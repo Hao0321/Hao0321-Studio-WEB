@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>遊戲大廳 — Hao0321 Studio</title>
+  <meta name="description" content="Hao0321 Studio 原創小遊戲合集 — 免費遊玩，隨時暢玩。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    [data-theme="light"] {
+      --bg-primary: #faf8f5; --bg-secondary: #f3f0eb; --bg-card: #ffffff;
+      --bg-nav: rgba(250,248,245,0.92);
+      --text-primary: #2c2c2c; --text-secondary: #6b6b6b; --text-muted: #999999; --text-faint: #c8c8c8;
+      --border-light: rgba(0,0,0,0.06); --border-medium: rgba(0,0,0,0.10);
+      --accent: #8b7355; --accent-light: #a38d6d; --accent-glow: rgba(139,115,85,0.08);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.04); --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+      --toggle-bg: var(--bg-secondary); --toggle-knob: var(--text-primary);
+    }
+    [data-theme="dark"] {
+      --bg-primary: #1a1a18; --bg-secondary: #222220; --bg-card: #2a2a28;
+      --bg-nav: rgba(26,26,24,0.92);
+      --text-primary: #e8e4dc; --text-secondary: #a0a0a0; --text-muted: #6b6b6b; --text-faint: #3a3a38;
+      --border-light: rgba(255,255,255,0.06); --border-medium: rgba(255,255,255,0.10);
+      --accent: #c4a882; --accent-light: #d4bc9a; --accent-glow: rgba(196,168,130,0.10);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.2); --shadow-md: 0 4px 16px rgba(0,0,0,0.25);
+      --toggle-bg: #2a2a28; --toggle-knob: var(--accent);
+    }
+    html.theme-transitioning, html.theme-transitioning *, html.theme-transitioning *::before, html.theme-transitioning *::after {
+      transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease !important;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary); color: var(--text-primary);
+      font-family: 'Inter', 'Noto Sans TC', sans-serif; font-weight: 300; line-height: 1.8;
+      -webkit-font-smoothing: antialiased; min-height: 100vh;
+    }
+    ::selection { background: var(--accent); color: white; }
+    a { color: inherit; }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 72px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 clamp(24px, 5vw, 64px);
+      background: var(--bg-nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-light);
+    }
+    .logo { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-primary); }
+    .logo-mark {
+      width: 32px; height: 32px; border: 1.5px solid var(--text-primary); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Noto Serif TC', serif; font-size: 0.85rem; transition: all 0.3s ease;
+    }
+    .logo:hover .logo-mark { background: var(--text-primary); color: var(--bg-primary); }
+    .logo-text { font-weight: 400; font-size: 0.85rem; letter-spacing: 0.06em; }
+    .nav-right { display: flex; align-items: center; gap: 20px; }
+    .nav-back {
+      padding: 8px 20px; border: 1px solid var(--border-medium); border-radius: 100px;
+      font-size: 0.78rem; text-decoration: none; color: var(--text-secondary);
+      transition: all 0.3s ease; letter-spacing: 0.03em;
+    }
+    .nav-back:hover { border-color: var(--text-primary); color: var(--text-primary); }
+    .theme-toggle {
+      width: 48px; height: 26px; background: var(--toggle-bg); border: 1px solid var(--border-medium);
+      border-radius: 100px; cursor: pointer; display: flex; align-items: center; padding: 0 3px;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .theme-toggle:hover { border-color: var(--accent); }
+    .toggle-knob {
+      width: 20px; height: 20px; background: var(--toggle-knob); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
+    }
+    [data-theme="dark"] .toggle-knob { transform: translateX(22px); }
+    .toggle-icon { width: 11px; height: 11px; position: absolute; transition: opacity 0.3s, transform 0.3s; }
+    .icon-sun { opacity: 1; color: var(--bg-primary); }
+    .icon-moon { opacity: 0; color: var(--bg-primary); transform: rotate(-90deg) scale(0.5); }
+    [data-theme="dark"] .icon-sun { opacity: 0; transform: rotate(90deg) scale(0.5); }
+    [data-theme="dark"] .icon-moon { opacity: 1; transform: rotate(0) scale(1); }
+
+    /* HERO */
+    .hero {
+      padding: 140px clamp(24px, 5vw, 64px) 60px; text-align: center;
+    }
+    .hero-label {
+      font-size: 0.7rem; font-weight: 400; letter-spacing: 0.25em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 20px;
+    }
+    .hero-title {
+      font-family: 'Noto Serif TC', serif; font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 300; line-height: 1.4; margin-bottom: 16px;
+    }
+    .hero-title em { font-style: normal; color: var(--accent); }
+    .hero-desc {
+      color: var(--text-secondary); font-size: 0.92rem; line-height: 1.9;
+      max-width: 480px; margin: 0 auto;
+    }
+
+    /* GAMES GRID */
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 clamp(24px, 5vw, 64px); }
+    .games-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 20px; padding-bottom: 100px;
+    }
+    .game-card {
+      background: var(--bg-card); border: 1px solid var(--border-light); border-radius: 8px;
+      overflow: hidden; text-decoration: none; color: inherit;
+      transition: all 0.3s ease; display: flex; flex-direction: column;
+    }
+    .game-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--accent); }
+    .game-thumb {
+      aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px; position: relative; overflow: hidden;
+    }
+    .game-thumb-icon { font-size: 2.4rem; opacity: 0.5; }
+    .game-thumb-label {
+      font-family: 'Noto Serif TC', serif; font-size: 0.78rem;
+      color: rgba(255,255,255,0.25); letter-spacing: 0.1em;
+    }
+    .game-info { padding: 20px 22px; flex: 1; display: flex; flex-direction: column; }
+    .game-info h3 {
+      font-family: 'Noto Serif TC', serif; font-size: 1rem; font-weight: 400; margin-bottom: 6px;
+    }
+    .game-info p {
+      color: var(--text-secondary); font-size: 0.8rem; line-height: 1.7; flex: 1;
+    }
+    .game-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 14px; }
+    .game-tag {
+      padding: 3px 10px; border: 1px solid var(--border-light); border-radius: 100px;
+      font-size: 0.65rem; color: var(--text-muted); transition: all 0.3s ease;
+    }
+    .game-card:hover .game-tag { border-color: var(--accent-glow); color: var(--accent); background: var(--accent-glow); }
+    .game-play {
+      display: flex; align-items: center; gap: 6px; margin-top: 14px;
+      font-size: 0.78rem; color: var(--accent); transition: gap 0.3s ease;
+    }
+    .game-card:hover .game-play { gap: 10px; }
+
+    /* COLORS */
+    .thumb-cat    { background: linear-gradient(160deg, #2d1b00, #5d3a1a); }
+    .thumb-dodge  { background: linear-gradient(160deg, #06060e, #1a0a2e); }
+    .thumb-frost  { background: linear-gradient(160deg, #0a1628, #162840); }
+    .thumb-surv   { background: linear-gradient(160deg, #0d1117, #1a1f2e); }
+    .thumb-poker  { background: linear-gradient(160deg, #1a0a0a, #2d1818); }
+    .thumb-dog    { background: linear-gradient(160deg, #3e2723, #5d4037); }
+    .thumb-mono   { background: linear-gradient(160deg, #1b2838, #2a4050); }
+    .thumb-water  { background: linear-gradient(160deg, #0a2028, #164050); }
+    .thumb-wolf   { background: linear-gradient(160deg, #1a0020, #2d1040); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border-light);
+      padding: 28px clamp(24px, 5vw, 64px);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    footer p { font-size: 0.72rem; color: var(--text-muted); }
+    footer a { font-size: 0.72rem; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+    footer a:hover { color: var(--accent); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-d1 { transition-delay: 0.06s; }
+    .reveal-d2 { transition-delay: 0.12s; }
+    .reveal-d3 { transition-delay: 0.18s; }
+    .reveal-d4 { transition-delay: 0.24s; }
+    .reveal-d5 { transition-delay: 0.30s; }
+
+    @media (max-width: 768px) {
+      .games-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 480px) {
+      .games-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="../" class="logo"><div class="logo-mark">H</div><div class="logo-text">Hao0321 Studio</div></a>
+    <div class="nav-right">
+      <a href="../" class="nav-back">&larr; 回首頁</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="切換主題">
+        <div class="toggle-knob" style="position:relative;">
+          <svg class="toggle-icon icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <svg class="toggle-icon icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </div>
+      </button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <p class="hero-label" style="opacity:0;animation:fadeUp .8s ease .2s forwards">Arcade</p>
+    <h1 class="hero-title" style="opacity:0;animation:fadeUp .8s ease .4s forwards">Hao0321 <em>遊戲大廳</em></h1>
+    <p class="hero-desc" style="opacity:0;animation:fadeUp .8s ease .6s forwards">免費遊玩的原創小遊戲合集 — 在瀏覽器裡，隨時開玩。</p>
+  </section>
+
+  <div class="container">
+    <div class="games-grid">
+
+      <a href="play.html?game=cat-battle" class="game-card reveal">
+        <div class="game-thumb thumb-cat"><span class="game-thumb-icon">🐱</span><span class="game-thumb-label">Strategy</span></div>
+        <div class="game-info">
+          <h3>にゃんこ突撃</h3>
+          <p>派遣貓咪軍團出征，以策略征服各關卡！升級你的貓貓部隊。</p>
+          <div class="game-tags"><span class="game-tag">策略</span><span class="game-tag">塔防</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+      <a href="play.html?game=dodge-master" class="game-card reveal reveal-d1">
+        <div class="game-thumb thumb-dodge"><span class="game-thumb-icon">⚡</span><span class="game-thumb-label">Action</span></div>
+        <div class="game-info">
+          <h3>DODGE MASTER</h3>
+          <p>賽博龐克風格的閃避遊戲，收集道具、解鎖角色。</p>
+          <div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">閃避</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+      <a href="play.html?game=frost-survival" class="game-card reveal reveal-d2">
+        <div class="game-thumb thumb-frost"><span class="game-thumb-icon">❄️</span><span class="game-thumb-label">Survival</span></div>
+        <div class="game-info">
+          <h3>霜寒求生</h3>
+          <p>在極寒世界中建造營地、管理資源，撐過漫漫寒夜。</p>
+          <div class="game-tags"><span class="game-tag">生存</span><span class="game-tag">建造</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+      <a href="play.html?game=hao-survivor" class="game-card reveal reveal-d3">
+        <div class="game-thumb thumb-surv"><span class="game-thumb-icon">🎮</span><span class="game-thumb-label">Roguelike</span></div>
+        <div class="game-info">
+          <h3>HAO SURVIVOR</h3>
+          <p>類吸血鬼倖存者玩法，選擇角色與技能，挑戰無盡怪物浪潮。</p>
+          <div class="game-tags"><span class="game-tag">Roguelike</span><span class="game-tag">動作</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+      <a href="play.html?game=poker-suite" class="game-card reveal reveal-d4">
+        <div class="game-thumb thumb-poker"><span class="game-thumb-icon">🃏</span><span class="game-thumb-label">Card</span></div>
+        <div class="game-info">
+          <h3>撲克合集</h3>
+          <p>大老二、抽鬼牌、接龍、德州撲克、鬥地主 — 經典撲克一次滿足。</p>
+          <div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">多合一</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+      <a href="play.html?game=save-the-dog" class="game-card reveal reveal-d5">
+        <div class="game-thumb thumb-dog"><span class="game-thumb-icon">🐕</span><span class="game-thumb-label">Puzzle</span></div>
+        <div class="game-info">
+          <h3>救救狗狗</h3>
+          <p>畫線保護狗狗不被蜜蜂螫到！考驗你的觀察力與反應。</p>
+          <div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">畫線</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+      <a href="play.html?game=taiwan-monopoly" class="game-card reveal">
+        <div class="game-thumb thumb-mono"><span class="game-thumb-icon">🏮</span><span class="game-thumb-label">Board</span></div>
+        <div class="game-info">
+          <h3>台灣大富翁</h3>
+          <p>走遍台北 101、九份、阿里山 — 買地蓋房，成為台灣首富。</p>
+          <div class="game-tags"><span class="game-tag">桌遊</span><span class="game-tag">大富翁</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+      <a href="play.html?game=water-sort" class="game-card reveal reveal-d1">
+        <div class="game-thumb thumb-water"><span class="game-thumb-icon">🧪</span><span class="game-thumb-label">Puzzle</span></div>
+        <div class="game-info">
+          <h3>水排序益智</h3>
+          <p>將同色液體排列到同一瓶中，越後面的關卡越燒腦。</p>
+          <div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">排序</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+      <a href="play.html?game=werewolf" class="game-card reveal reveal-d2">
+        <div class="game-thumb thumb-wolf"><span class="game-thumb-icon">🐺</span><span class="game-thumb-label">Social</span></div>
+        <div class="game-info">
+          <h3>狼人殺</h3>
+          <p>經典桌遊數位版，與 AI 對手鬥智鬥勇，找出隱藏的狼人。</p>
+          <div class="game-tags"><span class="game-tag">推理</span><span class="game-tag">社交</span></div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Hao0321 Studio. All rights reserved.</p>
+    <a href="#">Back to top &uarr;</a>
+  </footer>
+
+  <script>
+    "use strict";
+    var html = document.documentElement;
+    var themeBtn = document.getElementById('themeToggle');
+    (function() {
+      var saved = null;
+      try { saved = window.localStorage ? localStorage.getItem('hao-theme') : null; } catch(e) {}
+      if (saved === 'dark' || saved === 'light') html.setAttribute('data-theme', saved);
+      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) html.setAttribute('data-theme', 'dark');
+    })();
+    themeBtn.addEventListener('click', function() {
+      var current = html.getAttribute('data-theme');
+      var next = current === 'dark' ? 'light' : 'dark';
+      html.classList.add('theme-transitioning');
+      html.setAttribute('data-theme', next);
+      try { if (window.localStorage) localStorage.setItem('hao-theme', next); } catch(e) {}
+      setTimeout(function() { html.classList.remove('theme-transitioning'); }, 600);
+    });
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>遊戲中 — Hao0321 Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    [data-theme="light"] {
+      --bg-primary: #faf8f5; --bg-secondary: #f3f0eb; --bg-card: #ffffff;
+      --text-primary: #2c2c2c; --text-secondary: #6b6b6b; --text-muted: #999;
+      --border-light: rgba(0,0,0,0.06); --border-medium: rgba(0,0,0,0.10);
+      --accent: #8b7355;
+    }
+    [data-theme="dark"] {
+      --bg-primary: #1a1a18; --bg-secondary: #222220; --bg-card: #2a2a28;
+      --text-primary: #e8e4dc; --text-secondary: #a0a0a0; --text-muted: #6b6b6b;
+      --border-light: rgba(255,255,255,0.06); --border-medium: rgba(255,255,255,0.10);
+      --accent: #c4a882;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg-primary); color: var(--text-primary);
+      font-family: 'Inter', 'Noto Sans TC', sans-serif; font-weight: 300;
+      display: flex; flex-direction: column; overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* TOP BAR */
+    .topbar {
+      height: 48px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 20px; border-bottom: 1px solid var(--border-light);
+      background: var(--bg-secondary); flex-shrink: 0; z-index: 10;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 16px; }
+    .topbar-back {
+      font-size: 0.78rem; color: var(--text-muted); text-decoration: none;
+      display: flex; align-items: center; gap: 6px; transition: color 0.3s;
+    }
+    .topbar-back:hover { color: var(--text-primary); }
+    .topbar-title { font-size: 0.82rem; font-weight: 400; color: var(--text-primary); }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-btn {
+      padding: 5px 14px; border: 1px solid var(--border-medium); border-radius: 100px;
+      background: none; color: var(--text-muted); font-size: 0.72rem; cursor: pointer;
+      font-family: inherit; transition: all 0.3s;
+    }
+    .topbar-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
+
+    /* MAIN LAYOUT */
+    .main-layout { flex: 1; display: flex; overflow: hidden; }
+
+    /* AD SIDEBAR (LEFT) */
+    .ad-sidebar {
+      width: 160px; flex-shrink: 0; background: var(--bg-secondary);
+      border-right: 1px solid var(--border-light);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px 10px; gap: 20px;
+    }
+    .ad-slot {
+      width: 140px; background: var(--bg-card); border: 1px dashed var(--border-medium);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      color: var(--text-faint, #ccc); font-size: 0.65rem; letter-spacing: 0.08em;
+    }
+    .ad-slot-tall { height: 600px; max-height: 40vh; }
+    .ad-slot-small { height: 250px; max-height: 20vh; }
+
+    /* GAME AREA */
+    .game-area {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      background: #000; position: relative; overflow: hidden;
+    }
+    #game-root {
+      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    }
+    #game-root > * { max-width: 100%; max-height: 100%; }
+    #game-iframe {
+      width: 100%; height: 100%; border: none; display: block;
+    }
+
+    /* AD BANNER (BOTTOM) */
+    .ad-banner {
+      height: 90px; flex-shrink: 0; background: var(--bg-secondary);
+      border-top: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ad-banner .ad-slot { width: 728px; max-width: 90%; height: 70px; }
+
+    /* LOADING */
+    .game-loading {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 20px;
+      background: #000; color: #888; z-index: 5; transition: opacity 0.4s;
+    }
+    .game-loading.hidden { opacity: 0; pointer-events: none; }
+    .spinner {
+      width: 32px; height: 32px; border: 2px solid #333; border-top-color: var(--accent);
+      border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 0.82rem; letter-spacing: 0.1em; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .ad-sidebar { display: none; }
+    }
+    @media (max-width: 768px) {
+      .ad-banner { height: 60px; }
+      .ad-banner .ad-slot { height: 50px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <a href="index.html" class="topbar-back">&larr; 遊戲大廳</a>
+      <span class="topbar-title" id="gameTitle">載入中...</span>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-btn" onclick="toggleFullscreen()">全螢幕</button>
+      <a href="../" class="topbar-btn" style="text-decoration:none;">首頁</a>
+    </div>
+  </div>
+
+  <div class="main-layout">
+    <!-- Left Ad Sidebar -->
+    <aside class="ad-sidebar">
+      <div class="ad-slot ad-slot-tall">Ad Space</div>
+      <div class="ad-slot ad-slot-small">Ad Space</div>
+    </aside>
+
+    <!-- Game Area -->
+    <div class="game-area" id="gameArea">
+      <div class="game-loading" id="gameLoading">
+        <div class="spinner"></div>
+        <span class="loading-text">LOADING</span>
+      </div>
+      <div id="game-root"></div>
+    </div>
+  </div>
+
+  <!-- Bottom Ad Banner -->
+  <div class="ad-banner">
+    <div class="ad-slot">Ad Space — 728x90</div>
+  </div>
+
+  <!-- React (production) -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script>
+    "use strict";
+
+    // Theme sync
+    (function() {
+      var saved = null;
+      try { saved = window.localStorage ? localStorage.getItem('hao-theme') : null; } catch(e) {}
+      if (saved === 'dark' || saved === 'light') document.documentElement.setAttribute('data-theme', saved);
+      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+
+    var GAMES = {
+      'cat-battle':      { title: 'にゃんこ突撃',     file: 'cat-battle.jsx',       type: 'jsx' },
+      'dodge-master':    { title: 'DODGE MASTER',      file: 'dodge-master-v5.html', type: 'html' },
+      'frost-survival':  { title: '霜寒求生',         file: 'frost-survival.jsx',   type: 'jsx' },
+      'hao-survivor':    { title: 'HAO SURVIVOR',      file: 'hao-survivor-v3.jsx',  type: 'jsx' },
+      'poker-suite':     { title: '撲克合集',         file: 'poker-suite.jsx',      type: 'jsx' },
+      'save-the-dog':    { title: '救救狗狗',         file: 'save-the-dog.jsx',     type: 'jsx' },
+      'taiwan-monopoly': { title: '台灣大富翁',       file: 'taiwan-monopoly.jsx',  type: 'jsx' },
+      'water-sort':      { title: '水排序益智',       file: 'water-sort-puzzle.jsx', type: 'jsx' },
+      'werewolf':        { title: '狼人殺',           file: 'werewolf-game.jsx',    type: 'jsx' }
+    };
+
+    var params = new URLSearchParams(window.location.search);
+    var gameKey = params.get('game');
+    var game = GAMES[gameKey];
+
+    if (!game) {
+      document.getElementById('gameTitle').textContent = '找不到遊戲';
+      document.getElementById('gameLoading').innerHTML = '<span style="color:#666;font-size:0.9rem;">遊戲不存在，<a href="index.html" style="color:#c4a882;">回到大廳</a></span>';
+    } else {
+      document.title = game.title + ' — Hao0321 Studio';
+      document.getElementById('gameTitle').textContent = game.title;
+
+      if (game.type === 'html') {
+        // Load standalone HTML game in iframe
+        var root = document.getElementById('game-root');
+        root.innerHTML = '<iframe id="game-iframe" src="' + game.file + '"></iframe>';
+        document.getElementById('game-iframe').addEventListener('load', function() {
+          document.getElementById('gameLoading').classList.add('hidden');
+        });
+      } else {
+        // Load JSX game via Babel + React
+        fetch(game.file)
+          .then(function(r) { return r.text(); })
+          .then(function(code) {
+            // Transform JSX to JS
+            var transformed = Babel.transform(code, {
+              presets: ['react'],
+              plugins: []
+            }).code;
+
+            // Wrap in module scope and render
+            var wrappedCode = '(function() {\n' +
+              'var exports = {};\n' +
+              'var module = { exports: exports };\n' +
+              transformed.replace(/import\s*\{[^}]*\}\s*from\s*["'][^"']*["'];?/g, '') + '\n' +
+              'var _default = module.exports.default || exports.default;\n' +
+              'if (typeof _default === "function") {\n' +
+              '  var _root = ReactDOM.createRoot(document.getElementById("game-root"));\n' +
+              '  _root.render(React.createElement(_default));\n' +
+              '}\n' +
+              '})();';
+
+            // Provide React hooks globally
+            window.useState = React.useState;
+            window.useEffect = React.useEffect;
+            window.useRef = React.useRef;
+            window.useCallback = React.useCallback;
+            window.useMemo = React.useMemo;
+
+            // Execute
+            var script = document.createElement('script');
+            script.textContent = wrappedCode;
+            document.body.appendChild(script);
+
+            document.getElementById('gameLoading').classList.add('hidden');
+          })
+          .catch(function(err) {
+            console.error('Game load error:', err);
+            document.getElementById('gameLoading').innerHTML =
+              '<span style="color:#ff6b6b;font-size:0.82rem;">載入失敗</span>' +
+              '<span style="color:#666;font-size:0.75rem;">' + err.message + '</span>' +
+              '<a href="index.html" style="color:#c4a882;font-size:0.78rem;margin-top:8px;">回到大廳</a>';
+          });
+      }
+    }
+
+    function toggleFullscreen() {
+      var el = document.getElementById('gameArea');
+      if (!document.fullscreenElement) {
+        (el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen).call(el);
+      } else {
+        (document.exitFullscreen || document.webkitExitFullscreen || document.msExitFullscreen).call(document);
+      }
+    }
+  </script>
+</body>
+</html>
