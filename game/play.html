@@ -148,6 +148,9 @@
     <div class="ad-slot">Ad Space — 728x90</div>
   </div>
 
+  <!-- Google AdSense — 取得你的 pub-ID 後取消註解 -->
+  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUB_ID" crossorigin="anonymous"></script> -->
+
   <!-- React (production) -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
@@ -155,6 +158,19 @@
 
   <script>
     "use strict";
+
+    // Provide React hooks as globals (JSX files import these from "react")
+    var useState = React.useState;
+    var useEffect = React.useEffect;
+    var useRef = React.useRef;
+    var useCallback = React.useCallback;
+    var useMemo = React.useMemo;
+    var useReducer = React.useReducer;
+    var useContext = React.useContext;
+    var createContext = React.createContext;
+    var memo = React.memo;
+    var forwardRef = React.forwardRef;
+    var Fragment = React.Fragment;
 
     // Theme sync
     (function() {
@@ -177,6 +193,37 @@
       'werewolf':        { title: '狼人殺',           file: 'werewolf-game.jsx',    type: 'jsx' }
     };
 
+    function stripModuleSyntax(code) {
+      // 1. Remove import lines: import { ... } from "react"
+      code = code.replace(/^\s*import\s+\{[^}]*\}\s+from\s+["'][^"']*["'];?\s*$/gm, '');
+      // 2. Remove bare import: import "xxx"
+      code = code.replace(/^\s*import\s+["'][^"']*["'];?\s*$/gm, '');
+      // 3. Capture default export name, then remove the "export default" keyword
+      var defaultExportName = null;
+      // export default function Name(...)
+      code = code.replace(/export\s+default\s+function\s+(\w+)/g, function(m, name) {
+        defaultExportName = name;
+        return 'function ' + name;
+      });
+      // export default class Name
+      code = code.replace(/export\s+default\s+class\s+(\w+)/g, function(m, name) {
+        defaultExportName = name;
+        return 'class ' + name;
+      });
+      // export default SomeName (standalone)
+      if (!defaultExportName) {
+        code = code.replace(/export\s+default\s+(\w+)\s*;?/g, function(m, name) {
+          defaultExportName = name;
+          return '';
+        });
+      }
+      // 4. Remove named exports: export { ... }
+      code = code.replace(/^\s*export\s*\{[^}]*\}\s*;?\s*$/gm, '');
+      // 5. Remove "export" from "export function/const/let/var"
+      code = code.replace(/export\s+(function|const|let|var|class)\s/g, '$1 ');
+      return { code: code, defaultExport: defaultExportName };
+    }
+
     var params = new URLSearchParams(window.location.search);
     var gameKey = params.get('game');
     var game = GAMES[gameKey];
@@ -189,45 +236,36 @@
       document.getElementById('gameTitle').textContent = game.title;
 
       if (game.type === 'html') {
-        // Load standalone HTML game in iframe
         var root = document.getElementById('game-root');
         root.innerHTML = '<iframe id="game-iframe" src="' + game.file + '"></iframe>';
         document.getElementById('game-iframe').addEventListener('load', function() {
           document.getElementById('gameLoading').classList.add('hidden');
         });
       } else {
-        // Load JSX game via Babel + React
         fetch(game.file)
           .then(function(r) { return r.text(); })
-          .then(function(code) {
-            // Transform JSX to JS
-            var transformed = Babel.transform(code, {
-              presets: ['react'],
-              plugins: []
+          .then(function(rawCode) {
+            // Step 1: Strip import/export before Babel sees it
+            var stripped = stripModuleSyntax(rawCode);
+            var cleanCode = stripped.code;
+            var componentName = stripped.defaultExport;
+
+            // Step 2: Transform JSX only (no module handling needed)
+            var transformed = Babel.transform(cleanCode, {
+              presets: ['react']
             }).code;
 
-            // Wrap in module scope and render
-            var wrappedCode = '(function() {\n' +
-              'var exports = {};\n' +
-              'var module = { exports: exports };\n' +
-              transformed.replace(/import\s*\{[^}]*\}\s*from\s*["'][^"']*["'];?/g, '') + '\n' +
-              'var _default = module.exports.default || exports.default;\n' +
-              'if (typeof _default === "function") {\n' +
-              '  var _root = ReactDOM.createRoot(document.getElementById("game-root"));\n' +
-              '  _root.render(React.createElement(_default));\n' +
-              '}\n' +
-              '})();';
+            // Step 3: Append render call
+            if (componentName) {
+              transformed += '\n;(function(){' +
+                'var _root = ReactDOM.createRoot(document.getElementById("game-root"));' +
+                '_root.render(React.createElement(' + componentName + '));' +
+                '})();';
+            }
 
-            // Provide React hooks globally
-            window.useState = React.useState;
-            window.useEffect = React.useEffect;
-            window.useRef = React.useRef;
-            window.useCallback = React.useCallback;
-            window.useMemo = React.useMemo;
-
-            // Execute
+            // Step 4: Execute
             var script = document.createElement('script');
-            script.textContent = wrappedCode;
+            script.textContent = transformed;
             document.body.appendChild(script);
 
             document.getElementById('gameLoading').classList.add('hidden');
