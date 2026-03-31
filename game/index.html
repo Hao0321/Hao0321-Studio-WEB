@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500;600&family=Noto+Sans+TC:wght@200;300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
-  <!-- Google AdSense — 取得你的 pub-ID 後取消註解 -->
-  <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUB_ID" crossorigin="anonymous"></script> -->
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9106945071014808" crossorigin="anonymous"></script>
   <style>
     [data-theme="light"] {
       --bg-primary: #faf8f5; --bg-secondary: #f3f0eb; --bg-card: #ffffff;
@@ -115,12 +115,37 @@
     .game-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: var(--accent); }
     .game-thumb {
       aspect-ratio: 16/10; display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 8px; position: relative; overflow: hidden;
+      flex-direction: column; gap: 0; position: relative; overflow: hidden;
     }
-    .game-thumb-icon { font-size: 2.4rem; opacity: 0.5; }
-    .game-thumb-label {
-      font-family: 'Noto Serif TC', serif; font-size: 0.78rem;
-      color: rgba(255,255,255,0.25); letter-spacing: 0.1em;
+    .game-thumb::before {
+      content: ''; position: absolute; inset: 0; opacity: 0.12;
+      background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.3), transparent 60%);
+    }
+    .game-thumb::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
+      background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+    }
+    .cover-title {
+      position: absolute; bottom: 14px; left: 16px; z-index: 2;
+      font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.95rem;
+      color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.5); letter-spacing: 0.02em;
+    }
+    .cover-badge {
+      position: absolute; top: 12px; right: 12px; z-index: 2;
+      padding: 3px 10px; border-radius: 100px; font-size: 0.58rem; font-weight: 500;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      background: rgba(0,0,0,0.45); color: rgba(255,255,255,0.75);
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+    }
+    .cover-icon {
+      font-size: 3.2rem; position: relative; z-index: 1;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+      transition: transform 0.4s ease;
+    }
+    .game-card:hover .cover-icon { transform: scale(1.1); }
+    /* decorative elements */
+    .cover-deco {
+      position: absolute; z-index: 1; opacity: 0.08; font-size: 1.2rem;
     }
     .game-info { padding: 20px 22px; flex: 1; display: flex; flex-direction: column; }
     .game-info h3 {
@@ -141,16 +166,43 @@
     }
     .game-card:hover .game-play { gap: 10px; }
 
-    /* COLORS */
-    .thumb-cat    { background: linear-gradient(160deg, #2d1b00, #5d3a1a); }
-    .thumb-dodge  { background: linear-gradient(160deg, #06060e, #1a0a2e); }
-    .thumb-frost  { background: linear-gradient(160deg, #0a1628, #162840); }
-    .thumb-surv   { background: linear-gradient(160deg, #0d1117, #1a1f2e); }
-    .thumb-poker  { background: linear-gradient(160deg, #1a0a0a, #2d1818); }
-    .thumb-dog    { background: linear-gradient(160deg, #3e2723, #5d4037); }
-    .thumb-mono   { background: linear-gradient(160deg, #1b2838, #2a4050); }
-    .thumb-water  { background: linear-gradient(160deg, #0a2028, #164050); }
-    .thumb-wolf   { background: linear-gradient(160deg, #1a0020, #2d1040); }
+    /* COVER THEMES */
+    .thumb-cat {
+      background: linear-gradient(145deg, #4a2800, #8b5e34, #3d1f00);
+      box-shadow: inset 0 0 60px rgba(255,150,50,0.08);
+    }
+    .thumb-dodge {
+      background: linear-gradient(145deg, #06060e, #0d0a2e, #1a0040);
+      box-shadow: inset 0 0 80px rgba(0,240,255,0.06);
+    }
+    .thumb-frost {
+      background: linear-gradient(145deg, #0a1e38, #1a3a5c, #0c2848);
+      box-shadow: inset 0 0 60px rgba(100,200,255,0.06);
+    }
+    .thumb-surv {
+      background: linear-gradient(145deg, #0d1117, #1a2332, #0f1820);
+      box-shadow: inset 0 0 60px rgba(251,191,36,0.05);
+    }
+    .thumb-poker {
+      background: linear-gradient(145deg, #2d0a0a, #4a1515, #1a0505);
+      box-shadow: inset 0 0 60px rgba(255,50,50,0.06);
+    }
+    .thumb-dog {
+      background: linear-gradient(145deg, #4e3425, #7a5840, #3e2718);
+      box-shadow: inset 0 0 60px rgba(255,200,100,0.06);
+    }
+    .thumb-mono {
+      background: linear-gradient(145deg, #1b2838, #2a4558, #152030);
+      box-shadow: inset 0 0 60px rgba(20,184,166,0.06);
+    }
+    .thumb-water {
+      background: linear-gradient(145deg, #082830, #1a4858, #0a3040);
+      box-shadow: inset 0 0 60px rgba(50,200,230,0.06);
+    }
+    .thumb-wolf {
+      background: linear-gradient(145deg, #1a0028, #35104a, #200030);
+      box-shadow: inset 0 0 60px rgba(200,80,255,0.06);
+    }
 
     /* FOOTER */
     footer {
@@ -205,7 +257,14 @@
     <div class="games-grid">
 
       <a href="play.html?game=cat-battle" class="game-card reveal">
-        <div class="game-thumb thumb-cat"><span class="game-thumb-icon">🐱</span><span class="game-thumb-label">Strategy</span></div>
+        <div class="game-thumb thumb-cat">
+          <span class="cover-deco" style="top:12%;left:10%">🐾</span>
+          <span class="cover-deco" style="top:20%;right:18%;font-size:0.9rem">⚔️</span>
+          <span class="cover-deco" style="bottom:35%;right:12%">🐾</span>
+          <span class="cover-icon">🐱</span>
+          <span class="cover-badge">Strategy</span>
+          <span class="cover-title">にゃんこ突撃</span>
+        </div>
         <div class="game-info">
           <h3>にゃんこ突撃</h3>
           <p>派遣貓咪軍團出征，以策略征服各關卡！升級你的貓貓部隊。</p>
@@ -215,7 +274,14 @@
       </a>
 
       <a href="play.html?game=dodge-master" class="game-card reveal reveal-d1">
-        <div class="game-thumb thumb-dodge"><span class="game-thumb-icon">⚡</span><span class="game-thumb-label">Action</span></div>
+        <div class="game-thumb thumb-dodge">
+          <span class="cover-deco" style="top:15%;left:15%;font-size:1.5rem;opacity:0.05">◆</span>
+          <span class="cover-deco" style="bottom:30%;left:20%;font-size:1rem;opacity:0.06">◇</span>
+          <span class="cover-deco" style="top:25%;right:15%;opacity:0.05">⚡</span>
+          <span class="cover-icon">⚡</span>
+          <span class="cover-badge">Action</span>
+          <span class="cover-title">DODGE MASTER</span>
+        </div>
         <div class="game-info">
           <h3>DODGE MASTER</h3>
           <p>賽博龐克風格的閃避遊戲，收集道具、解鎖角色。</p>
@@ -225,7 +291,14 @@
       </a>
 
       <a href="play.html?game=frost-survival" class="game-card reveal reveal-d2">
-        <div class="game-thumb thumb-frost"><span class="game-thumb-icon">❄️</span><span class="game-thumb-label">Survival</span></div>
+        <div class="game-thumb thumb-frost">
+          <span class="cover-deco" style="top:10%;left:12%">❄️</span>
+          <span class="cover-deco" style="top:22%;right:20%;font-size:0.8rem">🌨️</span>
+          <span class="cover-deco" style="bottom:32%;left:22%">❄️</span>
+          <span class="cover-icon">🏔️</span>
+          <span class="cover-badge">Survival</span>
+          <span class="cover-title">霜寒求生</span>
+        </div>
         <div class="game-info">
           <h3>霜寒求生</h3>
           <p>在極寒世界中建造營地、管理資源，撐過漫漫寒夜。</p>
@@ -235,7 +308,14 @@
       </a>
 
       <a href="play.html?game=hao-survivor" class="game-card reveal reveal-d3">
-        <div class="game-thumb thumb-surv"><span class="game-thumb-icon">🎮</span><span class="game-thumb-label">Roguelike</span></div>
+        <div class="game-thumb thumb-surv">
+          <span class="cover-deco" style="top:12%;left:14%;font-size:1rem">💀</span>
+          <span class="cover-deco" style="top:18%;right:16%">⚡</span>
+          <span class="cover-deco" style="bottom:30%;right:20%;font-size:0.9rem">🔥</span>
+          <span class="cover-icon">🎮</span>
+          <span class="cover-badge">Roguelike</span>
+          <span class="cover-title">HAO SURVIVOR</span>
+        </div>
         <div class="game-info">
           <h3>HAO SURVIVOR</h3>
           <p>類吸血鬼倖存者玩法，選擇角色與技能，挑戰無盡怪物浪潮。</p>
@@ -245,7 +325,15 @@
       </a>
 
       <a href="play.html?game=poker-suite" class="game-card reveal reveal-d4">
-        <div class="game-thumb thumb-poker"><span class="game-thumb-icon">🃏</span><span class="game-thumb-label">Card</span></div>
+        <div class="game-thumb thumb-poker">
+          <span class="cover-deco" style="top:10%;left:12%;font-size:1.5rem;opacity:0.1;color:#ff4444">♥</span>
+          <span class="cover-deco" style="top:20%;right:14%;font-size:1.3rem;opacity:0.1">♠</span>
+          <span class="cover-deco" style="bottom:28%;left:18%;font-size:1.4rem;opacity:0.1;color:#ff4444">♦</span>
+          <span class="cover-deco" style="bottom:35%;right:22%;font-size:1.2rem;opacity:0.1">♣</span>
+          <span class="cover-icon">🃏</span>
+          <span class="cover-badge">Card</span>
+          <span class="cover-title">撲克合集</span>
+        </div>
         <div class="game-info">
           <h3>撲克合集</h3>
           <p>大老二、抽鬼牌、接龍、德州撲克、鬥地主 — 經典撲克一次滿足。</p>
@@ -255,7 +343,14 @@
       </a>
 
       <a href="play.html?game=save-the-dog" class="game-card reveal reveal-d5">
-        <div class="game-thumb thumb-dog"><span class="game-thumb-icon">🐕</span><span class="game-thumb-label">Puzzle</span></div>
+        <div class="game-thumb thumb-dog">
+          <span class="cover-deco" style="top:12%;left:14%">🐝</span>
+          <span class="cover-deco" style="top:25%;right:18%;font-size:0.9rem">🐝</span>
+          <span class="cover-deco" style="bottom:30%;left:20%">✏️</span>
+          <span class="cover-icon">🐕</span>
+          <span class="cover-badge">Puzzle</span>
+          <span class="cover-title">救救狗狗</span>
+        </div>
         <div class="game-info">
           <h3>救救狗狗</h3>
           <p>畫線保護狗狗不被蜜蜂螫到！考驗你的觀察力與反應。</p>
@@ -265,7 +360,14 @@
       </a>
 
       <a href="play.html?game=taiwan-monopoly" class="game-card reveal">
-        <div class="game-thumb thumb-mono"><span class="game-thumb-icon">🏮</span><span class="game-thumb-label">Board</span></div>
+        <div class="game-thumb thumb-mono">
+          <span class="cover-deco" style="top:10%;left:10%">🏙️</span>
+          <span class="cover-deco" style="top:18%;right:14%;font-size:0.9rem">⛰️</span>
+          <span class="cover-deco" style="bottom:30%;left:22%">🚄</span>
+          <span class="cover-icon">🏮</span>
+          <span class="cover-badge">Board</span>
+          <span class="cover-title">台灣大富翁</span>
+        </div>
         <div class="game-info">
           <h3>台灣大富翁</h3>
           <p>走遍台北 101、九份、阿里山 — 買地蓋房，成為台灣首富。</p>
@@ -275,7 +377,14 @@
       </a>
 
       <a href="play.html?game=water-sort" class="game-card reveal reveal-d1">
-        <div class="game-thumb thumb-water"><span class="game-thumb-icon">🧪</span><span class="game-thumb-label">Puzzle</span></div>
+        <div class="game-thumb thumb-water">
+          <span class="cover-deco" style="top:12%;left:16%;font-size:1rem;opacity:0.1;color:#66d9e8">●</span>
+          <span class="cover-deco" style="top:22%;right:18%;font-size:0.9rem;opacity:0.1;color:#69db7c">●</span>
+          <span class="cover-deco" style="bottom:32%;left:20%;font-size:1.1rem;opacity:0.1;color:#ff6b6b">●</span>
+          <span class="cover-icon">🧪</span>
+          <span class="cover-badge">Puzzle</span>
+          <span class="cover-title">水排序益智</span>
+        </div>
         <div class="game-info">
           <h3>水排序益智</h3>
           <p>將同色液體排列到同一瓶中，越後面的關卡越燒腦。</p>
@@ -285,7 +394,14 @@
       </a>
 
       <a href="play.html?game=werewolf" class="game-card reveal reveal-d2">
-        <div class="game-thumb thumb-wolf"><span class="game-thumb-icon">🐺</span><span class="game-thumb-label">Social</span></div>
+        <div class="game-thumb thumb-wolf">
+          <span class="cover-deco" style="top:10%;left:12%">🌙</span>
+          <span class="cover-deco" style="top:22%;right:16%;font-size:0.9rem">🔮</span>
+          <span class="cover-deco" style="bottom:30%;left:18%">💉</span>
+          <span class="cover-icon">🐺</span>
+          <span class="cover-badge">Social</span>
+          <span class="cover-title">狼人殺</span>
+        </div>
         <div class="game-info">
           <h3>狼人殺</h3>
           <p>經典桌遊數位版，與 AI 對手鬥智鬥勇，找出隱藏的狼人。</p>
