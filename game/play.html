@@ -74,9 +74,10 @@
       background: #000; position: relative; overflow: hidden;
     }
     #game-root {
-      width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+      width: 100%; height: 100%; overflow: auto;
+      position: relative;
     }
-    #game-root > * { max-width: 100%; max-height: 100%; }
+    #game-root > * { width: 100%; min-height: 100%; }
     #game-iframe {
       width: 100%; height: 100%; border: none; display: block;
     }
@@ -95,7 +96,7 @@
       align-items: center; justify-content: center; gap: 20px;
       background: #000; color: #888; z-index: 5; transition: opacity 0.4s;
     }
-    .game-loading.hidden { opacity: 0; pointer-events: none; }
+    .game-loading.hidden { opacity: 0; pointer-events: none; display: none; }
     .spinner {
       width: 32px; height: 32px; border: 2px solid #333; border-top-color: var(--accent);
       border-radius: 50%; animation: spin 0.8s linear infinite;
@@ -160,18 +161,18 @@
   <script>
     "use strict";
 
-    // Provide React hooks as globals (JSX files import these from "react")
-    var useState = React.useState;
-    var useEffect = React.useEffect;
-    var useRef = React.useRef;
-    var useCallback = React.useCallback;
-    var useMemo = React.useMemo;
-    var useReducer = React.useReducer;
-    var useContext = React.useContext;
-    var createContext = React.createContext;
-    var memo = React.memo;
-    var forwardRef = React.forwardRef;
-    var Fragment = React.Fragment;
+    // Provide React hooks as globals via window (JSX files import these from "react")
+    window.useState = React.useState;
+    window.useEffect = React.useEffect;
+    window.useRef = React.useRef;
+    window.useCallback = React.useCallback;
+    window.useMemo = React.useMemo;
+    window.useReducer = React.useReducer;
+    window.useContext = React.useContext;
+    window.createContext = React.createContext;
+    window.memo = React.memo;
+    window.forwardRef = React.forwardRef;
+    window.Fragment = React.Fragment;
 
     // Theme sync
     (function() {
@@ -256,17 +257,18 @@
               presets: ['react']
             }).code;
 
-            // Step 3: Append render call
+            // Step 3: Wrap in IIFE to avoid global scope conflicts + append render call
+            var finalCode = '(function(React,ReactDOM,useState,useEffect,useRef,useCallback,useMemo,useReducer,useContext,createContext,memo,forwardRef,Fragment){\n' +
+              transformed + '\n';
             if (componentName) {
-              transformed += '\n;(function(){' +
-                'var _root = ReactDOM.createRoot(document.getElementById("game-root"));' +
-                '_root.render(React.createElement(' + componentName + '));' +
-                '})();';
+              finalCode += 'var _root=ReactDOM.createRoot(document.getElementById("game-root"));' +
+                '_root.render(React.createElement(' + componentName + '));\n';
             }
+            finalCode += '})(React,ReactDOM,React.useState,React.useEffect,React.useRef,React.useCallback,React.useMemo,React.useReducer,React.useContext,React.createContext,React.memo,React.forwardRef,React.Fragment);';
 
             // Step 4: Execute
             var script = document.createElement('script');
-            script.textContent = transformed;
+            script.textContent = finalCode;
             document.body.appendChild(script);
 
             document.getElementById('gameLoading').classList.add('hidden');
