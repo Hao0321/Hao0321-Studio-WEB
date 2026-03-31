@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" data-theme="light">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
@@ -8,17 +8,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
-    [data-theme="light"] {
-      --bg-primary: #faf8f5; --bg-secondary: #f3f0eb; --bg-card: #ffffff;
-      --text-primary: #2c2c2c; --text-secondary: #6b6b6b; --text-muted: #999;
-      --border-light: rgba(0,0,0,0.06); --border-medium: rgba(0,0,0,0.10);
-      --accent: #8b7355;
-    }
-    [data-theme="dark"] {
-      --bg-primary: #1a1a18; --bg-secondary: #222220; --bg-card: #2a2a28;
-      --text-primary: #e8e4dc; --text-secondary: #a0a0a0; --text-muted: #6b6b6b;
-      --border-light: rgba(255,255,255,0.06); --border-medium: rgba(255,255,255,0.10);
-      --accent: #c4a882;
+    :root {
+      --bg-primary: #0a0a0f; --bg-secondary: #12121a; --bg-card: #1a1a28;
+      --text-primary: #f0f0f0; --text-secondary: #a0a0b0; --text-muted: #555568;
+      --border-light: rgba(255,255,255,0.06); --border-medium: rgba(168,85,247,0.15);
+      --accent: #a855f7; --pink: #ff2d7b;
+      --grad: linear-gradient(135deg, #a855f7, #ff2d7b);
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { height: 100%; }
@@ -48,7 +43,7 @@
       background: none; color: var(--text-muted); font-size: 0.72rem; cursor: pointer;
       font-family: inherit; transition: all 0.3s;
     }
-    .topbar-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
+    .topbar-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(168,85,247,0.1); }
 
     /* MAIN LAYOUT */
     .main-layout { flex: 1; display: flex; overflow: hidden; }
@@ -174,14 +169,7 @@
     window.forwardRef = React.forwardRef;
     window.Fragment = React.Fragment;
 
-    // Theme sync
-    (function() {
-      var saved = null;
-      try { saved = window.localStorage ? localStorage.getItem('hao-theme') : null; } catch(e) {}
-      if (saved === 'dark' || saved === 'light') document.documentElement.setAttribute('data-theme', saved);
-      else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)
-        document.documentElement.setAttribute('data-theme', 'dark');
-    })();
+    // Theme: dark only (no toggle needed)
 
     var GAMES = {
       'cat-battle':      { title: 'にゃんこ突撃',     file: 'cat-battle.jsx',       type: 'jsx' },
