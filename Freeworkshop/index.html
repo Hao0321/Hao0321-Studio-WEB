@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自由工坊 — AI 創意應用社群 | GPT・Gemini AI 應用</title>
+  <meta name="description" content="自由工坊是一個 AI 創意應用社群，探索圖片創作、影片創作、音樂創作、VibeCoding 與社群產品，用 GPT、Gemini 等 AI 工具實現無限創意。">
+  <meta name="keywords" content="AI創作,自由工坊,GPT,Gemini,Midjourney,Suno,VibeCoding,AI音樂,AI影片,AI圖片">
+  <meta name="author" content="自由工坊 FreeWorkshop">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="自由工坊 — AI 創意應用社群">
+  <meta property="og:description" content="用 AI 探索圖片、影片、音樂、程式的無限可能。加入自由工坊，一起創造！">
+  <meta property="og:image" content="https://hao0321.com/Freeworkshop/hero.jpg">
+  <meta property="og:url" content="https://hao0321.com/Freeworkshop/">
+  <meta property="og:locale" content="zh_TW">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="自由工坊 — AI 創意應用社群">
+  <meta name="twitter:description" content="用 AI 探索圖片、影片、音樂、程式的無限可能。加入自由工坊，一起創造！">
+  <meta name="twitter:image" content="https://hao0321.com/Freeworkshop/hero.jpg">
+
+  <link rel="canonical" href="https://hao0321.com/Freeworkshop/" />
+  <meta name="theme-color" content="#0033CC" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="apple-touch-icon" href="favicon.svg">
+
+  <!-- Google Analytics — 替換 G-XXXXXXXXXX 為你的追蹤 ID -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script> -->
+
+  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Studio Topbar -->
+  <div class="studio-bar">
+    <a href="../" class="studio-bar-link">
+      <span class="studio-bar-logo">H</span>
+      <span>Hao0321 Studio</span>
+    </a>
+    <span class="studio-bar-sep">|</span>
+    <span class="studio-bar-sub">自由工坊</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-logo">自由工坊</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#announcements">最新公告</a></li>
+        <li><a href="#about">關於我們</a></li>
+        <li><a href="#categories">創作領域</a></li>
+        <li><a href="#showcase">成果展示</a></li>
+        <li><a href="#gallery">作品展示</a></li>
+        <li><a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" class="nav-cta">加入 Discord</a></li>
+      </ul>
+    </div>
+    <div class="nav-overlay" id="navOverlay"></div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <img src="hero.jpg" alt="自由工坊主視覺" class="hero-image">
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-deco">
+      <div class="circle circle-1"></div>
+      <div class="circle circle-2"></div>
+      <div class="circle circle-3"></div>
+      <div class="circle circle-4"></div>
+      <div class="circle circle-5"></div>
+    </div>
+    <div class="hero-content">
+      <p class="hero-desc animate-on-scroll">我們是一群熱愛 AI 創意的人，用最新技術探索圖片、影片、音樂、程式的無限可能</p>
+      <div class="hero-actions animate-on-scroll">
+        <a href="#showcase" class="btn btn-primary">探索成果</a>
+        <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" class="btn btn-outline">加入 Discord</a>
+      </div>
+    </div>
+    <div class="scroll-indicator">
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+
+  <!-- Announcements Section -->
+  <section class="announcements" id="announcements">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">ANNOUNCEMENTS</span>
+        <h2 class="section-title">最新公告</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="announcements-grid">
+        <div class="announcement-card animate-on-scroll" data-delay="0">
+          <span class="announcement-badge new">NEW</span>
+          <time class="announcement-date">2025.04.06</time>
+          <h3 class="announcement-title">自由工坊網站正式上線</h3>
+          <p class="announcement-desc">全新的自由工坊官方網站正式上線！集結了社群中 28 位優秀創作者的作品，歡迎大家來逛逛。</p>
+          <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" class="announcement-link">前往 Discord 討論 →</a>
+        </div>
+        <div class="announcement-card animate-on-scroll" data-delay="100">
+          <time class="announcement-date">2025.03.20</time>
+          <h3 class="announcement-title">AI 音樂創作交流會</h3>
+          <p class="announcement-desc">每週六晚上 8 點在 Discord 語音頻道舉辦 AI 音樂創作分享，歡迎所有成員參加。</p>
+        </div>
+        <div class="announcement-card animate-on-scroll" data-delay="200">
+          <time class="announcement-date">2025.03.10</time>
+          <h3 class="announcement-title">VibeCoding 專案孵化計畫</h3>
+          <p class="announcement-desc">社群正式啟動 VibeCoding 專案孵化計畫，有想法的成員可以在 Discord 提案頻道發起。</p>
+          <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" class="announcement-link">了解更多 →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">ABOUT US</span>
+        <h2 class="section-title">什麼是自由工坊？</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="about-grid">
+        <div class="about-card animate-on-scroll" data-delay="0">
+          <div class="about-icon">
+            <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/><path d="M16 24l6 6 10-12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>開放自由</h3>
+          <p>不限工具、不限主題，任何人都能帶著創意加入，用 AI 實現想法</p>
+        </div>
+        <div class="about-card animate-on-scroll" data-delay="100">
+          <div class="about-icon">
+            <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="20" r="3" stroke="currentColor" stroke-width="2"/><circle cx="30" cy="20" r="3" stroke="currentColor" stroke-width="2"/><path d="M16 30c2 3 5 5 8 5s6-2 8-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          </div>
+          <h3>共學共創</h3>
+          <p>社群成員互相學習，分享 AI 工具技巧，一起完成跨領域的創作專案</p>
+        </div>
+        <div class="about-card animate-on-scroll" data-delay="200">
+          <div class="about-icon">
+            <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/><path d="M24 14v20M14 24h20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+          </div>
+          <h3>持續探索</h3>
+          <p>從 GPT 到 Gemini，從圖片到音樂，我們不斷探索 AI 應用的新邊界</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories Section -->
+  <section class="categories" id="categories">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">WHAT WE DO</span>
+        <h2 class="section-title">創作領域</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="categories-grid">
+        <div class="category-card animate-on-scroll" data-delay="0">
+          <div class="category-visual" style="--accent: #FFE600;">
+            <div class="category-circle"></div>
+            <div class="category-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+          </div>
+          <h3>圖片創作</h3>
+          <p>運用 Midjourney、DALL-E、Stable Diffusion 等工具，創造驚艷的 AI 藝術作品</p>
+          <div class="category-tags">
+            <span>Midjourney</span><span>NanoBanana</span><span>ComfyUI</span>
+          </div>
+        </div>
+        <div class="category-card animate-on-scroll" data-delay="100">
+          <div class="category-visual" style="--accent: #0055FF;">
+            <div class="category-circle"></div>
+            <div class="category-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/><line x1="17" y1="17" x2="22" y2="17"/></svg></div>
+          </div>
+          <h3>影片創作</h3>
+          <p>用 AI 輔助剪輯、特效、動畫製作，打造高品質影像內容</p>
+          <div class="category-tags">
+            <span>Sora</span><span>OiiOii</span><span>Kling</span><span>Vidu</span><span>Runway</span>
+          </div>
+        </div>
+        <div class="category-card animate-on-scroll" data-delay="200">
+          <div class="category-visual" style="--accent: #FF4444;">
+            <div class="category-circle"></div>
+            <div class="category-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          </div>
+          <h3>音樂創作</h3>
+          <p>透過 AI 音樂生成工具，創作獨特的旋律、配樂與歌曲</p>
+          <div class="category-tags">
+            <span>Suno</span><span>Udio</span><span>AIVA</span>
+          </div>
+        </div>
+        <div class="category-card animate-on-scroll" data-delay="300">
+          <div class="category-visual" style="--accent: #00CC88;">
+            <div class="category-circle"></div>
+            <div class="category-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+          </div>
+          <h3>VibeCoding</h3>
+          <p>用自然語言指揮 AI 寫程式，體驗「感覺式程式設計」的全新開發方式</p>
+          <div class="category-tags">
+            <span>Cursor</span><span>Claude</span><span>Copilot</span>
+          </div>
+        </div>
+        <div class="category-card animate-on-scroll" data-delay="400">
+          <div class="category-visual" style="--accent: #AA55FF;">
+            <div class="category-circle"></div>
+            <div class="category-emoji"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></div>
+          </div>
+          <h3>社群產品</h3>
+          <p>將 AI 創意轉化為實際產品，從概念到落地，打造社群專屬的應用</p>
+          <div class="category-tags">
+            <span>SaaS</span><span>Bot</span><span>Workflow</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Creators Showcase Section -->
+  <section class="showcase" id="showcase">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">CREATORS</span>
+        <h2 class="section-title">創作者推薦</h2>
+        <div class="section-line"></div>
+        <p class="section-desc">認識自由工坊的優秀創作者們，探索他們用 AI 打造的精彩作品</p>
+      </div>
+
+      <div class="creators-grid" id="creatorsList">
+
+        <!-- Hao0321 -->
+        <div class="creator-card animate-on-scroll" data-delay="0" data-channel-id="UCo8gjRuF_P58SkJd4I3435g">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=H&background=0033CC&color=fff&size=80&bold=true&font-size=0.45" alt="Hao0321"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Hao0321</h3>
+              <a href="https://www.youtube.com/@HAO0321_Studio" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="-p8sMr3H9LQ">
+                <img src="https://img.youtube.com/vi/-p8sMr3H9LQ/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">獨家開發 3 款實用小工具免費送</p>
+          </div>
+        </div>
+
+        <!-- 迷子 Maigo -->
+        <div class="creator-card animate-on-scroll" data-delay="50" data-channel-id="UC4fB8_KdPGBk1bI2DeNKb4w">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=迷&background=FFE600&color=001A80&size=80&bold=true&font-size=0.45" alt="迷子 Maigo"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">迷子 Maigo</h3>
+              <a href="https://www.youtube.com/@maigo0830" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="rQKDb5n1Bdo">
+                <img src="https://img.youtube.com/vi/rQKDb5n1Bdo/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">White Out Signal / ft.重音テト</p>
+          </div>
+        </div>
+
+        <!-- Xiaoloulou -->
+        <div class="creator-card animate-on-scroll" data-delay="100" data-channel-id="UCtL7XFPgWzknUlW38ilBrQg">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=X&background=0055FF&color=fff&size=80&bold=true&font-size=0.45" alt="Xiaoloulou"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Xiaoloulou</h3>
+              <a href="https://www.youtube.com/channel/UCtL7XFPgWzknUlW38ilBrQg" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="Fb3DVdAQkDM">
+                <img src="https://img.youtube.com/vi/Fb3DVdAQkDM/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">【心碎輓歌】《花墜之處》</p>
+          </div>
+        </div>
+
+        <!-- 九黎月 -->
+        <div class="creator-card animate-on-scroll" data-delay="150" data-channel-id="UCZVT570EWJ64ibL-re9CFpQ">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=九&background=AA55FF&color=fff&size=80&bold=true&font-size=0.45" alt="九黎月"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">九黎月</h3>
+              <a href="https://www.youtube.com/@Jiuliyue" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="aJazt-VYjjc">
+                <img src="https://img.youtube.com/vi/aJazt-VYjjc/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">【中國風】《天衣縫》</p>
+          </div>
+        </div>
+
+        <!-- COYA可夜 -->
+        <div class="creator-card animate-on-scroll" data-delay="0" data-channel-id="UCdUiLDnjJc3fcH-0wT7CFpg">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=可&background=FF6699&color=fff&size=80&bold=true&font-size=0.45" alt="COYA可夜"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">COYA可夜</h3>
+              <a href="https://www.youtube.com/@Coya可夜" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="neou0SJ66CM">
+                <img src="https://img.youtube.com/vi/neou0SJ66CM/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">Sweet Pop - 少女系電音原創</p>
+          </div>
+        </div>
+
+        <!-- Zoe. G -->
+        <div class="creator-card animate-on-scroll" data-delay="50" data-channel-id="UCTrgJME6bNivRn8-rERa9Ww">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=Z&background=FF4488&color=fff&size=80&bold=true&font-size=0.45" alt="Zoe. G"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Zoe. G</h3>
+              <a href="https://www.youtube.com/@Zoe_G_Studio" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="fuwyaAPXKQw">
+                <img src="https://img.youtube.com/vi/fuwyaAPXKQw/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">《抗體 Antibody》虐心催淚情歌</p>
+          </div>
+        </div>
+
+        <!-- 璃煙 -->
+        <div class="creator-card animate-on-scroll" data-delay="50" data-channel-id="UCLdLKasdxG3qEKxmJZdTQLQ">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=璃&background=00CC88&color=fff&size=80&bold=true&font-size=0.45" alt="璃煙"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">璃煙</h3>
+              <a href="https://www.youtube.com/channel/UCLdLKasdxG3qEKxmJZdTQLQ" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="LjG-eIi0bNM">
+                <img src="https://img.youtube.com/vi/LjG-eIi0bNM/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">【月曜清涼】月光菩薩 古風療癒梵音</p>
+          </div>
+        </div>
+
+        <!-- Oriental Jupiter -->
+        <div class="creator-card animate-on-scroll" data-delay="100" data-channel-id="UC0sVTh85AVzyK-vm_rZR_kA">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=OJ&background=FF8800&color=fff&size=80&bold=true&font-size=0.4" alt="Oriental Jupiter"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Oriental Jupiter</h3>
+              <a href="https://www.youtube.com/@OrientalJupiter" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="Ld_gsUWQk0U">
+                <img src="https://img.youtube.com/vi/Ld_gsUWQk0U/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">German War Chant — Pure Intensity</p>
+          </div>
+        </div>
+
+        <!-- 弦斷誰聽 -->
+        <div class="creator-card animate-on-scroll" data-delay="150" data-channel-id="UCrEwP2D4GSuahg3la3Lbprw">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=弦&background=CC0044&color=fff&size=80&bold=true&font-size=0.45" alt="弦斷誰聽"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">弦斷誰聽</h3>
+              <a href="https://www.youtube.com/channel/UCrEwP2D4GSuahg3la3Lbprw" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="DByXBSOvHOg">
+                <img src="https://img.youtube.com/vi/DByXBSOvHOg/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">《空山‧山外人間》RAP 武俠風</p>
+          </div>
+        </div>
+
+        <!-- Aria 艾莉亞 -->
+        <div class="creator-card animate-on-scroll" data-delay="0" data-channel-id="UCvRzuPyI5vaNDaHlRXXVRLg">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=A&background=6644CC&color=fff&size=80&bold=true&font-size=0.45" alt="Aria艾莉亞"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Aria 艾莉亞</h3>
+              <a href="https://www.youtube.com/channel/UCvRzuPyI5vaNDaHlRXXVRLg" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="AZr-7JZkgSs">
+                <img src="https://img.youtube.com/vi/AZr-7JZkgSs/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">《我還住在你愛我的那一年》</p>
+          </div>
+        </div>
+
+        <!-- 再睡一夏 -->
+        <div class="creator-card animate-on-scroll" data-delay="50" data-channel-id="UCa40T0voMyoc9-SR1_YeV2A">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=夏&background=0088CC&color=fff&size=80&bold=true&font-size=0.45" alt="再睡一夏"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">再睡一夏</h3>
+              <a href="https://www.youtube.com/@%E5%86%8D%E7%9D%A1%E4%B8%80%E5%A4%8F-u7o" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="GHfGQqGDbdc">
+                <img src="https://img.youtube.com/vi/GHfGQqGDbdc/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">白色情人節快樂!</p>
+          </div>
+        </div>
+
+        <!-- RE:IGN -->
+        <div class="creator-card animate-on-scroll" data-delay="100" data-channel-id="UCfTRxp7lFW4CkK7s8-BV0eQ">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=R&background=FF2266&color=fff&size=80&bold=true&font-size=0.45" alt="RE:IGN"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">RE:IGN</h3>
+              <a href="https://www.youtube.com/@REIGNKPopPets" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="h0BRTpdYylk">
+                <img src="https://img.youtube.com/vi/h0BRTpdYylk/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">Epic EDM K-Pop Idol Playlist</p>
+          </div>
+        </div>
+
+        <!-- 筠芙得利 -->
+        <div class="creator-card animate-on-scroll" data-delay="0" data-channel-id="UCTyJuFjiImTIMqzs-pIjgfw">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=筠&background=E8B04A&color=fff&size=80&bold=true&font-size=0.45" alt="筠芙得利"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">筠芙得利</h3>
+              <a href="https://www.youtube.com/@筠芙得利" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="YXP5lLuhMho">
+                <img src="https://img.youtube.com/vi/YXP5lLuhMho/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">紀時宇《永恆的貶值》Lo-fi 華語 R&B</p>
+          </div>
+        </div>
+
+        <!-- ChordataStar -->
+        <div class="creator-card animate-on-scroll" data-delay="50" data-channel-id="UCawj_ntDlFWdCxLbVoEp9Nw">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=C&background=4488FF&color=fff&size=80&bold=true&font-size=0.45" alt="ChordataStar"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">ChordataStar</h3>
+              <a href="https://www.youtube.com/@ChordataStar" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="WLZ5YgS4-8w">
+                <img src="https://img.youtube.com/vi/WLZ5YgS4-8w/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">靜心古風音樂 冥靜無為</p>
+          </div>
+        </div>
+
+        <!-- Cat'sMelody -->
+        <div class="creator-card animate-on-scroll" data-delay="100" data-channel-id="UCdImP2deqJkMpBeVVwoayng">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=C&background=FF8844&color=fff&size=80&bold=true&font-size=0.45" alt="Cat'sMelody"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Cat'sMelody</h3>
+              <a href="https://www.youtube.com/@kimexe111" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="u9nF9MRut4g">
+                <img src="https://img.youtube.com/vi/u9nF9MRut4g/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">【刺佇身軀的名】台式極道 Industrial Trap</p>
+          </div>
+        </div>
+
+        <!-- 迷路的宇宙人 -->
+        <div class="creator-card animate-on-scroll" data-delay="150" data-channel-id="UCdgoj5KsyZVDQt0Z1_ONz-g">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=迷&background=6644AA&color=fff&size=80&bold=true&font-size=0.45" alt="迷路的宇宙人"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">迷路的宇宙人</h3>
+              <a href="https://www.youtube.com/@lostalien9527" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="KT-D3yvKrUk">
+                <img src="https://img.youtube.com/vi/KT-D3yvKrUk/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">迷路的宇宙人 最新作品</p>
+          </div>
+        </div>
+
+        <!-- MM Music Lab -->
+        <div class="creator-card animate-on-scroll" data-delay="0" data-channel-id="UCRnKQ2EGB7ksuk6xeFoSr0A">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=MM&background=22AA88&color=fff&size=80&bold=true&font-size=0.4" alt="MM Music Lab"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">MM Music Lab</h3>
+              <a href="https://www.youtube.com/@MMMusicLab" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="jGMxJ8LHzHU">
+                <img src="https://img.youtube.com/vi/jGMxJ8LHzHU/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">長大後，你還記得糖果紙的味道嗎？</p>
+          </div>
+        </div>
+
+        <!-- 浣月Huanyue -->
+        <div class="creator-card animate-on-scroll" data-delay="50" data-channel-id="UCQOPNojFmmirTrJj7Uy_YpA">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=月&background=8866CC&color=fff&size=80&bold=true&font-size=0.45" alt="浣月Huanyue"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">浣月Huanyue</h3>
+              <a href="https://www.youtube.com/@Moon-z6w" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="N4qhKots8lg">
+                <img src="https://img.youtube.com/vi/N4qhKots8lg/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">【古風精選】《錦瑟赴朝夕》</p>
+          </div>
+        </div>
+
+        <!-- Vera Studio -->
+        <div class="creator-card animate-on-scroll" data-delay="100" data-channel-id="UCfvzOpMeQgtv3_NPqv-yrqA">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=V&background=CC3366&color=fff&size=80&bold=true&font-size=0.45" alt="Vera Studio"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Vera Studio</h3>
+              <a href="https://www.youtube.com/@VeraSTUDIO-e1x" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="Qon84_EfFuk">
+                <img src="https://img.youtube.com/vi/Qon84_EfFuk/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">【勵志成長】《紙飛機》</p>
+          </div>
+        </div>
+
+        <!-- Moyamina -->
+        <div class="creator-card animate-on-scroll" data-delay="150" data-channel-id="UCvOVEpggU-7WXQ-K38eQGGQ">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=M&background=44BB66&color=fff&size=80&bold=true&font-size=0.45" alt="Moyamina"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Moyamina</h3>
+              <a href="https://www.youtube.com/@ChantMoyamina" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="VRpt32qkX-U">
+                <img src="https://img.youtube.com/vi/VRpt32qkX-U/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">Paper Bombs - Gothic Song</p>
+          </div>
+        </div>
+
+        <!-- SUNG EAGAN -->
+        <div class="creator-card animate-on-scroll" data-delay="0" data-channel-id="UCdzu1FqRDfRYk8mjLxCRhUw">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=SE&background=2266CC&color=fff&size=80&bold=true&font-size=0.4" alt="SUNG EAGAN"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">SUNG EAGAN</h3>
+              <a href="https://www.youtube.com/@sungeagan" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="_eV_ynUi3kk">
+                <img src="https://img.youtube.com/vi/_eV_ynUi3kk/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">Late Night R&B — NEON SILENCE</p>
+          </div>
+        </div>
+
+        <!-- 頌-心意 -->
+        <div class="creator-card animate-on-scroll" data-delay="50" data-channel-id="UCKzR9yJjMV9m0DS0BozS9fw">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=頌&background=BB4488&color=fff&size=80&bold=true&font-size=0.45" alt="頌-心意"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">頌-心意</h3>
+              <a href="https://www.youtube.com/@sunghsinyi" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="hIBVHMb5hwo">
+                <img src="https://img.youtube.com/vi/hIBVHMb5hwo/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">Missing Asbel - ROCK EDM</p>
+          </div>
+        </div>
+
+        <!-- 洛陽-Luo Sequence -->
+        <div class="creator-card animate-on-scroll" data-delay="100" data-channel-id="UCP7vt7hh_7k9iSk1cNu9DsQ">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=洛&background=CC6622&color=fff&size=80&bold=true&font-size=0.45" alt="洛陽-Luo Sequence"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">洛陽-Luo Sequence</h3>
+              <a href="https://www.youtube.com/@luo-sequence" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="zVlKPEIhRf8">
+                <img src="https://img.youtube.com/vi/zVlKPEIhRf8/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">格桑花的呼吸 雙版本</p>
+          </div>
+        </div>
+
+        <!-- 語音星空 -->
+        <div class="creator-card animate-on-scroll" data-delay="150" data-channel-id="UC4sQ-mQ_AiZrNtSOEzqY7FA">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=語&background=2244AA&color=fff&size=80&bold=true&font-size=0.45" alt="語音星空"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">語音星空</h3>
+              <a href="https://www.youtube.com/@yustellar" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="OgASiV0BRM8">
+                <img src="https://img.youtube.com/vi/OgASiV0BRM8/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">風帶走的名字 星語</p>
+          </div>
+        </div>
+
+        <!-- 安餒An_Nie -->
+        <div class="creator-card animate-on-scroll" data-delay="0" data-channel-id="UCYyzOVPBHzhr_cFFJbGoymQ">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=安&background=55AA44&color=fff&size=80&bold=true&font-size=0.45" alt="安餒An_Nie"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">安餒An_Nie</h3>
+              <a href="https://www.youtube.com/channel/UCYyzOVPBHzhr_cFFJbGoymQ" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="b4LJ1at--zo">
+                <img src="https://img.youtube.com/vi/b4LJ1at--zo/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">《不歸人》國風新作</p>
+          </div>
+        </div>
+
+        <!-- Ghost Ai Ling -->
+        <div class="creator-card animate-on-scroll" data-delay="50" data-channel-id="UCped3Fkwl38pu58kZqBhsww">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=G&background=333366&color=fff&size=80&bold=true&font-size=0.45" alt="Ghost Ai Ling"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">Ghost Ai Ling</h3>
+              <a href="https://www.youtube.com/@AiLingGhost" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="-1Ol-aRWfWg">
+                <img src="https://img.youtube.com/vi/-1Ol-aRWfWg/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">Dream World《夢の追跡》</p>
+          </div>
+        </div>
+
+        <!-- 空山和尚 -->
+        <div class="creator-card animate-on-scroll" data-delay="100" data-channel-id="UCAYUu9UHkrIopMgqikI6smw">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=空&background=8B6914&color=fff&size=80&bold=true&font-size=0.45" alt="空山和尚"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">空山和尚</h3>
+              <a href="https://www.youtube.com/@kokorowanoODO" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="SRrZUIhCJCg">
+                <img src="https://img.youtube.com/vi/SRrZUIhCJCg/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">《星君說》空山和尚</p>
+          </div>
+        </div>
+
+        <!-- 台瘋音樂 -->
+        <div class="creator-card animate-on-scroll" data-delay="150" data-channel-id="UCb9VYkNGVj-ee_SmfZIHSfw">
+          <div class="creator-header">
+            <div class="creator-avatar"><img loading="lazy" src="https://ui-avatars.com/api/?name=台&background=CC2244&color=fff&size=80&bold=true&font-size=0.45" alt="台瘋音樂"></div>
+            <div class="creator-info">
+              <h3 class="creator-name">台瘋音樂</h3>
+              <a href="https://www.youtube.com/@台瘋音樂" target="_blank" rel="noopener" class="creator-channel">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+                YouTube
+              </a>
+            </div>
+          </div>
+          <div class="creator-video">
+            <div class="video-wrapper">
+              <div class="video-placeholder" data-video-id="CSlW1cGznBg">
+                <img src="https://img.youtube.com/vi/CSlW1cGznBg/hqdefault.jpg" alt="影片縮圖" class="video-thumb" loading="lazy">
+                <div class="play-button"><svg viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="#FF0000"/><path d="M45 24L27 14v20" fill="#fff"/></svg></div>
+              </div>
+            </div>
+            <p class="video-title">Emo Slow Rock 溫柔告白</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section class="gallery" id="gallery">
+    <div class="container">
+      <div class="section-header animate-on-scroll">
+        <span class="section-tag">GALLERY</span>
+        <h2 class="section-title">優質作品展示</h2>
+        <div class="section-line"></div>
+        <p class="section-desc">精選自由工坊成員們的 AI 創作，點擊可放大預覽</p>
+      </div>
+
+      <div class="gallery-filters animate-on-scroll">
+        <button class="filter-btn active" data-filter="all">全部</button>
+        <button class="filter-btn" data-filter="image">圖片</button>
+        <button class="filter-btn" data-filter="video">影片</button>
+        <button class="filter-btn" data-filter="music">音樂</button>
+        <button class="filter-btn" data-filter="code">VibeCoding</button>
+      </div>
+
+      <div class="gallery-masonry" id="galleryGrid">
+
+        <div class="gallery-item" data-category="image">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/-p8sMr3H9LQ/maxresdefault.jpg" alt="AI 圖片創作" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #FFE600;">圖片創作</span>
+            <h4>AI 生成藝術作品</h4>
+            <p class="gallery-author">by Hao0321</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="music">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/rQKDb5n1Bdo/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
+            <h4>White Out Signal</h4>
+            <p class="gallery-author">by 迷子 Maigo</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="music">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/Fb3DVdAQkDM/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
+            <h4>花墜之處</h4>
+            <p class="gallery-author">by Xiaoloulou</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="music">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/aJazt-VYjjc/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
+            <h4>天衣縫</h4>
+            <p class="gallery-author">by 九黎月</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="music">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/neou0SJ66CM/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
+            <h4>Sweet Pop 少女系電音</h4>
+            <p class="gallery-author">by COYA可夜</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="video">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/fuwyaAPXKQw/maxresdefault.jpg" alt="AI 影片創作" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #0055FF;">影片創作</span>
+            <h4>抗體 Antibody</h4>
+            <p class="gallery-author">by Zoe. G</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="music">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/AZr-7JZkgSs/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
+            <h4>我還住在你愛我的那一年</h4>
+            <p class="gallery-author">by Aria 艾莉亞</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="music">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/DByXBSOvHOg/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
+            <h4>空山・山外人間</h4>
+            <p class="gallery-author">by 弦斷誰聽</p>
+          </div>
+        </div>
+
+        <div class="gallery-item" data-category="code">
+          <div class="gallery-thumb">
+            <img src="https://img.youtube.com/vi/YXP5lLuhMho/maxresdefault.jpg" alt="VibeCoding" loading="lazy">
+            <div class="gallery-overlay">
+              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
+            </div>
+          </div>
+          <div class="gallery-info">
+            <span class="gallery-tag" style="--tag-color: #00CC88;">VibeCoding</span>
+            <h4>永恆的貶值 Lo-fi R&B</h4>
+            <p class="gallery-author">by 筠芙得利</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+      <button class="lightbox-close" id="lightboxClose" aria-label="關閉">✕</button>
+      <div class="lightbox-content">
+        <img id="lightboxImg" src="" alt="預覽">
+      </div>
+    </div>
+  </section>
+
+  <!-- Collaborate Section -->
+  <section class="collaborate" id="collaborate">
+    <div class="collab-deco">
+      <div class="circle circle-c1"></div>
+      <div class="circle circle-c2"></div>
+      <div class="circle circle-c3"></div>
+    </div>
+    <div class="container">
+      <div class="collab-content animate-on-scroll">
+        <span class="section-tag">JOIN US</span>
+        <h2 class="collab-title">一起創造，無限可能</h2>
+        <p class="collab-desc">無論你是 AI 創作者、開發者、設計師還是單純對 AI 充滿好奇的人，自由工坊都歡迎你的加入。讓我們一起探索 AI 的無限可能！</p>
+        <div class="collab-options">
+          <div class="collab-card animate-on-scroll" data-delay="0">
+            <div class="collab-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <h4>社群合作</h4>
+            <p>與其他 AI 創作者一起合作專案</p>
+          </div>
+          <div class="collab-card animate-on-scroll" data-delay="100">
+            <div class="collab-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div>
+            <h4>分享交流</h4>
+            <p>分享你的 AI 作品與使用心得</p>
+          </div>
+          <div class="collab-card animate-on-scroll" data-delay="200">
+            <div class="collab-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
+            <h4>專案孵化</h4>
+            <p>將你的 AI 創意轉化為實際產品</p>
+          </div>
+        </div>
+        <div class="collab-buttons animate-on-scroll">
+          <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+            <span>加入自由工坊 Discord</span>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="https://line.me/ti/p/~kris0425" target="_blank" rel="noopener" class="btn btn-line btn-lg">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+            <span>Line 業務洽談</span>
+          </a>
+        </div>
+        <!-- hidden original single btn kept for JS ref -->
+        <a href="#" class="btn btn-primary btn-lg collab-btn" style="display:none">
+          <span>加入自由工坊 Discord</span>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h3>自由工坊</h3>
+          <p>AI 創意應用社群 — GPT・Gemini AI 應用</p>
+          <a href="../" class="footer-studio-link">← 回到 Hao0321 Studio</a>
+        </div>
+        <div class="footer-nav">
+          <h4>導覽</h4>
+          <a href="#about">關於我們</a>
+          <a href="#categories">創作領域</a>
+          <a href="#showcase">成果展示</a>
+          <a href="#collaborate">加入合作</a>
+        </div>
+        <div class="footer-social">
+          <h4>加入社群</h4>
+          <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" class="footer-social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+            Discord 社群
+          </a>
+          <a href="https://www.youtube.com/@HAO0321_Studio" target="_blank" rel="noopener" class="footer-social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#fff"/></svg>
+            YouTube
+          </a>
+          <a href="https://line.me/ti/p/~kris0425" target="_blank" rel="noopener" class="footer-social-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63h2.386c.346 0 .627.285.627.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.391-.09-.51-.25l-2.443-3.317v2.94c0 .344-.279.629-.631.629-.346 0-.626-.285-.626-.629V8.108c0-.27.173-.51.43-.595.06-.023.136-.033.194-.033.195 0 .375.104.495.254l2.462 3.33V8.108c0-.345.282-.63.63-.63.345 0 .63.285.63.63v4.771zm-5.741 0c0 .344-.282.629-.631.629-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.63-.63.346 0 .628.285.628.63v4.771zm-2.466.629H4.917c-.345 0-.63-.285-.63-.629V8.108c0-.345.285-.63.63-.63.348 0 .63.285.63.63v4.141h1.756c.348 0 .629.283.629.63 0 .344-.282.629-.629.629M24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08l-.164 1.02c-.045.301-.24 1.186 1.049.645 1.291-.539 6.916-4.078 9.436-6.975C23.176 14.393 24 12.458 24 10.314"/></svg>
+            Line 業務洽談
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 自由工坊 FreeWorkshop. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
