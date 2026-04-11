@@ -563,8 +563,10 @@
       overflow: hidden;
       z-index: 1;
     }
-    /* GSAP pin-spacer must not overlap other sections */
-    .pin-spacer { z-index: 1 !important; }
+    /* GSAP pin-spacer must not block nebula/starfield behind it */
+    .pin-spacer {
+      z-index: auto !important;
+    }
     .hero-bg {
       position: absolute;
       inset: 0;
