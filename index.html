@@ -553,16 +553,13 @@
     /* ===== SECTOR 01 — HERO ===== */
     .hero {
       min-height: 200vh;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
+      display: block;
       text-align: center;
-      padding: 0 clamp(20px, 5vw, 64px);
+      padding: 0;
       position: relative;
-      overflow: hidden;
     }
     .hero-bg {
-      position: fixed;
+      position: sticky;
       top: 0;
       left: 0;
       width: 100%;
@@ -639,12 +636,12 @@
     }
     .hero-content {
       max-width: 800px;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      position: sticky;
+      top: 50vh;
+      transform: translateY(-50%);
+      margin: -100vh auto 0;
       z-index: 3;
-      width: calc(100% - 2 * clamp(20px, 5vw, 64px));
+      padding: 0 clamp(20px, 5vw, 64px);
     }
     .hero-coords {
       font-family: var(--font-mono);
@@ -700,8 +697,8 @@
       letter-spacing: 0.25em;
       opacity: 0;
       animation: fadeUp 0.8s ease 1.2s forwards;
-      z-index: 3;
-      transition: opacity 0.3s;
+      z-index: 4;
+      pointer-events: none;
     }
     .hero-scroll::after {
       content: '';
@@ -2202,40 +2199,19 @@
         }
       });
 
-      // Fade out hero-bg and content together at the end
-      var heroFixed = ['.hero-bg', '.hero-content'];
-      heroFixed.forEach(function(sel) {
-        gsap.to(sel, {
-          opacity: 0,
-          scrollTrigger: {
-            trigger: heroSection,
-            start: '80% top',
-            end: '98% top',
-            scrub: true,
-            onLeave: function() {
-              document.querySelector(sel).style.pointerEvents = 'none';
-              document.querySelector(sel).style.visibility = 'hidden';
-            },
-            onEnterBack: function() {
-              document.querySelector(sel).style.pointerEvents = '';
-              document.querySelector(sel).style.visibility = '';
-              document.querySelector(sel).style.opacity = '';
-            }
-          }
-        });
-      });
-      // Also move content up slightly during fade
+      // Fade hero content as sequence plays (keep bg visible — sticky handles exit)
       gsap.to('.hero-content', {
+        opacity: 0,
         y: -40,
         scrollTrigger: {
           trigger: heroSection,
-          start: '80% top',
-          end: '98% top',
+          start: '60% top',
+          end: '85% top',
           scrub: true
         }
       });
 
-      // Fade hero scroll indicator
+      // Fade hero scroll indicator early
       gsap.to('.hero-scroll', {
         opacity: 0,
         scrollTrigger: {
@@ -2245,11 +2221,9 @@
           scrub: true,
           onLeave: function() {
             document.querySelector('.hero-scroll').style.visibility = 'hidden';
-            document.querySelector('.hero-scroll').style.pointerEvents = 'none';
           },
           onEnterBack: function() {
             document.querySelector('.hero-scroll').style.visibility = '';
-            document.querySelector('.hero-scroll').style.pointerEvents = '';
           }
         }
       });
