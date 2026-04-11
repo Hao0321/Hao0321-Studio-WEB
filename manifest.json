@@ -1,0 +1,17 @@
+{
+  "name": "Hao0321 Studio",
+  "short_name": "Hao0321",
+  "description": "AI 教學、遊戲開發、影視動畫、原創音樂",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ff1493",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

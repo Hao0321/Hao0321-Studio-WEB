@@ -1,0 +1,57 @@
+# Hao0321 Studio
+
+> Hao0321 Studio 是一個專注於 AI 教學、遊戲開發、影視動畫與原創音樂的創作工作室。由創作者 Hao 創立，致力於用心創造有溫度的數位體驗。
+
+## 主要頁面
+
+- [首頁](https://hao0321.com/): Hao0321 Studio 官方網站，展示服務、作品集、YouTube 頻道與聯繫方式。
+- [遊戲大廳](https://game.hao0321.com/): 免費遊玩的原創瀏覽器遊戲合集，包含策略、動作、益智、卡牌等多種類型。
+- [自由工坊](https://hao0321.com/Freeworkshop/): AI 創意應用社群，聚集 AI 圖片、影片、音樂、VibeCoding 創作者。
+- [命運之牌](https://game.hao0321.com/poker-fortune.html): 撲克牌占卜工具，支持繁中、英文、日文三語。
+- [Pact of Arcania](https://game.hao0321.com/pact-of-arcania.html): 靈契之戰 — 瀏覽器卡牌對戰 RPG 遊戲。
+
+## 四大核心領域
+
+1. **AI 教學**: Vibe Coding、創意應用、AI 工作流，以清晰的方式解構 AI 技術。
+2. **遊戲開發**: 從獨立遊戲到商業專案，涵蓋 Unity、Unreal、Web Game 開發。
+3. **影視動畫**: Motion Graphics、3D 動畫、VFX，打造具敘事張力的影像作品。
+4. **原創音樂**: 作詞作曲、華語原創、編曲製作，創作融合多元風格的音樂作品。
+
+## 遊戲列表
+
+- にゃんこ突撃: 策略塔防遊戲
+- DODGE MASTER: 賽博龐克閃避遊戲
+- 霜寒求生: 極寒世界生存建造
+- HAO SURVIVOR: 類吸血鬼倖存者 Roguelike
+- 撲克合集: 大老二、德州撲克、鬥地主
+- 救救狗狗: 畫線益智遊戲
+- 台灣大富翁: 台灣主題桌遊
+- 水排序益智: 同色液體排序
+- 狼人殺: AI 對手推理社交
+- 命運之牌: 撲克牌占卜
+- 下樓梯: 經典動作遊戲
+- SPLAT RING: 霓虹環形跳躍街機
+- Pact of Arcania 靈契之戰: 卡牌對戰 RPG
+
+## 社群與聯繫
+
+- YouTube: https://youtube.com/@hao0321_studio
+- Discord: https://discord.gg/MtccYqJxCx
+- Instagram: https://www.instagram.com/hao0321_studio
+- Gumroad 商店: https://hao0321.gumroad.com
+- Email: hello@hao0321.studio
+- 自由工坊 (AI 創意社群): https://hao0321.com/Freeworkshop/
+
+## 常見問題
+
+### Hao0321 Studio 是什麼？
+Hao0321 Studio 是由創作者 Hao 創立的數位創作工作室，專注於 AI 教學、遊戲開發、影視動畫與原創音樂四大領域。
+
+### 遊戲需要付費嗎？
+所有遊戲都是免費的，可以直接在瀏覽器中遊玩，不需要下載。
+
+### 如何加入自由工坊社群？
+可以透過 Discord (https://discord.gg/MtccYqJxCx) 加入自由工坊，與其他 AI 創作者交流學習。
+
+### 可以合作嗎？
+歡迎透過 Email (hello@hao0321.studio) 或 Discord 聯繫合作邀約。

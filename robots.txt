@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /.claude/
+
+Sitemap: https://hao0321.com/sitemap.xml
+LLMs-Txt: https://hao0321.com/llms.txt
