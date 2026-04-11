@@ -552,20 +552,20 @@
 
     /* ===== SECTOR 01 — HERO ===== */
     .hero {
-      min-height: 200vh;
-      display: block;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 0;
+      padding: 0 clamp(20px, 5vw, 64px);
       position: relative;
+      overflow: hidden;
     }
     .hero-bg {
-      position: sticky;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
+      position: absolute;
+      inset: 0;
       overflow: hidden;
-      z-index: 0;
     }
     #heroCanvas {
       position: absolute;
@@ -636,12 +636,8 @@
     }
     .hero-content {
       max-width: 800px;
-      position: sticky;
-      top: 50vh;
-      transform: translateY(-50%);
-      margin: -100vh auto 0;
+      position: relative;
       z-index: 3;
-      padding: 0 clamp(20px, 5vw, 64px);
     }
     .hero-coords {
       font-family: var(--font-mono);
@@ -2140,6 +2136,70 @@
       setupScrollSequence();
     }
 
+    function setupScrollSequence() {
+      var heroSection = document.querySelector('.hero');
+
+      // Pin hero and scrub through frames
+      ScrollTrigger.create({
+        trigger: heroSection,
+        start: 'top top',
+        end: '+=100%',
+        pin: true,
+        scrub: 0.5,
+        onUpdate: function(self) {
+          var frameIndex = Math.min(
+            frameCount - 1,
+            Math.floor(self.progress * frameCount)
+          );
+          if (frameIndex !== currentFrame && frames[frameIndex]) {
+            currentFrame = frameIndex;
+            drawFrame(frameIndex);
+          }
+        }
+      });
+
+      // Fade hero content in second half of sequence
+      gsap.to('.hero-content', {
+        opacity: 0,
+        y: -40,
+        scrollTrigger: {
+          trigger: heroSection,
+          start: 'top top',
+          end: '+=100%',
+          scrub: true,
+          // Only fade in the last 30% of progress
+          onUpdate: function(self) {
+            var p = self.progress;
+            if (p > 0.7) {
+              var fade = 1 - ((p - 0.7) / 0.3);
+              document.querySelector('.hero-content').style.opacity = fade;
+              document.querySelector('.hero-content').style.transform = 'translateY(' + ((1 - fade) * -40) + 'px)';
+            } else {
+              document.querySelector('.hero-content').style.opacity = 1;
+              document.querySelector('.hero-content').style.transform = 'translateY(0)';
+            }
+          }
+        }
+      });
+
+      // Fade hero scroll indicator early
+      gsap.to('.hero-scroll', {
+        opacity: 0,
+        scrollTrigger: {
+          trigger: heroSection,
+          start: 'top top',
+          end: '+=20%',
+          scrub: true,
+          onLeave: function() {
+            document.querySelector('.hero-scroll').style.visibility = 'hidden';
+          },
+          onEnterBack: function() {
+            document.querySelector('.hero-scroll').style.visibility = '';
+          }
+        }
+      });
+    }
+
     function loadFrames() {
       // Load in batches to avoid overwhelming the browser
       var batchSize = 10;
@@ -2177,56 +2237,6 @@
         }
       }
       loadBatch(0);
-    }
-
-    function setupScrollSequence() {
-      var heroSection = document.querySelector('.hero');
-
-      ScrollTrigger.create({
-        trigger: heroSection,
-        start: 'top top',
-        end: 'bottom bottom',
-        scrub: 0.5,
-        onUpdate: function(self) {
-          var frameIndex = Math.min(
-            frameCount - 1,
-            Math.floor(self.progress * frameCount)
-          );
-          if (frameIndex !== currentFrame && frames[frameIndex]) {
-            currentFrame = frameIndex;
-            drawFrame(frameIndex);
-          }
-        }
-      });
-
-      // Fade hero content as sequence plays (keep bg visible — sticky handles exit)
-      gsap.to('.hero-content', {
-        opacity: 0,
-        y: -40,
-        scrollTrigger: {
-          trigger: heroSection,
-          start: '60% top',
-          end: '85% top',
-          scrub: true
-        }
-      });
-
-      // Fade hero scroll indicator early
-      gsap.to('.hero-scroll', {
-        opacity: 0,
-        scrollTrigger: {
-          trigger: heroSection,
-          start: '5% top',
-          end: '15% top',
-          scrub: true,
-          onLeave: function() {
-            document.querySelector('.hero-scroll').style.visibility = 'hidden';
-          },
-          onEnterBack: function() {
-            document.querySelector('.hero-scroll').style.visibility = '';
-          }
-        }
-      });
     }
 
     // Start loading
