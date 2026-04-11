@@ -1386,7 +1386,7 @@
   <!-- Loading Screen -->
   <div class="hero-loader" id="heroLoader">
     <div class="logo-mark" style="width:48px;height:48px;font-size:1.2rem;margin-bottom:8px">H</div>
-    <div class="hero-loader-text" id="loaderText">LOADING SEQUENCE 0%</div>
+    <div class="hero-loader-text" id="loaderText">INITIALIZING LAUNCH SEQUENCE 0%</div>
     <div class="hero-loader-bar"><div class="hero-loader-fill" id="loaderFill"></div></div>
   </div>
 
@@ -2235,7 +2235,7 @@
               loaded++;
               var pct = Math.round((loaded / frameCount) * 100);
               loaderFill.style.width = pct + '%';
-              loaderText.textContent = 'LOADING SEQUENCE ' + pct + '%';
+              loaderText.textContent = (pct < 30 ? 'INITIALIZING LAUNCH SEQUENCE' : pct < 70 ? 'SYSTEMS CHECK IN PROGRESS' : pct < 95 ? 'NAVIGATION CHARTS LOADED' : 'ALL SYSTEMS GO') + ' ' + pct + '%';
               if (loaded === frameCount) {
                 onAllLoaded();
               }
@@ -2244,7 +2244,7 @@
               loaded++;
               var pct = Math.round((loaded / frameCount) * 100);
               loaderFill.style.width = pct + '%';
-              loaderText.textContent = 'LOADING SEQUENCE ' + pct + '%';
+              loaderText.textContent = (pct < 30 ? 'INITIALIZING LAUNCH SEQUENCE' : pct < 70 ? 'SYSTEMS CHECK IN PROGRESS' : pct < 95 ? 'NAVIGATION CHARTS LOADED' : 'ALL SYSTEMS GO') + ' ' + pct + '%';
               if (loaded === frameCount) {
                 onAllLoaded();
               }
