@@ -561,7 +561,10 @@
       padding: 0 clamp(20px, 5vw, 64px);
       position: relative;
       overflow: hidden;
+      z-index: 1;
     }
+    /* GSAP pin-spacer must not overlap other sections */
+    .pin-spacer { z-index: 1 !important; }
     .hero-bg {
       position: absolute;
       inset: 0;
