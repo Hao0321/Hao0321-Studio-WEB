@@ -2202,42 +2202,36 @@
         }
       });
 
-      // Fade out hero-bg when leaving hero section
-      gsap.to('.hero-bg', {
-        opacity: 0,
-        scrollTrigger: {
-          trigger: heroSection,
-          start: '75% top',
-          end: '95% top',
-          scrub: true,
-          onLeave: function() {
-            document.querySelector('.hero-bg').style.pointerEvents = 'none';
-            document.querySelector('.hero-bg').style.visibility = 'hidden';
-          },
-          onEnterBack: function() {
-            document.querySelector('.hero-bg').style.pointerEvents = '';
-            document.querySelector('.hero-bg').style.visibility = '';
+      // Fade out hero-bg and content together at the end
+      var heroFixed = ['.hero-bg', '.hero-content'];
+      heroFixed.forEach(function(sel) {
+        gsap.to(sel, {
+          opacity: 0,
+          scrollTrigger: {
+            trigger: heroSection,
+            start: '80% top',
+            end: '98% top',
+            scrub: true,
+            onLeave: function() {
+              document.querySelector(sel).style.pointerEvents = 'none';
+              document.querySelector(sel).style.visibility = 'hidden';
+            },
+            onEnterBack: function() {
+              document.querySelector(sel).style.pointerEvents = '';
+              document.querySelector(sel).style.visibility = '';
+              document.querySelector(sel).style.opacity = '';
+            }
           }
-        }
+        });
       });
-
-      // Fade hero text
+      // Also move content up slightly during fade
       gsap.to('.hero-content', {
-        opacity: 0,
-        y: -60,
+        y: -40,
         scrollTrigger: {
           trigger: heroSection,
-          start: '55% top',
-          end: '75% top',
-          scrub: true,
-          onLeave: function() {
-            document.querySelector('.hero-content').style.pointerEvents = 'none';
-            document.querySelector('.hero-content').style.visibility = 'hidden';
-          },
-          onEnterBack: function() {
-            document.querySelector('.hero-content').style.pointerEvents = '';
-            document.querySelector('.hero-content').style.visibility = '';
-          }
+          start: '80% top',
+          end: '98% top',
+          scrub: true
         }
       });
 
