@@ -596,7 +596,7 @@
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, var(--void) 0%, rgba(5,5,8,0.3) 40%, rgba(5,5,8,0.5) 70%, var(--void) 100%);
+      background: linear-gradient(180deg, var(--void) 0%, rgba(5,5,8,0.2) 30%, rgba(5,5,8,0.3) 60%, rgba(5,5,8,0.5) 100%);
       z-index: 1;
     }
     /* Hero loading screen */
@@ -1250,11 +1250,7 @@
 
     /* ===== SECTION DIVIDER ===== */
     .sector-divider {
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,180,255,0.15), transparent);
-      margin: 0 clamp(20px, 5vw, 64px);
-      position: relative;
-      z-index: 2;
+      display: none;
     }
 
     /* ===== ANIMATIONS ===== */
