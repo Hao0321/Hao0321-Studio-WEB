@@ -552,7 +552,7 @@
 
     /* ===== SECTOR 01 — HERO ===== */
     .hero {
-      min-height: 300vh;
+      min-height: 200vh;
       display: flex;
       align-items: flex-start;
       justify-content: center;
@@ -2207,8 +2207,8 @@
         opacity: 0,
         scrollTrigger: {
           trigger: heroSection,
-          start: '70% top',
-          end: '90% top',
+          start: '75% top',
+          end: '95% top',
           scrub: true,
           onLeave: function() {
             document.querySelector('.hero-bg').style.pointerEvents = 'none';
@@ -2221,14 +2221,14 @@
         }
       });
 
-      // Fade hero text + scroll indicator
+      // Fade hero text
       gsap.to('.hero-content', {
         opacity: 0,
         y: -60,
         scrollTrigger: {
           trigger: heroSection,
-          start: '40% top',
-          end: '60% top',
+          start: '55% top',
+          end: '75% top',
           scrub: true,
           onLeave: function() {
             document.querySelector('.hero-content').style.pointerEvents = 'none';
@@ -2246,9 +2246,17 @@
         opacity: 0,
         scrollTrigger: {
           trigger: heroSection,
-          start: '10% top',
-          end: '20% top',
-          scrub: true
+          start: '5% top',
+          end: '15% top',
+          scrub: true,
+          onLeave: function() {
+            document.querySelector('.hero-scroll').style.visibility = 'hidden';
+            document.querySelector('.hero-scroll').style.pointerEvents = 'none';
+          },
+          onEnterBack: function() {
+            document.querySelector('.hero-scroll').style.visibility = '';
+            document.querySelector('.hero-scroll').style.pointerEvents = '';
+          }
         }
       });
     }
