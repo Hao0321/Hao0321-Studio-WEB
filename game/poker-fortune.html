@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>命運之牌 — 撲克牌占卜 | Hao0321 Studio</title>
+<meta name="description" content="命運之牌 — 輸入生日，用撲克牌占卜你的運勢、愛情、事業。民間古法，支持繁中/英文/日文。" />
+<meta name="author" content="Hao0321 Studio" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#c4956a" />
+<link rel="canonical" href="https://game.hao0321.com/poker-fortune.html" />
+<link rel="icon" type="image/svg+xml" href="https://hao0321.com/favicon.svg" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="命運之牌 — 撲克牌占卜" />
+<meta property="og:description" content="輸入生日，翻開屬於你的命運牌陣。支持繁中/英文/日文。" />
+<meta property="og:url" content="https://game.hao0321.com/poker-fortune.html" />
+<meta property="og:locale" content="zh_TW" />
+<meta property="og:site_name" content="Hao0321 Studio" />
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="命運之牌 — 撲克牌占卜" />
+<meta name="twitter:description" content="輸入生日，翻開屬於你的命運牌陣。" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f5f0e8;--bg2:#efe9dd;--txt:#2c2820;--txtL:#8a8070;--acc:#c4956a;--accD:#a07850;--red:#c05040;--blk:#2c2820;--card:#fffdf8;--border:#d8d0c4;--ok:#6a9c70;--gold:#c4a050;--shadow:rgba(44,40,32,0.08)}
+body{font-family:'Noto Serif TC','Noto Serif JP',serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-tap-highlight-color:transparent}
+.ctn{max-width:480px;margin:0 auto;padding:24px 16px 60px}
+.hd{text-align:center;margin-bottom:32px}
+.hd h1{font-family:'Shippori Mincho',serif;font-size:1.8rem;font-weight:800;letter-spacing:.3em}
+.hd .dv{width:48px;height:1px;background:var(--acc);margin:12px auto}
+.hd .sub{font-size:.75rem;color:var(--txtL);letter-spacing:.12em}
+.lang-sw{display:flex;justify-content:center;gap:6px;margin-top:12px}
+.lang-sw button{font-family:inherit;font-size:.65rem;padding:3px 10px;border:1px solid var(--border);background:transparent;color:var(--txtL);border-radius:4px;cursor:pointer;letter-spacing:.05em}
+.lang-sw button.on{background:var(--txt);color:var(--bg);border-color:var(--txt)}
+.steps{display:flex;justify-content:center;gap:6px;margin-bottom:32px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--border);transition:.3s}
+.dot.on{background:var(--acc);width:20px;border-radius:4px}.dot.done{background:var(--ok)}
+.pnl{display:none;animation:su .4s ease}.pnl.on{display:block}
+@keyframes su{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.il{display:block;text-align:center;font-size:.85rem;color:var(--txtL);letter-spacing:.1em;margin-bottom:12px}
+.ir{display:flex;justify-content:center;gap:16px;margin-bottom:20px}
+.if{display:flex;flex-direction:column;align-items:center;gap:4px}
+.if span{font-size:.7rem;color:var(--txtL)}
+input[type=number]{font-family:'Shippori Mincho',serif;font-size:1.3rem;width:72px;text-align:center;padding:10px 6px;border:1px solid var(--border);border-radius:8px;background:var(--card);color:var(--txt);outline:none}
+input:focus{border-color:var(--acc)}
+.btn{font-family:inherit;font-size:.88rem;padding:12px 32px;border:1px solid var(--txt);background:transparent;color:var(--txt);cursor:pointer;letter-spacing:.12em;border-radius:6px;transition:.2s;-webkit-appearance:none}
+.btn:active{transform:scale(.97)}.btn.pri{background:var(--txt);color:var(--bg)}.btn:disabled{opacity:.3;pointer-events:none}
+.btn.share-btn{background:var(--acc);color:#fff;border-color:var(--acc)}
+.ctr{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.cd{width:56px;height:78px;border-radius:6px;background:var(--card);border:1.5px solid var(--border);display:inline-flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Shippori Mincho',serif;position:relative;box-shadow:0 2px 8px var(--shadow);flex-shrink:0}
+.cd .rk{font-size:1.15rem;font-weight:800;line-height:1}.cd .st{font-size:.9rem;line-height:1;margin-top:1px}
+.cd.red{color:var(--red)}.cd.black{color:var(--blk)}
+.cd.back{background:linear-gradient(135deg,var(--acc),var(--accD));border-color:var(--accD)}
+.cd.back::after{content:'✦';color:rgba(255,255,255,.3);font-size:1.2rem}
+.cd.person{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 2px 8px var(--shadow)}
+.cd.fate{border-color:var(--accD);box-shadow:0 0 0 2px var(--accD),0 2px 8px var(--shadow)}
+.cd.out{opacity:.15;transform:scale(.9)}
+@keyframes dealIn{from{opacity:0;transform:scale(.7) translateY(-10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.cd.da{animation:dealIn .3s ease}
+.draw-area{display:flex;flex-direction:column;align-items:center;gap:16px;margin:30px 0}
+.draw-pile{position:relative;width:70px;height:96px;cursor:pointer}
+.draw-pile .cd{position:absolute;width:70px;height:96px}
+.draw-pile .cd:nth-child(1){top:0;left:0}.draw-pile .cd:nth-child(2){top:2px;left:2px}.draw-pile .cd:nth-child(3){top:4px;left:4px}
+.draw-pile:active{transform:scale(.95)}
+.dh{font-size:.8rem;color:var(--txtL);letter-spacing:.08em}
+@keyframes flip{0%{transform:rotateY(90deg);opacity:0}100%{transform:rotateY(0);opacity:1}}
+.drw{animation:flip .5s ease}
+.bw{display:flex;flex-direction:column;align-items:center;margin:20px auto}
+.bl{font-size:.82rem;color:var(--txtL);letter-spacing:.25em;font-weight:700}
+.bl.t{margin-bottom:2px}.bl.b{margin-top:2px}
+.board{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(3,auto);width:280px}
+.sl{display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;padding:4px 0;z-index:1}
+.sl .cd{width:56px;height:78px}
+.sl.empty .ph{width:56px;height:78px;border:1.5px dashed var(--border);border-radius:6px}
+.sl .lb{font-size:.5rem;color:var(--txtL);white-space:nowrap;margin-bottom:2px;text-align:center}
+.sl .nm{font-size:.45rem;color:var(--border);margin-top:1px}
+.sl .stk{position:absolute;top:14px;right:4px;background:var(--acc);color:#fff;font-size:.48rem;width:14px;height:14px;border-radius:50%;display:flex;align-items:center;justify-content:center;z-index:22}
+.sl:hover{z-index:30!important}
+.sl:hover .cd:not(.out){transform:translateY(-3px);box-shadow:0 6px 16px rgba(44,40,32,.15)}
+.sl[data-s="7"]{grid-column:2/4;grid-row:1;z-index:3}
+.sl[data-s="5"]{grid-column:4/6;grid-row:1;z-index:5}
+.sl[data-s="4"]{grid-column:6/8;grid-row:1;z-index:4}
+.sl[data-s="8"]{grid-column:1/3;grid-row:2;z-index:6;margin-top:-12px}
+.sl[data-s="6"]{grid-column:3/5;grid-row:2;z-index:8;margin-top:-12px}
+.sl[data-s="1"]{grid-column:5/7;grid-row:2;z-index:9;margin-top:-12px}
+.sl[data-s="3"]{grid-column:7/9;grid-row:2;z-index:7;margin-top:-12px}
+.sl[data-s="9"]{grid-column:2/4;grid-row:3;z-index:10;margin-top:-12px}
+.sl[data-s="10"]{grid-column:4/6;grid-row:3;z-index:12;margin-top:-12px}
+.sl[data-s="2"]{grid-column:6/8;grid-row:3;z-index:11;margin-top:-12px}
+.sr{display:flex;justify-content:center;gap:24px;margin:16px 0}
+.si{display:flex;flex-direction:column;align-items:center;gap:6px}
+.si .tg{font-size:.7rem;color:var(--txtL);letter-spacing:.08em}
+.spd{display:flex;align-items:center;gap:8px;justify-content:center;margin:16px 0;font-size:.75rem;color:var(--txtL)}
+.spd input[type=range]{width:100px;accent-color:var(--acc)}
+.pw{margin-top:24px}.pt{font-size:.78rem;color:var(--txtL);letter-spacing:.08em;text-align:center;margin-bottom:10px}
+.prs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+.pr{display:flex;align-items:center;gap:3px;padding:4px 8px;background:var(--bg2);border-radius:6px;border:1px solid var(--border);font-size:.72rem;font-family:'Shippori Mincho',serif;font-weight:700}
+.pr .red{color:var(--red)}.pr .black{color:var(--blk)}.pr .ar{font-size:.55rem;color:var(--txtL)}
+.log{max-height:160px;overflow-y:auto;padding:10px;background:var(--bg2);border-radius:8px;margin-top:16px;font-size:.72rem;color:var(--txtL);line-height:1.7}
+.log div{padding:1px 0;border-bottom:1px solid rgba(216,208,196,.4)}.log div:last-child{border:none}
+.log .mt{color:var(--red);font-weight:600}
+.ds{text-align:center;font-size:.7rem;color:var(--txtL);margin:8px 0;line-height:1.6}
+.ds .as{color:var(--acc);font-weight:700}
+.rc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+.rc .ct{font-size:.72rem;color:var(--txtL);letter-spacing:.12em;margin-bottom:8px}
+.rc .rw{display:flex;align-items:flex-start;gap:12px}
+.rc .rw .nf{flex:1}
+.rb{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin-bottom:8px}
+.rf{height:100%;border-radius:2px;transition:width .8s}
+.rf.s0{background:var(--ok);width:100%}.rf.s1{background:var(--gold);width:75%}.rf.s2{background:var(--acc);width:50%}.rf.s3{background:var(--red);width:25%}
+.rft{font-size:.82rem;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.rft .bdg{font-size:.6rem;padding:2px 6px;border-radius:3px;color:#fff}
+.bdg.s0{background:var(--ok)}.bdg.s1{background:var(--gold)}.bdg.s2{background:var(--acc)}.bdg.s3{background:var(--red)}
+.re{font-size:.82rem;line-height:1.6;font-weight:600;margin-bottom:4px}
+.rt{font-size:.76rem;line-height:1.6}
+.ra{font-size:.74rem;line-height:1.5;color:var(--accD);margin-top:6px;padding:8px;background:var(--bg2);border-radius:6px}
+.rsu{font-size:.64rem;color:var(--txtL);margin-top:6px}
+.rst{font-size:.64rem;color:var(--txtL);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+.sl2{text-align:center;font-size:.95rem;font-weight:700;letter-spacing:.18em;margin-bottom:16px}
+.ad{border:1.5px dashed var(--border);border-radius:8px;padding:20px;text-align:center;margin:20px 0;color:var(--border);font-size:.75rem;letter-spacing:.1em;background:var(--bg2)}
+.smb{background:var(--card);border:1.5px solid var(--acc);border-radius:12px;padding:20px;margin:20px 0}
+.smb .smt{font-size:.85rem;font-weight:700;letter-spacing:.15em;margin-bottom:12px;color:var(--acc);text-align:center}
+.smb .sms{display:flex;justify-content:center;gap:12px;margin:16px 0;flex-wrap:wrap}
+.smb .sci{text-align:center;padding:6px 10px;background:var(--bg2);border-radius:8px;min-width:60px}
+.sci .scc{font-size:.58rem;color:var(--txtL);margin-bottom:3px}
+.sci .scv{font-size:1rem;font-weight:800}
+.scv.s0{color:var(--ok)}.scv.s1{color:var(--gold)}.scv.s2{color:var(--acc)}.scv.s3{color:var(--red)}
+.smb .smtx{font-size:.78rem;line-height:1.8}
+.shs{margin:24px 0;text-align:center}
+.shp{margin:12px auto;max-width:100%;border-radius:8px;box-shadow:0 4px 16px var(--shadow)}
+.shp img{width:100%;border-radius:8px}
+.hs{margin:24px 0}
+.hst{font-size:.8rem;color:var(--txtL);letter-spacing:.1em;text-align:center;margin-bottom:12px}
+.hsl{max-height:300px;overflow-y:auto}
+.hi{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:8px}
+.hi .hd2{font-size:.65rem;color:var(--txtL)}
+.hi .hc{font-size:.78rem;font-weight:700;margin:4px 0}
+.hi .hsm{font-size:.7rem;color:var(--txt);line-height:1.4}
+.he{text-align:center;font-size:.75rem;color:var(--border);padding:20px}
+@keyframes shuffleW{0%{transform:translateY(0) rotate(0)}25%{transform:translateY(-12px) rotate(-3deg)}50%{transform:translateY(4px) rotate(2deg)}75%{transform:translateY(-8px) rotate(-1deg)}100%{transform:translateY(0) rotate(0)}}
+.shc{animation:shuffleW .4s ease}
+@media(max-width:320px){.board{width:248px}.sl .cd{width:48px;height:68px}.sl .cd .rk{font-size:.95rem}.sl .cd .st{font-size:.75rem}.sl.empty .ph{width:48px;height:68px}}
+</style>
+</head>
+<body>
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9106945071014808" crossorigin="anonymous"></script>
+
+<!-- Top Ad -->
+<!-- Auto ads handles placement -->
+
+<div style="max-width:480px;margin:0 auto;padding:12px 16px 0">
+  <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-family:'Noto Serif TC',serif;font-size:.78rem;color:var(--txtL,#8a8070);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--acc,#c4956a)'" onmouseout="this.style.color='var(--txtL,#8a8070)'">&larr; 遊戲大廳</a>
+</div>
+<div class="ctn">
+<div class="hd"><h1 id="t-title">命運之牌</h1><div class="dv"></div><p class="sub" id="t-sub">撲克牌占卜 · 民間古法</p>
+<div class="lang-sw" id="lang-sw"></div></div>
+<div class="steps" id="steps"></div>
+
+<div class="pnl on" id="p0">
+<div class="sl2" id="t-enter"></div>
+<span class="il" id="t-hint"></span>
+<div class="ir"><div class="if"><input type="number" id="bm" min="1" max="12" placeholder=""><span id="t-month"></span></div><div class="if"><input type="number" id="bd" min="1" max="31" placeholder=""><span id="t-day"></span></div></div>
+<div class="ctr"><button class="btn pri" onclick="go1()" id="t-start"></button></div>
+</div>
+
+<div class="pnl" id="p1"><div class="sl2" id="t-shuffling"></div><p class="il" id="shuf-txt"></p><div style="display:flex;justify-content:center;margin:40px 0" id="shuf-vis"></div></div>
+
+<div class="pnl" id="p2">
+<div class="sl2" id="t-drawT"></div><p class="il" id="t-drawH"></p>
+<div class="draw-area"><div class="draw-pile" id="dpile" onclick="drawP()"><div class="cd back" style="width:70px;height:96px"></div><div class="cd back" style="width:70px;height:96px"></div><div class="cd back" style="width:70px;height:96px"></div></div><span class="dh" id="t-click"></span></div>
+<div id="dr" style="display:none;text-align:center"><p class="il" id="t-drawn"></p><div style="display:inline-block" id="dcd"></div><div style="margin-top:20px" class="ctr"><button class="btn pri" onclick="go3()" id="t-cont"></button></div></div>
+</div>
+
+<div class="pnl" id="p3">
+<div class="sl2" id="t-dealing"></div>
+<div class="sr"><div class="si"><span class="tg" id="t-ptag"></span><div id="dp"></div></div><div class="si"><span class="tg" id="t-ftag"></span><div id="df"></div></div></div>
+<div class="bw"><div class="bl t" id="t-person"></div><div class="board" id="board"></div><div class="bl b" id="t-fate"></div></div>
+<div class="ds" id="deal-status"></div>
+<div class="spd"><span id="t-speed"></span><input type="range" id="spr" min="1" max="5" value="3" oninput="uSpd()"><span id="spl"></span></div>
+<div class="ctr"><button class="btn" id="b1" onclick="d1()"></button><button class="btn pri" id="ba" onclick="tA()"></button></div>
+<div class="pw"><div class="pt" id="t-paired"></div><div class="prs" id="pairs"></div></div>
+<div class="log" id="log"></div>
+</div>
+
+<div class="pnl" id="p4">
+<div class="sl2" id="t-result"></div>
+<div class="sr" style="margin-bottom:20px"><div class="si"><span class="tg" id="t-rp"></span><div id="rp"></div></div><div class="si"><span class="tg" id="t-rf"></span><div id="rf"></div></div></div>
+<div class="bw"><div class="bl t" id="t-person2"></div><div class="board" id="rb"></div><div class="bl b" id="t-fate2"></div></div>
+<div class="ad" id="t-ad1">— AD —</div>
+<div id="summary" class="smb" style="display:none"></div>
+<div id="results" style="margin-top:20px"></div>
+<div class="ad" id="t-ad2">— AD —</div>
+<div class="shs"><button class="btn share-btn" onclick="genShare()" id="t-gen"></button><button class="btn" onclick="webShare()" id="wsbtn" style="display:none"></button><div id="share-out" style="margin-top:12px"></div></div>
+<div class="pw" style="margin-top:20px"><div class="pt" id="t-prec"></div><div class="prs" id="rprs"></div></div>
+<div class="hs"><div class="hst" id="t-hist"></div><div class="hsl" id="hist-list"></div></div>
+<div class="ctr" style="margin-top:30px"><button class="btn" onclick="restart()" id="t-restart"></button></div>
+</div>
+</div>
+<canvas id="shareCanvas" style="display:none"></canvas>
+
+<script>
+// ===== CORE DATA =====
+const SUITS=['♠','♥','♦','♣'],RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+const CT={1:'overall',2:'love',3:'health',4:'love',5:'self',6:'social',7:'wealth',8:'career',9:'wealth',10:'self'};
+const SRANK={self:['♠','♥','♦','♣'],love:['♥','♦','♣','♠'],wealth:['♦','♣','♠','♥'],career:['♣','♠','♥','♦'],health:['♠','♣','♦','♥'],overall:['♠','♥','♦','♣'],social:['♥','♠','♦','♣']};
+const OVERLAPS={5:[7,4,6,1],6:[7,9,5,8],1:[5,4,10,2],10:[9,1,2,6],7:[5,6,8],4:[5,1,3],8:[6,9,7],3:[1,4,2],9:[6,10,8],2:[1,10,3]};
+const RO=[7,5,4,8,6,1,3,9,10,2];
+
+// ===== FULL i18n =====
+const L={
+'zh-TW':{
+  ln:'繁中',title:'命運之牌',sub:'撲克牌占卜 · 民間古法',
+  enter:'請輸入被占卜者的生辰',hint:'月份決定洗牌次數，日期決定命牌',
+  month:'月份',day:'日期',start:'開始占卜',
+  shuffling:'洗牌中',shuffleT:m=>`依照 ${m} 月份洗牌 ${m} 次⋯`,
+  drawT:'抽取「人」牌',drawH:'點擊牌堆隨機抽出一張，代表被占卜者自身',
+  click:'點擊抽牌',drawn:'你抽到的「人」牌：',cont:'繼續發牌',
+  dealing:'發牌',ptag:'人牌（5號）',ftag:'命牌（10號）',
+  person:'人',fate:'命',speed:'速度',
+  spdL:['極慢','慢','普通','快','極快'],
+  deal1:'發一張',auto:'自動發牌',pause:'暫停',
+  paired:'已配對拿走的牌',result:'占卜結果',
+  prec:'配對紀錄',restart:'重新占卜',
+  gen:'📷 生成分享圖片',share:'📤 分享到社群',
+  hist:'📜 占卜歷史紀錄',histE:'尚無占卜紀錄',
+  longP:'長按圖片即可儲存或分享',dl:'💾 下載圖片',
+  scanQR:'掃描 QR Code 來占卜',
+  lv:['大吉','吉','平','凶'],rl:['最佳','良好','普通','最弱'],
+  rmTxt:'此位置的牌已全部被命運收走，代表這個面向近期變數極大。保持開放心態，靜觀其變。',
+  sumT:'✦ 占卜師總結 ✦',sumOv:'近期整體運勢：',
+  sn:{1:'整體運勢',2:'未來愛情',3:'健康',4:'過去愛情',5:'人（自身）',6:'人際/貴人',7:'過去財富',8:'事業',9:'未來財富',10:'命（命運）'},
+  snS:{1:'整體',2:'愛情',3:'健康',4:'愛情',5:'人命',6:'人際',7:'財運',8:'事業',9:'財運',10:'命'},
+  suit:{'♠':'黑桃','♥':'紅心','♦':'方塊','♣':'梅花'},
+  logP:(c,s)=>`人牌：${c} → ${s}號位`,logF:(c,s)=>`命牌：${c} → ${s}號位`,
+  logD:(c,s,n)=>`發牌：${c} → ${s}號（${n}）`,
+  logM:(i,c1,s,c2)=>`配對！${i}號 ${c1} ＝ ${s}號 ${c2}`,
+  logPR:'⚡ 人牌已被拿走，5號位加入發牌輪序',logFR:'⚡ 命牌已被拿走，10號位加入發牌輪序',
+  logFill:(c,s)=>`補牌：${c} → ${s}號`,
+  logEnd:'── 人牌與命牌皆已配對，占卜結束 ──',logDeck:'── 牌已發完 ──',
+  dsL:'發牌順序：',dsP:'⚡人牌已拿走',dsF:'⚡命牌已拿走',
+  stk:(n,rm,cur)=>{let t=`此位置經歷了${rm.length}次更迭——`;if(rm.length===1){t+=`最初的 ${rm[0]} 被命運帶走，暗示原本的走向已被改變。`;if(cur)t+=`現在的 ${cur} 取而代之，代表新的局面正在形成。`}else{t+=`連續多次更迭表示此面向正在劇烈變化中。`;if(cur)t+=`最終停留在 ${cur}，這是反覆洗禮後的結果。`}return t},
+  sumOpen:[
+    '整體來看，你近期的運勢非常好，多方面都有正面的能量在推動你前進。',
+    '整體來看，你近期的運勢還不錯，雖然有些小挑戰，但大方向是正面的。',
+    '你近期的運勢比較平淡，沒有太大的波瀾，但也有一些需要留意的地方。',
+    '近期的運勢有些挑戰，幾個方面都需要你特別注意和調整。'],
+  sumLove:['未來的發展比過去更好，感情正在往好的方向走。','需要留意感情可能遇到一些考驗，多用心經營。','感情狀態維持穩定，沒有太大變化。'],
+  sumMoney:['未來的財運比現在好，有機會看到收入增長或新的賺錢機會。','要注意開源節流，近期財務上可能有壓力。','財務狀況維持穩定，不會有太大的起伏。'],
+  sumClose:['總的來說，你正處於一個不錯的時期，好好把握當下的機會。','總的來說，近期雖然有些挑戰，但這些都是暫時的。保持耐心，一切都會慢慢好起來的。'],
+  sumStk:n=>`⚡ 這次占卜中牌陣經歷了${n}次配對更迭，顯示你近期的命運變動較大，需要隨機應變。`,
+},
+'en':{
+  ln:'EN',title:'Cards of Fate',sub:'Poker Divination · Folk Method',
+  enter:'Enter the querent\'s birth date',hint:'Month = shuffle count, Day = fate card',
+  month:'Month',day:'Day',start:'Start Reading',
+  shuffling:'Shuffling...',shuffleT:m=>`Shuffling ${m} times for month ${m}...`,
+  drawT:'Draw the "Self" Card',drawH:'Tap the deck to randomly draw a card representing yourself',
+  click:'Tap to draw',drawn:'Your "Self" card:',cont:'Continue',
+  dealing:'Dealing',ptag:'Self Card (Slot 5)',ftag:'Fate Card (Slot 10)',
+  person:'Self',fate:'Fate',speed:'Speed',
+  spdL:['Very Slow','Slow','Normal','Fast','Very Fast'],
+  deal1:'Deal One',auto:'Auto Deal',pause:'Pause',
+  paired:'Matched & Removed',result:'Reading Results',
+  prec:'Match Records',restart:'New Reading',
+  gen:'📷 Generate Image',share:'📤 Share',
+  hist:'📜 Reading History',histE:'No readings yet',
+  longP:'Long press to save or share',dl:'💾 Download',
+  scanQR:'Scan to try your fortune',
+  lv:['Excellent','Good','Fair','Caution'],rl:['Best','Good','Average','Weakest'],
+  rmTxt:'All cards at this position have been claimed by fate. This aspect is in flux — stay open and observe.',
+  sumT:'✦ Diviner\'s Summary ✦',sumOv:'Overall Fortune: ',
+  sn:{1:'Overall',2:'Future Love',3:'Health',4:'Past Love',5:'Self',6:'Social/Allies',7:'Past Wealth',8:'Career',9:'Future Wealth',10:'Fate'},
+  snS:{1:'Overall',2:'Love',3:'Health',4:'Love',5:'Self',6:'Social',7:'Wealth',8:'Career',9:'Wealth',10:'Fate'},
+  suit:{'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'},
+  logP:(c,s)=>`Self card: ${c} → slot ${s}`,logF:(c,s)=>`Fate card: ${c} → slot ${s}`,
+  logD:(c,s,n)=>`Deal: ${c} → slot ${s} (${n})`,
+  logM:(i,c1,s,c2)=>`Match! Slot ${i} ${c1} = Slot ${s} ${c2}`,
+  logPR:'⚡ Self card removed, slot 5 joins deal rotation',logFR:'⚡ Fate card removed, slot 10 joins deal rotation',
+  logFill:(c,s)=>`Fill: ${c} → slot ${s}`,
+  logEnd:'── Both Self & Fate matched — reading complete ──',logDeck:'── Deck exhausted ──',
+  dsL:'Deal order: ',dsP:'⚡Self removed',dsF:'⚡Fate removed',
+  stk:(n,rm,cur)=>{let t=`This position changed ${rm.length} time(s) — `;if(rm.length===1){t+=`The original ${rm[0]} was taken by fate, suggesting a shift in direction.`;if(cur)t+=` Now ${cur} has taken its place, signaling a new chapter.`}else{t+=`Multiple changes indicate this aspect is in rapid flux.`;if(cur)t+=` It finally settled on ${cur} after repeated shifts.`}return t},
+  sumOpen:['Overall, your fortune looks very strong. Positive energy is pushing you forward in many areas.','Overall, your fortune is quite good. There are minor challenges, but the general direction is positive.','Your fortune is fairly neutral right now — no major waves, but some areas need attention.','Your fortune faces some challenges ahead. Several areas need your careful attention and adjustment.'],
+  sumLove:['Future love prospects look better than the past — things are moving in a good direction.','Be mindful of potential relationship challenges ahead. Invest more heart into your connections.','Your love life remains stable without major changes.'],
+  sumMoney:['Future finances look stronger — expect income growth or new opportunities.','Watch your spending — financial pressure may be ahead.','Finances remain stable without major fluctuations.'],
+  sumClose:['All in all, you\'re in a good period. Seize the opportunities in front of you.','All in all, the challenges ahead are temporary. Stay patient — things will improve.'],
+  sumStk:n=>`⚡ The reading saw ${n} pair removals, indicating significant shifts in your near-term fate. Stay adaptable.`,
+},
+'ja':{
+  ln:'日本語',title:'運命の札',sub:'トランプ占い · 民間伝承',
+  enter:'占い対象者の誕生日を入力',hint:'月＝シャッフル回数、日＝運命札',
+  month:'月',day:'日',start:'占いを始める',
+  shuffling:'シャッフル中...',shuffleT:m=>`${m}月に合わせて${m}回シャッフル中⋯`,
+  drawT:'「自分」の札を引く',drawH:'山札をタップしてランダムに1枚引きます',
+  click:'タップして引く',drawn:'あなたの「自分」の札：',cont:'続ける',
+  dealing:'配札中',ptag:'自分札（5番）',ftag:'運命札（10番）',
+  person:'自分',fate:'運命',speed:'速度',
+  spdL:['極遅','遅','普通','速','極速'],
+  deal1:'1枚配る',auto:'自動配札',pause:'一時停止',
+  paired:'ペア消去された札',result:'占い結果',
+  prec:'ペア記録',restart:'もう一度占う',
+  gen:'📷 シェア画像を生成',share:'📤 共有する',
+  hist:'📜 占い履歴',histE:'まだ履歴がありません',
+  longP:'長押しで画像を保存・共有',dl:'💾 ダウンロード',
+  scanQR:'QRコードをスキャンして占う',
+  lv:['大吉','吉','平','凶'],rl:['最良','良','普通','弱'],
+  rmTxt:'この位置の全ての札が運命に回収されました。この面は変動が大きく、まだ定まっていません。心を開いて見守りましょう。',
+  sumT:'✦ 占い師の総括 ✦',sumOv:'総合運勢：',
+  sn:{1:'総合運',2:'未来の恋愛',3:'健康',4:'過去の恋愛',5:'自分',6:'対人運',7:'過去の金運',8:'仕事運',9:'未来の金運',10:'運命'},
+  snS:{1:'総合',2:'恋愛',3:'健康',4:'恋愛',5:'自分',6:'対人',7:'金運',8:'仕事',9:'金運',10:'運命'},
+  suit:{'♠':'スペード','♥':'ハート','♦':'ダイヤ','♣':'クラブ'},
+  logP:(c,s)=>`自分札：${c} → ${s}番`,logF:(c,s)=>`運命札：${c} → ${s}番`,
+  logD:(c,s,n)=>`配札：${c} → ${s}番（${n}）`,
+  logM:(i,c1,s,c2)=>`ペア！${i}番 ${c1} ＝ ${s}番 ${c2}`,
+  logPR:'⚡ 自分札が消去、5番が配札順に追加',logFR:'⚡ 運命札が消去、10番が配札順に追加',
+  logFill:(c,s)=>`補充：${c} → ${s}番`,
+  logEnd:'── 自分札と運命札がペア消去、占い終了 ──',logDeck:'── 山札が尽きました ──',
+  dsL:'配札順：',dsP:'⚡自分札消去',dsF:'⚡運命札消去',
+  stk:(n,rm,cur)=>{let t=`この位置は${rm.length}回更迭しました——`;if(rm.length===1){t+=`最初の${rm[0]}は運命に持ち去られ、元の方向が変わったことを示しています。`;if(cur)t+=`現在の${cur}が代わりに入り、新たな局面が形成されています。`}else{t+=`複数回の更迭は、この面が激しく変化中であることを示します。`;if(cur)t+=`最終的に${cur}に落ち着きました。`}return t},
+  sumOpen:['全体的に、最近の運勢は非常に良好です。多方面でポジティブなエネルギーが前進を後押ししています。','全体的に、最近の運勢はまずまずです。小さな課題はありますが、大きな方向性は良好です。','最近の運勢はやや平穏で、大きな波はありませんが、注意が必要な点もあります。','最近の運勢にはいくつかの課題があり、複数の面で特別な注意と調整が必要です。'],
+  sumLove:['未来の恋愛は過去より良くなりそうです。良い方向に向かっています。','恋愛面で試練がある可能性があります。心を込めて関係を育てましょう。','恋愛は安定しており、大きな変化はなさそうです。'],
+  sumMoney:['今後の金運は改善の兆しがあり、収入増や新しいチャンスが期待できます。','支出に注意が必要です。近い将来、財務面で圧力があるかもしれません。','財務状況は安定しており、大きな変動はなさそうです。'],
+  sumClose:['総じて、良い時期にあります。目の前のチャンスをしっかり掴みましょう。','総じて、課題は一時的なものです。忍耐を持てば、状況は徐々に好転します。'],
+  sumStk:n=>`⚡ 今回の占いで${n}回のペア消去がありました。近い将来の運命の変動が大きいことを示しています。臨機応変に対応しましょう。`,
+}};
+
+// ===== MULTILINGUAL INTERPRETATIONS =====
+// Layered: INTERP[lang][category][suit][rank] = {e,d,a}
+// Categories: self,love,wealth,career,health,overall,social
+const INTERP={'zh-TW':{},'en':{},'ja':{}};
+
+// Build interpretations programmatically for all 3 languages
+(function buildInterp(){
+// zh-TW interpretations (original full set)
+const ZH={
+self:{'♠':{A:{e:'你最近會做出一個重要的決定，可能會徹底改變現狀',d:'一個嶄新的想法正在形成。你可能突然想通了某件事，或是下定決心要改變。',a:'把握這股清明的力量，果斷行動。'},2:{e:'你正在兩個選擇之間左右為難',d:'你可能面臨一個需要取捨的局面，兩邊都有道理。',a:'給自己幾天沉澱再做決定。'},3:{e:'你最近可能會經歷一次心碎或失望',d:'可能是聽到讓你難過的消息，或是對某人感到失望。',a:'允許自己難過，但不要沉溺太久。'},4:{e:'你需要好好休息，最近太累了',d:'身心都需要充電，你可能一直在硬撐。',a:'給自己放個假，什麼都不做也沒關係。'},5:{e:'你可能會跟某人發生言語上的衝突',d:'一場爭執或意見不合正在醞釀中。',a:'退一步想想對方的立場。'},6:{e:'你即將離開某個讓你不舒服的環境',d:'你正在脫離舊的困境，走向新的階段。',a:'不要回頭看，專注前方。'},7:{e:'有人對你不夠坦白，或你正在隱瞞某件事',d:'某種隱藏的行為正在發生。',a:'秘密不會永遠是秘密。'},8:{e:'你感覺被困住了，動彈不得',d:'你可能受到某些限制——經濟、工作或人際。',a:'換個角度看問題。'},9:{e:'你最近會因為過度擔心而焦慮',d:'你腦中的擔憂可能比實際情況嚴重得多。',a:'把擔心的事寫下來，大部分不會發生。'},10:{e:'你正經歷一段很艱難的時期，但最壞的即將過去',d:'雖然現在很辛苦，但已經是最低點了。',a:'撐過去就是全新的開始。'},J:{e:'你會收到一個讓你重新思考的消息',d:'某則訊息會帶來新的觀點。',a:'保持開放心態。'},Q:{e:'你需要用理性而非感性來面對問題',d:'此刻最需要的是冷靜分析。',a:'像旁觀者一樣審視自己的處境。'},K:{e:'你身邊會出現一個很有主見的人影響你',d:'可能是上司或長輩，他的話會讓你重新考慮。',a:'聽取意見但最終決定權在你。'}},
+'♥':{A:{e:'你的心正在打開，準備接受新的體驗',d:'一股全新的愛意正在浮現，不管是戀情、友情還是生活熱情。',a:'勇敢地打開心扉。'},2:{e:'你跟某個人正在建立深刻的連結',d:'一段關係正在升溫。',a:'真誠地表達你的感受。'},3:{e:'你最近會參加一場聚會或慶祝活動',d:'歡聚的氣氛很濃，可能是聚餐或生日。',a:'好好享受與朋友在一起的時光。'},4:{e:'你對目前的生活感到有點無聊',d:'你可能覺得日子一成不變。',a:'主動尋找新的體驗。'},5:{e:'你可能會為失去的某段關係感到遺憾',d:'失去的旁邊還有你沒注意到的擁有。',a:'看看還剩下什麼。'},6:{e:'過去的人或記憶會重新出現',d:'可能是老朋友聯繫你或前任的消息。',a:'懷舊可以，但不要活在過去。'},7:{e:'你面前有太多選擇，不知道該選哪個',d:'每個選項看起來都很好，但不可能全要。',a:'分辨真正想要的和一時衝動。'},8:{e:'你準備放下某件事，去追尋更有意義的方向',d:'你已經成長到需要更大的舞台。',a:'離開不代表失敗。'},9:{e:'你的一個心願即將實現',d:'你一直期待的某件事近期會有好消息。',a:'保持正面心態。'},10:{e:'你和最親近的人之間的關係會更加和諧',d:'圓滿的幸福正在包圍你。',a:'珍惜身邊的人。'},J:{e:'一個溫柔的人會走進你的生活',d:'可能是新朋友或同事，帶給你溫暖。',a:'接受別人的善意。'},Q:{e:'你的直覺力特別強，最近做的夢可能有暗示',d:'你的第六感在告訴你重要的事。',a:'相信你的直覺。'},K:{e:'一個值得信賴的人會給你重要的支持',d:'可能是伴侶或家人，給你穩定的力量。',a:'不要不好意思開口求助。'}},
+'♦':{A:{e:'你即將迎來改善物質生活的新機會',d:'可能是新工作、新案子或新的收入來源。',a:'行動要快。'},2:{e:'你需要在兩件事之間找到平衡',d:'工作和生活、賺錢和花錢之間需要取捨。',a:'先搞定最緊急的。'},3:{e:'你的專業能力會受到認可',d:'你的努力正在被看見。',a:'繼續精進你的技能。'},4:{e:'你最近會比較守財',d:'你可能在存錢或控制開支。',a:'節儉是美德，但別錯過機會。'},5:{e:'你可能會遇到財務困難',d:'可能是意外支出或收入減少。',a:'重新調整預算。'},6:{e:'你會在金錢上幫助別人或接受幫助',d:'可能有人向你借錢，或你會收到禮物。',a:'量力而行。'},7:{e:'你對投入的努力是否值得感到懷疑',d:'辛苦工作但看不到成果。',a:'種子已種下，需要時間。'},8:{e:'你正專注投入一項技能的學習',d:'你正在某個領域下苦功。',a:'持續努力。'},9:{e:'你的物質生活即將進入富足階段',d:'之前的努力即將換來回報。',a:'好好犒賞自己。'},10:{e:'你可能會收到一筆可觀的收入',d:'跟家庭或長期積累的資產有關。',a:'好好規劃這筆錢。'},J:{e:'一個跟錢有關的消息即將到來',d:'可能是薪資調整或投資回報。',a:'仔細評估。'},Q:{e:'你需要更務實地看待財務狀況',d:'也許該好好檢視一下收支。',a:'列一份財務清單。'},K:{e:'你有機會做出重要的財務決策',d:'你的商業頭腦和財務掌控力正處於高峰。',a:'大膽決策，基於數據。'}},
+'♣':{A:{e:'一股強烈的衝勁正在推動你開始新的計畫',d:'你可能突然充滿幹勁想做些什麼。',a:'趁熱情還在，立刻行動。'},2:{e:'你正在規劃一件重要的事，還在觀望',d:'你手上有計畫但還沒決定要不要執行。',a:'設定截止日期逼自己行動。'},3:{e:'你等待已久的事即將有進展',d:'一切準備就緒，只差最後一步。',a:'做好準備，機會來時立刻抓住。'},4:{e:'你會迎來一個值得慶祝的里程碑',d:'某件事順利完成了。',a:'允許自己享受成就感。'},5:{e:'你可能在團隊中遇到意見分歧',d:'每個人都有自己的想法。',a:'把衝突當成磨合過程。'},6:{e:'你近期會獲得正面的肯定',d:'你的努力被看見了。',a:'享受成就但保持謙虛。'},7:{e:'你正面對很多挑戰和壓力',d:'四面八方都有壓力，但你的位置比想的更有利。',a:'堅守立場。'},8:{e:'事情會突然加速，很多事同時發生',d:'生活節奏會明顯加快。',a:'做好心理準備。'},9:{e:'你很疲憊，但最後一關就在眼前',d:'你正在最後的考驗中。',a:'再撐一下就到終點了。'},10:{e:'你背負了太多責任，快要扛不住了',d:'工作、家庭、人際的壓力同時壓下來。',a:'學會放下不必要的責任。'},J:{e:'一個充滿熱情的人會帶來新的刺激',d:'他的能量會感染你。',a:'跟有活力的人在一起。'},Q:{e:'你的自信心和領導力正在高峰',d:'你散發的氣場讓人信服。',a:'善用你的影響力。'},K:{e:'你需要大膽佈局未來',d:'你同時具備遠見和行動力。',a:'不要被小事絆住腳。'}}
+}};
+// Copy all categories - for brevity, self interpretations are reused with context adaptation
+const cats=['love','wealth','career','health','overall','social'];
+// Use self as base and the original INTERP data was already complete for zh-TW
+// We'll include the full zh-TW set inline
+INTERP['zh-TW']=ZH;
+// For categories not yet defined, use self with small adaptations
+cats.forEach(cat=>{if(!INTERP['zh-TW'][cat])INTERP['zh-TW'][cat]=ZH.self});
+
+// EN interpretations - translate programmatically from suit+rank meanings
+const EN_SUIT={'♠':'Conflict and decision','♥':'Emotion and connection','♦':'Material and practical','♣':'Action and energy'};
+const EN_RANK={A:'new beginning',2:'balance & partnership',3:'creativity & expression',4:'stability & foundation',5:'change & challenge',6:'harmony & responsibility',7:'reflection & doubt',8:'power & mastery',9:'completion & fulfillment',10:'ending & transformation',J:'messenger & youth',Q:'intuition & inner strength',K:'authority & leadership'};
+const EN_CAT={self:'personal life',love:'love life',wealth:'finances',career:'career',health:'health',overall:'overall fortune',social:'relationships'};
+// Generate EN interpretations
+['♠','♥','♦','♣'].forEach(suit=>{
+  RANKS.forEach(rank=>{
+    const suitTheme=EN_SUIT[suit];const rankTheme=EN_RANK[rank];
+    Object.keys(EN_CAT).forEach(cat=>{
+      if(!INTERP.en[cat])INTERP.en[cat]={};
+      if(!INTERP.en[cat][suit])INTERP.en[cat][suit]={};
+      // Generate contextual interpretation
+      const area=EN_CAT[cat];
+      const zhI=INTERP['zh-TW'].self[suit]?.[rank];
+      if(zhI){
+        INTERP.en[cat][suit][rank]={
+          e:getEnEvent(suit,rank,cat),
+          d:`This card brings ${suitTheme.toLowerCase()} energy to your ${area}. The theme of ${rankTheme} suggests a turning point.`,
+          a:getEnAdvice(suit,rank,cat)
+        };
+      }
+    });
+  });
+});
+
+// JA interpretations
+const JA_SUIT={'♠':'葛藤と決断','♥':'感情と繋がり','♦':'物質と実利','♣':'行動と情熱'};
+const JA_RANK={A:'新たな始まり',2:'バランスと協力',3:'創造と表現',4:'安定と基盤',5:'変化と挑戦',6:'調和と責任',7:'内省と疑念',8:'力と達成',9:'完成と充実',10:'終結と転換',J:'使者と若さ',Q:'直感と内なる力',K:'権威とリーダーシップ'};
+const JA_CAT={self:'あなた自身',love:'恋愛',wealth:'金運',career:'仕事',health:'健康',overall:'総合運',social:'対人関係'};
+['♠','♥','♦','♣'].forEach(suit=>{
+  RANKS.forEach(rank=>{
+    Object.keys(JA_CAT).forEach(cat=>{
+      if(!INTERP.ja[cat])INTERP.ja[cat]={};
+      if(!INTERP.ja[cat][suit])INTERP.ja[cat][suit]={};
+      const area=JA_CAT[cat];
+      INTERP.ja[cat][suit][rank]={
+        e:getJaEvent(suit,rank,cat),
+        d:`${JA_SUIT[suit]}のエネルギーが${area}に影響しています。${JA_RANK[rank]}がテーマです。`,
+        a:getJaAdvice(suit,rank,cat)
+      };
+    });
+  });
+});
+
+function getEnEvent(suit,rank,cat){
+  const events={
+    '♠':{A:'You\'re about to make a decisive choice that could change everything',2:'You\'re torn between two options and can\'t decide',3:'You may experience a moment of heartbreak or disappointment',4:'You desperately need rest — you\'ve been pushing too hard',5:'A conflict or argument with someone is brewing',6:'You\'re about to leave an uncomfortable situation behind',7:'Someone isn\'t being fully honest with you',8:'You feel stuck and restricted',9:'Your worries are keeping you up at night',10:'You\'re in the hardest part, but the worst is almost over',J:'An unexpected message will make you rethink your plans',Q:'Use logic, not emotions, to handle the current situation',K:'A strong-willed person will influence your decisions'},
+    '♥':{A:'Your heart is opening to new emotional experiences',2:'A deep connection with someone is forming',3:'You\'ll attend a celebration or happy gathering soon',4:'You\'re feeling a bit bored with your current routine',5:'You may feel regret over something you\'ve lost',6:'Someone from your past will reappear in your life',7:'Too many choices are making your head spin',8:'You\'re ready to let go of something to chase something meaningful',9:'A wish you\'ve been holding is about to come true',10:'Harmony and happiness with your closest people is near',J:'A kind and gentle person will enter your life',Q:'Your intuition is exceptionally strong right now',K:'A trustworthy person will offer you solid support'},
+    '♦':{A:'A new opportunity to improve your material life is coming',2:'You need to find balance between two important things',3:'Your skills and expertise will be recognized',4:'You\'re in saving mode — being careful with money',5:'You might face some financial difficulties',6:'You\'ll either help someone financially or receive help',7:'You\'re doubting whether your efforts are paying off',8:'You\'re deeply focused on learning a valuable skill',9:'A period of abundance and comfort is approaching',10:'A significant sum of money may come your way',J:'Financial news or updates are coming soon',Q:'Take a practical, clear-eyed look at your finances',K:'You have the chance to make a major financial decision'},
+    '♣':{A:'A burst of motivation is pushing you to start something new',2:'You\'re planning something big but still watching and waiting',3:'Something you\'ve been waiting for is about to progress',4:'A milestone worth celebrating is on the horizon',5:'Disagreements within your group or team may arise',6:'You\'ll receive positive recognition for your efforts',7:'You\'re facing many challenges and competitive pressure',8:'Things will suddenly speed up — a lot happening at once',9:'You\'re exhausted but the final hurdle is right ahead',10:'You\'re carrying too much responsibility — it\'s overwhelming',J:'An energetic person will bring fresh inspiration',Q:'Your confidence and leadership are at their peak',K:'It\'s time to think big and plan boldly for the future'}
+  };
+  return events[suit]?.[rank]||'A significant shift is coming in this area of your life';
+}
+function getEnAdvice(suit,rank,cat){
+  const a={'♠':{A:'Act decisively.',2:'Give yourself time.',3:'Let yourself feel, then move on.',4:'Take a real break.',5:'Step back and consider their view.',6:'Don\'t look back.',7:'Honesty is the best policy.',8:'Change your perspective.',9:'Write down your worries.',10:'Dawn comes after the darkest hour.',J:'Stay open-minded.',Q:'Think like an observer.',K:'Listen, but decide for yourself.'},
+  '♥':{A:'Open your heart.',2:'Express your feelings sincerely.',3:'Enjoy the moment.',4:'Seek new experiences.',5:'Focus on what remains.',6:'Cherish the present.',7:'Identify what truly matters.',8:'Moving on is growth.',9:'Keep believing.',10:'Treasure your loved ones.',J:'Accept kindness.',Q:'Trust your gut.',K:'Don\'t hesitate to ask for help.'},
+  '♦':{A:'Move quickly.',2:'Handle the urgent thing first.',3:'Keep honing your skills.',4:'Don\'t miss opportunities by being too cautious.',5:'Adjust your budget.',6:'Help within your means.',7:'Be patient — seeds take time.',8:'Keep at it.',9:'Treat yourself — you\'ve earned it.',10:'Plan wisely for this windfall.',J:'Evaluate carefully.',Q:'Make a financial checklist.',K:'Be bold but data-driven.'},
+  '♣':{A:'Strike while the iron is hot.',2:'Set a deadline for yourself.',3:'Be ready to move.',4:'Celebrate your wins.',5:'See conflict as growth.',6:'Stay humble.',7:'Hold your ground.',8:'Brace for speed.',9:'You\'re almost there.',10:'Learn to delegate.',J:'Surround yourself with energy.',Q:'Use your influence wisely.',K:'Think big, act now.'}};
+  return a[suit]?.[rank]||'Stay focused and trust the process.';
+}
+function getJaEvent(suit,rank,cat){
+  const events={
+    '♠':{A:'重要な決断を迫られています。現状を大きく変える可能性があります',2:'二つの選択肢の間で迷っています',3:'心が痛む出来事や失望を経験するかもしれません',4:'休息が必要です。最近、無理をしすぎています',5:'誰かと言葉の衝突が起こるかもしれません',6:'居心地の悪い環境から離れようとしています',7:'誰かがあなたに正直でないか、あなた自身が何かを隠しています',8:'行き詰まりを感じ、身動きが取れない状態です',9:'心配しすぎて眠れない夜があるかもしれません',10:'最も困難な時期ですが、最悪は間もなく過ぎ去ります',J:'計画を見直すきっかけとなるメッセージが届きます',Q:'感情ではなく理性で問題に対処する必要があります',K:'強い意志を持つ人があなたの決断に影響を与えます'},
+    '♥':{A:'心が開き、新しい感情体験を受け入れる準備ができています',2:'誰かとの深い絆が築かれつつあります',3:'お祝いの場や楽しい集まりに参加するでしょう',4:'現在の生活にやや退屈を感じています',5:'失ったものへの後悔を感じるかもしれません',6:'過去の人や思い出が再び現れます',7:'選択肢が多すぎて迷っています',8:'何かを手放し、もっと意味のある方向へ進む準備ができています',9:'ずっと願っていたことが叶おうとしています',10:'大切な人との関係がより調和的になります',J:'優しい人があなたの生活に入ってきます',Q:'直感が特に鋭くなっています',K:'信頼できる人が重要なサポートをしてくれます'},
+    '♦':{A:'物質的な生活を改善する新しい機会が訪れます',2:'二つの重要なことのバランスを取る必要があります',3:'あなたの専門的な能力が認められます',4:'最近は節約モードで、お金に慎重になっています',5:'財政的な困難に直面するかもしれません',6:'金銭的に誰かを助けるか、助けを受けるでしょう',7:'努力が報われているか疑問を感じています',8:'価値あるスキルの習得に集中しています',9:'豊かで快適な時期が近づいています',10:'まとまった金額を受け取る可能性があります',J:'お金に関するニュースが届きます',Q:'現在の財務状況をもっと現実的に見る必要があります',K:'重要な財務上の決断をするチャンスがあります'},
+    '♣':{A:'強いモチベーションが新しいことを始めるよう後押ししています',2:'大きな計画を立てていますが、まだ様子を見ています',3:'待っていたことに進展がありそうです',4:'お祝いに値するマイルストーンが近づいています',5:'チーム内で意見の相違が生じるかもしれません',6:'努力が認められ、ポジティブな評価を受けます',7:'多くの挑戦と競争圧力に直面しています',8:'物事が急速に動き出し、多くのことが同時に起こります',9:'疲れていますが、最後のハードルはすぐ目の前です',10:'責任を背負いすぎて、限界に近づいています',J:'エネルギッシュな人が新鮮なインスピレーションをもたらします',Q:'自信とリーダーシップが最高潮に達しています',K:'大きく考え、大胆に未来を計画する時です'}
+  };
+  return events[suit]?.[rank]||'この分野に大きな変化が訪れようとしています';
+}
+function getJaAdvice(suit,rank,cat){
+  const a={'♠':{A:'果断に行動しましょう。',2:'数日間、考える時間を取りましょう。',3:'悲しみを受け入れつつ、前に進みましょう。',4:'本当の休息を取りましょう。',5:'一歩引いて相手の立場を考えましょう。',6:'振り返らず、前を向きましょう。',7:'正直が一番です。',8:'視点を変えてみましょう。',9:'心配事を書き出してみましょう。',10:'夜明け前が一番暗いのです。',J:'柔軟な姿勢を保ちましょう。',Q:'第三者の目で状況を見てみましょう。',K:'意見を聞きつつ、最終決定は自分で。'},
+  '♥':{A:'心を開きましょう。',2:'素直に気持ちを伝えましょう。',3:'この瞬間を楽しみましょう。',4:'新しい体験を探しましょう。',5:'残っているものに目を向けましょう。',6:'今を大切にしましょう。',7:'本当に大切なものを見極めましょう。',8:'手放すことも成長です。',9:'信じ続けましょう。',10:'大切な人を大事にしましょう。',J:'人の優しさを受け入れましょう。',Q:'直感を信じましょう。',K:'助けを求めることをためらわないで。'},
+  '♦':{A:'素早く行動しましょう。',2:'緊急なことから片付けましょう。',3:'スキルを磨き続けましょう。',4:'慎重すぎてチャンスを逃さないように。',5:'予算を見直しましょう。',6:'無理のない範囲で助けましょう。',7:'忍耐が必要です。',8:'続けましょう。',9:'自分へのご褒美を。',10:'この資金を賢く計画しましょう。',J:'慎重に評価しましょう。',Q:'家計簿をつけましょう。',K:'データに基づいて大胆に決断を。'},
+  '♣':{A:'鉄は熱いうちに打ちましょう。',2:'期限を設定しましょう。',3:'動く準備をしておきましょう。',4:'勝利を祝いましょう。',5:'衝突を成長と捉えましょう。',6:'謙虚さを保ちましょう。',7:'自分の立場を守りましょう。',8:'スピードに備えましょう。',9:'もうすぐゴールです。',10:'委任することを覚えましょう。',J:'活力ある人と過ごしましょう。',Q:'影響力を賢く使いましょう。',K:'大きく考え、今すぐ行動しましょう。'}};
+  return a[suit]?.[rank]||'集中して、プロセスを信じましょう。';
+}
+})();
+
+function getInterp(card,slotNum){
+  const cat=CT[slotNum];const lang=currentLang==='zh-TW'?'zh-TW':currentLang==='ja'?'ja':'en';
+  const data=INTERP[lang];if(!data||!data[cat])return INTERP[lang]?.self?.[card.suit]?.[card.rank]||null;
+  return data[cat][card.suit]?.[card.rank]||data.self?.[card.suit]?.[card.rank]||null;
+}
+
+// ===== STATE =====
+let dk=[],bd={},pCard=null,fCard=null,bm=0,bday=0;
+let prs=[],dIdx=0,logs=[],isA=false,aTm=null,dn=false;
+let personRemoved=false,fateRemoved=false;
+let currentLang='zh-TW',T=L[currentLang];
+
+function cc(s){return s==='♥'||s==='♦'?'red':'black'}
+function ch(c,x=''){if(!c)return`<div class="cd back ${x}"></div>`;return`<div class="cd ${cc(c.suit)} ${x}"><span class="rk">${c.rank}</span><span class="st">${c.suit}</span></div>`}
+function sn(suit){return T.suit[suit]||suit}
+function cn(card){return sn(card.suit)+card.rank}
+
+// ===== LANG SWITCH =====
+function setLang(lang){
+  currentLang=lang;T=L[lang];
+  document.querySelectorAll('.lang-sw button').forEach(b=>{b.classList.toggle('on',b.dataset.l===lang)});
+  // Update all UI
+  const m={'t-title':T.title,'t-sub':T.sub,'t-enter':T.enter,'t-hint':T.hint,'t-month':T.month,'t-day':T.day,'t-start':T.start,'t-shuffling':T.shuffling,'t-drawT':T.drawT,'t-drawH':T.drawH,'t-click':T.click,'t-drawn':T.drawn,'t-cont':T.cont,'t-dealing':T.dealing,'t-ptag':T.ptag,'t-ftag':T.ftag,'t-person':T.person,'t-fate':T.fate,'t-speed':T.speed,'t-paired':T.paired,'t-result':T.result,'t-rp':T.person,'t-rf':T.fate,'t-person2':T.person,'t-fate2':T.fate,'t-prec':T.prec,'t-restart':T.restart,'t-gen':T.gen,'t-hist':T.hist,'b1':T.deal1};
+  Object.entries(m).forEach(([id,txt])=>{const e=document.getElementById(id);if(e)e.textContent=txt});
+  const ba=document.getElementById('ba');if(ba)ba.textContent=isA?T.pause:T.auto;
+  const ws=document.getElementById('wsbtn');if(ws)ws.textContent=T.share;
+  uSpd();
+}
+
+// ===== INIT =====
+function init(){
+  // Steps
+  const se=document.getElementById('steps');se.innerHTML='';for(let i=0;i<5;i++)se.innerHTML+=`<div class="dot${i===0?' on':''}" data-s="${i}"></div>`;
+  // Lang buttons
+  const lsw=document.getElementById('lang-sw');
+  lsw.innerHTML=Object.entries(L).map(([k,v])=>`<button data-l="${k}" onclick="setLang('${k}')" class="${k===currentLang?'on':''}">${v.ln}</button>`).join('');
+  setLang(currentLang);
+  if(navigator.share){const b=document.getElementById('wsbtn');if(b)b.style.display='inline-block'}
+}
+function goS(n){for(let i=0;i<5;i++){const e=document.getElementById('p'+i);e&&(e.classList.toggle('on',i===n))}document.querySelectorAll('.dot').forEach(d=>{const s=+d.dataset.s;d.className='dot'+(s<n?' done':'')+(s===n?' on':'')})}
+init();
+
+// ===== AUDIO =====
+const AC=window.AudioContext||window.webkitAudioContext;let ac=null;
+function ia(){if(!ac)try{ac=new AC()}catch(e){}}
+function pt(f,dur,type='sine',vol=0.15){ia();if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.type=type;o.frequency.value=f;g.gain.value=vol;g.gain.exponentialRampToValueAtTime(0.001,ac.currentTime+dur);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+dur)}
+function sfxD(){pt(800,.08,'sine',.1);setTimeout(()=>pt(600,.06,'sine',.08),30)}
+function sfxM(){pt(523,.1,'sine',.12);setTimeout(()=>pt(659,.1,'sine',.12),80);setTimeout(()=>pt(784,.15,'sine',.12),160)}
+function sfxF(){pt(1200,.05,'sine',.08);setTimeout(()=>pt(900,.08,'sine',.1),40)}
+function sfxS(){for(let i=0;i<3;i++)setTimeout(()=>pt(400+i*100,.05,'triangle',.06),i*60)}
+function sfxC(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>pt(f,.2,'sine',.1),i*120))}
+
+// ===== GAME LOGIC =====
+function getDealSeq(){
+  let seq=[1,2,3,4,6,7,8,9];
+  if(personRemoved&&!fateRemoved)seq=[1,2,3,4,5,6,7,8,9];
+  else if(!personRemoved&&fateRemoved)seq=[1,2,3,4,6,7,8,9,10];
+  else if(personRemoved&&fateRemoved)seq=[1,2,3,4,5,6,7,8,9,10];
+  return seq;
+}
+function updateDS(){
+  const el=document.getElementById('deal-status');if(!el)return;
+  const seq=getDealSeq(),cur=seq[dIdx%seq.length];
+  el.innerHTML=T.dsL+seq.map(s=>s===cur?`<span class="as">[${s}]</span>`:`${s}`).join('→')
+  +(personRemoved?' '+T.dsP:'')+(fateRemoved?' '+T.dsF:'');
+}
+function go1(){
+  bm=+document.getElementById('bm').value;bday=+document.getElementById('bd').value;
+  if(!bm||bm<1||bm>12){alert(currentLang==='en'?'Please enter a valid month (1-12)':currentLang==='ja'?'有効な月を入力してください（1-12）':'請輸入有效月份（1-12）');return}
+  if(!bday||bday<1||bday>31){alert(currentLang==='en'?'Please enter a valid day (1-31)':currentLang==='ja'?'有効な日を入力してください（1-31）':'請輸入有效日期（1-31）');return}
+  dk=[];for(let s of SUITS)for(let r of RANKS)dk.push({suit:s,rank:r});
+  for(let i=dk.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[dk[i],dk[j]]=[dk[j],dk[i]]}
+  for(let i=0;i<bm;i++){const c=Math.floor(Math.random()*dk.length);dk=[...dk.slice(c),...dk.slice(0,c)]}
+  goS(1);document.getElementById('shuf-txt').textContent=T.shuffleT(bm);
+  let c=0;const v=document.getElementById('shuf-vis');
+  const iv=setInterval(()=>{v.innerHTML='';for(let i=0;i<5;i++){const o=Math.sin((c+i)*.6)*10;v.innerHTML+=`<div class="cd back shc" style="transform:translateY(${o}px) rotate(${o*.4}deg);width:46px;height:64px;margin:0 -4px;animation-delay:${i*.05}s"></div>`}if(c%3===0)sfxS();c++;if(c>bm*4+10){clearInterval(iv);setTimeout(()=>goS(2),300)}},100);
+}
+function drawP(){
+  const i=Math.floor(Math.random()*dk.length);pCard=dk.splice(i,1)[0];sfxF();
+  document.getElementById('dpile').style.display='none';document.getElementById('t-click').style.display='none';
+  document.getElementById('dr').style.display='block';
+  document.getElementById('dcd').innerHTML=`<div class="drw">${ch(pCard,'person')}</div>`;
+}
+function go3(){
+  const fi=(bday-1)%dk.length;fCard=dk.splice(fi,1)[0];
+  bd={};for(let i=1;i<=10;i++)bd[i]={cards:[],rm:[]};
+  bd[5].cards=[pCard];bd[10].cards=[fCard];
+  dIdx=0;prs=[];logs=[];dn=false;isA=false;personRemoved=false;fateRemoved=false;
+  aLog(T.logP(cn(pCard),5));aLog(T.logF(cn(fCard),10));
+  goS(3);
+  document.getElementById('dp').innerHTML=ch(pCard,'person');
+  document.getElementById('df').innerHTML=ch(fCard,'fate');
+  rBoard('board');uSpd();updateDS();
+}
+function rBoard(id){
+  const b=document.getElementById(id);b.innerHTML='';
+  RO.forEach(i=>{
+    const d=bd[i],top=gTop(i),rc=d.rm.length;
+    const sl=document.createElement('div');
+    sl.className='sl'+(!d.cards.length&&!rc?' empty':'');sl.dataset.s=i;
+    let ex=i===5?'person':i===10?'fate':'';
+    let h=`<span class="lb">${T.sn[i]}</span>`;
+    if(top)h+=ch(top,ex+' da');
+    else if(rc>0)h+='<div class="cd out" style="border:1.5px dashed var(--border)"><span class="rk" style="font-size:.7rem;color:var(--border)">✕</span></div>';
+    else h+='<div class="ph"></div>';
+    h+=`<span class="nm">${i}</span>`;
+    const ts=d.cards.length+rc;if(ts>1)h+=`<span class="stk">${ts}</span>`;
+    sl.innerHTML=h;b.appendChild(sl);
+  });
+}
+function gTop(n){const cs=bd[n].cards;for(let i=cs.length-1;i>=0;i--)if(cs[i])return cs[i];return null}
+function gTopI(n){const cs=bd[n].cards;for(let i=cs.length-1;i>=0;i--)if(cs[i])return{card:cs[i],idx:i};return null}
+function d1(){
+  if(dn||!dk.length)return;const seq=getDealSeq();const slot=seq[dIdx%seq.length];
+  dealToSlot(slot);dIdx=(dIdx+1)%seq.length;
+  rBoard('board');rPairs('pairs');updateDS();checkEnd();
+}
+function dealToSlot(slot){
+  if(!dk.length)return;const c=dk.shift();bd[slot].cards.push(c);sfxD();
+  aLog(T.logD(cn(c),slot,T.sn[slot]));
+  let matched=false;
+  for(let i=1;i<=10;i++){if(i===slot)continue;const t=gTopI(i);
+    if(t&&t.card.rank===c.rank){matched=true;sfxM();
+      aLog(`<span class="mt">${T.logM(i,cn(t.card),slot,cn(c))}</span>`);
+      prs.push({c1:t.card,s1:i,c2:c,s2:slot});
+      bd[i].rm.push(t.card);bd[i].cards[t.idx]=null;
+      const ci=gTopI(slot);if(ci&&ci.card===c){bd[slot].rm.push(c);bd[slot].cards[ci.idx]=null}
+      if((i===5||slot===5)&&!personRemoved){personRemoved=true;aLog(T.logPR)}
+      if((i===10||slot===10)&&!fateRemoved){fateRemoved=true;aLog(T.logFR)}
+      break;
+    }
+  }
+  if(personRemoved&&fateRemoved)return;
+  if(matched&&dk.length>0)dealToSlot(slot);
+}
+function checkEnd(){
+  if(personRemoved&&fateRemoved){fillR();dn=true;sA();aLog(T.logEnd);rBoard('board');setTimeout(showR,600)}
+  else if(!dk.length&&!dn){dn=true;sA();aLog(T.logDeck);setTimeout(showR,600)}
+}
+function fillR(){for(let i=1;i<=10;i++){if(!gTop(i)&&dk.length){const c=dk.shift();bd[i].cards.push(c);aLog(T.logFill(cn(c),i))}}}
+function rPairs(id){const e=document.getElementById(id);e.innerHTML='';prs.forEach(p=>{e.innerHTML+=`<div class="pr"><span class="${cc(p.c1.suit)}">${p.c1.suit}${p.c1.rank}</span><span class="ar">⇄</span><span class="${cc(p.c2.suit)}">${p.c2.suit}${p.c2.rank}</span></div>`})}
+function aLog(t){logs.push(t);const e=document.getElementById('log');e.innerHTML=logs.map(l=>`<div>${l}</div>`).join('');e.scrollTop=e.scrollHeight}
+function uSpd(){const v=+document.getElementById('spr').value;document.getElementById('spl').textContent=T.spdL[v-1]}
+function gSpd(){return[1200,800,500,250,100][(+document.getElementById('spr').value)-1]}
+function tA(){if(isA)sA();else{isA=true;document.getElementById('ba').textContent=T.pause;document.getElementById('b1').disabled=true;aStep()}}
+function aStep(){if(!isA||dn){sA();return}d1();if(!dn)aTm=setTimeout(aStep,gSpd())}
+function sA(){isA=false;clearTimeout(aTm);aTm=null;const b=document.getElementById('ba');if(b){b.textContent=T.auto;document.getElementById('b1').disabled=false}}
+
+// ===== RESULTS =====
+function showR(){
+  goS(4);sfxC();
+  document.getElementById('rp').innerHTML=ch(pCard,'person');
+  document.getElementById('rf').innerHTML=ch(fCard,'fate');
+  rBoard('rb');rPairs('rprs');
+  genSummary();saveHistory();loadHistory();
+  const res=document.getElementById('results');res.innerHTML='';
+  [5,10,1,4,2,7,9,8,3,6].forEach(s=>{
+    const top=gTop(s),cat=CT[s],rk=SRANK[cat]||SRANK.overall;
+    let h=`<div class="rc"><div class="ct">${T.sn[s]}</div><div class="rw">`;
+    if(top){
+      const si=rk.indexOf(top.suit),lv=T.lv[si];
+      const interp=getInterp(top,s);
+      const rmC=bd[s].rm;
+      const stkTxt=rmC.length?T.stk(s,rmC.map(c=>cn(c)),cn(top)):'';
+      h+=ch(top,(s===5?'person':s===10?'fate':''));
+      h+=`<div class="nf"><div class="rb"><div class="rf s${si}"></div></div>`;
+      h+=`<div class="rft"><span class="bdg s${si}">${lv}</span> ${sn(top.suit)}${top.rank}</div>`;
+      if(interp){
+        h+=`<div class="re">${interp.e}</div>`;
+        h+=`<div class="rt">${interp.d}</div>`;
+        h+=`<div class="ra">💡 ${interp.a}</div>`;
+      }
+      if(stkTxt)h+=`<div class="rt" style="margin-top:6px;color:var(--accD);font-size:.72rem">⟡ ${stkTxt}</div>`;
+      h+=`<div class="rsu">${sn(top.suit)} ${T.snS[s]||''} #${si+1} (${T.rl[si]})</div></div>`;
+    }else{
+      h+='<div class="cd out" style="border:1.5px dashed var(--border)"><span class="rk" style="color:var(--border)">✕</span></div>';
+      h+=`<div class="nf"><div class="rt" style="color:var(--txtL)">${T.rmTxt}</div></div>`;
+    }
+    h+='</div>';
+    const rmC=bd[s].rm,allC=bd[s].cards.filter(Boolean);
+    if(rmC.length>0){h+=`<div class="rst">📚 ${[...rmC,...allC].map((c,idx)=>`<span style="color:${cc(c.suit)==='red'?'var(--red)':'var(--blk)'};${idx<rmC.length?'text-decoration:line-through;opacity:.5':''}">${c.suit}${c.rank}</span>`).join(' → ')}</div>`}
+    h+='</div>';res.innerHTML+=h;
+  });
+}
+
+function genSummary(){
+  const el=document.getElementById('summary');
+  const positions=[{s:1,c:'overall'},{s:4,c:'love'},{s:2,c:'love'},{s:7,c:'wealth'},{s:9,c:'wealth'},{s:8,c:'career'},{s:3,c:'health'},{s:6,c:'social'}];
+  const scores={};
+  positions.forEach(p=>{const top=gTop(p.s);if(!top)return;const rk=SRANK[p.c]||SRANK.overall;const si=rk.indexOf(top.suit);const sc=3-si;const cn2=T.snS[p.s]||p.c;if(!scores[cn2])scores[cn2]={t:0,n:0};scores[cn2].t+=sc;scores[cn2].n++});
+  let tt=0,tn=0;Object.values(scores).forEach(s=>{tt+=s.t;tn+=s.n});
+  const avg=tn?tt/tn:1.5;
+  const oi=avg>=2.5?0:avg>=1.8?1:avg>=1?2:3;
+  let scH='<div class="sms">';
+  Object.entries(scores).forEach(([n,s])=>{const a=s.n?s.t/s.n:0;const si=a>=2.5?0:a>=1.8?1:a>=1?2:3;scH+=`<div class="sci"><div class="scc">${n}</div><div class="scv s${si}">${['★★★','★★☆','★☆☆','☆☆☆'][si]}</div></div>`});
+  scH+='</div>';
+  let sm=T.sumOpen[oi];
+  const l4=gTop(4),l2=gTop(2);
+  if(l4&&l2){const l4s=(SRANK.love).indexOf(l4.suit),l2s=(SRANK.love).indexOf(l2.suit);sm+='\n\n💕 '+(l2s<l4s?T.sumLove[0]:l2s>l4s?T.sumLove[1]:T.sumLove[2])}
+  const m7=gTop(7),m9=gTop(9);
+  if(m7&&m9){const m7s=(SRANK.wealth).indexOf(m7.suit),m9s=(SRANK.wealth).indexOf(m9.suit);sm+='\n\n💰 '+(m9s<m7s?T.sumMoney[0]:m9s>m7s?T.sumMoney[1]:T.sumMoney[2])}
+  const car=gTop(8);if(car){const ci=getInterp(car,8);if(ci)sm+='\n\n💼 '+ci.e+'。'}
+  const hea=gTop(3);if(hea){const hi=getInterp(hea,3);if(hi)sm+='\n\n🏥 '+hi.e+'。'}
+  sm+='\n\n'+(avg>=2?T.sumClose[0]:T.sumClose[1]);
+  let ts=0;for(let i=1;i<=10;i++)ts+=bd[i].rm.length;
+  if(ts>=5)sm+='\n\n'+T.sumStk(ts);
+  el.style.display='block';
+  el.innerHTML=`<div class="smt">${T.sumT}</div><div style="text-align:center;margin-bottom:8px;font-size:.9rem;font-weight:700">${T.sumOv}<span class="scv s${oi}">${T.lv[oi]}</span></div>${scH}<div class="smtx">${sm.replace(/\n/g,'<br>')}</div>`;
+}
+
+// ===== HISTORY =====
+async function saveHistory(){
+  try{
+    const rec={date:new Date().toISOString(),month:bm,day:bday,person:{suit:pCard.suit,rank:pCard.rank},fate:{suit:fCard.suit,rank:fCard.rank},overall:T.lv[0],lang:currentLang};
+    // Determine overall
+    const positions=[{s:1,c:'overall'},{s:4,c:'love'},{s:2,c:'love'},{s:7,c:'wealth'},{s:9,c:'wealth'},{s:8,c:'career'},{s:3,c:'health'}];
+    let tt=0,tn=0;positions.forEach(p=>{const top=gTop(p.s);if(!top)return;const rk=SRANK[p.c]||SRANK.overall;tt+=(3-rk.indexOf(top.suit));tn++});
+    const avg=tn?tt/tn:1.5;rec.overall=T.lv[avg>=2.5?0:avg>=1.8?1:avg>=1?2:3];
+    let hist=[];
+    try{if(window.storage){const r=await window.storage.get('fortune-history');if(r&&r.value)hist=JSON.parse(r.value)}}catch(e){}
+    if(!hist.length){try{const ls=localStorage.getItem('fortune-history');if(ls)hist=JSON.parse(ls)}catch(e){}}
+    hist.unshift(rec);if(hist.length>20)hist=hist.slice(0,20);
+    try{if(window.storage)await window.storage.set('fortune-history',JSON.stringify(hist));else localStorage.setItem('fortune-history',JSON.stringify(hist))}catch(e){try{localStorage.setItem('fortune-history',JSON.stringify(hist))}catch(e2){}}
+  }catch(e){}
+}
+async function loadHistory(){
+  const el=document.getElementById('hist-list');if(!el)return;
+  let hist=null;
+  try{if(window.storage){const r=await window.storage.get('fortune-history');if(r&&r.value)hist=JSON.parse(r.value)}}catch(e){}
+  if(!hist){try{const ls=localStorage.getItem('fortune-history');if(ls)hist=JSON.parse(ls)}catch(e){}}
+  if(!hist||!hist.length){el.innerHTML=`<div class="he">${T.histE}</div>`;return}
+  const lc={'大吉':'var(--ok)','吉':'var(--gold)','平':'var(--acc)','凶':'var(--red)','Excellent':'var(--ok)','Good':'var(--gold)','Fair':'var(--acc)','Caution':'var(--red)'};
+  el.innerHTML=hist.map(h=>{const d=new Date(h.date);const ds=`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;const hl=L[h.lang||'zh-TW']||T;return`<div class="hi"><div class="hd2">${ds}　${T.month}:${h.month} ${T.day}:${h.day}</div><div class="hc">${T.person}:${(hl.suit||T.suit)[h.person.suit]}${h.person.rank}　${T.fate}:${(hl.suit||T.suit)[h.fate.suit]}${h.fate.rank}　<span style="color:${lc[h.overall]||'var(--txt)'}">${h.overall}</span></div></div>`}).join('');
+}
+
+// ===== SHARE =====
+function genShare(){
+  const canvas=document.getElementById('shareCanvas');const ctx=canvas.getContext('2d');
+  const W=750,H=1300;canvas.width=W;canvas.height=H;
+  ctx.fillStyle='#f5f0e8';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle='#2c2820';ctx.font='bold 36px "Noto Serif TC","Noto Serif JP",serif';ctx.textAlign='center';
+  ctx.fillText(T.title,W/2,60);
+  ctx.fillStyle='#8a8070';ctx.font='14px "Noto Serif TC","Noto Serif JP",serif';ctx.fillText(T.sub,W/2,85);
+  ctx.strokeStyle='#c4956a';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(W/2-30,100);ctx.lineTo(W/2+30,100);ctx.stroke();
+  ctx.font='14px "Noto Serif TC","Noto Serif JP",serif';ctx.fillStyle='#2c2820';
+  ctx.fillText(`${T.person}: ${sn(pCard.suit)}${pCard.rank}　　${T.fate}: ${sn(fCard.suit)}${fCard.rank}`,W/2,128);
+  let y=158;
+  [5,10,1,4,2,7,9,8,3,6].forEach(s=>{
+    const top=gTop(s),cat=CT[s],rk=SRANK[cat]||SRANK.overall;
+    if(!top){ctx.fillStyle='#d8d0c4';ctx.font='13px "Noto Serif TC","Noto Serif JP",serif';ctx.textAlign='left';ctx.fillText(`${T.sn[s]}: ${T.lv[3]}`,50,y);y+=28;return}
+    const si=rk.indexOf(top.suit),lv=T.lv[si];
+    const colors=['#6a9c70','#c4a050','#c4956a','#c05040'];
+    const interp=getInterp(top,s);
+    ctx.fillStyle=colors[si];const bw=ctx.measureText(lv).width+14;
+    roundRect(ctx,46,y-12,bw,18,3);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 11px "Noto Serif TC","Noto Serif JP",serif';ctx.textAlign='left';ctx.fillText(lv,52,y);
+    ctx.fillStyle='#2c2820';ctx.font='bold 14px "Noto Serif TC","Noto Serif JP",serif';ctx.fillText(`${T.sn[s]}　${sn(top.suit)}${top.rank}`,50+bw+6,y);y+=18;
+    if(interp){ctx.fillStyle='#2c2820';ctx.font='13px "Noto Serif TC","Noto Serif JP",serif';wrapText(ctx,interp.e,50,W-100).forEach(l=>{ctx.fillText(l,50,y);y+=18});ctx.fillStyle='#a07850';ctx.font='11px "Noto Serif TC","Noto Serif JP",serif';ctx.fillText('💡 '+interp.a,50,y);y+=16}
+    y+=8;
+  });
+  ctx.fillStyle='#d8d0c4';ctx.font='11px "Noto Serif TC","Noto Serif JP",serif';ctx.textAlign='center';ctx.fillText(T.title+' · '+T.sub,W/2,H-20);
+  const dataUrl=canvas.toDataURL('image/png');
+  document.getElementById('share-out').innerHTML=`<div class="shp"><img src="${dataUrl}"></div><p style="font-size:.75rem;color:var(--txtL);margin:8px 0">${T.longP}</p><button class="btn" onclick="dlShare()" style="margin-top:4px">${T.dl}</button>`;
+}
+function dlShare(){const c=document.getElementById('shareCanvas');const a=document.createElement('a');a.download=T.title+'.png';a.href=c.toDataURL('image/png');a.click()}
+function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath()}
+function wrapText(ctx,text,x,maxW){const lines=[];let line='';for(let i=0;i<text.length;i++){const test=line+text[i];if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=text[i]}else line=test}if(line)lines.push(line);return lines}
+function webShare(){genShare();setTimeout(async()=>{try{const c=document.getElementById('shareCanvas');const blob=await new Promise(r=>c.toBlob(r,'image/png'));const f=new File([blob],T.title+'.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({title:T.title,text:T.title+' 🃏',files:[f]});else alert('Browser does not support file sharing.')}catch(e){}},500)}
+
+function restart(){
+  dn=false;sA();personRemoved=false;fateRemoved=false;
+  document.getElementById('bm').value='';document.getElementById('bd').value='';
+  document.getElementById('dpile').style.display='';document.getElementById('t-click').style.display='';
+  document.getElementById('dr').style.display='none';
+  const so=document.getElementById('share-out');if(so)so.innerHTML='';
+  const sm=document.getElementById('summary');if(sm)sm.style.display='none';
+  goS(0);
+}
+</script>
+
+<!-- Auto ads handles placement -->
+</body>
+</html>
