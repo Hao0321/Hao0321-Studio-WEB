@@ -282,7 +282,7 @@ export default function WaterSortPuzzle() {
       minHeight:"100vh", background:"#08080c", color:"#e8e4df",
       fontFamily:"'Noto Sans JP',sans-serif",
       display:"flex", flexDirection:"column", alignItems:"center",
-      padding:"16px 8px 40px", position:"relative", overflow:"hidden",
+      padding:"16px 8px 40px", position:"relative", overflow:"auto",
     }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@200;300;400;500;700&display=swap');
@@ -347,8 +347,11 @@ export default function WaterSortPuzzle() {
       <div style={{
         flex:1,display:"flex",flexDirection:"column",
         justifyContent:"center",alignItems:"center",
-        gap:20,zIndex:1,minHeight:260,
+        gap:cnt>7?12:20,zIndex:1,minHeight:cnt>7?320:260,
         animation:"fadeIn .5s ease .15s both",
+        transform:cnt>8?"scale(0.85)":cnt>6?"scale(0.92)":"none",
+        transformOrigin:"center center",
+        maxWidth:"100vw",
       }}>
         {cnt <= 5 ? renderRow(bottles) : (
           <>
@@ -386,7 +389,7 @@ export default function WaterSortPuzzle() {
       </div>
 
       {/* Level select */}
-      <div style={{marginTop:28,display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center",zIndex:1,animation:"fadeIn .5s ease .35s both"}}>
+      <div style={{marginTop:28,display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center",zIndex:1,animation:"fadeIn .5s ease .35s both",maxWidth:360}}>
         {LEVELS.map((_,i) => (
           <button key={i} onClick={()=>go(i)} style={{
             width:38,height:38,borderRadius:10,
