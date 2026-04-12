@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>遊戲中 — Hao0321 Studio</title>
+  <meta name="description" content="Hao0321 Studio 原創遊戲 — 免費在瀏覽器中遊玩。" />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <link rel="icon" type="image/svg+xml" href="https://hao0321.com/favicon.svg" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9106945071014808" crossorigin="anonymous"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -69,10 +74,18 @@
       background: #000; position: relative; overflow: hidden;
     }
     #game-root {
-      width: 100%; height: 100%; overflow: auto;
-      position: relative;
+      position: absolute; inset: 0;
+      overflow: auto; -webkit-overflow-scrolling: touch;
     }
-    #game-root > * { width: 100%; min-height: 100%; }
+    #game-root > div {
+      width: 100% !important; height: 100% !important;
+      max-width: 100% !important; max-height: 100% !important;
+      overflow: auto !important;
+    }
+    #game-root canvas {
+      width: 100% !important; height: 100% !important;
+      max-width: 100%; max-height: 100%;
+    }
     #game-iframe {
       width: 100%; height: 100%; border: none; display: block;
     }
@@ -104,8 +117,11 @@
       .ad-sidebar { display: none; }
     }
     @media (max-width: 768px) {
-      .ad-banner { height: 60px; }
-      .ad-banner .ad-slot { height: 50px; }
+      .ad-banner { display: none; }
+      .topbar { height: 40px; padding: 0 12px; }
+      .topbar-title { font-size: 0.76rem; }
+      .topbar-back { font-size: 0.72rem; }
+      .topbar-btn { padding: 4px 10px; font-size: 0.68rem; }
     }
   </style>
 </head>
@@ -118,16 +134,13 @@
     </div>
     <div class="topbar-right">
       <button class="topbar-btn" onclick="toggleFullscreen()">全螢幕</button>
-      <a href="../" class="topbar-btn" style="text-decoration:none;">首頁</a>
+      <a href="https://hao0321.com/" class="topbar-btn" style="text-decoration:none;">首頁</a>
     </div>
   </div>
 
   <div class="main-layout">
-    <!-- Left Ad Sidebar -->
-    <aside class="ad-sidebar">
-      <ins class="adsbygoogle" style="display:block;width:160px;height:600px" data-ad-client="ca-pub-9106945071014808" data-ad-slot="auto" data-ad-format="vertical"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </aside>
+    <!-- Left Ad Sidebar — auto ads handles placement -->
+    <aside class="ad-sidebar"></aside>
 
     <!-- Game Area -->
     <div class="game-area" id="gameArea">
@@ -139,19 +152,12 @@
     </div>
   </div>
 
-  <!-- Bottom Ad Banner -->
-  <div class="ad-banner">
-    <ins class="adsbygoogle" style="display:inline-block;width:728px;max-width:90%;height:90px" data-ad-client="ca-pub-9106945071014808" data-ad-slot="auto" data-ad-format="horizontal"></ins>
-    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-  </div>
-
-  <!-- Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9106945071014808" crossorigin="anonymous"></script>
+  <!-- Bottom Ad Banner — auto ads handles placement -->
 
   <!-- React (production) -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.2/babel.min.js" integrity="sha384-dqDn4UOhYWNxmtwnMX6yC3WtZZ6Li8rF6rLB7cu0i/R7btvb+p+kObgEHto7VsJK" crossorigin="anonymous"></script>
 
   <script>
     "use strict";
@@ -180,7 +186,9 @@
       'save-the-dog':    { title: '救救狗狗',         file: 'save-the-dog.jsx',     type: 'jsx' },
       'taiwan-monopoly': { title: '台灣大富翁',       file: 'taiwan-monopoly.jsx',  type: 'jsx' },
       'water-sort':      { title: '水排序益智',       file: 'water-sort-puzzle.jsx', type: 'jsx' },
-      'werewolf':        { title: '狼人殺',           file: 'werewolf-game.jsx',    type: 'jsx' }
+      'werewolf':        { title: '狼人殺',           file: 'werewolf-game.jsx',    type: 'jsx' },
+      'downstairs':      { title: '下樓梯',           file: 'downstairs.jsx',       type: 'jsx' },
+      'splat-ring':      { title: 'SPLAT RING',       file: 'splat-ring.jsx',       type: 'jsx' }
     };
 
     function stripModuleSyntax(code) {
@@ -216,19 +224,35 @@
 
     var params = new URLSearchParams(window.location.search);
     var gameKey = params.get('game');
-    var game = GAMES[gameKey];
+    // Only allow alphanumeric + hyphen keys to prevent injection
+    if (gameKey && !/^[a-z0-9-]+$/.test(gameKey)) gameKey = null;
+    var game = gameKey ? GAMES[gameKey] : null;
 
     if (!game) {
       document.getElementById('gameTitle').textContent = '找不到遊戲';
-      document.getElementById('gameLoading').innerHTML = '<span style="color:#666;font-size:0.9rem;">遊戲不存在，<a href="index.html" style="color:#c4a882;">回到大廳</a></span>';
+      var errEl = document.getElementById('gameLoading');
+      errEl.textContent = '';
+      var errSpan = document.createElement('span');
+      errSpan.style.cssText = 'color:#666;font-size:0.9rem;';
+      errSpan.textContent = '遊戲不存在，';
+      var errLink = document.createElement('a');
+      errLink.href = 'index.html';
+      errLink.style.color = '#c4a882';
+      errLink.textContent = '回到大廳';
+      errSpan.appendChild(errLink);
+      errEl.appendChild(errSpan);
     } else {
       document.title = game.title + ' — Hao0321 Studio';
       document.getElementById('gameTitle').textContent = game.title;
 
       if (game.type === 'html') {
         var root = document.getElementById('game-root');
-        root.innerHTML = '<iframe id="game-iframe" src="' + game.file + '"></iframe>';
-        document.getElementById('game-iframe').addEventListener('load', function() {
+        var iframe = document.createElement('iframe');
+        iframe.id = 'game-iframe';
+        iframe.src = game.file;
+        iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;';
+        root.appendChild(iframe);
+        iframe.addEventListener('load', function() {
           document.getElementById('gameLoading').classList.add('hidden');
         });
       } else {

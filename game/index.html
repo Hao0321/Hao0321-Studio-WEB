@@ -4,7 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>遊戲大廳 — Hao0321 Studio</title>
-  <meta name="description" content="Hao0321 Studio 原創小遊戲合集 — 免費遊玩，隨時暢玩。" />
+  <meta name="description" content="Hao0321 Studio 原創小遊戲合集 — 免費遊玩，隨時暢玩。策略、動作、益智、卡牌多種類型。" />
+  <meta name="author" content="Hao0321 Studio" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#a855f7" />
+  <link rel="canonical" href="https://game.hao0321.com/" />
+  <link rel="icon" type="image/svg+xml" href="https://hao0321.com/favicon.svg" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="遊戲大廳 — Hao0321 Studio" />
+  <meta property="og:description" content="免費遊玩的原創小遊戲合集 — 策略、動作、益智、卡牌，在瀏覽器裡隨時開玩。" />
+  <meta property="og:url" content="https://game.hao0321.com/" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="og:site_name" content="Hao0321 Studio" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="遊戲大廳 — Hao0321 Studio" />
+  <meta name="twitter:description" content="免費遊玩的原創小遊戲合集 — 策略、動作、益智、卡牌，在瀏覽器裡隨時開玩。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -23,8 +41,8 @@
     .logo-mark{width:36px;height:36px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;box-shadow:0 0 20px var(--glow-purple)}
     .logo-text{font-weight:600;font-size:.88rem;letter-spacing:.04em}
     .nav-right{display:flex;align-items:center;gap:16px}
-    .nav-back{padding:8px 20px;border:1px solid rgba(168,85,247,0.2);border-radius:100px;font-size:.78rem;text-decoration:none;color:var(--text2);transition:all .3s;letter-spacing:.03em}
-    .nav-back:hover{border-color:var(--purple);color:var(--purple);background:var(--glow-purple)}
+    .nav-back{padding:8px 20px;border:1px solid rgba(255,255,255,0.12);border-radius:6px;font-size:.78rem;text-decoration:none;color:var(--text2);transition:all .35s;letter-spacing:.03em;font-weight:600}
+    .nav-back:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08);transform:translateY(-2px)}
 
     .hero{padding:140px clamp(20px,5vw,64px) 60px;text-align:center;position:relative;z-index:1}
     .hero-label{font-size:.7rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;display:inline-block;opacity:0;animation:fadeUp .8s ease .2s forwards}
@@ -34,23 +52,22 @@
 
     .container{max-width:1100px;margin:0 auto;padding:0 clamp(20px,5vw,64px);position:relative;z-index:1}
     .games-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-bottom:100px}
-    .game-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:all .4s;display:flex;flex-direction:column}
-    .game-card:hover{transform:translateY(-4px);box-shadow:0 0 30px var(--glow-purple);border-color:var(--purple)}
-    .game-thumb{aspect-ratio:16/10;display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;overflow:hidden}
-    .game-thumb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(to top,rgba(0,0,0,0.6),transparent)}
-    .cover-icon{font-size:3.2rem;position:relative;z-index:1;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.3));transition:transform .4s}
-    .game-card:hover .cover-icon{transform:scale(1.1)}
-    .cover-title{position:absolute;bottom:14px;left:16px;z-index:2;font-weight:700;font-size:.9rem;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
-    .cover-badge{position:absolute;top:12px;right:12px;z-index:2;padding:3px 10px;border-radius:100px;font-size:.55rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:rgba(168,85,247,0.5);color:rgba(255,255,255,0.9);backdrop-filter:blur(4px)}
-    .cover-deco{position:absolute;z-index:1;opacity:.08;font-size:1.2rem}
+    .game-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:all .4s cubic-bezier(.25,.46,.45,.94);display:flex;flex-direction:column}
+    .game-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,0.4);border-color:rgba(255,255,255,0.15)}
+    .game-thumb{aspect-ratio:16/10;display:flex;align-items:flex-end;justify-content:flex-start;position:relative;overflow:hidden}
+    .game-thumb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent)}
+    .cover-icon{display:none}
+    .cover-deco{display:none}
+    .cover-title{position:absolute;bottom:0;left:0;right:0;z-index:2;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:1.6rem;color:#fff;padding:20px;text-shadow:0 2px 12px rgba(0,0,0,0.6);letter-spacing:-.02em;line-height:1.1}
+    .cover-badge{position:absolute;top:12px;right:12px;z-index:2;padding:4px 12px;border-radius:4px;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:#fff;color:#111;transform:rotate(-2deg)}
     .game-info{padding:18px 20px;flex:1;display:flex;flex-direction:column}
     .game-info h3{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:5px}
     .game-info p{color:var(--text2);font-size:.78rem;line-height:1.7;flex:1}
     .game-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
-    .game-tag{padding:3px 10px;border:1px solid rgba(168,85,247,0.2);border-radius:100px;font-size:.62rem;color:var(--purple);transition:all .3s}
-    .game-card:hover .game-tag{border-color:var(--pink);color:var(--pink);background:var(--glow-pink)}
-    .game-play{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:.76rem;color:var(--pink);font-weight:500;transition:gap .3s}
-    .game-card:hover .game-play{gap:10px}
+    .game-tag{padding:4px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;font-size:.62rem;color:var(--text2);font-weight:600;letter-spacing:.03em;transition:all .3s}
+    .game-card:hover .game-tag{border-color:rgba(255,255,255,0.25);color:#fff;background:rgba(255,255,255,0.08)}
+    .game-play{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:.76rem;color:var(--pink);font-weight:700;letter-spacing:.03em;transition:all .3s}
+    .game-card:hover .game-play{gap:10px;color:#fff}
 
     .thumb-cat{background:linear-gradient(145deg,#4a2800,#8b5e34,#3d1f00)}
     .thumb-dodge{background:linear-gradient(145deg,#06060e,#0d0a2e,#1a0040)}
@@ -61,6 +78,10 @@
     .thumb-mono{background:linear-gradient(145deg,#1b2838,#2a4558,#152030)}
     .thumb-water{background:linear-gradient(145deg,#082830,#1a4858,#0a3040)}
     .thumb-wolf{background:linear-gradient(145deg,#1a0028,#35104a,#200030)}
+    .thumb-fortune{background:linear-gradient(145deg,#2a1a00,#4a3010,#3a2508)}
+    .thumb-down{background:linear-gradient(145deg,#1a0828,#3a1850,#280a3a)}
+    .thumb-splat{background:linear-gradient(145deg,#18122B,#2a1e48,#140e22)}
+    .thumb-arcania{background:linear-gradient(145deg,#0a1020,#1a2848,#0c1830)}
 
     footer{border-top:1px solid rgba(255,255,255,0.06);padding:24px clamp(20px,5vw,64px);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
     footer p{font-size:.72rem;color:var(--text3)}footer a{font-size:.72rem;color:var(--text3);text-decoration:none;transition:color .3s}footer a:hover{color:var(--purple)}
@@ -77,8 +98,8 @@
   <div class="grid-bg"></div>
 
   <nav>
-    <a href="../" class="logo"><div class="logo-mark">H</div><div class="logo-text">Hao0321 Studio</div></a>
-    <div class="nav-right"><a href="../" class="nav-back">&larr; 回首頁</a></div>
+    <a href="https://hao0321.com/" class="logo"><div class="logo-mark">H</div><div class="logo-text">Hao0321 Studio</div></a>
+    <div class="nav-right"><a href="https://hao0321.com/" class="nav-back">&larr; 回首頁</a></div>
   </nav>
 
   <section class="hero">
@@ -125,10 +146,39 @@
         <div class="game-thumb thumb-wolf"><span class="cover-deco" style="top:10%;left:12%">🌙</span><span class="cover-icon">🐺</span><span class="cover-badge">Social</span><span class="cover-title">狼人殺</span></div>
         <div class="game-info"><h3>狼人殺</h3><p>與 AI 對手鬥智鬥勇，找出隱藏的狼人。</p><div class="game-tags"><span class="game-tag">推理</span><span class="game-tag">社交</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
       </a>
+      <a href="poker-fortune.html" class="game-card reveal reveal-d3">
+        <div class="game-thumb thumb-fortune"><span class="cover-deco" style="top:10%;left:10%;font-size:1.5rem;opacity:.1;color:#c4a050">✦</span><span class="cover-deco" style="top:18%;right:14%;font-size:1.3rem;opacity:.08;color:#c4956a">♦</span><span class="cover-icon">🔮</span><span class="cover-badge">Fortune</span><span class="cover-title">命運之牌</span></div>
+        <div class="game-info"><h3>命運之牌</h3><p>撲克牌占卜 — 輸入生日，翻開屬於你的命運牌陣。</p><div class="game-tags"><span class="game-tag">占卜</span><span class="game-tag">撲克</span></div><span class="game-play">開始占卜 &rarr;</span></div>
+      </a>
+      <a href="play.html?game=downstairs" class="game-card reveal reveal-d4">
+        <div class="game-thumb thumb-down"><span class="cover-deco" style="top:12%;left:14%;font-size:1rem;opacity:.08">⬇️</span><span class="cover-icon">🏃</span><span class="cover-badge">Action</span><span class="cover-title">下樓梯</span></div>
+        <div class="game-info"><h3>下樓梯</h3><p>經典下樓梯遊戲 — 踩著平台不斷往下，小心陷阱！</p><div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">經典</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+      </a>
+      <a href="play.html?game=splat-ring" class="game-card reveal reveal-d5">
+        <div class="game-thumb thumb-splat"><span class="cover-deco" style="top:10%;left:12%;font-size:1.3rem;opacity:.1;color:#C6FF00">●</span><span class="cover-icon">🎯</span><span class="cover-badge">Arcade</span><span class="cover-title">SPLAT RING</span></div>
+        <div class="game-info"><h3>SPLAT RING</h3><p>在霓虹環形軌道上跳躍，精準著陸得高分！</p><div class="game-tags"><span class="game-tag">街機</span><span class="game-tag">跳躍</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+      </a>
+      <a href="pact-of-arcania.html" class="game-card reveal">
+        <div class="game-thumb thumb-arcania"><span class="cover-deco" style="top:10%;left:10%;font-size:1.3rem;opacity:.1">✨</span><span class="cover-deco" style="top:18%;right:12%;font-size:1rem;opacity:.08">🗡️</span><span class="cover-icon">⚔️</span><span class="cover-badge">Card RPG</span><span class="cover-title">靈契之戰</span></div>
+        <div class="game-info"><h3>Pact of Arcania 靈契之戰</h3><p>卡牌對戰 RPG — 召喚靈獸、施展法術，挑戰強敵！</p><div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">RPG</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+      </a>
     </div>
+
+    <!-- AdSense auto ads — Google decides placement after approval -->
   </div>
 
-  <footer><p>&copy; 2026 Hao0321 Studio. All rights reserved.</p><a href="#">Back to top &uarr;</a></footer>
+  <footer><p>&copy; 2026 Hao0321 Studio. All rights reserved.</p><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="回到頂部">Back to top &uarr;</a></footer>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": "遊戲大廳 — Hao0321 Studio",
+    "description": "免費遊玩的原創小遊戲合集",
+    "url": "https://hao0321.com/game/",
+    "isPartOf": { "@type": "WebSite", "name": "Hao0321 Studio", "url": "https://hao0321.com" }
+  }
+  </script>
 
   <script>
     "use strict";
