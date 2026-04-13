@@ -866,7 +866,7 @@
     /* ===== SECTOR 04 — SUPPLY (Shop + Pipeline) ===== */
     .supply-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       margin-top: 48px;
     }
@@ -1301,7 +1301,7 @@
       .lang-switcher { display: none; }
       .hamburger { display: block; }
       .services-grid { grid-template-columns: 1fr; }
-      .supply-grid { grid-template-columns: 1fr; }
+      .supply-grid { grid-template-columns: 1fr !important; }
       .comm-grid { grid-template-columns: 1fr; }
       .works-timeline::before { left: 12px; }
       .work-dot { margin-left: 7px; }
@@ -1509,6 +1509,12 @@
           <h3>Production Pipeline</h3>
           <p data-i18n="supply_pipe_desc">互動式 VFX / Game / Indie 製作流程圖，視覺化你的工作流。</p>
           <span class="btn btn-ghost" data-i18n="supply_pipe_cta">查看 Pipeline</span>
+        </a>
+        <a href="analytics/" class="supply-card glass-card reveal" style="text-decoration:none;color:inherit">
+          <div class="supply-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--glow-blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+          <h3 data-i18n="supply_analytics_title">Social Analytics</h3>
+          <p data-i18n="supply_analytics_desc">YouTube / 社群數據分析儀表板，追蹤頻道成長與互動數據。</p>
+          <span class="btn btn-ghost" data-i18n="supply_analytics_cta">查看數據</span>
         </a>
       </div>
     </div>
@@ -1748,6 +1754,7 @@
       supply_shop_cta: "前往 Gumroad 商店",
       supply_pipe_desc: "互動式 VFX / Game / Indie 製作流程圖，視覺化你的工作流。",
       supply_pipe_cta: "查看 Pipeline",
+      supply_analytics_title: "Social Analytics", supply_analytics_desc: "YouTube / 社群數據分析儀表板，追蹤頻道成長與互動數據。", supply_analytics_cta: "查看數據",
       sec_comms_label: "通訊頻道", sec_comms_title: "在這裡，我分享所學",
       sec_comms_desc: "我的 YouTube 頻道是知識與創意的交匯點 — 分享 AI 教學、遊戲開發幕後、影視動畫製作，以及原創音樂。",
       yt_tag_behind: "影視幕後", yt_subscribe: "訂閱頻道", yt_join_community: "加入社群",
@@ -1794,6 +1801,7 @@
       supply_shop_cta: "Visit Gumroad Shop",
       supply_pipe_desc: "Interactive VFX / Game / Indie production flowchart to visualize your workflow.",
       supply_pipe_cta: "View Pipeline",
+      supply_analytics_title: "Social Analytics", supply_analytics_desc: "YouTube / social media analytics dashboard — track channel growth and engagement.", supply_analytics_cta: "View Analytics",
       sec_comms_label: "Comms Channel", sec_comms_title: "Where I Share What I Learn",
       sec_comms_desc: "My YouTube channel is where knowledge meets creativity — sharing AI tutorials, game dev behind-the-scenes, film production, and original music.",
       yt_tag_behind: "Behind the Scenes", yt_subscribe: "Subscribe", yt_join_community: "Join Community",
@@ -1840,6 +1848,7 @@
       supply_shop_cta: "Gumroadショップへ",
       supply_pipe_desc: "インタラクティブなVFX/ゲーム/インディー制作フローチャート。",
       supply_pipe_cta: "Pipelineを見る",
+      supply_analytics_title: "Social Analytics", supply_analytics_desc: "YouTube / SNS分析ダッシュボード — チャンネル成長とエンゲージメントを追跡。", supply_analytics_cta: "データを見る",
       sec_comms_label: "通信チャンネル", sec_comms_title: "学んだことを共有する場所",
       sec_comms_desc: "YouTubeチャンネルは知識とクリエイティビティの交差点 — AI教育、ゲーム開発の裏側、映像制作、オリジナル音楽を共有。",
       yt_tag_behind: "舞台裏", yt_subscribe: "チャンネル登録", yt_join_community: "コミュニティ参加",

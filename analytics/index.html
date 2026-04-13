@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social Analytics — Hao0321 Studio</title>
+  <meta name="description" content="YouTube / 社群數據分析儀表板 — 追蹤訂閱數、觀看數、互動率。" />
+  <meta name="theme-color" content="#00b4ff" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0a0a14; min-height: 100vh; }
+    #app-root { min-height: 100vh; }
+    .app-loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; color: #555; font-family: monospace; font-size: 14px; letter-spacing: 2px; }
+  </style>
+</head>
+<body>
+  <div id="app-root"><div class="app-loading">LOADING ANALYTICS...</div></div>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.26.10/babel.min.js" crossorigin="anonymous"></script>
+
+  <script>
+    fetch('hao-analytics.jsx')
+      .then(function(r) { return r.text(); })
+      .then(function(code) {
+        code = code.replace(/^\s*import\s+\{[^}]*\}\s+from\s+["'][^"']*["'];?\s*$/gm, '');
+        code = code.replace(/^\s*import\s+["'][^"']*["'];?\s*$/gm, '');
+        var exportName = null;
+        code = code.replace(/export\s+default\s+function\s+(\w+)/g, function(m, name) {
+          exportName = name; return 'function ' + name;
+        });
+        if (!exportName) {
+          code = code.replace(/export\s+default\s+(\w+)/g, function(m, name) {
+            exportName = name; return '';
+          });
+        }
+        var finalCode = code + '\nvar _root=ReactDOM.createRoot(document.getElementById("app-root"));_root.render(React.createElement(' + (exportName || 'App') + '));';
+        var transformed = Babel.transform(finalCode, { presets: ['react'] }).code;
+        var script = document.createElement('script');
+        script.textContent = transformed;
+        document.body.appendChild(script);
+      })
+      .catch(function(err) {
+        document.getElementById('app-root').innerHTML = '<div style="color:#f66;padding:40px;font-family:monospace">Error: ' + err.message + '</div>';
+      });
+  </script>
+</body>
+</html>
