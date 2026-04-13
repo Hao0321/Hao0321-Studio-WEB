@@ -36,7 +36,8 @@
             exportName = name; return '';
           });
         }
-        var finalCode = code + '\nvar _root=ReactDOM.createRoot(document.getElementById("app-root"));_root.render(React.createElement(' + (exportName || 'App') + '));';
+        var reactShim = 'var useState=React.useState,useEffect=React.useEffect,useMemo=React.useMemo,useCallback=React.useCallback,useRef=React.useRef,useReducer=React.useReducer,useContext=React.useContext,createContext=React.createContext,Fragment=React.Fragment;\n';
+        var finalCode = reactShim + code + '\nvar _root=ReactDOM.createRoot(document.getElementById("app-root"));_root.render(React.createElement(' + (exportName || 'App') + '));';
         var transformed = Babel.transform(finalCode, { presets: ['react'] }).code;
         var script = document.createElement('script');
         script.textContent = transformed;
