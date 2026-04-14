@@ -68,45 +68,39 @@ const generateHourlyData = (hours, base, volatility) => {
 };
 
 const CHANNEL_DATA = {
-  name: "HAO0321 Studio",
-  handle: "@hao0321_studio",
+  name: "Demo Channel",
+  handle: "@demo",
   avatar: null,
   joinDate: "2021-06-15",
   country: "TW",
   category: "Science & Technology",
   platforms: {
     youtube: {
-      // ── 真實數據 (來自 YouTube Studio 2026-04-13) ──
-      subscribers: 11317,
-      views: 498000,               // 總觀看數估算
-      videos: 82,
-      avgViews: 6073,              // 498000 / 82
-      engRate: 7.2,                // 小頻道互動率較高
-      estRevenue: { min: 16, max: 31 }, // 基於 CPM $2.05，月觀看 ~10K
-      grade: "B",
-      rank: 482310,
-      rankCategory: 18420,
-      subsHistory: generateTimeSeriesData(90, 10925, 11317, 60),
-      viewsHistory: generateTimeSeriesData(90, 468000, 498000, 2000),
-      hourlyViews: generateHourlyData(48, 14, 8),  // ~333 views/day ÷ 24h
+      subscribers: 1000,
+      views: 50000,
+      videos: 20,
+      avgViews: 2500,
+      engRate: 5.0,
+      estRevenue: { min: 5, max: 15 },
+      grade: "C",
+      rank: null,
+      rankCategory: null,
+      subsHistory: generateTimeSeriesData(90, 900, 1000, 20),
+      viewsHistory: generateTimeSeriesData(90, 45000, 50000, 500),
+      hourlyViews: generateHourlyData(48, 5, 3),
       topLongVideos: [
-        { title: "房間改造 DIY！Tapo C200 監視器安裝教學，避開記錄盲區", views: 8900, likes: 420, comments: 67, date: "2026-02-28", duration: "11:35" },
-        { title: "獨家開發！超強 AI 提示詞神器 2.0 免費送，整合 Midjourney", views: 7200, likes: 510, comments: 83, date: "2026-03-05", duration: "15:22" },
-        { title: "Vibe Coding 全端開發實戰", views: 5800, likes: 390, comments: 54, date: "2026-03-28", duration: "18:42" },
-        { title: "SynthV 音樂製作教學", views: 4100, likes: 320, comments: 41, date: "2026-01-10", duration: "15:30" },
+        { title: "Demo Video 1", views: 5000, likes: 300, comments: 40, date: "2026-02-28", duration: "10:00" },
+        { title: "Demo Video 2", views: 3500, likes: 200, comments: 25, date: "2026-03-05", duration: "12:00" },
       ],
       topShorts: [
-        { title: "沒出息 (Official Lyric Video) | Hao0321 中文原創單曲", views: 12400, likes: 680, comments: 92, date: "2026-03-15", duration: "0:45" },
+        { title: "Demo Short 1", views: 8000, likes: 500, comments: 60, date: "2026-03-15", duration: "0:30" },
       ],
       uploadSchedule: [0, 1, 0, 1, 1, 0, 0],  // ~3 videos/month
       demographics: { "13-17": 8, "18-24": 35, "25-34": 38, "35-44": 12, "45+": 7 },
       geoData: { "TW": 55, "HK": 12, "US": 10, "MY": 8, "SG": 5, "JP": 4, "Other": 6 },
       milestones: [
-        { label: "1K Subscribers", date: "2023-03-10", achieved: true },
-        { label: "5K Subscribers", date: "2024-08-20", achieved: true },
-        { label: "10K Subscribers", date: "2025-06-15", achieved: true },
-        { label: "15K Subscribers", date: null, achieved: false, projected: "2028-08-05" },
-        { label: "500K Total Views", date: null, achieved: false, projected: "2026-04-19" },
+        { label: "1K Subscribers", date: "2024-01-01", achieved: true },
+        { label: "5K Subscribers", date: null, achieved: false, projected: "2026-06-01" },
       ],
     },
     twitch: {
@@ -574,21 +568,24 @@ export default function HaoAnalytics() {
       return true;
     } catch (err) {
       console.error("API Error:", err);
+      setSearchError("搜尋失敗：" + (err.message || "請檢查網路連線後重試"));
       return false;
     }
   }, []);
 
-  // Auto-load default channel on mount
+  // No auto-load — show search UI first
   useEffect(() => {
-    loadChannel("HAO0321 Studio").finally(() => setIsLoading(false));
+    setIsLoading(false);
   }, []);
 
-  const handleSearch = useCallback(async () => {
-    if (!searchQuery.trim()) return;
+  const handleSearch = useCallback(async (overrideQuery) => {
+    const q = (overrideQuery || searchQuery || "").trim();
+    if (!q) return;
+    setSearchQuery(q);
     setIsSearching(true);
     setSearchError(null);
-    const ok = await loadChannel(searchQuery);
-    if (!ok) setSearchError("找不到此頻道，請確認名稱或網址");
+    const ok = await loadChannel(q);
+    if (!ok) setSearchError("找不到此頻道。試試輸入 @handle、頻道名稱或 YouTube 網址。");
     else setActiveTab("overview");
     setIsSearching(false);
   }, [searchQuery, loadChannel]);
@@ -649,7 +646,7 @@ export default function HaoAnalytics() {
           </div>
           <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
             <input style={{ flex: 1, background: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 12, padding: "11px 18px", color: "#1A1A2E", fontSize: 13, fontFamily: "inherit", outline: "none" }}
-              placeholder="搜尋任何 YouTube 頻道..."
+              placeholder="輸入 @handle、頻道名稱或 YouTube 網址..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -667,6 +664,24 @@ export default function HaoAnalytics() {
       {isLoading && (
         <div style={{ maxWidth: 920, margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
           <div style={{ fontSize: 16, fontWeight: 700, color: "#9CA3AF" }}>載入中...</div>
+        </div>
+      )}
+
+      {/* ── LANDING ── */}
+      {!isLoading && !showChannel && (
+        <div style={{ maxWidth: 920, margin: "0 auto", padding: "80px 24px", textAlign: "center" }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>&#x1F4CA;</div>
+          <div style={{ fontSize: 24, fontWeight: 900, color: "#1A1A2E", marginBottom: 8 }}>YouTube Channel Analytics</div>
+          <div style={{ fontSize: 14, color: "#9CA3AF", marginBottom: 32, lineHeight: 1.8 }}>
+            搜尋任何 YouTube 頻道，查看訂閱數、觀看趨勢、互動率、AI 成長預測。<br/>
+            輸入 @handle、頻道名稱或完整網址即可開始。
+          </div>
+          <div style={{ fontSize: 12, color: "#9CA3AF", marginBottom: 12, fontWeight: 600 }}>試試看：</div>
+          <div style={{ display: "flex", gap: 8, justifyContent: "center", flexWrap: "wrap" }}>
+            {["@MrBeast", "Lofi Girl", "@PewDiePie", "Travis Scott"].map(function(ex) {
+              return <button key={ex} onClick={function(){handleSearch(ex)}} style={{ background: "#fff", border: "1px solid #E5E7EB", borderRadius: 20, padding: "8px 18px", fontSize: 13, fontWeight: 600, color: "#6B7280", cursor: "pointer", fontFamily: "inherit" }}>{ex}</button>;
+            })}
+          </div>
         </div>
       )}
 
