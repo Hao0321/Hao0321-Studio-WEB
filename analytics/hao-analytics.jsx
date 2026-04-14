@@ -1,33 +1,95 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 
-/* ── YouTube API (inlined) ── */
+/* ── YouTube API (optimized — ~103 units/search vs 303) ── */
 const YT_API_KEY = "AIzaSyD8r_h3C6vsPf7ByzV6T4cDi2sK5TCMLMA";
 const YT_BASE = "https://www.googleapis.com/youtube/v3";
+var _profileCache = {};
+
 async function resolveChannel(query) {
   const q = query.trim();
+  // Direct channel ID from URL
   const chMatch = q.match(/channel\/(UC[\w-]+)/);
   if (chMatch) return chMatch[1];
-  const hMatch = q.match(/@([\w.-]+)/);
-  const handle = hMatch ? hMatch[1] : null;
+  // Direct channel ID
   if (/^UC[\w-]{22}$/.test(q)) return q;
-  const searchTerm = handle ? `@${handle}` : q;
-  const res = await fetch(`${YT_BASE}/search?part=snippet&type=channel&q=${encodeURIComponent(searchTerm)}&maxResults=1&key=${YT_API_KEY}`);
-  const data = await res.json();
-  return data.items?.length > 0 ? data.items[0].snippet.channelId : null;
+  // @handle — use channels?forHandle (1 unit instead of 100)
+  const hMatch = q.match(/@([\w.-]+)/) || q.match(/youtube\.com\/@([\w.-]+)/);
+  if (hMatch) {
+    var hRes = await fetch(YT_BASE + '/channels?part=snippet,statistics&forHandle=@' + hMatch[1] + '&key=' + YT_API_KEY);
+    var hData = await hRes.json();
+    if (hData.items && hData.items.length > 0) return hData.items[0].id;
+  }
+  // Fallback: search (100 units)
+  var res = await fetch(YT_BASE + '/search?part=snippet&type=channel&q=' + encodeURIComponent(q) + '&maxResults=1&key=' + YT_API_KEY);
+  var data = await res.json();
+  if (data.error) throw new Error(data.error.message || 'API error');
+  return data.items && data.items.length > 0 ? data.items[0].snippet.channelId : null;
 }
+
 async function fetchChannelData(channelId) {
-  const res = await fetch(`${YT_BASE}/channels?part=snippet,statistics,brandingSettings&id=${channelId}&key=${YT_API_KEY}`);
-  const data = await res.json();
-  if (!data.items?.length) return null;
-  const ch = data.items[0], stats = ch.statistics, snippet = ch.snippet;
-  return { id: channelId, name: snippet.title, handle: snippet.customUrl || `@${snippet.title}`, description: snippet.description, avatar: snippet.thumbnails?.medium?.url || null, country: snippet.country || "—", joinDate: snippet.publishedAt?.split("T")[0] || "—", subscribers: parseInt(stats.subscriberCount) || 0, views: parseInt(stats.viewCount) || 0, videos: parseInt(stats.videoCount) || 0, hiddenSubscribers: stats.hiddenSubscriberCount || false };
+  var res = await fetch(YT_BASE + '/channels?part=snippet,statistics&id=' + channelId + '&key=' + YT_API_KEY);
+  var data = await res.json();
+  if (data.error) throw new Error(data.error.message || 'API error');
+  if (!data.items || !data.items.length) return null;
+  var ch = data.items[0], stats = ch.statistics, snippet = ch.snippet;
+  return { id: channelId, name: snippet.title, handle: snippet.customUrl || '@' + snippet.title, description: snippet.description, avatar: snippet.thumbnails ? (snippet.thumbnails.medium ? snippet.thumbnails.medium.url : null) : null, country: snippet.country || "—", joinDate: snippet.publishedAt ? snippet.publishedAt.split("T")[0] : "—", subscribers: parseInt(stats.subscriberCount) || 0, views: parseInt(stats.viewCount) || 0, videos: parseInt(stats.videoCount) || 0, hiddenSubscribers: stats.hiddenSubscriberCount || false };
 }
-function parseDurationSeconds(iso) { const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if (!m) return 0; return (parseInt(m[1]||0)*3600)+(parseInt(m[2]||0)*60)+parseInt(m[3]||0); }
-function parseDuration(iso) { const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if (!m) return "0:00"; const h=m[1]?parseInt(m[1]):0, min=m[2]?parseInt(m[2]):0, sec=m[3]?parseInt(m[3]):0; if(h>0)return `${h}:${String(min).padStart(2,"0")}:${String(sec).padStart(2,"0")}`; return `${min}:${String(sec).padStart(2,"0")}`; }
-function buildVideoObj(v) { const dur=v.contentDetails.duration, secs=parseDurationSeconds(dur); return { id:v.id, title:v.snippet.title, views:parseInt(v.statistics.viewCount)||0, likes:parseInt(v.statistics.likeCount)||0, comments:parseInt(v.statistics.commentCount)||0, date:v.snippet.publishedAt.split("T")[0], duration:parseDuration(dur), durationSeconds:secs, isShort:secs<=60, thumbnail:v.snippet.thumbnails?.medium?.url||null }; }
-async function fetchVideos(channelId, order, max) { const res=await fetch(`${YT_BASE}/search?part=snippet&channelId=${channelId}&order=${order}&type=video&maxResults=${max}&key=${YT_API_KEY}`); const data=await res.json(); if(!data.items?.length)return[]; const ids=data.items.map(v=>v.id.videoId).join(","); const sr=await fetch(`${YT_BASE}/videos?part=statistics,contentDetails,snippet&id=${ids}&key=${YT_API_KEY}`); const sd=await sr.json(); return(sd.items||[]).map(buildVideoObj); }
-function calcGrade(subs,engRate){let s=0;if(subs>=10000000)s+=50;else if(subs>=1000000)s+=42;else if(subs>=100000)s+=35;else if(subs>=10000)s+=28;else if(subs>=1000)s+=20;else s+=10;if(engRate>=10)s+=30;else if(engRate>=7)s+=25;else if(engRate>=5)s+=20;else if(engRate>=3)s+=15;else if(engRate>=1)s+=10;else s+=5;if(s>=70)return"A+";if(s>=62)return"A";if(s>=55)return"A-";if(s>=48)return"B+";if(s>=42)return"B";if(s>=35)return"B-";if(s>=28)return"C+";if(s>=20)return"C";return"D";}
-async function fetchFullProfile(query) { const cid=await resolveChannel(query); if(!cid)return null; const[ch,top,recent]=await Promise.all([fetchChannelData(cid),fetchVideos(cid,"viewCount",20),fetchVideos(cid,"date",20)]); if(!ch)return null; const totalEng=recent.reduce((s,v)=>s+v.likes+v.comments,0),totalViews=recent.reduce((s,v)=>s+v.views,0),engRate=totalViews>0?((totalEng/totalViews)*100):0; const avgViews=ch.videos>0?Math.round(ch.views/ch.videos):0; const avgDV=totalViews/Math.max(recent.length,1),mV=avgDV*30; const pick=v=>({title:v.title,views:v.views,likes:v.likes,comments:v.comments,date:v.date,duration:v.duration,isShort:v.isShort}); return{...ch,avgViews,engRate:parseFloat(engRate.toFixed(1)),estRevenue:{min:Math.round((mV/1000)*1),max:Math.round((mV/1000)*3)},grade:calcGrade(ch.subscribers,engRate),topLongVideos:top.filter(v=>!v.isShort).slice(0,5).map(pick),topShorts:top.filter(v=>v.isShort).slice(0,5).map(pick),recentVideos:recent}; }
+
+function parseDurationSeconds(iso) { var m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if (!m) return 0; return (parseInt(m[1]||0)*3600)+(parseInt(m[2]||0)*60)+parseInt(m[3]||0); }
+function parseDuration(iso) { var m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if (!m) return "0:00"; var h=m[1]?parseInt(m[1]):0, min=m[2]?parseInt(m[2]):0, sec=m[3]?parseInt(m[3]):0; if(h>0)return h+':'+String(min).padStart(2,"0")+':'+String(sec).padStart(2,"0"); return min+':'+String(sec).padStart(2,"0"); }
+function buildVideoObj(v) { var dur=v.contentDetails.duration, secs=parseDurationSeconds(dur); return { id:v.id, title:v.snippet.title, views:parseInt(v.statistics.viewCount)||0, likes:parseInt(v.statistics.likeCount)||0, comments:parseInt(v.statistics.commentCount)||0, date:v.snippet.publishedAt.split("T")[0], duration:parseDuration(dur), durationSeconds:secs, isShort:secs<=60, thumbnail: v.snippet.thumbnails ? (v.snippet.thumbnails.medium ? v.snippet.thumbnails.medium.url : null) : null }; }
+
+// Single video fetch — only 1 search call (100 units) + 1 videos call (1 unit)
+async function fetchVideos(channelId, max) {
+  var res = await fetch(YT_BASE + '/search?part=snippet&channelId=' + channelId + '&order=date&type=video&maxResults=' + max + '&key=' + YT_API_KEY);
+  var data = await res.json();
+  if (data.error) throw new Error(data.error.message || 'API error');
+  if (!data.items || !data.items.length) return [];
+  var ids = data.items.map(function(v){return v.id.videoId}).join(",");
+  var sr = await fetch(YT_BASE + '/videos?part=statistics,contentDetails,snippet&id=' + ids + '&key=' + YT_API_KEY);
+  var sd = await sr.json();
+  return (sd.items||[]).map(buildVideoObj);
+}
+
+function calcGrade(subs,engRate){var s=0;if(subs>=10000000)s+=50;else if(subs>=1000000)s+=42;else if(subs>=100000)s+=35;else if(subs>=10000)s+=28;else if(subs>=1000)s+=20;else s+=10;if(engRate>=10)s+=30;else if(engRate>=7)s+=25;else if(engRate>=5)s+=20;else if(engRate>=3)s+=15;else if(engRate>=1)s+=10;else s+=5;if(s>=70)return"A+";if(s>=62)return"A";if(s>=55)return"A-";if(s>=48)return"B+";if(s>=42)return"B";if(s>=35)return"B-";if(s>=28)return"C+";if(s>=20)return"C";return"D";}
+
+// Optimized: 1 resolve (1-100 units) + 1 channel (1 unit) + 1 video search (101 units)
+// Total: ~103-203 units vs previous 303
+async function fetchFullProfile(query) {
+  // Check cache first
+  var cacheKey = query.trim().toLowerCase();
+  if (_profileCache[cacheKey]) return _profileCache[cacheKey];
+
+  var cid = await resolveChannel(query);
+  if (!cid) return null;
+  // Fetch channel + recent videos in parallel (skip separate "top by views" call)
+  var results = await Promise.all([fetchChannelData(cid), fetchVideos(cid, 15)]);
+  var ch = results[0], videos = results[1];
+  if (!ch) return null;
+
+  var totalEng = videos.reduce(function(s,v){return s+v.likes+v.comments},0);
+  var totalViews = videos.reduce(function(s,v){return s+v.views},0);
+  var engRate = totalViews > 0 ? ((totalEng/totalViews)*100) : 0;
+  var avgViews = ch.videos > 0 ? Math.round(ch.views/ch.videos) : 0;
+  var avgDV = totalViews / Math.max(videos.length, 1);
+  var mV = avgDV * 30;
+  var pick = function(v){return{title:v.title,views:v.views,likes:v.likes,comments:v.comments,date:v.date,duration:v.duration,isShort:v.isShort}};
+  // Sort client-side for top videos instead of separate API call
+  var sorted = videos.slice().sort(function(a,b){return b.views - a.views});
+
+  var profile = Object.assign({}, ch, {
+    avgViews: avgViews,
+    engRate: parseFloat(engRate.toFixed(1)),
+    estRevenue: {min: Math.round((mV/1000)*1), max: Math.round((mV/1000)*3)},
+    grade: calcGrade(ch.subscribers, engRate),
+    topLongVideos: sorted.filter(function(v){return !v.isShort}).slice(0,5).map(pick),
+    topShorts: sorted.filter(function(v){return v.isShort}).slice(0,5).map(pick),
+    recentVideos: videos
+  });
+
+  _profileCache[cacheKey] = profile;
+  return profile;
+}
 
 // ─── MOCK DATA ENGINE ───────────────────────────────────────────────
 const PLATFORMS = {
