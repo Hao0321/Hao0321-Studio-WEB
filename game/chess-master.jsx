@@ -2160,9 +2160,15 @@ function MahjongGame({ onBack, variant }) {
     const next=nextT(0);setTurn(next);setPhase('draw');setMessage(`${MJ_WIND_NAMES[next]||''}`);
   };
 
-  const doPass=()=>{setClaimOptions(null);
-    if(phase==='claim'){const next=nextT(lastDiscard.by);setTurn(next);setPhase('draw');setMessage(`${MJ_WIND_NAMES[next]||''}`);}
-    else{setPhase('discard');setMessage('選牌打出');}
+  const doPass=()=>{
+    const wasSelfDraw = claimOptions?.selfDraw;
+    setClaimOptions(null);
+    if(wasSelfDraw){
+      // After kong replacement — stay on player's turn to discard
+      setPhase('discard');setMessage('選牌打出');
+    } else if(phase==='claim'){
+      const next=nextT(lastDiscard.by);setTurn(next);setPhase('draw');setMessage(`${MJ_WIND_NAMES[next]||''}`);
+    } else{setPhase('discard');setMessage('選牌打出');}
   };
   const doWin=()=>{if(!claimOptions?.canWin)return;
     setWinnerInfo(makeWinInfo(0,claimOptions.selfDraw,claimOptions.selfDraw?currentTile:lastDiscard?.tile));setPhase('end');setMessage(claimOptions.selfDraw?'自摸!':'胡牌!');setClaimOptions(null);
@@ -2196,7 +2202,7 @@ function MahjongGame({ onBack, variant }) {
         const rc={};testAll.forEach(t=>{const k=tk(t);rc[k]=(rc[k]||0)+1;});
         const hasAnK2=Object.values(rc).some(c=>c>=4);
         if(cw||hasAnK2){
-          setCurrentTile(rep);setPhase('discard');
+          setCurrentTile(rep);setPhase('claim');
           setClaimOptions({canWin:cw,canKong:hasAnK2,canPong:false,canChow:false,forPlayer:0,selfDraw:true});
           setMessage(cw?'嶺上自摸!':'可再槓!');
         } else {
@@ -2214,7 +2220,7 @@ function MahjongGame({ onBack, variant }) {
         const testAll=[...nh[0],rep];
         const cw=canWin(testAll,nm[0].length);
         if(cw){
-          setCurrentTile(rep);setPhase('discard');
+          setCurrentTile(rep);setPhase('claim');
           setClaimOptions({canWin:true,canKong:false,canPong:false,canChow:false,forPlayer:0,selfDraw:true});
           setMessage('嶺上自摸!');
         } else {
