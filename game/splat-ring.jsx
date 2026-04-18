@@ -366,7 +366,10 @@ export default function SplatRing() {
             g.jumpOff = 0; g.vy = 0; g.airborne = false;
             g.hitCD = 50;
             burst(CX + Math.cos(PLAYER_A) * INNER, CY + Math.sin(PLAYER_A) * INNER, C.orange, 10, 3);
-            if (g.lives <= 0) { g.phase = "dead"; if (g.score > g.best) g.best = g.score; }
+            if (g.lives <= 0) {
+              g.phase = "dead"; if (g.score > g.best) g.best = g.score;
+              if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(g.score);
+            }
           }
         } else if (d > 0.25) { ob._sc = false; }
       });

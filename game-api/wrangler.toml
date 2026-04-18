@@ -1,0 +1,16 @@
+name = "hao-games-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+GOOGLE_CLIENT_ID = "1098993759422-h6mv01edrfl3n5ngcia9ijhek4qrfse3.apps.googleusercontent.com"
+JWT_SECRET = "hao0321-games-secret-key-2026"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hao-games-db"
+database_id = "5cf30197-3a2d-46ba-9a17-766bd1c5ed48"
+
+[[routes]]
+pattern = "api.game.hao0321.com/*"
+zone_name = "hao0321.com"

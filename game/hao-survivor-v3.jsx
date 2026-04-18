@@ -495,6 +495,7 @@ export default function HaoSurvivor() {
           g.paused=true;
           setGameStats({kills:g.kills,time:g.time,level:p.level});
           setScreen("gameover");
+          if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(g.kills);
         }
       }
     });
@@ -517,7 +518,10 @@ export default function HaoSurvivor() {
         p.hp -= dmg; p.invincible = 0.3;
         addShake(2); g.flash=0.15;
         g.dmgTexts.push({ x:p.x, y:p.y-p.r-10, text:Math.round(dmg), color:"#ff6b6b", life:35, maxLife:35, scale:1.2 });
-        if (p.hp<=0) { g.paused=true; setGameStats({kills:g.kills,time:g.time,level:p.level}); setScreen("gameover"); }
+        if (p.hp<=0) {
+          g.paused=true; setGameStats({kills:g.kills,time:g.time,level:p.level}); setScreen("gameover");
+          if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(g.kills);
+        }
         return false;
       }
       return true;
@@ -590,6 +594,7 @@ export default function HaoSurvivor() {
       setGameStats({kills:g.kills,time:g.time,level:p.level});
       if (g.stageIdx+1<STAGES.length) setStagesUnlocked(prev=>Math.max(prev,g.stageIdx+2));
       setScreen("stageclear");
+      if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(g.kills + 1000);
     }
 
     // ═══════ RENDER ═══════

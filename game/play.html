@@ -222,6 +222,33 @@
     if (gameKey && !/^[a-z0-9-]+$/.test(gameKey)) gameKey = null;
     var game = gameKey ? GAMES[gameKey] : null;
 
+    // ── Hao Game SDK ── (games call window.haoGame.reportScore(n) on game over)
+    (function(){
+      var API = 'https://api.game.hao0321.com';
+      var lastReported = { key: null, ts: 0 };
+      function token() { return localStorage.getItem('hao_token'); }
+      window.haoGame = {
+        id: gameKey,
+        isLoggedIn: function() { return !!token(); },
+        reportScore: function(score) {
+          if (!gameKey || typeof score !== 'number' || !isFinite(score) || score < 0) return Promise.resolve({ ok: false });
+          score = Math.floor(score);
+          // Debounce: same score within 3s is a duplicate
+          var key = gameKey + ':' + score;
+          var now = Date.now();
+          if (lastReported.key === key && (now - lastReported.ts) < 3000) return Promise.resolve({ ok: false, dup: true });
+          lastReported = { key: key, ts: now };
+          var t = token();
+          if (!t) return Promise.resolve({ ok: false, reason: 'not-logged-in' });
+          return fetch(API + '/score', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + t },
+            body: JSON.stringify({ game: gameKey, score: score })
+          }).then(function(r){ return r.ok ? r.json() : { ok: false }; }).catch(function(){ return { ok: false }; });
+        }
+      };
+    })();
+
     if (!game) {
       document.getElementById('gameTitle').textContent = '找不到遊戲';
       var errEl = document.getElementById('gameLoading');
