@@ -473,6 +473,7 @@ export default function App() {
             s.phase = "lose";
             for (let p = 0; p < 18; p++)
               s.particles.push({ x: s.dog.x, y: s.dog.y, vx: (Math.random() - .5) * 6, vy: (Math.random() - .5) * 6, life: 35, ml: 35, c: [244, 67, 54] });
+            if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(s.level);
             re(v => v + 1);
           }
         }
@@ -482,6 +483,7 @@ export default function App() {
           for (let p = 0; p < 35; p++)
             s.particles.push({ x: s.dog.x + (Math.random() - .5) * 50, y: s.dog.y + (Math.random() - .5) * 50,
               vx: (Math.random() - .5) * 6, vy: -Math.random() * 5 - 2, life: 50, ml: 50, c: Math.random() > .5 ? [255, 193, 7] : [255, 112, 67] });
+          if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(s.level + 1);
           re(v => v + 1);
         }
       }

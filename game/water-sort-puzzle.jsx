@@ -222,6 +222,7 @@ export default function WaterSortPuzzle() {
             if (!b || moves+1 < b) return {...p,[level]:moves+1};
             return p;
           });
+          if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(level + 1);
           setTimeout(() => setParticles(false), 3500);
         }
       } else {

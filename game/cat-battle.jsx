@@ -85,6 +85,7 @@ export default function App(){
       return n;
     });
     setScr("result");
+    if(w&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(si+1);
   };
 
   return(
