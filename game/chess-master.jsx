@@ -251,13 +251,14 @@ function XiangqiGame({ onBack }) {
           const nc = { ...captured };
           nc[turn] = [...nc[turn], cap];
           setCaptured(nc);
-          if (cap.t==='帅'||cap.t==='将') setWinner(turn);
+          if (cap.t==='帅'||cap.t==='将') { setWinner(turn); if(turn==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
         }
         const nextT = turn==='r'?'b':'r';
         setBoard(nb); setTurn(nextT); setSel(null); setMoves([]); setLastMove([r,c]);
         // Check if opponent is checkmated
         if (!hasAnyLegalMove(nb, nextT)) {
           setWinner(turn);
+          if(turn==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1);
         }
       } else if (p && p.c === turn) {
         setSel([r,c]); setMoves(getLegalMoves(board, r, c, turn));
@@ -294,7 +295,7 @@ function XiangqiGame({ onBack }) {
           }
         }
       }
-      if (legalMoves.length===0) { setWinner('r'); return; } // checkmate
+      if (legalMoves.length===0) { setWinner('r'); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); return; } // checkmate
 
       // Score each move
       for (const m of legalMoves) {
@@ -510,7 +511,7 @@ function DarkChessGame({ onBack }) {
           const ns = {...score}; ns[turn]++; setScore(ns);
           const remaining = nb.flat().filter(x => x);
           const opp = turn==='r'?'b':'r';
-          if (!remaining.some(x => x.c===opp)) setWinner(turn);
+          if (!remaining.some(x => x.c===opp)) { setWinner(turn); if(turn==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
         }
         setBoard(nb); setTurn(turn==='r'?'b':'r'); setSel(null); setLastMove([r,c]);
       } else if (p && p.hidden) {
@@ -572,6 +573,7 @@ function DarkChessGame({ onBack }) {
       } else {
         // AI has no legal actions — AI loses
         setWinner('r');
+        if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1);
       }
     }, 500);
     return () => clearTimeout(timer);
@@ -586,7 +588,7 @@ function DarkChessGame({ onBack }) {
       if (p && p.hidden) { hasAction = true; break; }
       if (p && !p.hidden && p.c === turn && getMoves(r, c, board, turn).length > 0) hasAction = true;
     }
-    if (!hasAction) setWinner(turn === 'r' ? 'b' : 'r');
+    if (!hasAction) { const w = turn === 'r' ? 'b' : 'r'; setWinner(w); if(w==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
   }, [board, turn, winner]);
   const CS = 44;
   const ms = sel ? getMoves(sel[0],sel[1]) : [];

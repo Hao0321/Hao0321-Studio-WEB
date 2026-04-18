@@ -453,7 +453,7 @@ function BigTwoGame({ onBack }) {
     const nh = [...hands]; nh[0] = nh[0].filter(c => !sel.some(s2 => s2.id === c.id));
     setH(nh); setCP([...sel]); setPA({ c: [...sel], p: 0 }); setLP(0); setPaC(0);
     if (isF) setIF(false); setSel([]); log("你 " + CL[t]);
-    if (!nh[0].length) { setWin(0); setFW(f => f + 1); setPh("over"); return; }
+    if (!nh[0].length) { setWin(0); setFW(f => f + 1); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
     setCur(1 % pc);
   };
 
@@ -673,7 +673,7 @@ function OldMaidGame({ onBack }) {
   const start = () => { let d = shuffle(mkDeck(true)); const ji = d.findIndex(c => c.isJoker); d.splice(ji, 1);
     let h0 = [], h1 = []; d.forEach((c, i) => (i % 2 ? h1 : h0).push(c)); h0 = remP(shuffle(h0)); h1 = remP(shuffle(h1));
     setHs([h0, h1]); setTn(0); setMsg(""); setWin(null); setPh("play"); };
-  const chkW = (hs2) => { if (!hs2[0].length) { setWin(0); setMsg("你贏了！"); setFw(f => f + 1); setPh("over"); return true; }
+  const chkW = (hs2) => { if (!hs2[0].length) { setWin(0); setMsg("你贏了！"); setFw(f => f + 1); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return true; }
     if (!hs2[1].length) { setWin(1); setMsg("你持有鬼牌！"); setPh("over"); return true; } return false; };
   const draw = (idx) => { const c = hs[1][idx]; const n1 = hs[1].filter((_, i) => i !== idx); const n0 = remP([...hs[0], c]);
     const nh = [n0, n1]; setHs(nh); setMsg("抽到 " + (c.isJoker ? "🃏" : c.rank + c.suit)); if (!chkW(nh)) setTn(1); };
@@ -792,7 +792,7 @@ function SevensGame({ onBack }) {
     setHs(nh); setBd(nb); setLastPlayed(c); setShowHint(false);
     const m = "你放了 " + c.rank + c.suit;
     setMsg(m); addLog(m);
-    if (!nh[0].length) { setWin(0); setFw(f => f + 1); setPh("over"); addLog("你贏了！"); return; }
+    if (!nh[0].length) { setWin(0); setFw(f => f + 1); setPh("over"); addLog("你贏了！"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
     setTn(1);
   };
 
@@ -1432,7 +1432,7 @@ function DDZGame({ onBack }) {
     nh[0] = nh[0].filter(c => !sel.some(s2 => s2.id === c.id));
     setHs(nh); setCP([...sel]); setLP(0); setPaC(0); setSel([]);
     setMsg("出了 " + (DDZ_NAMES[co.t] || co.t));
-    if (!nh[0].length) { setWin(0); setFw(f => f + 1); setPh("over"); return; }
+    if (!nh[0].length) { setWin(0); setFw(f => f + 1); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
     setCur(1);
   };
 

@@ -507,6 +507,7 @@ function endGame(){
 
   gs='over';P.alive=false;$('hud').style.display='none';$('hudBtns').style.display='none';
   const isNew=score>D.best;if(isNew)D.best=score;saveData();
+  try{const h=window.parent&&window.parent.haoGame;if(h&&h.reportScore)h.reportScore(score);}catch(e){}
 
   $('goSc').textContent=score;$('goT').textContent=sTime.toFixed(1)+'s';
   $('goC').textContent=maxCombo;$('goD').textContent=dodged;
