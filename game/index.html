@@ -28,7 +28,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9106945071014808" crossorigin="anonymous"></script>
   <style>
-    :root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a28;--purple:#a855f7;--pink:#ff2d7b;--text:#f0f0f0;--text2:#a0a0b0;--text3:#555568;--glow-purple:rgba(168,85,247,0.15);--glow-pink:rgba(255,45,123,0.15);--grad:linear-gradient(135deg,#a855f7,#ff2d7b);--radius:12px}
+    :root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a28;--purple:#a855f7;--pink:#ff2d7b;--text:#f0f0f0;--text2:#a0a0b0;--text3:#555568;--glow-purple:rgba(168,85,247,0.15);--glow-pink:rgba(255,45,123,0.15);--grad:linear-gradient(135deg,#a855f7,#ff2d7b);--radius:14px}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{background:var(--bg);color:var(--text);font-family:'Inter','Noto Sans TC',sans-serif;font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh}
@@ -36,39 +36,87 @@
 
     .grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:60px 60px}
 
+    /* ── Nav ── */
     nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,5vw,64px);background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(168,85,247,0.1)}
     .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
     .logo-mark{width:36px;height:36px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;box-shadow:0 0 20px var(--glow-purple)}
     .logo-text{font-weight:600;font-size:.88rem;letter-spacing:.04em}
-    .nav-right{display:flex;align-items:center;gap:16px}
-    .nav-back{padding:8px 20px;border:1px solid rgba(255,255,255,0.12);border-radius:6px;font-size:.78rem;text-decoration:none;color:var(--text2);transition:all .35s;letter-spacing:.03em;font-weight:600}
-    .nav-back:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08);transform:translateY(-2px)}
+    .nav-right{display:flex;align-items:center;gap:10px}
+    .nav-btn{padding:8px 18px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;font-size:.78rem;text-decoration:none;color:var(--text2);transition:all .35s;letter-spacing:.03em;font-weight:600;cursor:pointer;background:transparent;display:inline-flex;align-items:center;gap:6px}
+    .nav-btn:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08);transform:translateY(-2px)}
+    .nav-btn--accent{border-color:var(--purple);color:var(--purple)}
+    .nav-btn--accent:hover{background:var(--purple);color:#fff;border-color:var(--purple)}
 
-    .hero{padding:140px clamp(20px,5vw,64px) 60px;text-align:center;position:relative;z-index:1}
+    /* ── Hero ── */
+    .hero{padding:140px clamp(20px,5vw,64px) 48px;text-align:center;position:relative;z-index:1}
     .hero-label{font-size:.7rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;display:inline-block;opacity:0;animation:fadeUp .8s ease .2s forwards}
     .hero-title{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.1;margin-bottom:16px;opacity:0;animation:fadeUp .8s ease .4s forwards}
     .hero-title em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
     .hero-desc{color:var(--text2);font-size:.95rem;max-width:480px;margin:0 auto;opacity:0;animation:fadeUp .8s ease .6s forwards}
 
+    /* ── Container ── */
     .container{max-width:1100px;margin:0 auto;padding:0 clamp(20px,5vw,64px);position:relative;z-index:1}
-    .games-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-bottom:100px}
-    .game-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:all .4s cubic-bezier(.25,.46,.45,.94);display:flex;flex-direction:column}
-    .game-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,0.4);border-color:rgba(255,255,255,0.15)}
+
+    /* ── Stats Bar ── */
+    .stats-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 0 24px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:28px}
+    .stats-left{display:flex;align-items:center;gap:12px}
+    .stats-count{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .stats-label{color:var(--text2);font-size:.82rem}
+    .btn-random{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border:1px solid rgba(168,85,247,0.3);border-radius:8px;background:rgba(168,85,247,0.08);color:var(--purple);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s;letter-spacing:.02em}
+    .btn-random:hover{background:var(--purple);color:#fff;border-color:var(--purple);transform:translateY(-2px);box-shadow:0 4px 20px var(--glow-purple)}
+    .btn-random svg{width:16px;height:16px}
+
+    /* ── Category Filter ── */
+    .filter-bar{display:flex;flex-wrap:wrap;gap:8px;padding:0 0 32px;position:relative;z-index:2}
+    .filter-pill{padding:8px 20px;border:1px solid rgba(255,255,255,0.1);border-radius:100px;font-size:.78rem;color:var(--text2);font-weight:600;cursor:pointer;transition:all .3s;background:transparent;letter-spacing:.02em;white-space:nowrap}
+    .filter-pill:hover{border-color:rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.05)}
+    .filter-pill.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 16px var(--glow-purple)}
+
+    /* ── Favorites Section ── */
+    .fav-section{margin-bottom:36px;display:none}
+    .fav-section.has-favs{display:block}
+    .fav-header{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+    .fav-header h2{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.15rem;font-weight:700}
+    .fav-header span{color:var(--pink);font-size:1.1rem}
+    .fav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+    /* ── Games Grid ── */
+    .section-label{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+    .section-label span{color:var(--purple);font-size:1rem}
+    .games-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-bottom:60px}
+
+    /* ── Game Card ── */
+    .game-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:all .4s cubic-bezier(.25,.46,.45,.94);display:flex;flex-direction:column;position:relative}
+    .game-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,0.5);border-color:rgba(168,85,247,0.25)}
+    .game-card.hidden{display:none}
     .game-thumb{aspect-ratio:16/10;display:flex;align-items:flex-end;justify-content:flex-start;position:relative;overflow:hidden}
     .game-thumb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent)}
     .cover-icon{display:none}
     .cover-deco{display:none}
-    .cover-title{position:absolute;bottom:0;left:0;right:0;z-index:2;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:1.6rem;color:#fff;padding:20px;text-shadow:0 2px 12px rgba(0,0,0,0.6);letter-spacing:-.02em;line-height:1.1}
-    .cover-badge{position:absolute;top:12px;right:12px;z-index:2;padding:4px 12px;border-radius:4px;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:#fff;color:#111;transform:rotate(-2deg)}
-    .game-info{padding:18px 20px;flex:1;display:flex;flex-direction:column}
-    .game-info h3{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:.95rem;font-weight:700;margin-bottom:5px}
-    .game-info p{color:var(--text2);font-size:.78rem;line-height:1.7;flex:1}
-    .game-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
-    .game-tag{padding:4px 12px;border:1px solid rgba(255,255,255,0.1);border-radius:4px;font-size:.62rem;color:var(--text2);font-weight:600;letter-spacing:.03em;transition:all .3s}
-    .game-card:hover .game-tag{border-color:rgba(255,255,255,0.25);color:#fff;background:rgba(255,255,255,0.08)}
+    .cover-title{position:absolute;bottom:0;left:0;right:0;z-index:2;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:1.5rem;color:#fff;padding:18px 18px 16px;text-shadow:0 2px 12px rgba(0,0,0,0.6);letter-spacing:-.02em;line-height:1.1}
+    .cover-badge{position:absolute;top:12px;left:12px;z-index:3;padding:4px 12px;border-radius:6px;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,0.15);color:#fff;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1)}
+    .badge-new{position:absolute;top:12px;left:12px;z-index:4;padding:4px 10px;border-radius:6px;font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff;box-shadow:0 2px 12px var(--glow-pink);animation:pulse-new 2s infinite}
+    .badge-new + .cover-badge{left:auto;right:50px;top:12px}
+
+    /* ── Heart/Fav Button ── */
+    .fav-btn{position:absolute;top:10px;right:10px;z-index:5;width:34px;height:34px;border-radius:50%;border:none;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;color:rgba(255,255,255,0.5)}
+    .fav-btn:hover{background:rgba(0,0,0,0.65);transform:scale(1.15);color:#fff}
+    .fav-btn.favorited{color:var(--pink);background:rgba(255,45,123,0.2)}
+    .fav-btn.favorited:hover{background:rgba(255,45,123,0.35)}
+    .fav-btn svg{width:17px;height:17px;pointer-events:none}
+
+    .game-info{padding:16px 18px;flex:1;display:flex;flex-direction:column}
+    .game-info h3{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:.92rem;font-weight:700;margin-bottom:4px}
+    .game-info p{color:var(--text2);font-size:.76rem;line-height:1.7;flex:1}
+    .game-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+    .game-tags{display:flex;flex-wrap:wrap;gap:5px}
+    .game-tag{padding:3px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:6px;font-size:.6rem;color:var(--text3);font-weight:600;letter-spacing:.03em;transition:all .3s}
+    .game-card:hover .game-tag{border-color:rgba(255,255,255,0.2);color:var(--text2);background:rgba(255,255,255,0.04)}
+    .game-plays{font-size:.62rem;color:var(--text3);white-space:nowrap}
     .game-play{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:.76rem;color:var(--pink);font-weight:700;letter-spacing:.03em;transition:all .3s}
     .game-card:hover .game-play{gap:10px;color:#fff}
 
+    /* Thumb gradients */
     .thumb-cat{background:linear-gradient(145deg,#4a2800,#8b5e34,#3d1f00)}
     .thumb-dodge{background:linear-gradient(145deg,#06060e,#0d0a2e,#1a0040)}
     .thumb-frost{background:linear-gradient(145deg,#0a1e38,#1a3a5c,#0c2848)}
@@ -84,15 +132,41 @@
     .thumb-chess{background:linear-gradient(145deg,#1a1008,#2e1e0a,#1c1208)}
     .thumb-arcania{background:linear-gradient(145deg,#0a1020,#1a2848,#0c1830)}
 
+    /* ── FAQ Section ── */
+    .faq-section{padding:48px 0 60px;border-top:1px solid rgba(255,255,255,0.06)}
+    .faq-title{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:28px;display:flex;align-items:center;gap:10px}
+    .faq-title span{font-size:1.1rem}
+    .faq-item{border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;background:var(--bg2);transition:border-color .3s}
+    .faq-item:hover{border-color:rgba(168,85,247,0.2)}
+    .faq-q{padding:18px 22px;font-size:.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .3s;user-select:none}
+    .faq-q:hover{background:rgba(255,255,255,0.02)}
+    .faq-q::after{content:'+';font-size:1.2rem;color:var(--purple);font-weight:300;transition:transform .3s}
+    .faq-item.open .faq-q::after{transform:rotate(45deg)}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease}
+    .faq-item.open .faq-a{max-height:200px;padding:0 22px 18px}
+    .faq-a p{color:var(--text2);font-size:.82rem;line-height:1.8}
+
+    /* ── Footer ── */
     footer{border-top:1px solid rgba(255,255,255,0.06);padding:24px clamp(20px,5vw,64px);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
     footer p{font-size:.72rem;color:var(--text3)}footer a{font-size:.72rem;color:var(--text3);text-decoration:none;transition:color .3s}footer a:hover{color:var(--purple)}
 
+    /* ── Animations ── */
     @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes pulse-new{0%,100%{box-shadow:0 2px 12px var(--glow-pink)}50%{box-shadow:0 2px 24px rgba(255,45,123,0.35)}}
     .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}.reveal.visible{opacity:1;transform:translateY(0)}
     .reveal-d1{transition-delay:.06s}.reveal-d2{transition-delay:.12s}.reveal-d3{transition-delay:.18s}.reveal-d4{transition-delay:.24s}.reveal-d5{transition-delay:.30s}
 
-    @media(max-width:768px){.games-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:480px){.games-grid{grid-template-columns:1fr}}
+    /* ── Responsive ── */
+    @media(max-width:768px){
+      .games-grid,.fav-grid{grid-template-columns:1fr 1fr}
+      .filter-bar{gap:6px}
+      .filter-pill{padding:6px 14px;font-size:.72rem}
+      .stats-bar{flex-direction:column;gap:12px;align-items:flex-start}
+    }
+    @media(max-width:480px){
+      .games-grid,.fav-grid{grid-template-columns:1fr}
+      .cover-title{font-size:1.2rem;padding:14px}
+    }
   </style>
 </head>
 <body>
@@ -100,7 +174,13 @@
 
   <nav>
     <a href="https://hao0321.com/" class="logo"><div class="logo-mark">H</div><div class="logo-text">Hao0321 Studio</div></a>
-    <div class="nav-right"><a href="https://hao0321.com/" class="nav-back">&larr; 回首頁</a></div>
+    <div class="nav-right">
+      <button class="nav-btn nav-btn--accent" id="navRandom" title="隨機遊戲">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="22" height="22" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="16" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
+        隨機遊戲
+      </button>
+      <a href="https://hao0321.com/" class="nav-btn">&larr; 回首頁</a>
+    </div>
   </nav>
 
   <section class="hero">
@@ -110,63 +190,348 @@
   </section>
 
   <div class="container">
-    <div class="games-grid">
-      <a href="play.html?game=cat-battle" class="game-card reveal">
-        <div class="game-thumb thumb-cat"><span class="cover-deco" style="top:12%;left:10%">🐾</span><span class="cover-deco" style="top:20%;right:18%;font-size:.9rem">⚔️</span><span class="cover-icon">🐱</span><span class="cover-badge">Strategy</span><span class="cover-title">にゃんこ突撃</span></div>
-        <div class="game-info"><h3>にゃんこ突撃</h3><p>派遣貓咪軍團出征，以策略征服各關卡！</p><div class="game-tags"><span class="game-tag">策略</span><span class="game-tag">塔防</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      <div class="stats-left">
+        <span class="stats-count">14</span>
+        <span class="stats-label">款遊戲</span>
+      </div>
+      <button class="btn-random" id="statsRandom">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="22" height="22" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/></svg>
+        隨機遊戲
+      </button>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="filter-bar">
+      <button class="filter-pill active" data-filter="all">全部遊戲</button>
+      <button class="filter-pill" data-filter="strategy">策略</button>
+      <button class="filter-pill" data-filter="action">動作</button>
+      <button class="filter-pill" data-filter="puzzle">益智</button>
+      <button class="filter-pill" data-filter="card">卡牌</button>
+      <button class="filter-pill" data-filter="board">桌遊</button>
+    </div>
+
+    <!-- Favorites Section -->
+    <div class="fav-section" id="favSection">
+      <div class="fav-header">
+        <span>&#9829;</span>
+        <h2>My Favorites</h2>
+      </div>
+      <div class="fav-grid" id="favGrid"></div>
+    </div>
+
+    <!-- All Games -->
+    <div class="section-label"><span>&#9654;</span> 全部遊戲</div>
+    <div class="games-grid" id="gamesGrid">
+
+      <!-- 1. にゃんこ突撃 -->
+      <a href="play.html?game=cat-battle" class="game-card reveal" data-cat="strategy" data-id="cat-battle">
+        <div class="game-thumb thumb-cat">
+          <span class="cover-deco" style="top:12%;left:10%">&#128062;</span>
+          <span class="cover-deco" style="top:20%;right:18%;font-size:.9rem">&#9876;&#65039;</span>
+          <span class="cover-icon">&#128049;</span>
+          <span class="cover-badge">Strategy</span>
+          <span class="cover-title">にゃんこ突撃</span>
+          <button class="fav-btn" data-fav="cat-battle" onclick="toggleFav(event,'cat-battle')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>にゃんこ突撃</h3>
+          <p>派遣貓咪軍團出征，以策略征服各關卡！</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">策略</span><span class="game-tag">塔防</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=dodge-master" class="game-card reveal reveal-d1">
-        <div class="game-thumb thumb-dodge"><span class="cover-deco" style="top:15%;left:15%;font-size:1.5rem;opacity:.05">◆</span><span class="cover-icon">⚡</span><span class="cover-badge">Action</span><span class="cover-title">DODGE MASTER</span></div>
-        <div class="game-info"><h3>DODGE MASTER</h3><p>賽博龐克風格的閃避遊戲，收集道具、解鎖角色。</p><div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">閃避</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 2. DODGE MASTER -->
+      <a href="play.html?game=dodge-master" class="game-card reveal reveal-d1" data-cat="action" data-id="dodge-master">
+        <div class="game-thumb thumb-dodge">
+          <span class="cover-deco" style="top:15%;left:15%;font-size:1.5rem;opacity:.05">&#9670;</span>
+          <span class="cover-icon">&#9889;</span>
+          <span class="cover-badge">Action</span>
+          <span class="cover-title">DODGE MASTER</span>
+          <button class="fav-btn" data-fav="dodge-master" onclick="toggleFav(event,'dodge-master')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>DODGE MASTER</h3>
+          <p>賽博龐克風格的閃避遊戲，收集道具、解鎖角色。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">閃避</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=frost-survival" class="game-card reveal reveal-d2">
-        <div class="game-thumb thumb-frost"><span class="cover-deco" style="top:10%;left:12%">❄️</span><span class="cover-icon">🏔️</span><span class="cover-badge">Survival</span><span class="cover-title">霜寒求生</span></div>
-        <div class="game-info"><h3>霜寒求生</h3><p>在極寒世界中建造營地、管理資源。</p><div class="game-tags"><span class="game-tag">生存</span><span class="game-tag">建造</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 3. 霜寒求生 -->
+      <a href="play.html?game=frost-survival" class="game-card reveal reveal-d2" data-cat="strategy" data-id="frost-survival">
+        <div class="game-thumb thumb-frost">
+          <span class="cover-deco" style="top:10%;left:12%">&#10052;&#65039;</span>
+          <span class="cover-icon">&#127956;&#65039;</span>
+          <span class="cover-badge">Survival</span>
+          <span class="cover-title">霜寒求生</span>
+          <button class="fav-btn" data-fav="frost-survival" onclick="toggleFav(event,'frost-survival')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>霜寒求生</h3>
+          <p>在極寒世界中建造營地、管理資源。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">生存</span><span class="game-tag">建造</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=hao-survivor" class="game-card reveal reveal-d3">
-        <div class="game-thumb thumb-surv"><span class="cover-deco" style="top:12%;left:14%;font-size:1rem">💀</span><span class="cover-icon">🎮</span><span class="cover-badge">Roguelike</span><span class="cover-title">HAO SURVIVOR</span></div>
-        <div class="game-info"><h3>HAO SURVIVOR</h3><p>類吸血鬼倖存者玩法，挑戰無盡怪物浪潮。</p><div class="game-tags"><span class="game-tag">Roguelike</span><span class="game-tag">動作</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 4. HAO SURVIVOR -->
+      <a href="play.html?game=hao-survivor" class="game-card reveal reveal-d3" data-cat="strategy" data-id="hao-survivor">
+        <div class="game-thumb thumb-surv">
+          <span class="cover-deco" style="top:12%;left:14%;font-size:1rem">&#128128;</span>
+          <span class="cover-icon">&#127918;</span>
+          <span class="cover-badge">Roguelike</span>
+          <span class="cover-title">HAO SURVIVOR</span>
+          <button class="fav-btn" data-fav="hao-survivor" onclick="toggleFav(event,'hao-survivor')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>HAO SURVIVOR</h3>
+          <p>類吸血鬼倖存者玩法，挑戰無盡怪物浪潮。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">Roguelike</span><span class="game-tag">動作</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=poker-suite" class="game-card reveal reveal-d4">
-        <div class="game-thumb thumb-poker"><span class="cover-deco" style="top:10%;left:12%;font-size:1.5rem;opacity:.1;color:#ff4444">♥</span><span class="cover-deco" style="top:20%;right:14%;font-size:1.3rem;opacity:.1">♠</span><span class="cover-icon">🃏</span><span class="cover-badge">Card</span><span class="cover-title">撲克合集</span></div>
-        <div class="game-info"><h3>撲克合集</h3><p>大老二、德州撲克、鬥地主 — 經典撲克一次滿足。</p><div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">多合一</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 5. 撲克合集 -->
+      <a href="play.html?game=poker-suite" class="game-card reveal reveal-d4" data-cat="card" data-id="poker-suite">
+        <div class="game-thumb thumb-poker">
+          <span class="cover-deco" style="top:10%;left:12%;font-size:1.5rem;opacity:.1;color:#ff4444">&#9829;</span>
+          <span class="cover-deco" style="top:20%;right:14%;font-size:1.3rem;opacity:.1">&#9824;</span>
+          <span class="cover-icon">&#127183;</span>
+          <span class="cover-badge">Card</span>
+          <span class="cover-title">撲克合集</span>
+          <button class="fav-btn" data-fav="poker-suite" onclick="toggleFav(event,'poker-suite')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>撲克合集</h3>
+          <p>大老二、德州撲克、鬥地主 — 經典撲克一次滿足。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">多合一</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=save-the-dog" class="game-card reveal reveal-d5">
-        <div class="game-thumb thumb-dog"><span class="cover-deco" style="top:12%;left:14%">🐝</span><span class="cover-icon">🐕</span><span class="cover-badge">Puzzle</span><span class="cover-title">救救狗狗</span></div>
-        <div class="game-info"><h3>救救狗狗</h3><p>畫線保護狗狗不被蜜蜂螫到！</p><div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">畫線</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 6. 救救狗狗 -->
+      <a href="play.html?game=save-the-dog" class="game-card reveal reveal-d5" data-cat="puzzle" data-id="save-the-dog">
+        <div class="game-thumb thumb-dog">
+          <span class="cover-deco" style="top:12%;left:14%">&#128029;</span>
+          <span class="cover-icon">&#128021;</span>
+          <span class="cover-badge">Puzzle</span>
+          <span class="cover-title">救救狗狗</span>
+          <button class="fav-btn" data-fav="save-the-dog" onclick="toggleFav(event,'save-the-dog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>救救狗狗</h3>
+          <p>畫線保護狗狗不被蜜蜂螫到！</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">畫線</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=taiwan-monopoly" class="game-card reveal">
-        <div class="game-thumb thumb-mono"><span class="cover-deco" style="top:10%;left:10%">🏙️</span><span class="cover-icon">🏮</span><span class="cover-badge">Board</span><span class="cover-title">台灣大富翁</span></div>
-        <div class="game-info"><h3>台灣大富翁</h3><p>走遍台北 101、九份、阿里山。</p><div class="game-tags"><span class="game-tag">桌遊</span><span class="game-tag">大富翁</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 7. 台灣大富翁 -->
+      <a href="play.html?game=taiwan-monopoly" class="game-card reveal" data-cat="board" data-id="taiwan-monopoly">
+        <div class="game-thumb thumb-mono">
+          <span class="cover-deco" style="top:10%;left:10%">&#127961;&#65039;</span>
+          <span class="cover-icon">&#127982;</span>
+          <span class="cover-badge">Board</span>
+          <span class="cover-title">台灣大富翁</span>
+          <button class="fav-btn" data-fav="taiwan-monopoly" onclick="toggleFav(event,'taiwan-monopoly')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>台灣大富翁</h3>
+          <p>走遍台北 101、九份、阿里山。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">桌遊</span><span class="game-tag">大富翁</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=water-sort" class="game-card reveal reveal-d1">
-        <div class="game-thumb thumb-water"><span class="cover-deco" style="top:12%;left:16%;font-size:1rem;opacity:.1;color:#66d9e8">●</span><span class="cover-icon">🧪</span><span class="cover-badge">Puzzle</span><span class="cover-title">水排序益智</span></div>
-        <div class="game-info"><h3>水排序益智</h3><p>將同色液體排列到同一瓶中。</p><div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">排序</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 8. 水排序益智 -->
+      <a href="play.html?game=water-sort" class="game-card reveal reveal-d1" data-cat="puzzle" data-id="water-sort">
+        <div class="game-thumb thumb-water">
+          <span class="cover-deco" style="top:12%;left:16%;font-size:1rem;opacity:.1;color:#66d9e8">&#9679;</span>
+          <span class="cover-icon">&#129514;</span>
+          <span class="cover-badge">Puzzle</span>
+          <span class="cover-title">水排序益智</span>
+          <button class="fav-btn" data-fav="water-sort" onclick="toggleFav(event,'water-sort')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>水排序益智</h3>
+          <p>將同色液體排列到同一瓶中。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">排序</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=werewolf" class="game-card reveal reveal-d2">
-        <div class="game-thumb thumb-wolf"><span class="cover-deco" style="top:10%;left:12%">🌙</span><span class="cover-icon">🐺</span><span class="cover-badge">Social</span><span class="cover-title">狼人殺</span></div>
-        <div class="game-info"><h3>狼人殺</h3><p>與 AI 對手鬥智鬥勇，找出隱藏的狼人。</p><div class="game-tags"><span class="game-tag">推理</span><span class="game-tag">社交</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 9. 狼人殺 -->
+      <a href="play.html?game=werewolf" class="game-card reveal reveal-d2" data-cat="board" data-id="werewolf">
+        <div class="game-thumb thumb-wolf">
+          <span class="cover-deco" style="top:10%;left:12%">&#127769;</span>
+          <span class="cover-icon">&#128058;</span>
+          <span class="cover-badge">Social</span>
+          <span class="cover-title">狼人殺</span>
+          <button class="fav-btn" data-fav="werewolf" onclick="toggleFav(event,'werewolf')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>狼人殺</h3>
+          <p>與 AI 對手鬥智鬥勇，找出隱藏的狼人。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">推理</span><span class="game-tag">社交</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="poker-fortune.html" class="game-card reveal reveal-d3">
-        <div class="game-thumb thumb-fortune"><span class="cover-deco" style="top:10%;left:10%;font-size:1.5rem;opacity:.1;color:#c4a050">✦</span><span class="cover-deco" style="top:18%;right:14%;font-size:1.3rem;opacity:.08;color:#c4956a">♦</span><span class="cover-icon">🔮</span><span class="cover-badge">Fortune</span><span class="cover-title">命運之牌</span></div>
-        <div class="game-info"><h3>命運之牌</h3><p>撲克牌占卜 — 輸入生日，翻開屬於你的命運牌陣。</p><div class="game-tags"><span class="game-tag">占卜</span><span class="game-tag">撲克</span></div><span class="game-play">開始占卜 &rarr;</span></div>
+
+      <!-- 10. 命運之牌 -->
+      <a href="poker-fortune.html" class="game-card reveal reveal-d3" data-cat="card" data-id="poker-fortune">
+        <div class="game-thumb thumb-fortune">
+          <span class="cover-deco" style="top:10%;left:10%;font-size:1.5rem;opacity:.1;color:#c4a050">&#10022;</span>
+          <span class="cover-deco" style="top:18%;right:14%;font-size:1.3rem;opacity:.08;color:#c4956a">&#9830;</span>
+          <span class="cover-icon">&#128302;</span>
+          <span class="cover-badge">Fortune</span>
+          <span class="cover-title">命運之牌</span>
+          <button class="fav-btn" data-fav="poker-fortune" onclick="toggleFav(event,'poker-fortune')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>命運之牌</h3>
+          <p>撲克牌占卜 — 輸入生日，翻開屬於你的命運牌陣。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">占卜</span><span class="game-tag">撲克</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始占卜 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=downstairs" class="game-card reveal reveal-d4">
-        <div class="game-thumb thumb-down"><span class="cover-deco" style="top:12%;left:14%;font-size:1rem;opacity:.08">⬇️</span><span class="cover-icon">🏃</span><span class="cover-badge">Action</span><span class="cover-title">下樓梯</span></div>
-        <div class="game-info"><h3>下樓梯</h3><p>經典下樓梯遊戲 — 踩著平台不斷往下，小心陷阱！</p><div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">經典</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 11. 下樓梯 -->
+      <a href="play.html?game=downstairs" class="game-card reveal reveal-d4" data-cat="action" data-id="downstairs">
+        <div class="game-thumb thumb-down">
+          <span class="cover-deco" style="top:12%;left:14%;font-size:1rem;opacity:.08">&#11015;&#65039;</span>
+          <span class="cover-icon">&#127939;</span>
+          <span class="cover-badge">Action</span>
+          <span class="cover-title">下樓梯</span>
+          <button class="fav-btn" data-fav="downstairs" onclick="toggleFav(event,'downstairs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>下樓梯</h3>
+          <p>經典下樓梯遊戲 — 踩著平台不斷往下，小心陷阱！</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">經典</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=splat-ring" class="game-card reveal reveal-d5">
-        <div class="game-thumb thumb-splat"><span class="cover-deco" style="top:10%;left:12%;font-size:1.3rem;opacity:.1;color:#C6FF00">●</span><span class="cover-icon">🎯</span><span class="cover-badge">Arcade</span><span class="cover-title">SPLAT RING</span></div>
-        <div class="game-info"><h3>SPLAT RING</h3><p>在霓虹環形軌道上跳躍，精準著陸得高分！</p><div class="game-tags"><span class="game-tag">街機</span><span class="game-tag">跳躍</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 12. SPLAT RING -->
+      <a href="play.html?game=splat-ring" class="game-card reveal reveal-d5" data-cat="action" data-id="splat-ring">
+        <div class="game-thumb thumb-splat">
+          <span class="cover-deco" style="top:10%;left:12%;font-size:1.3rem;opacity:.1;color:#C6FF00">&#9679;</span>
+          <span class="cover-icon">&#127919;</span>
+          <span class="cover-badge">Arcade</span>
+          <span class="cover-title">SPLAT RING</span>
+          <button class="fav-btn" data-fav="splat-ring" onclick="toggleFav(event,'splat-ring')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>SPLAT RING</h3>
+          <p>在霓虹環形軌道上跳躍，精準著陸得高分！</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">街機</span><span class="game-tag">跳躍</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="play.html?game=chess-master" class="game-card reveal reveal-d1">
-        <div class="game-thumb thumb-chess"><span class="cover-deco" style="top:10%;left:12%;font-size:1.3rem;opacity:.1">&#9818;</span><span class="cover-deco" style="top:18%;right:14%;font-size:1rem;opacity:.08">&#9822;</span><span class="cover-icon">&#9819;</span><span class="cover-badge">Board</span><span class="cover-title">Chess Master</span></div>
-        <div class="game-info"><h3>Chess Master</h3><p>象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日式/台式麻將 — 8 款經典棋類。</p><div class="game-tags"><span class="game-tag">棋類</span><span class="game-tag">8 合 1</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 13. Chess Master (NEW) -->
+      <a href="play.html?game=chess-master" class="game-card reveal reveal-d1" data-cat="board" data-id="chess-master">
+        <div class="game-thumb thumb-chess">
+          <span class="badge-new">NEW</span>
+          <span class="cover-deco" style="top:10%;left:12%;font-size:1.3rem;opacity:.1">&#9818;</span>
+          <span class="cover-deco" style="top:18%;right:14%;font-size:1rem;opacity:.08">&#9822;</span>
+          <span class="cover-icon">&#9819;</span>
+          <span class="cover-badge">Board</span>
+          <span class="cover-title">Chess Master</span>
+          <button class="fav-btn" data-fav="chess-master" onclick="toggleFav(event,'chess-master')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>Chess Master</h3>
+          <p>象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日式/台式麻將 — 8 款經典棋類。</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">棋類</span><span class="game-tag">8 合 1</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
-      <a href="pact-of-arcania.html" class="game-card reveal reveal-d2">
-        <div class="game-thumb thumb-arcania"><span class="cover-deco" style="top:10%;left:10%;font-size:1.3rem;opacity:.1">✨</span><span class="cover-deco" style="top:18%;right:12%;font-size:1rem;opacity:.08">🗡️</span><span class="cover-icon">⚔️</span><span class="cover-badge">Card RPG</span><span class="cover-title">靈契之戰</span></div>
-        <div class="game-info"><h3>Pact of Arcania 靈契之戰</h3><p>卡牌對戰 RPG — 召喚靈獸、施展法術，挑戰強敵！</p><div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">RPG</span></div><span class="game-play">開始遊玩 &rarr;</span></div>
+
+      <!-- 14. Pact of Arcania (NEW) -->
+      <a href="pact-of-arcania.html" class="game-card reveal reveal-d2" data-cat="card" data-id="pact-of-arcania">
+        <div class="game-thumb thumb-arcania">
+          <span class="badge-new">NEW</span>
+          <span class="cover-deco" style="top:10%;left:10%;font-size:1.3rem;opacity:.1">&#10024;</span>
+          <span class="cover-deco" style="top:18%;right:12%;font-size:1rem;opacity:.08">&#128481;&#65039;</span>
+          <span class="cover-icon">&#9876;&#65039;</span>
+          <span class="cover-badge">Card RPG</span>
+          <span class="cover-title">靈契之戰</span>
+          <button class="fav-btn" data-fav="pact-of-arcania" onclick="toggleFav(event,'pact-of-arcania')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+        </div>
+        <div class="game-info">
+          <h3>Pact of Arcania 靈契之戰</h3>
+          <p>卡牌對戰 RPG — 召喚靈獸、施展法術，挑戰強敵！</p>
+          <div class="game-meta">
+            <div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">RPG</span></div>
+            <span class="game-plays">已被玩 -- 次</span>
+          </div>
+          <span class="game-play">開始遊玩 &rarr;</span>
+        </div>
       </a>
+
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section">
+      <div class="faq-title"><span>&#10067;</span> 常見問題</div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">遊戲大廳支援手機嗎？</div>
+        <div class="faq-a"><p>支援！所有遊戲都針對手機和電腦優化。</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">需要下載安裝嗎？</div>
+        <div class="faq-a"><p>不用！直接在瀏覽器裡就能玩。</p></div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">遊戲是免費的嗎？</div>
+        <div class="faq-a"><p>完全免費，無需註冊。</p></div>
+      </div>
     </div>
 
     <!-- AdSense auto ads — Google decides placement after approval -->
@@ -187,8 +552,117 @@
 
   <script>
     "use strict";
-    var obs=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.06,rootMargin:'0px 0px -40px 0px'});
-    document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+
+    /* ── Game URLs for random pick ── */
+    var gameHrefs = [
+      'play.html?game=cat-battle','play.html?game=dodge-master','play.html?game=frost-survival',
+      'play.html?game=hao-survivor','play.html?game=poker-suite','play.html?game=save-the-dog',
+      'play.html?game=taiwan-monopoly','play.html?game=water-sort','play.html?game=werewolf',
+      'poker-fortune.html','play.html?game=downstairs','play.html?game=splat-ring',
+      'play.html?game=chess-master','pact-of-arcania.html'
+    ];
+
+    /* ── Random Game ── */
+    function goRandom() {
+      var idx = Math.floor(Math.random() * gameHrefs.length);
+      window.location.href = gameHrefs[idx];
+    }
+    document.getElementById('navRandom').addEventListener('click', goRandom);
+    document.getElementById('statsRandom').addEventListener('click', goRandom);
+
+    /* ── Category Filter ── */
+    var pills = document.querySelectorAll('.filter-pill');
+    var cards = document.querySelectorAll('.game-card[data-cat]');
+
+    pills.forEach(function(pill) {
+      pill.addEventListener('click', function() {
+        pills.forEach(function(p) { p.classList.remove('active'); });
+        pill.classList.add('active');
+        var filter = pill.getAttribute('data-filter');
+        cards.forEach(function(card) {
+          if (filter === 'all' || card.getAttribute('data-cat') === filter) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+      });
+    });
+
+    /* ── Favorites ── */
+    function getFavs() {
+      try { return JSON.parse(localStorage.getItem('hao_favs') || '[]'); }
+      catch(e) { return []; }
+    }
+    function saveFavs(favs) {
+      localStorage.setItem('hao_favs', JSON.stringify(favs));
+    }
+
+    function toggleFav(e, id) {
+      e.preventDefault();
+      e.stopPropagation();
+      var favs = getFavs();
+      var idx = favs.indexOf(id);
+      if (idx > -1) { favs.splice(idx, 1); }
+      else { favs.push(id); }
+      saveFavs(favs);
+      renderFavs();
+    }
+
+    function renderFavs() {
+      var favs = getFavs();
+      /* Update heart buttons */
+      document.querySelectorAll('.fav-btn').forEach(function(btn) {
+        var id = btn.getAttribute('data-fav');
+        if (favs.indexOf(id) > -1) {
+          btn.classList.add('favorited');
+          btn.querySelector('svg').setAttribute('fill', 'currentColor');
+        } else {
+          btn.classList.remove('favorited');
+          btn.querySelector('svg').setAttribute('fill', 'none');
+        }
+      });
+
+      /* Render favorites section */
+      var section = document.getElementById('favSection');
+      var grid = document.getElementById('favGrid');
+      grid.innerHTML = '';
+
+      if (favs.length === 0) {
+        section.classList.remove('has-favs');
+        return;
+      }
+      section.classList.add('has-favs');
+
+      favs.forEach(function(id) {
+        var original = document.querySelector('.game-card[data-id="' + id + '"]');
+        if (!original) return;
+        var clone = original.cloneNode(true);
+        clone.classList.add('visible');
+        clone.classList.remove('hidden');
+        clone.removeAttribute('data-cat');
+        /* Re-attach fav button handler */
+        var favBtn = clone.querySelector('.fav-btn');
+        if (favBtn) {
+          favBtn.onclick = function(e) { toggleFav(e, id); };
+        }
+        grid.appendChild(clone);
+      });
+    }
+
+    /* Initial render */
+    renderFavs();
+
+    /* ── Scroll Reveal (IntersectionObserver) ── */
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
   </script>
 </body>
 </html>
