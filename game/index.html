@@ -27,6 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9106945071014808" crossorigin="anonymous"></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     :root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a28;--purple:#a855f7;--pink:#ff2d7b;--text:#f0f0f0;--text2:#a0a0b0;--text3:#555568;--glow-purple:rgba(168,85,247,0.15);--glow-pink:rgba(255,45,123,0.15);--grad:linear-gradient(135deg,#a855f7,#ff2d7b);--radius:14px}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -156,16 +157,102 @@
     .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}.reveal.visible{opacity:1;transform:translateY(0)}
     .reveal-d1{transition-delay:.06s}.reveal-d2{transition-delay:.12s}.reveal-d3{transition-delay:.18s}.reveal-d4{transition-delay:.24s}.reveal-d5{transition-delay:.30s}
 
+    /* ── Nav icon buttons ── */
+    .nav-btn--icon{width:38px;height:38px;padding:0;justify-content:center;position:relative}
+    .nav-btn--icon svg{width:16px;height:16px}
+    .nav-btn--icon .badge-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink);animation:pulse-new 2s infinite}
+
+    /* ── User widget ── */
+    .user-chip{display:inline-flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border:1px solid rgba(168,85,247,0.3);border-radius:100px;background:rgba(168,85,247,0.08);cursor:pointer;transition:all .3s}
+    .user-chip:hover{background:rgba(168,85,247,0.18);border-color:var(--purple)}
+    .user-chip img{width:28px;height:28px;border-radius:50%;object-fit:cover}
+    .user-chip .coin{font-family:'Space Grotesk',sans-serif;font-size:.76rem;font-weight:700;color:var(--warn-amber,#ffc857);display:flex;align-items:center;gap:3px}
+
+    /* ── Modal ── */
+    .modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .25s ease}
+    .modal-overlay.open{display:flex}
+    .modal{background:var(--bg2);border:1px solid rgba(168,85,247,0.25);border-radius:var(--radius);max-width:480px;width:100%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,0.6);animation:slideUp .3s ease}
+    .modal-head{padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between}
+    .modal-title{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:8px}
+    .modal-close{width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,0.05);color:var(--text2);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .25s}
+    .modal-close:hover{background:rgba(255,255,255,0.12);color:#fff}
+    .modal-body{padding:22px 24px 24px;overflow-y:auto;flex:1}
+    .modal-body::-webkit-scrollbar{width:6px}
+    .modal-body::-webkit-scrollbar-thumb{background:rgba(168,85,247,0.3);border-radius:3px}
+
+    /* ── Login prompt ── */
+    .login-prompt{text-align:center;padding:12px 0 4px}
+    .login-prompt p{color:var(--text2);font-size:.86rem;margin-bottom:20px;line-height:1.7}
+    #gsiBtn{display:flex;justify-content:center;min-height:44px}
+
+    /* ── Check-in grid ── */
+    .checkin-status{text-align:center;padding:16px 0 22px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:20px}
+    .checkin-streak{font-family:'Space Grotesk',sans-serif;font-size:2.4rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+    .checkin-streak-label{color:var(--text2);font-size:.78rem;margin-top:6px;letter-spacing:.05em}
+    .checkin-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px}
+    .checkin-day{aspect-ratio:1;border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.66rem;color:var(--text3);gap:2px;position:relative}
+    .checkin-day b{font-family:'Space Grotesk',sans-serif;font-size:.86rem;font-weight:700;color:var(--warn-amber,#ffc857)}
+    .checkin-day.done{background:rgba(168,85,247,0.15);border-color:rgba(168,85,247,0.4)}
+    .checkin-day.done::after{content:'✓';position:absolute;top:3px;right:5px;font-size:.62rem;color:var(--purple);font-weight:700}
+    .checkin-day.today{border-color:var(--pink);box-shadow:0 0 0 1px var(--pink) inset}
+    .btn-primary{width:100%;padding:12px;border:none;border-radius:10px;background:var(--grad);color:#fff;font-family:inherit;font-weight:700;font-size:.86rem;letter-spacing:.04em;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow-purple)}
+    .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+    .checkin-toast{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:#6fffaa;padding:10px 14px;border-radius:10px;font-size:.82rem;text-align:center;margin-top:14px;display:none}
+    .checkin-toast.show{display:block;animation:slideUp .4s ease}
+
+    /* ── Leaderboard ── */
+    .lb-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
+    .lb-tab{padding:6px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:100px;background:transparent;color:var(--text2);font-size:.74rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .25s;font-family:inherit}
+    .lb-tab.active{background:var(--grad);color:#fff;border-color:transparent}
+    .lb-list{display:flex;flex-direction:column;gap:8px}
+    .lb-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);transition:all .25s}
+    .lb-row:hover{background:rgba(255,255,255,0.04)}
+    .lb-rank{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.92rem;width:28px;text-align:center;color:var(--text3)}
+    .lb-row.top1 .lb-rank{color:#ffd85c}
+    .lb-row.top2 .lb-rank{color:#e0e0e0}
+    .lb-row.top3 .lb-rank{color:#d38a3b}
+    .lb-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:rgba(168,85,247,0.2);flex-shrink:0}
+    .lb-name{flex:1;font-size:.84rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .lb-title{font-size:.64rem;color:var(--text3);font-weight:500;margin-left:6px}
+    .lb-score{font-family:'Space Grotesk',sans-serif;font-size:.88rem;font-weight:700;color:var(--purple)}
+    .lb-empty{text-align:center;color:var(--text3);padding:32px 0;font-size:.84rem}
+
+    /* ── Profile ── */
+    .profile-head{display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:18px}
+    .profile-head img{width:56px;height:56px;border-radius:50%;object-fit:cover}
+    .profile-name{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.08rem;font-weight:700}
+    .profile-title{font-size:.72rem;color:var(--purple);letter-spacing:.04em;margin-top:3px}
+    .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+    .stat-box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px}
+    .stat-box .v{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .stat-box .k{font-size:.7rem;color:var(--text3);margin-top:2px;letter-spacing:.05em}
+    .best-list{margin-bottom:18px}
+    .best-list h4{font-size:.76rem;color:var(--text2);font-weight:600;margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase}
+    .best-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:5px;font-size:.8rem}
+    .best-row b{font-family:'Space Grotesk',sans-serif;color:var(--purple);font-weight:700}
+    .btn-signout{width:100%;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:transparent;color:var(--text2);font-family:inherit;font-size:.78rem;cursor:pointer;transition:all .25s}
+    .btn-signout:hover{border-color:var(--pink);color:var(--pink);background:rgba(255,45,123,0.05)}
+
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
     /* ── Responsive ── */
     @media(max-width:768px){
       .games-grid,.fav-grid{grid-template-columns:1fr 1fr}
       .filter-bar{gap:6px}
       .filter-pill{padding:6px 14px;font-size:.72rem}
       .stats-bar{flex-direction:column;gap:12px;align-items:flex-start}
+      .nav-btn{padding:6px 12px;font-size:.72rem}
+      .nav-btn--icon{width:34px;height:34px}
+      .user-chip .coin{display:none}
+      .checkin-grid{grid-template-columns:repeat(7,1fr);gap:5px}
+      .checkin-day{font-size:.58rem}
     }
     @media(max-width:480px){
       .games-grid,.fav-grid{grid-template-columns:1fr}
       .cover-title{font-size:1.2rem;padding:14px}
+      .nav-btn-text{display:none}
     }
   </style>
 </head>
@@ -175,11 +262,22 @@
   <nav>
     <a href="https://hao0321.com/" class="logo"><div class="logo-mark">H</div><div class="logo-text">Hao0321 Studio</div></a>
     <div class="nav-right">
+      <button class="nav-btn nav-btn--icon" id="navLeaderboard" title="全球排行榜" aria-label="排行榜">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M6 4h12v8a6 6 0 0 1-12 0V4zM6 8H2v2a4 4 0 0 0 4 4M18 8h4v2a4 4 0 0 1-4 4"/></svg>
+      </button>
+      <button class="nav-btn nav-btn--icon" id="navCheckin" title="每日簽到" aria-label="簽到">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        <span class="badge-dot" id="checkinDot" style="display:none"></span>
+      </button>
       <button class="nav-btn nav-btn--accent" id="navRandom" title="隨機遊戲">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="22" height="22" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="16" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
-        隨機遊戲
+        <span class="nav-btn-text">隨機遊戲</span>
       </button>
-      <a href="https://hao0321.com/" class="nav-btn">&larr; 回首頁</a>
+      <button class="nav-btn" id="navLogin">登入</button>
+      <div class="user-chip" id="userChip" style="display:none">
+        <img id="userAvatar" alt="" />
+        <span class="coin">◈ <span id="userCoins">0</span></span>
+      </div>
     </div>
   </nav>
 
@@ -537,6 +635,70 @@
     <!-- AdSense auto ads — Google decides placement after approval -->
   </div>
 
+  <!-- Login Modal -->
+  <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal('loginModal')">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title"><span>◆</span> 登入以解鎖</div>
+        <button class="modal-close" onclick="closeModal('loginModal')" aria-label="關閉">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="login-prompt">
+          <p>登入後即可每日簽到領金幣、上傳分數到排行榜、查看個人戰績。</p>
+          <div id="gsiBtn"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Check-in Modal -->
+  <div class="modal-overlay" id="checkinModal" onclick="if(event.target===this)closeModal('checkinModal')">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title"><span>📆</span> 每日簽到</div>
+        <button class="modal-close" onclick="closeModal('checkinModal')" aria-label="關閉">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="checkin-status">
+          <div class="checkin-streak" id="checkinStreakVal">0</div>
+          <div class="checkin-streak-label">連續簽到天數</div>
+        </div>
+        <div class="checkin-grid" id="checkinGrid"></div>
+        <button class="btn-primary" id="checkinBtn">立即簽到</button>
+        <div class="checkin-toast" id="checkinToast"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard Modal -->
+  <div class="modal-overlay" id="leaderboardModal" onclick="if(event.target===this)closeModal('leaderboardModal')">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title"><span>🏆</span> 排行榜</div>
+        <button class="modal-close" onclick="closeModal('leaderboardModal')" aria-label="關閉">×</button>
+      </div>
+      <div class="modal-body">
+        <div class="lb-tabs" id="lbTabs">
+          <button class="lb-tab active" data-game="">全球總榜</button>
+        </div>
+        <div class="lb-list" id="lbList"><div class="lb-empty">載入中…</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div class="modal-overlay" id="profileModal" onclick="if(event.target===this)closeModal('profileModal')">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title"><span>◉</span> 我的資料</div>
+        <button class="modal-close" onclick="closeModal('profileModal')" aria-label="關閉">×</button>
+      </div>
+      <div class="modal-body" id="profileBody">
+        <div class="lb-empty">載入中…</div>
+      </div>
+    </div>
+  </div>
+
   <footer><p>&copy; 2026 Hao0321 Studio. All rights reserved.</p><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="回到頂部">Back to top &uarr;</a></footer>
 
   <script type="application/ld+json">
@@ -553,6 +715,30 @@
   <script>
     "use strict";
 
+    /* ── API & Auth Config ── */
+    var API_BASE = 'https://api.game.hao0321.com';
+    var GOOGLE_CLIENT_ID = '1098993759422-h6mv01edrfl3n5ngcia9ijhek4qrfse3.apps.googleusercontent.com';
+    var TOKEN_KEY = 'hao_token';
+    var USER_KEY = 'hao_user';
+    var token = localStorage.getItem(TOKEN_KEY) || null;
+    var currentUser = null;
+    try { currentUser = JSON.parse(localStorage.getItem(USER_KEY) || 'null'); } catch(e) { currentUser = null; }
+
+    function api(path, opts) {
+      opts = opts || {};
+      var headers = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = 'Bearer ' + token;
+      return fetch(API_BASE + '/' + path.replace(/^\//,''), {
+        method: opts.method || 'GET',
+        headers: headers,
+        body: opts.body ? JSON.stringify(opts.body) : undefined
+      }).then(function(r) {
+        if (r.status === 401) { signOut(); throw new Error('auth'); }
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.json();
+      });
+    }
+
     /* ── Game URLs for random pick ── */
     var gameHrefs = [
       'play.html?game=cat-battle','play.html?game=dodge-master','play.html?game=frost-survival',
@@ -561,6 +747,15 @@
       'poker-fortune.html','play.html?game=downstairs','play.html?game=splat-ring',
       'play.html?game=chess-master','pact-of-arcania.html'
     ];
+
+    /* ── Game meta for leaderboard tabs ── */
+    var gameMeta = {
+      'cat-battle':'にゃんこ突撃','dodge-master':'DODGE MASTER','frost-survival':'霜寒求生',
+      'hao-survivor':'HAO SURVIVOR','poker-suite':'撲克合集','save-the-dog':'救救狗狗',
+      'taiwan-monopoly':'台灣大富翁','water-sort':'水排序','werewolf':'狼人殺',
+      'poker-fortune':'命運之牌','downstairs':'下樓梯','splat-ring':'SPLAT RING',
+      'chess-master':'Chess Master','pact-of-arcania':'靈契之戰'
+    };
 
     /* ── Random Game ── */
     function goRandom() {
@@ -663,6 +858,293 @@
     }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
 
     document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+
+    /* ═══════════════════════════════════════════════════
+       ── Phase 2/3: API Integration (play/auth/etc) ──
+       ═══════════════════════════════════════════════════ */
+
+    /* ── Modal helpers ── */
+    function openModal(id) { document.getElementById(id).classList.add('open'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+    window.closeModal = closeModal;
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
+      }
+    });
+
+    /* ── Play counts ── */
+    function loadPlayCounts() {
+      api('play-counts').then(function(counts) {
+        document.querySelectorAll('.game-card[data-id]').forEach(function(card) {
+          var id = card.getAttribute('data-id');
+          var el = card.querySelector('.game-plays');
+          if (el && counts[id] != null) {
+            var n = counts[id];
+            var fmt = n >= 1000 ? (n/1000).toFixed(1) + 'k' : n;
+            el.textContent = '已被玩 ' + fmt + ' 次';
+          }
+        });
+      }).catch(function() { /* silent — keep placeholder */ });
+    }
+
+    /* ── Track clicks (POST /play) ── */
+    document.querySelectorAll('.game-card[data-id]').forEach(function(card) {
+      card.addEventListener('click', function(e) {
+        if (e.target.closest('.fav-btn')) return;
+        var id = card.getAttribute('data-id');
+        try {
+          var url = API_BASE + '/play';
+          var body = JSON.stringify({ game: id });
+          if (navigator.sendBeacon) {
+            navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }));
+          } else {
+            fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function(){});
+          }
+        } catch (err) { /* ignore */ }
+      });
+    });
+
+    /* ── Auth / User UI ── */
+    function updateUserUI() {
+      var loginBtn = document.getElementById('navLogin');
+      var chip = document.getElementById('userChip');
+      if (currentUser) {
+        loginBtn.style.display = 'none';
+        chip.style.display = 'inline-flex';
+        var av = document.getElementById('userAvatar');
+        av.src = currentUser.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
+        document.getElementById('userCoins').textContent = currentUser.coins || 0;
+      } else {
+        loginBtn.style.display = 'inline-flex';
+        chip.style.display = 'none';
+      }
+    }
+
+    function saveSession(jwt, user) {
+      token = jwt;
+      currentUser = user;
+      localStorage.setItem(TOKEN_KEY, jwt);
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      updateUserUI();
+      refreshCheckinDot();
+    }
+
+    function signOut() {
+      token = null; currentUser = null;
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+      updateUserUI();
+      document.getElementById('checkinDot').style.display = 'none';
+    }
+    window.signOut = signOut;
+
+    function handleGoogleCredential(resp) {
+      api('auth/google', { method: 'POST', body: { token: resp.credential } }).then(function(data) {
+        saveSession(data.token, data.user);
+        closeModal('loginModal');
+      }).catch(function() { alert('登入失敗，請稍後再試。'); });
+    }
+
+    function initGoogleSignIn() {
+      if (!window.google || !window.google.accounts || !window.google.accounts.id) return false;
+      try {
+        window.google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredential,
+          auto_select: false
+        });
+        var host = document.getElementById('gsiBtn');
+        if (host && !host.hasChildNodes()) {
+          window.google.accounts.id.renderButton(host, { theme: 'filled_black', size: 'large', shape: 'pill', text: 'signin_with', width: 280 });
+        }
+        return true;
+      } catch (e) { return false; }
+    }
+
+    document.getElementById('navLogin').addEventListener('click', function() {
+      openModal('loginModal');
+      if (!initGoogleSignIn()) {
+        var tries = 0;
+        var t = setInterval(function() {
+          if (initGoogleSignIn() || ++tries > 20) clearInterval(t);
+        }, 250);
+      }
+    });
+
+    document.getElementById('userChip').addEventListener('click', openProfile);
+
+    /* ── Check-in ── */
+    function refreshCheckinDot() {
+      var dot = document.getElementById('checkinDot');
+      if (!currentUser) { dot.style.display = 'none'; return; }
+      api('checkin').then(function(data) {
+        dot.style.display = data.checkedIn ? 'none' : 'block';
+      }).catch(function() { dot.style.display = 'none'; });
+    }
+
+    function renderCheckinGrid(streak, checkedIn) {
+      var grid = document.getElementById('checkinGrid');
+      grid.innerHTML = '';
+      var todayIdx = Math.max(streak, 1) - (checkedIn ? 0 : 1);
+      if (todayIdx < 0) todayIdx = 0;
+      for (var i = 0; i < 7; i++) {
+        var day = document.createElement('div');
+        day.className = 'checkin-day';
+        var reward = Math.min(10 + i * 5, 50);
+        day.innerHTML = '<span>Day ' + (i+1) + '</span><b>+' + reward + '</b>';
+        if (i < streak) day.classList.add('done');
+        if (i === todayIdx && !checkedIn) day.classList.add('today');
+        grid.appendChild(day);
+      }
+    }
+
+    document.getElementById('navCheckin').addEventListener('click', function() {
+      if (!currentUser) { openModal('loginModal'); return; }
+      openModal('checkinModal');
+      var btn = document.getElementById('checkinBtn');
+      var toast = document.getElementById('checkinToast');
+      toast.classList.remove('show');
+      btn.disabled = true;
+      btn.textContent = '載入中…';
+      api('checkin').then(function(data) {
+        document.getElementById('checkinStreakVal').textContent = data.streak || 0;
+        renderCheckinGrid(data.streak || 0, data.checkedIn);
+        if (data.checkedIn) {
+          btn.textContent = '今日已簽到 ✓';
+          btn.disabled = true;
+        } else {
+          btn.textContent = '立即簽到';
+          btn.disabled = false;
+        }
+      }).catch(function() {
+        btn.textContent = '無法連線';
+        btn.disabled = true;
+      });
+    });
+
+    document.getElementById('checkinBtn').addEventListener('click', function() {
+      var btn = this;
+      btn.disabled = true;
+      btn.textContent = '簽到中…';
+      api('checkin', { method: 'POST' }).then(function(data) {
+        if (data.already) {
+          btn.textContent = '今日已簽到 ✓';
+          return;
+        }
+        currentUser.coins = (currentUser.coins || 0) + (data.reward || 0);
+        localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+        updateUserUI();
+        document.getElementById('checkinStreakVal').textContent = data.streak;
+        renderCheckinGrid(data.streak, true);
+        var toast = document.getElementById('checkinToast');
+        toast.textContent = '+' + data.reward + ' 金幣！連續 ' + data.streak + ' 天簽到';
+        toast.classList.add('show');
+        btn.textContent = '今日已簽到 ✓';
+        document.getElementById('checkinDot').style.display = 'none';
+      }).catch(function() {
+        btn.textContent = '簽到失敗';
+        setTimeout(function(){ btn.disabled = false; btn.textContent = '立即簽到'; }, 1500);
+      });
+    });
+
+    /* ── Leaderboard ── */
+    function buildLbTabs() {
+      var tabs = document.getElementById('lbTabs');
+      if (tabs.children.length > 1) return;
+      Object.keys(gameMeta).forEach(function(gid) {
+        var t = document.createElement('button');
+        t.className = 'lb-tab';
+        t.setAttribute('data-game', gid);
+        t.textContent = gameMeta[gid];
+        tabs.appendChild(t);
+      });
+      tabs.querySelectorAll('.lb-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          tabs.querySelectorAll('.lb-tab').forEach(function(t){ t.classList.remove('active'); });
+          tab.classList.add('active');
+          loadLeaderboard(tab.getAttribute('data-game'));
+        });
+      });
+    }
+
+    function loadLeaderboard(gameId) {
+      var list = document.getElementById('lbList');
+      list.innerHTML = '<div class="lb-empty">載入中…</div>';
+      var path = gameId ? 'leaderboard/' + gameId : 'leaderboard';
+      api(path).then(function(rows) {
+        if (!rows || !rows.length) {
+          list.innerHTML = '<div class="lb-empty">還沒有紀錄，趕快衝榜！</div>';
+          return;
+        }
+        list.innerHTML = '';
+        rows.forEach(function(r, i) {
+          var row = document.createElement('div');
+          row.className = 'lb-row' + (i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '');
+          var rank = i + 1;
+          var avatarSrc = r.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
+          var score = gameId ? r.score : r.total_score;
+          var title = r.title ? '<span class="lb-title">' + escapeHtml(r.title) + '</span>' : '';
+          row.innerHTML = '<div class="lb-rank">' + (rank <= 3 ? ['🥇','🥈','🥉'][rank-1] : '#' + rank) + '</div>' +
+            '<img class="lb-avatar" src="' + avatarSrc + '" alt="" />' +
+            '<div class="lb-name">' + escapeHtml(r.name || 'Player') + title + '</div>' +
+            '<div class="lb-score">' + (score || 0).toLocaleString() + '</div>';
+          list.appendChild(row);
+        });
+      }).catch(function() {
+        list.innerHTML = '<div class="lb-empty">暫時無法連線排行榜</div>';
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+      });
+    }
+
+    document.getElementById('navLeaderboard').addEventListener('click', function() {
+      openModal('leaderboardModal');
+      buildLbTabs();
+      loadLeaderboard('');
+    });
+
+    /* ── Profile ── */
+    function openProfile() {
+      if (!currentUser) { openModal('loginModal'); return; }
+      openModal('profileModal');
+      var body = document.getElementById('profileBody');
+      body.innerHTML = '<div class="lb-empty">載入中…</div>';
+      api('profile').then(function(p) {
+        currentUser.coins = p.coins;
+        currentUser.title = p.title;
+        localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+        updateUserUI();
+
+        var avatarSrc = p.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
+        var bests = (p.bestScores || []).map(function(b) {
+          return '<div class="best-row"><span>' + escapeHtml(gameMeta[b.game_id] || b.game_id) + '</span><b>' + (b.score || 0).toLocaleString() + '</b></div>';
+        }).join('') || '<div class="lb-empty" style="padding:16px 0">尚無紀錄</div>';
+
+        body.innerHTML = '<div class="profile-head">' +
+            '<img src="' + avatarSrc + '" alt="" />' +
+            '<div><div class="profile-name">' + escapeHtml(p.name || 'Player') + '</div>' +
+            '<div class="profile-title">' + escapeHtml(p.title || 'Newbie') + '</div></div>' +
+          '</div>' +
+          '<div class="profile-stats">' +
+            '<div class="stat-box"><div class="v">' + (p.coins || 0) + '</div><div class="k">金幣</div></div>' +
+            '<div class="stat-box"><div class="v">' + (p.bestScores || []).length + '</div><div class="k">遊玩遊戲</div></div>' +
+          '</div>' +
+          '<div class="best-list"><h4>最佳成績</h4>' + bests + '</div>' +
+          '<button class="btn-signout" onclick="signOut();closeModal(\'profileModal\')">登出</button>';
+      }).catch(function() {
+        body.innerHTML = '<div class="lb-empty">無法連線，請稍後再試</div>';
+      });
+    }
+
+    /* ── Init ── */
+    loadPlayCounts();
+    updateUserUI();
+    if (currentUser) refreshCheckinDot();
   </script>
 </body>
 </html>
