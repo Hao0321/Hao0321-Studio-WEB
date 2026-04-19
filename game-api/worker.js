@@ -59,6 +59,10 @@ export default {
       return new Response(null, { headers: CORS });
     }
 
+    if (!env.JWT_SECRET) {
+      return err('Server misconfigured: JWT_SECRET not set. Run `wrangler secret put JWT_SECRET`.', 500);
+    }
+
     const url = new URL(req.url);
     const path = url.pathname.replace(/^\/+|\/+$/g, '');
 

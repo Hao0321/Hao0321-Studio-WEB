@@ -2,9 +2,10 @@ name = "hao-games-api"
 main = "worker.js"
 compatibility_date = "2024-01-01"
 
+# Public: Google OAuth client ID is safe to commit (it's in the browser anyway).
+# Private: JWT_SECRET must be set via `wrangler secret put JWT_SECRET` — see README.
 [vars]
 GOOGLE_CLIENT_ID = "1098993759422-h6mv01edrfl3n5ngcia9ijhek4qrfse3.apps.googleusercontent.com"
-JWT_SECRET = "hao0321-games-secret-key-2026"
 
 [[d1_databases]]
 binding = "DB"
