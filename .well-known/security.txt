@@ -1,0 +1,6 @@
+# If you believe you've found a security vulnerability in any Hao0321 Studio
+# property, please report it via email.
+Contact: mailto:lo246179268@gmail.com
+Preferred-Languages: zh-Hant, en
+Canonical: https://hao0321.com/.well-known/security.txt
+Expires: 2027-04-20T00:00:00.000Z
