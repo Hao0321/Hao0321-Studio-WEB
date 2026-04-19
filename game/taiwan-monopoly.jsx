@@ -290,7 +290,7 @@ export default function Game(){
     up[g.cur].money-=buyPr.pr;const no={...g.ow,[buyPr.id]:g.cur};showM(g.cur,-buyPr.pr);
     addLog(`${up[g.cur].name} 買 ${buyPr.n}`);pop();setPs(up);setOw(no);setShowBuy(false);setBuyPr(null);endTurn(up,no,g.hs);};
   const skipBuyAct=()=>{addLog(`${gs.current.ps[gs.current.cur].name} 跳過`);setShowBuy(false);setBuyPr(null);endTurn();};
-  const checkWin=(p)=>{const a=p.filter(x=>!x.bk);if(a.length===1){setWinner(a[0]);setMsg(`🏆 ${a[0].name} 獲勝！`);addLog(`🏆 ${a[0].name} 贏了！`);pop();}};
+  const checkWin=(p)=>{const a=p.filter(x=>!x.bk);if(a.length===1){setWinner(a[0]);setMsg(`🏆 ${a[0].name} 獲勝！`);addLog(`🏆 ${a[0].name} 贏了！`);pop();if(!a[0].isAI&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(Math.max(1,Math.floor((a[0].money||0)/1000)));}};
 
   const endTurn=(uP,uO,uH)=>{setLocked(true);const g=gs.current;let p=uP||g.ps,o=uO||g.ow,h=uH||g.hs;
     if(g.winner||p.filter(x=>!x.bk).length<=1)return;

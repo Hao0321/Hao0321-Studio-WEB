@@ -730,7 +730,9 @@ function GoGame({ onBack }) {
       const wStones = bd.flat().filter(x => x==='w').length;
       const bScore = bStones + territory.b;
       const wScore = wStones + territory.w + 5.5;
-      setWinner(bScore > wScore ? `黑 ${bScore} vs 白 ${wScore.toFixed(1)} — 黑方勝` : `白 ${wScore.toFixed(1)} vs 黑 ${bScore} — 白方勝`);
+      const blackWins = bScore > wScore;
+      setWinner(blackWins ? `黑 ${bScore} vs 白 ${wScore.toFixed(1)} — 黑方勝` : `白 ${wScore.toFixed(1)} vs 黑 ${bScore} — 白方勝`);
+      if (blackWins && typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(1);
       return;
     }
     setPass(p=>p+1); setTurn(t=>t==='b'?'w':'b');
@@ -983,7 +985,7 @@ function GomokuGame({ onBack }) {
     const nb = board.map(row => [...row]);
     nb[r][c] = turn;
     setBoard(nb); setLastMove([r,c]);
-    if (checkWin(nb, r, c, turn)) { setWinner(turn); return; }
+    if (checkWin(nb, r, c, turn)) { setWinner(turn); if(turn==='b'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); return; }
     // Draw check
     if (nb.every(row => row.every(cell => cell !== null))) { setWinner('draw'); return; }
     if (vsAI) {
@@ -1151,7 +1153,7 @@ function FlightGame({ onBack }) {
       else setMessage('');
     } else setMessage('');
     // Check win
-    if (np[turn].every(p => p === TRACK)) setWinner(turn);
+    if (np[turn].every(p => p === TRACK)) { setWinner(turn); if(turn===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
     // Roll again on 6
     const nextTurn = dice === 6 ? turn : (turn+1)%players;
     setPieces(np); setDice(null); setTurn(nextTurn);
@@ -1403,7 +1405,7 @@ function CheckersGame({ onBack }) {
         nb[key] = nb[`${sel[0]},${sel[1]}`];
         nb[`${sel[0]},${sel[1]}`] = null;
         const w = checkWin(nb, numPlayers);
-        if (w !== null) setWinner(w);
+        if (w !== null) { setWinner(w); if(w===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
         setBoard(nb); setTurn(nextTurn(turn, numPlayers)); setSel(null); setLastMove([r,c]);
       } else if (board[key] === turn) {
         setSel([r, c]);
@@ -1452,7 +1454,7 @@ function CheckersGame({ onBack }) {
       nb[`${mv.tr},${mv.tc}`] = nb[`${mv.fr},${mv.fc}`];
       nb[`${mv.fr},${mv.fc}`] = null;
       const w = checkWin(nb, numPlayers);
-      if (w !== null) setWinner(w);
+      if (w !== null) { setWinner(w); if(w===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
       setBoard(nb); setTurn(nextTurn(turn, numPlayers)); setSel(null); setLastMove([mv.tr,mv.tc]);
     }, 400);
     return () => clearTimeout(timer);
@@ -1816,6 +1818,10 @@ function MahjongGame({ onBack, variant }) {
   const [winnerInfo,setWinnerInfo]=useState(null);
   const [turnCount,setTurnCount]=useState(0);
   const [riichi,setRiichi]=useState(Array(4).fill(false)); // per-player riichi status
+
+  useEffect(() => {
+    if (winnerInfo && winnerInfo.player === 0 && typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(1);
+  }, [winnerInfo]);
 
   // Refs for AI to avoid stale closures
   const wallRef=useRef(wall); const handsRef=useRef(hands); const meldsRef=useRef(melds);
