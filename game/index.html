@@ -1145,6 +1145,15 @@
     loadPlayCounts();
     updateUserUI();
     if (currentUser) refreshCheckinDot();
+
+    /* Deep-link: #login opens login modal, #leaderboard opens board */
+    if (location.hash === '#login' && !currentUser) {
+      document.getElementById('navLogin').click();
+      history.replaceState(null, '', location.pathname);
+    } else if (location.hash === '#leaderboard') {
+      document.getElementById('navLeaderboard').click();
+      history.replaceState(null, '', location.pathname);
+    }
   </script>
 </body>
 </html>

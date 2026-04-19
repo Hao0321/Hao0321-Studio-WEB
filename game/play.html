@@ -108,6 +108,38 @@
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text { font-size: 0.82rem; letter-spacing: 0.1em; }
 
+    /* AUTH CHIP */
+    .auth-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px 4px 4px; border-radius: 100px;
+      border: 1px solid rgba(168,85,247,0.3); background: rgba(168,85,247,0.1);
+      color: var(--accent); text-decoration: none; font-size: 0.72rem;
+      font-family: inherit; cursor: pointer; transition: all 0.25s;
+    }
+    .auth-chip:hover { background: rgba(168,85,247,0.2); color: #fff; }
+    .auth-chip img { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
+    .auth-chip.logged-out { padding: 5px 14px; }
+    .auth-chip .coin { color: #ffc857; font-weight: 700; }
+
+    /* SCORE TOAST */
+    .score-toast {
+      position: fixed; right: 20px; bottom: 110px; z-index: 100;
+      padding: 12px 18px; border-radius: 12px;
+      background: rgba(20,20,30,0.95); backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(168,85,247,0.35);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      color: #fff; font-size: 0.82rem;
+      display: none; align-items: center; gap: 10px;
+      text-decoration: none; font-family: inherit;
+      animation: toastIn 0.4s cubic-bezier(.34,1.56,.64,1);
+      max-width: 320px;
+    }
+    .score-toast.show { display: inline-flex; }
+    .score-toast.newbest { border-color: #ffc857; box-shadow: 0 12px 40px rgba(255,200,87,0.25); }
+    .score-toast.signin { border-color: rgba(168,85,247,0.5); }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
     /* RESPONSIVE */
     @media (max-width: 1024px) {
       .ad-sidebar { display: none; }
@@ -118,6 +150,7 @@
       .topbar-title { font-size: 0.76rem; }
       .topbar-back { font-size: 0.72rem; }
       .topbar-btn { padding: 4px 10px; font-size: 0.68rem; }
+      .score-toast { right: 12px; bottom: 14px; font-size: 0.76rem; padding: 10px 14px; }
     }
   </style>
 </head>
@@ -129,10 +162,13 @@
       <span class="topbar-title" id="gameTitle">載入中...</span>
     </div>
     <div class="topbar-right">
+      <a class="auth-chip logged-out" id="authChip" href="index.html#login">登入</a>
       <button class="topbar-btn" onclick="toggleFullscreen()">全螢幕</button>
       <a href="https://hao0321.com/" class="topbar-btn" style="text-decoration:none;">首頁</a>
     </div>
   </div>
+
+  <a class="score-toast" id="scoreToast" href="#"></a>
 
   <div class="main-layout">
     <!-- Game Area -->
@@ -227,6 +263,39 @@
       var API = 'https://api.game.hao0321.com';
       var lastReported = { key: null, ts: 0 };
       function token() { return localStorage.getItem('hao_token'); }
+      function currentUser() {
+        try { return JSON.parse(localStorage.getItem('hao_user') || 'null'); } catch(e) { return null; }
+      }
+
+      function renderAuth() {
+        var chip = document.getElementById('authChip');
+        if (!chip) return;
+        var u = currentUser();
+        if (u) {
+          chip.classList.remove('logged-out');
+          chip.setAttribute('href', 'index.html');
+          var av = u.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
+          chip.innerHTML = '<img src="' + av + '" alt="" /><span class="coin">◈ ' + (u.coins || 0) + '</span>';
+        } else {
+          chip.classList.add('logged-out');
+          chip.textContent = '登入';
+          chip.setAttribute('href', 'index.html#login');
+        }
+      }
+
+      var toastTimer = null;
+      function showToast(opts) {
+        var el = document.getElementById('scoreToast');
+        if (!el) return;
+        el.className = 'score-toast show' + (opts.variant ? ' ' + opts.variant : '');
+        el.innerHTML = opts.html;
+        el.setAttribute('href', opts.href || '#');
+        if (!opts.href) el.onclick = function(e) { e.preventDefault(); };
+        else el.onclick = null;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(function(){ el.classList.remove('show'); }, opts.duration || 4500);
+      }
+
       window.haoGame = {
         id: gameKey,
         isLoggedIn: function() { return !!token(); },
@@ -239,14 +308,41 @@
           if (lastReported.key === key && (now - lastReported.ts) < 3000) return Promise.resolve({ ok: false, dup: true });
           lastReported = { key: key, ts: now };
           var t = token();
-          if (!t) return Promise.resolve({ ok: false, reason: 'not-logged-in' });
+          if (!t) {
+            showToast({
+              variant: 'signin',
+              html: '<span>◆ 登入後可上傳分數到排行榜 →</span>',
+              href: 'index.html#login',
+              duration: 6000
+            });
+            return Promise.resolve({ ok: false, reason: 'not-logged-in' });
+          }
           return fetch(API + '/score', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + t },
             body: JSON.stringify({ game: gameKey, score: score })
-          }).then(function(r){ return r.ok ? r.json() : { ok: false }; }).catch(function(){ return { ok: false }; });
+          }).then(function(r){ return r.ok ? r.json() : { ok: false }; })
+            .then(function(data) {
+              if (data && data.ok) {
+                // Server awards 2 coins per score
+                var u = currentUser();
+                if (u) { u.coins = (u.coins || 0) + 2; localStorage.setItem('hao_user', JSON.stringify(u)); renderAuth(); }
+                showToast({
+                  variant: data.newBest ? 'newbest' : '',
+                  html: data.newBest ? '<span>🏆 新紀錄 ' + score + '！+2 金幣</span>' : '<span>分數已上傳 · +2 金幣</span>'
+                });
+              }
+              return data || { ok: false };
+            })
+            .catch(function(){ return { ok: false }; });
         }
       };
+
+      // Listen for cross-tab login state changes (the hall modal updates localStorage)
+      window.addEventListener('storage', function(e) {
+        if (e.key === 'hao_token' || e.key === 'hao_user') renderAuth();
+      });
+      renderAuth();
     })();
 
     if (!game) {
