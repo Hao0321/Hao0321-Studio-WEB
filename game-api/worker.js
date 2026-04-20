@@ -53,6 +53,47 @@ function genId() {
   return 'u_' + crypto.randomUUID().slice(0, 12);
 }
 
+// ── Achievements ──────────────────────────────────────────────
+// Thresholds for incremental achievements; order matters for display.
+const ACHIEVEMENTS = {
+  first_login:  { name: '初次見面',   desc: '首次登入 Hao0321 遊戲大廳', icon: '👋' },
+  first_win:    { name: '首戰告捷',   desc: '第一次上傳分數',             icon: '🎯' },
+  streak_3:     { name: '三日堅持',   desc: '連續簽到 3 天',               icon: '🔥' },
+  streak_7:     { name: '七日達人',   desc: '連續簽到 7 天',               icon: '⭐' },
+  streak_30:    { name: '月度玩家',   desc: '連續簽到 30 天',              icon: '🏅' },
+  coins_50:     { name: '小富翁',     desc: '累積 50 金幣',                icon: '◈' },
+  coins_200:    { name: '金庫',       desc: '累積 200 金幣',               icon: '💰' },
+  coins_1000:   { name: '大戶',       desc: '累積 1000 金幣',              icon: '👑' },
+  played_5:     { name: '玩家',       desc: '玩過 5 款不同遊戲',           icon: '🎮' },
+  played_all:   { name: '收藏家',     desc: '玩過全部 14 款遊戲',          icon: '🏆' },
+};
+
+// Insert achievement if not already unlocked; returns achievement_id or null.
+async function tryUnlock(env, uid, aid) {
+  if (!ACHIEVEMENTS[aid]) return null;
+  const res = await env.DB.prepare(
+    'INSERT OR IGNORE INTO achievements (user_id, achievement_id) VALUES (?, ?)'
+  ).bind(uid, aid).run();
+  return res.meta && res.meta.changes > 0 ? aid : null;
+}
+
+// Check multiple achievements; returns array of newly unlocked IDs.
+async function checkCoinAchievements(env, uid, coins) {
+  const unlocked = [];
+  if (coins >= 50)   { const r = await tryUnlock(env, uid, 'coins_50');   if (r) unlocked.push(r); }
+  if (coins >= 200)  { const r = await tryUnlock(env, uid, 'coins_200');  if (r) unlocked.push(r); }
+  if (coins >= 1000) { const r = await tryUnlock(env, uid, 'coins_1000'); if (r) unlocked.push(r); }
+  return unlocked;
+}
+
+async function checkStreakAchievements(env, uid, streak) {
+  const unlocked = [];
+  if (streak >= 3)  { const r = await tryUnlock(env, uid, 'streak_3');  if (r) unlocked.push(r); }
+  if (streak >= 7)  { const r = await tryUnlock(env, uid, 'streak_7');  if (r) unlocked.push(r); }
+  if (streak >= 30) { const r = await tryUnlock(env, uid, 'streak_30'); if (r) unlocked.push(r); }
+  return unlocked;
+}
+
 export default {
   async fetch(req, env) {
     if (req.method === 'OPTIONS') {
@@ -88,8 +129,13 @@ export default {
           await env.DB.prepare('UPDATE users SET last_login = datetime("now"), name = ?, avatar = ? WHERE id = ?').bind(name, avatar, user.id).run();
         }
 
+        // Unlock first_login
+        const unlocked = [];
+        const u1 = await tryUnlock(env, user.id, 'first_login');
+        if (u1) unlocked.push(u1);
+
         const jwt = await signToken({ uid: user.id, name: user.name }, env.JWT_SECRET);
-        return json({ token: jwt, user: { id: user.id, name: user.name, avatar: user.avatar, title: user.title, coins: user.coins } });
+        return json({ token: jwt, user: { id: user.id, name: user.name, avatar: user.avatar, title: user.title, coins: user.coins }, unlocked });
       }
 
       // ===== CHECK-IN =====
@@ -112,7 +158,14 @@ export default {
         await env.DB.prepare('INSERT INTO checkins (user_id, date, streak, reward) VALUES (?, ?, ?, ?)').bind(u.uid, today, streak, reward).run();
         await env.DB.prepare('UPDATE users SET coins = coins + ? WHERE id = ?').bind(reward, u.uid).run();
 
-        return json({ streak, reward, already: false });
+        // Check streak + coin achievements
+        const userNow = await env.DB.prepare('SELECT coins FROM users WHERE id = ?').bind(u.uid).first();
+        const unlocked = [
+          ...await checkStreakAchievements(env, u.uid, streak),
+          ...await checkCoinAchievements(env, u.uid, userNow.coins),
+        ];
+
+        return json({ streak, reward, already: false, unlocked });
       }
 
       if (path === 'checkin' && req.method === 'GET') {
@@ -158,7 +211,20 @@ export default {
         // Award coins for playing
         await env.DB.prepare('UPDATE users SET coins = coins + 2 WHERE id = ?').bind(u.uid).run();
 
-        return json({ ok: true, newBest: !best || score > best.score });
+        // Check achievements
+        const userNow = await env.DB.prepare('SELECT coins FROM users WHERE id = ?').bind(u.uid).first();
+        const { results: bestRows } = await env.DB.prepare('SELECT DISTINCT game_id FROM best_scores WHERE user_id = ?').bind(u.uid).all();
+        const gameCount = (bestRows || []).length;
+        const unlocked = [];
+        if (score > 0) {
+          const r = await tryUnlock(env, u.uid, 'first_win');
+          if (r) unlocked.push(r);
+        }
+        unlocked.push(...await checkCoinAchievements(env, u.uid, userNow.coins));
+        if (gameCount >= 5)  { const r = await tryUnlock(env, u.uid, 'played_5');   if (r) unlocked.push(r); }
+        if (gameCount >= 14) { const r = await tryUnlock(env, u.uid, 'played_all'); if (r) unlocked.push(r); }
+
+        return json({ ok: true, newBest: !best || score > best.score, unlocked });
       }
 
       if (path.startsWith('leaderboard/')) {
@@ -177,6 +243,20 @@ export default {
         return json(results || []);
       }
 
+      // ===== ACHIEVEMENTS =====
+      if (path === 'achievements/catalog') {
+        return json(ACHIEVEMENTS);
+      }
+
+      if (path === 'achievements') {
+        const u = await getUser(req, env);
+        if (!u) return err('Unauthorized', 401);
+        const { results } = await env.DB.prepare(
+          'SELECT achievement_id, unlocked_at FROM achievements WHERE user_id = ? ORDER BY unlocked_at DESC'
+        ).bind(u.uid).all();
+        return json({ catalog: ACHIEVEMENTS, unlocked: results || [] });
+      }
+
       // ===== PROFILE =====
       if (path === 'profile') {
         const u = await getUser(req, env);
@@ -186,6 +266,7 @@ export default {
 
         const { results: scores } = await env.DB.prepare('SELECT game_id, score FROM best_scores WHERE user_id = ?').bind(u.uid).all();
         const { results: checkins } = await env.DB.prepare('SELECT date, streak, reward FROM checkins WHERE user_id = ? ORDER BY date DESC LIMIT 30').bind(u.uid).all();
+        const { results: achs } = await env.DB.prepare('SELECT achievement_id, unlocked_at FROM achievements WHERE user_id = ? ORDER BY unlocked_at DESC').bind(u.uid).all();
 
         return json({
           id: user.id,
@@ -196,6 +277,8 @@ export default {
           created_at: user.created_at,
           bestScores: scores || [],
           recentCheckins: checkins || [],
+          achievements: achs || [],
+          achievementCatalog: ACHIEVEMENTS,
         });
       }
 

@@ -234,6 +234,27 @@
     .btn-signout{width:100%;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:transparent;color:var(--text2);font-family:inherit;font-size:.78rem;cursor:pointer;transition:all .25s}
     .btn-signout:hover{border-color:var(--pink);color:var(--pink);background:rgba(255,45,123,0.05)}
 
+    /* ── Achievements ── */
+    .ach-list{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px}
+    .ach-item{aspect-ratio:1;border:1px solid rgba(255,255,255,0.06);border-radius:10px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;transition:all .25s;cursor:help;position:relative;text-align:center}
+    .ach-item .ach-icon{font-size:1.35rem;filter:grayscale(1) brightness(.5);transition:filter .3s}
+    .ach-item .ach-name{font-size:.58rem;color:var(--text3);font-weight:600;margin-top:3px;line-height:1.2}
+    .ach-item.unlocked{border-color:rgba(168,85,247,0.4);background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(255,45,123,0.08))}
+    .ach-item.unlocked .ach-icon{filter:none}
+    .ach-item.unlocked .ach-name{color:var(--text)}
+    .ach-item .ach-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0a0a0f;border:1px solid rgba(168,85,247,0.3);padding:6px 10px;border-radius:6px;font-size:.68rem;color:var(--text);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+    .ach-item:hover .ach-tip{opacity:1}
+
+    /* Unlock toast */
+    .unlock-toast{position:fixed;top:90px;right:20px;z-index:3000;padding:14px 18px;border-radius:12px;background:linear-gradient(135deg,rgba(168,85,247,0.95),rgba(255,45,123,0.95));color:#fff;display:none;align-items:center;gap:12px;box-shadow:0 12px 40px rgba(168,85,247,0.5);border:1px solid rgba(255,255,255,0.2);max-width:320px;animation:unlockIn 0.5s cubic-bezier(.34,1.56,.64,1)}
+    .unlock-toast.show{display:flex}
+    .unlock-toast .unlock-icon{font-size:1.8rem}
+    .unlock-toast .unlock-body{flex:1;min-width:0}
+    .unlock-toast .unlock-label{font-size:.62rem;opacity:.85;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+    .unlock-toast .unlock-name{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;margin-top:2px}
+    .unlock-toast .unlock-desc{font-size:.7rem;opacity:.9;margin-top:2px}
+    @keyframes unlockIn{from{opacity:0;transform:translateX(40px) scale(.9)}to{opacity:1;transform:translateX(0) scale(1)}}
+
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 
@@ -650,6 +671,16 @@
     <!-- AdSense auto ads — Google decides placement after approval -->
   </div>
 
+  <!-- Achievement Unlock Toast -->
+  <div class="unlock-toast" id="unlockToast">
+    <div class="unlock-icon" id="unlockIcon">🏆</div>
+    <div class="unlock-body">
+      <div class="unlock-label">成就解鎖</div>
+      <div class="unlock-name" id="unlockName"></div>
+      <div class="unlock-desc" id="unlockDesc"></div>
+    </div>
+  </div>
+
   <!-- Login Modal -->
   <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal('loginModal')">
     <div class="modal">
@@ -762,6 +793,36 @@
       'poker-fortune.html','play.html?game=downstairs','play.html?game=splat-ring',
       'play.html?game=chess-master','pact-of-arcania.html'
     ];
+
+    /* ── Achievement catalog (loaded from API, fallback constants) ── */
+    var achievementCatalog = {
+      first_login:  { name: '初次見面',   desc: '首次登入 Hao0321 遊戲大廳', icon: '👋' },
+      first_win:    { name: '首戰告捷',   desc: '第一次上傳分數',             icon: '🎯' },
+      streak_3:     { name: '三日堅持',   desc: '連續簽到 3 天',               icon: '🔥' },
+      streak_7:     { name: '七日達人',   desc: '連續簽到 7 天',               icon: '⭐' },
+      streak_30:    { name: '月度玩家',   desc: '連續簽到 30 天',              icon: '🏅' },
+      coins_50:     { name: '小富翁',     desc: '累積 50 金幣',                icon: '◈' },
+      coins_200:    { name: '金庫',       desc: '累積 200 金幣',               icon: '💰' },
+      coins_1000:   { name: '大戶',       desc: '累積 1000 金幣',              icon: '👑' },
+      played_5:     { name: '玩家',       desc: '玩過 5 款不同遊戲',           icon: '🎮' },
+      played_all:   { name: '收藏家',     desc: '玩過全部 14 款遊戲',          icon: '🏆' },
+    };
+
+    function showUnlockToast(id) {
+      var a = achievementCatalog[id];
+      if (!a) return;
+      document.getElementById('unlockIcon').textContent = a.icon;
+      document.getElementById('unlockName').textContent = a.name;
+      document.getElementById('unlockDesc').textContent = a.desc;
+      var toast = document.getElementById('unlockToast');
+      toast.classList.add('show');
+      setTimeout(function(){ toast.classList.remove('show'); }, 5000);
+    }
+
+    function queueUnlocks(arr) {
+      if (!arr || !arr.length) return;
+      arr.forEach(function(id, i) { setTimeout(function(){ showUnlockToast(id); }, i * 5500); });
+    }
 
     /* ── Game meta for leaderboard tabs ── */
     var gameMeta = {
@@ -958,6 +1019,7 @@
       api('auth/google', { method: 'POST', body: { token: resp.credential } }).then(function(data) {
         saveSession(data.token, data.user);
         closeModal('loginModal');
+        queueUnlocks(data.unlocked);
       }).catch(function() { alert('登入失敗，請稍後再試。'); });
     }
 
@@ -1057,6 +1119,7 @@
         toast.classList.add('show');
         btn.textContent = '今日已簽到 ✓';
         document.getElementById('checkinDot').style.display = 'none';
+        queueUnlocks(data.unlocked);
       }).catch(function() {
         btn.textContent = '簽到失敗';
         setTimeout(function(){ btn.disabled = false; btn.textContent = '立即簽到'; }, 1500);
@@ -1135,6 +1198,19 @@
         localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
         updateUserUI();
 
+        if (p.achievementCatalog) achievementCatalog = p.achievementCatalog;
+        var unlockedSet = new Set((p.achievements || []).map(function(a){ return a.achievement_id; }));
+        var achIds = Object.keys(achievementCatalog);
+        var achHtml = achIds.map(function(id) {
+          var a = achievementCatalog[id];
+          var on = unlockedSet.has(id);
+          return '<div class="ach-item' + (on ? ' unlocked' : '') + '">' +
+            '<span class="ach-icon">' + a.icon + '</span>' +
+            '<span class="ach-name">' + escapeHtml(a.name) + '</span>' +
+            '<span class="ach-tip">' + escapeHtml(a.desc) + (on ? ' ✓' : '') + '</span>' +
+            '</div>';
+        }).join('');
+
         var avatarSrc = p.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
         var bests = (p.bestScores || []).map(function(b) {
           return '<div class="best-row"><span>' + escapeHtml(gameMeta[b.game_id] || b.game_id) + '</span><b>' + (b.score || 0).toLocaleString() + '</b></div>';
@@ -1147,8 +1223,9 @@
           '</div>' +
           '<div class="profile-stats">' +
             '<div class="stat-box"><div class="v">' + (p.coins || 0) + '</div><div class="k">金幣</div></div>' +
-            '<div class="stat-box"><div class="v">' + (p.bestScores || []).length + '</div><div class="k">遊玩遊戲</div></div>' +
+            '<div class="stat-box"><div class="v">' + unlockedSet.size + '/' + achIds.length + '</div><div class="k">成就</div></div>' +
           '</div>' +
+          '<div class="best-list"><h4>成就徽章</h4><div class="ach-list">' + achHtml + '</div></div>' +
           '<div class="best-list"><h4>最佳成績</h4>' + bests + '</div>' +
           '<button class="btn-signout" onclick="signOut();closeModal(\'profileModal\')">登出</button>';
       }).catch(function() {

@@ -140,6 +140,16 @@
     .score-toast.signin { border-color: rgba(168,85,247,0.5); }
     @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
+    /* Achievement unlock toast */
+    .unlock-toast{position:fixed;top:70px;right:20px;z-index:101;padding:14px 18px;border-radius:12px;background:linear-gradient(135deg,rgba(168,85,247,0.95),rgba(255,45,123,0.95));color:#fff;display:none;align-items:center;gap:12px;box-shadow:0 12px 40px rgba(168,85,247,0.5);border:1px solid rgba(255,255,255,0.2);max-width:320px;animation:unlockIn 0.5s cubic-bezier(.34,1.56,.64,1)}
+    .unlock-toast.show{display:flex}
+    .unlock-toast .uicon{font-size:1.8rem}
+    .unlock-toast .ubody{flex:1;min-width:0}
+    .unlock-toast .ulabel{font-size:.62rem;opacity:.85;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+    .unlock-toast .uname{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;margin-top:2px}
+    .unlock-toast .udesc{font-size:.7rem;opacity:.9;margin-top:2px}
+    @keyframes unlockIn{from{opacity:0;transform:translateX(40px) scale(.9)}to{opacity:1;transform:translateX(0) scale(1)}}
+
     /* RESPONSIVE */
     @media (max-width: 1024px) {
       .ad-sidebar { display: none; }
@@ -169,6 +179,14 @@
   </div>
 
   <a class="score-toast" id="scoreToast" href="#"></a>
+  <div class="unlock-toast" id="unlockToast">
+    <div class="uicon" id="unlockIcon">🏆</div>
+    <div class="ubody">
+      <div class="ulabel">成就解鎖</div>
+      <div class="uname" id="unlockName"></div>
+      <div class="udesc" id="unlockDesc"></div>
+    </div>
+  </div>
 
   <div class="main-layout">
     <!-- Game Area -->
@@ -283,6 +301,30 @@
         }
       }
 
+      var ACHIEVEMENTS = {
+        first_login:{name:'初次見面',desc:'首次登入 Hao0321 遊戲大廳',icon:'👋'},
+        first_win:{name:'首戰告捷',desc:'第一次上傳分數',icon:'🎯'},
+        streak_3:{name:'三日堅持',desc:'連續簽到 3 天',icon:'🔥'},
+        streak_7:{name:'七日達人',desc:'連續簽到 7 天',icon:'⭐'},
+        streak_30:{name:'月度玩家',desc:'連續簽到 30 天',icon:'🏅'},
+        coins_50:{name:'小富翁',desc:'累積 50 金幣',icon:'◈'},
+        coins_200:{name:'金庫',desc:'累積 200 金幣',icon:'💰'},
+        coins_1000:{name:'大戶',desc:'累積 1000 金幣',icon:'👑'},
+        played_5:{name:'玩家',desc:'玩過 5 款不同遊戲',icon:'🎮'},
+        played_all:{name:'收藏家',desc:'玩過全部 14 款遊戲',icon:'🏆'}
+      };
+      var unlockTimer = null;
+      function showUnlockToast(id) {
+        var a = ACHIEVEMENTS[id]; if (!a) return;
+        var t = document.getElementById('unlockToast');
+        document.getElementById('unlockIcon').textContent = a.icon;
+        document.getElementById('unlockName').textContent = a.name;
+        document.getElementById('unlockDesc').textContent = a.desc;
+        t.classList.add('show');
+        clearTimeout(unlockTimer);
+        unlockTimer = setTimeout(function(){ t.classList.remove('show'); }, 5000);
+      }
+
       var toastTimer = null;
       function showToast(opts) {
         var el = document.getElementById('scoreToast');
@@ -331,6 +373,12 @@
                   variant: data.newBest ? 'newbest' : '',
                   html: data.newBest ? '<span>🏆 新紀錄 ' + score + '！+2 金幣</span>' : '<span>分數已上傳 · +2 金幣</span>'
                 });
+                // Delay unlock toasts to not clash with score toast
+                if (data.unlocked && data.unlocked.length) {
+                  data.unlocked.forEach(function(id, i) {
+                    setTimeout(function(){ showUnlockToast(id); }, 2500 + i * 5500);
+                  });
+                }
               }
               return data || { ok: false };
             })

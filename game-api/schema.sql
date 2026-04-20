@@ -54,3 +54,12 @@ INSERT OR IGNORE INTO play_counts (game_id, count) VALUES
   ('taiwan-monopoly', 0), ('water-sort', 0), ('werewolf', 0),
   ('poker-fortune', 0), ('downstairs', 0), ('splat-ring', 0),
   ('chess-master', 0), ('pact-of-arcania', 0);
+
+-- Achievements: one row per (user, achievement) unlocked
+CREATE TABLE IF NOT EXISTS achievements (
+  user_id TEXT NOT NULL,
+  achievement_id TEXT NOT NULL,
+  unlocked_at TEXT DEFAULT (datetime('now')),
+  PRIMARY KEY (user_id, achievement_id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
