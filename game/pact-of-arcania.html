@@ -7,7 +7,7 @@
 <meta name="description" content="Pact of Arcania 靈契之戰 - 瀏覽器卡牌對戰遊戲 by HAO0321 ©Studio">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
 <style>*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}body{background:#08060E;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow-x:hidden;overscroll-behavior:none}#root{min-height:100vh;min-height:100dvh}</style>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
@@ -49,59 +49,59 @@ const STY=`
 // ═══ 40 CHARACTERS · 8 FACTIONS ═══
 const CH=[
   // Human 人類
-  {id:"alexander",n:"亞歷山大",f:"H",p:"戰術專家",d:"棄牌再抽牌",i:"🗡️",c:"#E8945A",hp:10},
-  {id:"mulan",n:"木蘭",f:"H",p:"絕境反擊",d:"HP≤5無防禦時攻擊雙倍",i:"🏹",c:"#E86075",hp:10},
-  {id:"washington",n:"華盛頓",f:"H",p:"領袖號召",d:"防禦卡防禦值+2",i:"🦅",c:"#5A9AE8",hp:10},
-  {id:"curie",n:"瑪麗居里",f:"H",p:"科學天才",d:"恢復卡額外+1HP",i:"⚗️",c:"#B070E0",hp:10},
-  {id:"genghis",n:"成吉思汗",f:"H",p:"迅速突擊",d:"可攻擊2次(棄牌)",i:"🐎",c:"#D4A040",hp:10},
+  {id:"alexander",n:"亞歷山大",f:"H",p:"戰術專家",d:"棄牌再抽牌",i:"",c:"#E8945A",hp:10},
+  {id:"mulan",n:"木蘭",f:"H",p:"絕境反擊",d:"HP≤5無防禦時攻擊雙倍",i:"",c:"#E86075",hp:10},
+  {id:"washington",n:"華盛頓",f:"H",p:"領袖號召",d:"防禦卡防禦值+2",i:"",c:"#5A9AE8",hp:10},
+  {id:"curie",n:"瑪麗居里",f:"H",p:"科學天才",d:"恢復卡額外+1HP",i:"",c:"#B070E0",hp:10},
+  {id:"genghis",n:"成吉思汗",f:"H",p:"迅速突擊",d:"可攻擊2次(棄牌)",i:"",c:"#D4A040",hp:10},
   // Divine 神靈
-  {id:"zeus",n:"宙斯",f:"D",p:"制裁神光",d:"攻擊力以骰子決定",i:"⚡",c:"#FFD060",hp:10},
-  {id:"odin",n:"奧丁",f:"D",p:"全知之眼",d:"複製對手技能",i:"👁️",c:"#70A0E8",hp:10},
-  {id:"anubis",n:"阿努比斯",f:"D",p:"亡者守護",d:"受傷加防禦卡",i:"🐺",c:"#50C8A8",hp:10},
-  {id:"apollo",n:"阿波羅",f:"D",p:"太陽神光",d:"看頂3選2",i:"☀️",c:"#FF9848",hp:10},
-  {id:"artemis",n:"阿提密斯",f:"D",p:"狩獵女神",d:"受傷偷牌",i:"🌙",c:"#90B8F0",hp:10},
+  {id:"zeus",n:"宙斯",f:"D",p:"制裁神光",d:"攻擊力以骰子決定",i:"",c:"#FFD060",hp:10},
+  {id:"odin",n:"奧丁",f:"D",p:"全知之眼",d:"複製對手技能",i:"",c:"#70A0E8",hp:10},
+  {id:"anubis",n:"阿努比斯",f:"D",p:"亡者守護",d:"受傷加防禦卡",i:"",c:"#50C8A8",hp:10},
+  {id:"apollo",n:"阿波羅",f:"D",p:"太陽神光",d:"看頂3選2",i:"",c:"#FF9848",hp:10},
+  {id:"artemis",n:"阿提密斯",f:"D",p:"狩獵女神",d:"受傷偷牌",i:"",c:"#90B8F0",hp:10},
   // Elf 精靈
-  {id:"elron",n:"艾隆",f:"E",p:"自然守護",d:"被攻擊棄牌減2傷",i:"🍃",c:"#40C070",hp:10},
-  {id:"arisa",n:"艾瑞莎",f:"E",p:"精靈之箭",d:"攻擊骰奇數無視防禦",i:"🏹",c:"#60D090",hp:10},
-  {id:"elfin",n:"艾爾芬",f:"E",p:"森林再生",d:"用恢復卡額外抽1牌",i:"🌿",c:"#30B060",hp:10},
-  {id:"luna",n:"露娜",f:"E",p:"月光守護",d:"放防禦卡回復1HP",i:"🌙",c:"#80C8A0",hp:10},
-  {id:"elis",n:"埃莉絲",f:"E",p:"精靈之力",d:"攻擊+2但下回合不能攻擊",i:"✨",c:"#50E0A0",hp:10},
-  {id:"yalo",n:"亞洛",f:"E",p:"自然治癒",d:"回合治癒隊友2HP,不能自我恢復",i:"💚",c:"#38A858",hp:10},
+  {id:"elron",n:"艾隆",f:"E",p:"自然守護",d:"被攻擊棄牌減2傷",i:"",c:"#40C070",hp:10},
+  {id:"arisa",n:"艾瑞莎",f:"E",p:"精靈之箭",d:"攻擊骰奇數無視防禦",i:"",c:"#60D090",hp:10},
+  {id:"elfin",n:"艾爾芬",f:"E",p:"森林再生",d:"用恢復卡額外抽1牌",i:"",c:"#30B060",hp:10},
+  {id:"luna",n:"露娜",f:"E",p:"月光守護",d:"放防禦卡回復1HP",i:"",c:"#80C8A0",hp:10},
+  {id:"elis",n:"埃莉絲",f:"E",p:"精靈之力",d:"攻擊+2但下回合不能攻擊",i:"",c:"#50E0A0",hp:10},
+  {id:"yalo",n:"亞洛",f:"E",p:"自然治癒",d:"回合治癒隊友2HP,不能自我恢復",i:"",c:"#38A858",hp:10},
   // Dwarf 矮人
-  {id:"durin",n:"杜林",f:"W",p:"鋼鐵之力",d:"無場上防禦可從手牌打出",i:"🛡️",c:"#C8A060",hp:10},
-  {id:"balin",n:"巴林",f:"W",p:"矮人之怒",d:"防禦被破壞加攻擊",i:"🔨",c:"#D09040",hp:10},
-  {id:"thorin",n:"索林",f:"W",p:"寶藏守護",d:"攻擊成功從棄牌堆拿攻擊卡",i:"💎",c:"#E8B840",hp:10},
-  {id:"kili",n:"基利",f:"W",p:"鍛造大師",d:"棄牌換攻擊或防禦卡",i:"⚒️",c:"#B08030",hp:10},
-  {id:"fili",n:"菲力",f:"W",p:"犧牲打擊",d:"被攻擊反傷1點",i:"⚔️",c:"#D0A050",hp:10},
-  {id:"ori",n:"歐瑞",f:"W",p:"矮人醫師",d:"用恢復卡拿棄牌堆防禦卡",i:"🏥",c:"#A08840",hp:10},
+  {id:"durin",n:"杜林",f:"W",p:"鋼鐵之力",d:"無場上防禦可從手牌打出",i:"",c:"#C8A060",hp:10},
+  {id:"balin",n:"巴林",f:"W",p:"矮人之怒",d:"防禦被破壞加攻擊",i:"",c:"#D09040",hp:10},
+  {id:"thorin",n:"索林",f:"W",p:"寶藏守護",d:"攻擊成功從棄牌堆拿攻擊卡",i:"",c:"#E8B840",hp:10},
+  {id:"kili",n:"基利",f:"W",p:"鍛造大師",d:"棄牌換攻擊或防禦卡",i:"",c:"#B08030",hp:10},
+  {id:"fili",n:"菲力",f:"W",p:"犧牲打擊",d:"被攻擊反傷1點",i:"",c:"#D0A050",hp:10},
+  {id:"ori",n:"歐瑞",f:"W",p:"矮人醫師",d:"用恢復卡拿棄牌堆防禦卡",i:"",c:"#A08840",hp:10},
   // Demon 魔族
-  {id:"azazel",n:"阿撒茲",f:"M",p:"黑暗之力",d:"全場無防禦時攻擊+2",i:"👿",c:"#D04080",hp:10},
-  {id:"lilith",n:"莉莉絲",f:"M",p:"魅惑之力",d:"骰1-3強制對方棄牌",i:"💋",c:"#E050A0",hp:10},
-  {id:"mol",n:"莫爾",f:"M",p:"黑暗增幅",d:"回合未防守可偷牌",i:"🦇",c:"#A03070",hp:10},
-  {id:"salon",n:"薩隆",f:"M",p:"魔法增強",d:"棄恢復卡+3攻擊",i:"🔮",c:"#C040D0",hp:10},
-  {id:"yage",n:"亞格",f:"M",p:"黑暗治癒",d:"棄牌恢復2HP",i:"💀",c:"#B03080",hp:10},
-  {id:"eri",n:"厄瑞",f:"M",p:"魔族之怒",d:"HP≤5攻擊+2",i:"😈",c:"#E03060",hp:10},
+  {id:"azazel",n:"阿撒茲",f:"M",p:"黑暗之力",d:"全場無防禦時攻擊+2",i:"",c:"#D04080",hp:10},
+  {id:"lilith",n:"莉莉絲",f:"M",p:"魅惑之力",d:"骰1-3強制對方棄牌",i:"",c:"#E050A0",hp:10},
+  {id:"mol",n:"莫爾",f:"M",p:"黑暗增幅",d:"回合未防守可偷牌",i:"",c:"#A03070",hp:10},
+  {id:"salon",n:"薩隆",f:"M",p:"魔法增強",d:"棄恢復卡+3攻擊",i:"",c:"#C040D0",hp:10},
+  {id:"yage",n:"亞格",f:"M",p:"黑暗治癒",d:"棄牌恢復2HP",i:"",c:"#B03080",hp:10},
+  {id:"eri",n:"厄瑞",f:"M",p:"魔族之怒",d:"HP≤5攻擊+2",i:"",c:"#E03060",hp:10},
   // Dragon 龍族
-  {id:"fafnir",n:"法夫尼爾",f:"R",p:"力量收縮",d:"4+傷害骰偶數減半",i:"🐲",c:"#E06030",hp:10},
-  {id:"naga",n:"納迦",f:"R",p:"絕地求生",d:"HP≤4時抽3張",i:"🐍",c:"#D08040",hp:10},
-  {id:"bahamut",n:"巴哈姆特",f:"R",p:"天龍之力",d:"攻擊破壞敵方防禦",i:"🔥",c:"#F04020",hp:10},
-  {id:"leviathan",n:"利維坦",f:"R",p:"海龍之力",d:"防禦被破壞也破壞敵防禦",i:"🌊",c:"#4080D0",hp:10},
-  {id:"nas",n:"納斯",f:"R",p:"暗龍之力",d:"用恢復卡抽1牌",i:"🌑",c:"#8040A0",hp:10},
-  {id:"estel",n:"埃斯特",f:"R",p:"光龍之力",d:"回合開始骰奇數多抽1張",i:"☀️",c:"#F0C040",hp:10},
+  {id:"fafnir",n:"法夫尼爾",f:"R",p:"力量收縮",d:"4+傷害骰偶數減半",i:"",c:"#E06030",hp:10},
+  {id:"naga",n:"納迦",f:"R",p:"絕地求生",d:"HP≤4時抽3張",i:"",c:"#D08040",hp:10},
+  {id:"bahamut",n:"巴哈姆特",f:"R",p:"天龍之力",d:"攻擊破壞敵方防禦",i:"",c:"#F04020",hp:10},
+  {id:"leviathan",n:"利維坦",f:"R",p:"海龍之力",d:"防禦被破壞也破壞敵防禦",i:"",c:"#4080D0",hp:10},
+  {id:"nas",n:"納斯",f:"R",p:"暗龍之力",d:"用恢復卡抽1牌",i:"",c:"#8040A0",hp:10},
+  {id:"estel",n:"埃斯特",f:"R",p:"光龍之力",d:"回合開始骰奇數多抽1張",i:"",c:"#F0C040",hp:10},
   // Undead 亡靈
-  {id:"dknight",n:"死亡騎士",f:"U",p:"死亡之力",d:"死亡復活4HP,攻擊+2",i:"💀",c:"#608090",hp:8},
-  {id:"lichking",n:"巫妖王",f:"U",p:"亡靈之怒",d:"死亡復活8HP,全體無視防禦2傷",i:"👑",c:"#5070A0",hp:8},
-  {id:"skelemage",n:"骷髏法師",f:"U",p:"死亡吸收",d:"有人死亡接收手牌",i:"💀",c:"#7080A0",hp:10},
-  {id:"ghost",n:"幽靈",f:"U",p:"靈能迴避",d:"被攻擊骰1或6迴避,不能用防禦卡",i:"👻",c:"#A0B0D0",hp:10},
-  {id:"zombie",n:"僵屍",f:"U",p:"不死之力",d:"死亡復活4HP+攻擊卡+防禦卡",i:"🧟",c:"#506050",hp:8},
-  {id:"specter",n:"魅影",f:"U",p:"靈魂之力",d:"每回合可與對手換1牌",i:"👤",c:"#9090B0",hp:10},
+  {id:"dknight",n:"死亡騎士",f:"U",p:"死亡之力",d:"死亡復活4HP,攻擊+2",i:"",c:"#608090",hp:8},
+  {id:"lichking",n:"巫妖王",f:"U",p:"亡靈之怒",d:"死亡復活8HP,全體無視防禦2傷",i:"",c:"#5070A0",hp:8},
+  {id:"skelemage",n:"骷髏法師",f:"U",p:"死亡吸收",d:"有人死亡接收手牌",i:"",c:"#7080A0",hp:10},
+  {id:"ghost",n:"幽靈",f:"U",p:"靈能迴避",d:"被攻擊骰1或6迴避,不能用防禦卡",i:"",c:"#A0B0D0",hp:10},
+  {id:"zombie",n:"僵屍",f:"U",p:"不死之力",d:"死亡復活4HP+攻擊卡+防禦卡",i:"",c:"#506050",hp:8},
+  {id:"specter",n:"魅影",f:"U",p:"靈魂之力",d:"每回合可與對手換1牌",i:"",c:"#9090B0",hp:10},
 ];
 
 const FACS=[
-  {id:"H",n:"🏛️ 人類",c:"#E8945A"},{id:"D",n:"⚡ 神靈",c:"#FFD060"},
-  {id:"E",n:"🌿 精靈",c:"#40C070"},{id:"W",n:"⚒️ 矮人",c:"#D09040"},
-  {id:"M",n:"😈 魔族",c:"#D04080"},{id:"R",n:"🐲 龍族",c:"#E06030"},
-  {id:"U",n:"💀 亡靈",c:"#7080A0"},
+  {id:"H",n:" 人類",c:"#E8945A"},{id:"D",n:" 神靈",c:"#FFD060"},
+  {id:"E",n:" 精靈",c:"#40C070"},{id:"W",n:" 矮人",c:"#D09040"},
+  {id:"M",n:" 魔族",c:"#D04080"},{id:"R",n:" 龍族",c:"#E06030"},
+  {id:"U",n:" 亡靈",c:"#7080A0"},
 ];
 
 const CA={
@@ -116,7 +116,7 @@ const CA={
   ti:{id:"ti",t:"F",s:"f",n:"法力潮汐",cl:"#9060D0"},bm:{id:"bm",t:"F",s:"f",n:"時間炸彈",cl:"#9060D0"},
 };
 const DK=[["atk",15],["hvy",8],["fs",4],["aa",4],["df",12],["po",10],["rc",4],["ah",4],["sh",8],["th",2],["ad",2],["ch",2],["mr",2],["cs",2],["ab",2],["st",2],["sl",2],["ti",2],["bm",2]];
-const TN={A:"行動",S:"疾馳",C:"反擊",F:"命運"};const TI2={A:"🃏",S:"⚡",C:"🔥",F:"🌀"};const DF=["⚀","⚁","⚂","⚃","⚄","⚅"];
+const TN={A:"行動",S:"疾馳",C:"反擊",F:"命運"};const TI2={A:"",S:"",C:"",F:""};const DF=["⚀","⚁","⚂","⚃","⚄","⚅"];
 const uid=()=>Math.random().toString(36).slice(2,8);
 const shuf=(a)=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[b[i],b[j]]=[b[j],b[i]];}return b;};
 const rl=()=>(Math.random()*6|0)+1;
@@ -152,11 +152,11 @@ function PactOfArcania(){
     ps.forEach((p,i)=>{
       if(p.hp<=0&&!revived[i]){
         const ab=p.char.id;
-        if(ab==="dknight"){p.hp=4;addL("💀 死亡騎士復活！(4HP) 攻擊永久+2");setRevived(prev=>({...prev,[i]:true}));}
-        else if(ab==="lichking"){p.hp=8;addL("👑 巫妖王復活！(8HP) 全體受2傷");ps.forEach((t,j)=>{if(j!==i&&t.hp>0){t.hp=Math.max(0,t.hp-2);addL("💥 "+t.char.n+" -2HP("+t.hp+")");}});setRevived(prev=>({...prev,[i]:true}));}
-        else if(ab==="zombie"){p.hp=4;const atkC=d.find(c=>c.s==="a");if(atkC){p.hand.push(d.splice(d.indexOf(atkC),1)[0]);addL("🧟 僵屍復活+攻擊卡");}p.fld.push({k:"d",uid:uid()});addL("🧟 僵屍復活！(4HP)+防禦卡");setRevived(prev=>({...prev,[i]:true}));}
+        if(ab==="dknight"){p.hp=4;addL(" 死亡騎士復活！(4HP) 攻擊永久+2");setRevived(prev=>({...prev,[i]:true}));}
+        else if(ab==="lichking"){p.hp=8;addL(" 巫妖王復活！(8HP) 全體受2傷");ps.forEach((t,j)=>{if(j!==i&&t.hp>0){t.hp=Math.max(0,t.hp-2);addL(" "+t.char.n+" -2HP("+t.hp+")");}});setRevived(prev=>({...prev,[i]:true}));}
+        else if(ab==="zombie"){p.hp=4;const atkC=d.find(c=>c.s==="a");if(atkC){p.hand.push(d.splice(d.indexOf(atkC),1)[0]);addL(" 僵屍復活+攻擊卡");}p.fld.push({k:"d",uid:uid()});addL(" 僵屍復活！(4HP)+防禦卡");setRevived(prev=>({...prev,[i]:true}));}
         // 骷髏法師: absorb dead player's hand
-        if(p.hp<=0){const mage=ps.find((t,j)=>j!==i&&t.hp>0&&t.char.id==="skelemage");if(mage&&p.hand.length>0){mage.hand.push(...p.hand);p.hand=[];addL("💀 骷髏法師接收了"+p.char.n+"的手牌！");}}
+        if(p.hp<=0){const mage=ps.find((t,j)=>j!==i&&t.hp>0&&t.char.id==="skelemage");if(mage&&p.hand.length>0){mage.hand.push(...p.hand);p.hand=[];addL(" 骷髏法師接收了"+p.char.n+"的手牌！");}}
       }
     });
     const al=ps.filter(p=>p.hp>0);
@@ -171,12 +171,12 @@ function PactOfArcania(){
   // Calc attack damage with all ability modifiers
   const calcDmg=(baseDmg,atkIdx,ps,cm)=>{
     let dmg=baseDmg;const ab=gAb(atkIdx);
-    if(ab==="mulan"&&ps[atkIdx].hp<=5&&!ps[atkIdx].fld.some(f=>f.k==="d")){dmg*=2;addL("🏹 絕境反擊！雙倍！");}
-    if(ab==="elis"){dmg+=2;addL("✨ 精靈之力+2");setElisSkip(prev=>({...prev,[atkIdx]:true}));}
-    if(ab==="azazel"&&ps.every(p=>p.hp<=0||p.fld.filter(f=>f.k==="d").length===0)){dmg+=2;addL("👿 黑暗之力+2");}
-    if(ab==="eri"&&ps[atkIdx].hp<=5){dmg+=2;addL("😈 魔族之怒+2");}
-    if(ab==="dknight"&&revived[atkIdx]){dmg+=2;addL("💀 死亡之力+2");}
-    if(ab!=="zeus"&&cm[atkIdx]>0){dmg+=cm[atkIdx];addL("🔮 護符+"+cm[atkIdx]);cm[atkIdx]=0;}
+    if(ab==="mulan"&&ps[atkIdx].hp<=5&&!ps[atkIdx].fld.some(f=>f.k==="d")){dmg*=2;addL(" 絕境反擊！雙倍！");}
+    if(ab==="elis"){dmg+=2;addL(" 精靈之力+2");setElisSkip(prev=>({...prev,[atkIdx]:true}));}
+    if(ab==="azazel"&&ps.every(p=>p.hp<=0||p.fld.filter(f=>f.k==="d").length===0)){dmg+=2;addL(" 黑暗之力+2");}
+    if(ab==="eri"&&ps[atkIdx].hp<=5){dmg+=2;addL(" 魔族之怒+2");}
+    if(ab==="dknight"&&revived[atkIdx]){dmg+=2;addL(" 死亡之力+2");}
+    if(ab!=="zeus"&&cm[atkIdx]>0){dmg+=cm[atkIdx];addL(" 護符+"+cm[atkIdx]);cm[atkIdx]=0;}
     return dmg;
   };
 
@@ -184,8 +184,8 @@ function PactOfArcania(){
   const drDk=(cnt,d,hand,ps,si)=>{
     const dk2=[...d],h=[...hand],ps2=ps.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]})),logs=[];let drawn=0;const fatesDrawn=[];
     while(drawn<cnt&&dk2.length>0){const c=dk2.shift();
-      if(c.t==="F"){drawn++;if(si===0){h.push(c);fatesDrawn.push(c);logs.push("🌀 命運卡【"+c.n+"】！");}
-        else{logs.push("🌀 "+ps2[si].char.n+"【"+c.n+"】");
+      if(c.t==="F"){drawn++;if(si===0){h.push(c);fatesDrawn.push(c);logs.push(" 命運卡【"+c.n+"】！");}
+        else{logs.push(" "+ps2[si].char.n+"【"+c.n+"】");
           if(c.id==="st"){ps2.forEach(p=>{if(p.hp<=0)return;for(let x=0;x<2;x++)if(p.hand.length>0)p.hand.splice(Math.random()*p.hand.length|0,1);});}
           else if(c.id==="sl"){const ot=ps2.filter((p,i2)=>i2!==si&&p.hp>0&&p.hand.length>0);if(ot.length>0){const t=ot[Math.random()*ot.length|0];ps2[si].hand.push(t.hand.splice(Math.random()*t.hand.length|0,1)[0]);}}
           else if(c.id==="ti"){ps2.forEach(p=>{if(p.hp<=0)return;for(let x=0;x<2;x++)if(dk2.length>0){let cc=dk2.shift();while(cc&&cc.t==="F")cc=dk2.length>0?dk2.shift():null;if(cc)p.hand.push(cc);}});}
@@ -197,49 +197,49 @@ function PactOfArcania(){
   // Resolve attack with ALL character abilities
   const rAtk=(dmg,atkIdx,defIdx,ps,dd)=>{
     const logs=[];const def={...ps[defIdx],fld:[...ps[defIdx].fld],hand:[...ps[defIdx].hand]};const atk={...ps[atkIdx],hand:[...ps[atkIdx].hand]};const d2=[...dd];
-    logs.push("⚔️ "+atk.char.n+" → "+def.char.n+"（"+dmg+"點）");
+    logs.push(" "+atk.char.n+" → "+def.char.n+"（"+dmg+"點）");
     const dAb=gAb(defIdx);const aAb=gAb(atkIdx);
 
     // 幽靈: roll to dodge (1,6)
-    if(dAb==="ghost"){const gv=rl();if(gv===1||gv===6){logs.push("👻 靈能迴避！骰"+gv+"，閃避成功！");const ps2=[...ps];ps2[defIdx]=def;ps2[atkIdx]=atk;return{ps:ps2,logs,disc:d2};}}
+    if(dAb==="ghost"){const gv=rl();if(gv===1||gv===6){logs.push(" 靈能迴避！骰"+gv+"，閃避成功！");const ps2=[...ps];ps2[defIdx]=def;ps2[atkIdx]=atk;return{ps:ps2,logs,disc:d2};}}
     // 杜林: no field defense → auto play from hand
-    if(dAb==="durin"&&!def.fld.some(f=>f.k==="d")){const hDef=def.hand.findIndex(c=>c.s==="d");if(hDef>=0){const dc=def.hand.splice(hDef,1)[0];def.fld.push({k:"d",uid:uid()});d2.push(dc);logs.push("🛡️ 鋼鐵之力：從手牌打出防禦卡！");}}
+    if(dAb==="durin"&&!def.fld.some(f=>f.k==="d")){const hDef=def.hand.findIndex(c=>c.s==="d");if(hDef>=0){const dc=def.hand.splice(hDef,1)[0];def.fld.push({k:"d",uid:uid()});d2.push(dc);logs.push(" 鋼鐵之力：從手牌打出防禦卡！");}}
     // 艾隆: discard to reduce 2
-    if(dAb==="elron"&&def.hand.length>0){const dc=def.hand.splice(Math.random()*def.hand.length|0,1)[0];d2.push(dc);dmg=Math.max(0,dmg-2);logs.push("🍃 自然守護：棄牌減2傷("+dmg+")");}
+    if(dAb==="elron"&&def.hand.length>0){const dc=def.hand.splice(Math.random()*def.hand.length|0,1)[0];d2.push(dc);dmg=Math.max(0,dmg-2);logs.push(" 自然守護：棄牌減2傷("+dmg+")");}
     // 法夫尼爾: 4+ dmg, roll even = half
-    if(dAb==="fafnir"&&dmg>=4){const fv=rl();if(fv%2===0){dmg=Math.ceil(dmg/2);logs.push("🐲 力量收縮！骰"+fv+"，傷害減半("+dmg+")");}}
+    if(dAb==="fafnir"&&dmg>=4){const fv=rl();if(fv%2===0){dmg=Math.ceil(dmg/2);logs.push(" 力量收縮！骰"+fv+"，傷害減半("+dmg+")");}}
     // 艾瑞莎: odd roll = ignore defense
-    let ignDef=false;if(aAb==="arisa"){const av=rl();if(av%2===1){ignDef=true;logs.push("🏹 精靈之箭！骰"+av+"，無視防禦！");}else{logs.push("🏹 骰"+av+"，正常攻擊");}}
+    let ignDef=false;if(aAb==="arisa"){const av=rl();if(av%2===1){ignDef=true;logs.push(" 精靈之箭！骰"+av+"，無視防禦！");}else{logs.push(" 骰"+av+"，正常攻擊");}}
     // 巴哈姆特: destroy 1 defense
-    if(aAb==="bahamut"&&def.fld.some(f=>f.k==="d")){def.fld.splice(def.fld.findIndex(f=>f.k==="d"),1);logs.push("🔥 天龍之力：破壞1張防禦！");}
+    if(aAb==="bahamut"&&def.fld.some(f=>f.k==="d")){def.fld.splice(def.fld.findIndex(f=>f.k==="d"),1);logs.push(" 天龍之力：破壞1張防禦！");}
 
     let remaining=dmg;const dv=defVal(defIdx);
     if(!ignDef){while(remaining>0&&def.fld.some(f=>f.k==="d")){const di=def.fld.findIndex(f=>f.k==="d");if(di<0)break;
-      if(remaining>=dv){remaining-=dv;d2.push(def.fld.splice(di,1)[0]);logs.push("🔰 防禦破壞（吸收"+dv+"）");
+      if(remaining>=dv){remaining-=dv;d2.push(def.fld.splice(di,1)[0]);logs.push(" 防禦破壞（吸收"+dv+"）");
         // 巴林: gain attack bonus from destroyed defense
-        if(dAb==="balin"){logs.push("🔨 矮人之怒：攻擊+"+dv+"！");}
+        if(dAb==="balin"){logs.push(" 矮人之怒：攻擊+"+dv+"！");}
         // 利維坦: destroy enemy defense too
-        if(dAb==="leviathan"&&atk.fld.some(f=>f.k==="d")){atk.fld.splice(atk.fld.findIndex(f=>f.k==="d"),1);logs.push("🌊 海龍之力：破壞攻擊者防禦！");}
-      }else{logs.push("🔰 防禦吸收"+remaining+"（未破壞）");remaining=0;}}}
-    else{logs.push("⚡ 無視防禦直接攻擊！");}
+        if(dAb==="leviathan"&&atk.fld.some(f=>f.k==="d")){atk.fld.splice(atk.fld.findIndex(f=>f.k==="d"),1);logs.push(" 海龍之力：破壞攻擊者防禦！");}
+      }else{logs.push(" 防禦吸收"+remaining+"（未破壞）");remaining=0;}}}
+    else{logs.push(" 無視防禦直接攻擊！");}
 
-    if(remaining>0){def.hp=Math.max(0,def.hp-remaining);logs.push("❤️‍🔥 "+def.char.n+" -"+remaining+"HP（"+def.hp+"/"+def.mhp+"）");
+    if(remaining>0){def.hp=Math.max(0,def.hp-remaining);logs.push(" "+def.char.n+" -"+remaining+"HP（"+def.hp+"/"+def.mhp+"）");
       if(defIdx===0)showFx("hit",remaining);
       // 菲力: reflect 1 damage
-      if(dAb==="fili"&&atk.hp>0){atk.hp=Math.max(0,atk.hp-1);logs.push("⚔️ 犧牲打擊：反傷1點！("+atk.hp+"HP)");}
-      if(dAb==="anubis"&&def.fld.filter(f=>f.k==="d").length<2){def.fld.push({k:"d",uid:uid()});logs.push("🐺 亡者守護");}
-      if(dAb==="artemis"&&atk.hand.length>0){def.hand.push(atk.hand.splice(Math.random()*atk.hand.length|0,1)[0]);logs.push("🌙 偷取1牌");}
+      if(dAb==="fili"&&atk.hp>0){atk.hp=Math.max(0,atk.hp-1);logs.push(" 犧牲打擊：反傷1點！("+atk.hp+"HP)");}
+      if(dAb==="anubis"&&def.fld.filter(f=>f.k==="d").length<2){def.fld.push({k:"d",uid:uid()});logs.push(" 亡者守護");}
+      if(dAb==="artemis"&&atk.hand.length>0){def.hand.push(atk.hand.splice(Math.random()*atk.hand.length|0,1)[0]);logs.push(" 偷取1牌");}
       // 索林: successful attack → get atk card from discard
-      if(aAb==="thorin"){const atkCard=d2.find(c=>c.s==="a");if(atkCard){atk.hand.push(d2.splice(d2.indexOf(atkCard),1)[0]);logs.push("💎 寶藏守護：從棄牌堆獲得攻擊卡");}}
-      if(def.hp<=0)logs.push("💀 "+def.char.n+" 陣亡！");
-    }else{logs.push("🛡️ 完全擋下！");}
+      if(aAb==="thorin"){const atkCard=d2.find(c=>c.s==="a");if(atkCard){atk.hand.push(d2.splice(d2.indexOf(atkCard),1)[0]);logs.push(" 寶藏守護：從棄牌堆獲得攻擊卡");}}
+      if(def.hp<=0)logs.push(" "+def.char.n+" 陣亡！");
+    }else{logs.push(" 完全擋下！");}
     const ps2=[...ps];ps2[defIdx]=def;ps2[atkIdx]=atk;return{ps:ps2,logs,disc:d2};
   };
 
   // After heal hook - 艾爾芬/納斯: draw 1, 歐瑞: get defense from discard, 露娜: heal 1 on defense
   const afterHeal=(ab,ps,d,dd)=>{
-    if((ab==="elfin"||ab==="nas")&&d.length>0){let c=d.shift();while(c&&c.t==="F")c=d.length>0?d.shift():null;if(c){ps[ci].hand.push(c);addL(ab==="elfin"?"🌿 森林再生：抽1牌":"🌑 暗龍之力：抽1牌");}}
-    if(ab==="ori"){const defC=dd.find(c=>c.s==="d");if(defC){ps[ci].hand.push(dd.splice(dd.indexOf(defC),1)[0]);addL("🏥 矮人醫師：從棄牌堆獲得防禦卡");}}
+    if((ab==="elfin"||ab==="nas")&&d.length>0){let c=d.shift();while(c&&c.t==="F")c=d.length>0?d.shift():null;if(c){ps[ci].hand.push(c);addL(ab==="elfin"?" 森林再生：抽1牌":" 暗龍之力：抽1牌");}}
+    if(ab==="ori"){const defC=dd.find(c=>c.s==="d");if(defC){ps[ci].hand.push(dd.splice(dd.indexOf(defC),1)[0]);addL(" 矮人醫師：從棄牌堆獲得防禦卡");}}
   };
 
   const startG=(pc)=>{
@@ -250,51 +250,51 @@ function PactOfArcania(){
     setDk(d.slice(di));setDisc([]);setPls(ap);setCi(0);setTn(1);setPh("draw");setR1(true);setAn(0);setLog([]);
     const chM={},skm={},bmm={};ap.forEach((_,i)=>{chM[i]=0;skm[i]=false;bmm[i]=false;});
     setCh(chM);setSkM(skm);setBmM(bmm);setWin(null);setSel(null);setPend(null);setAxU(false);setCpAb(null);setTarg(null);setHlTg(null);setApo(null);setDiscSel(null);setFx(null);setFateShow(null);setElisSkip({});setRevived({});
-    addL("⚔️ 靈契之戰開始！");ap.forEach(p=>addL((p.ai?"🤖 ":"👤 ")+p.char.n+"("+p.char.p+")"));addL("📜 第一回合不可攻擊");setScr("game");
+    addL(" 靈契之戰開始！");ap.forEach(p=>addL((p.ai?" ":" ")+p.char.n+"("+p.char.p+")"));addL(" 第一回合不可攻擊");setScr("game");
   };
 
-  const tryEnd=(ps,d)=>{const cp=ps||pls;if(ci===0&&cp[0].hand.length>6){setPh("discard");setDiscSel({need:cp[0].hand.length-6,selected:[]});addL("⚠️ 手牌>6張！棄"+(cp[0].hand.length-6)+"張");return;}if(ci!==0&&cp[ci]&&cp[ci].hand.length>6){const np2=[...cp];const p={...np2[ci],hand:[...np2[ci].hand]};while(p.hand.length>6)p.hand.splice(Math.random()*p.hand.length|0,1);np2[ci]=p;setPls(np2);}doEnd(ps,d);};
+  const tryEnd=(ps,d)=>{const cp=ps||pls;if(ci===0&&cp[0].hand.length>6){setPh("discard");setDiscSel({need:cp[0].hand.length-6,selected:[]});addL(" 手牌>6張！棄"+(cp[0].hand.length-6)+"張");return;}if(ci!==0&&cp[ci]&&cp[ci].hand.length>6){const np2=[...cp];const p={...np2[ci],hand:[...np2[ci].hand]};while(p.hand.length>6)p.hand.splice(Math.random()*p.hand.length|0,1);np2[ci]=p;setPls(np2);}doEnd(ps,d);};
   const discConfirm=()=>{if(!discSel||discSel.selected.length!==discSel.need)return;let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]}));const dd=[...disc];discSel.selected.forEach(u2=>{const idx=ps[0].hand.findIndex(c=>c.uid===u2);if(idx>=0){dd.push(ps[0].hand.splice(idx,1)[0]);}});setPls(ps);setDisc(dd);setDiscSel(null);doEnd(ps,dk);};
   const doEnd=(ps,d)=>{
     const cp=ps||pls;
     // 莫爾: if no defense on field at end of turn, steal 1 card
-    const curAb2=gAb(ci);if(curAb2==="mol"&&cp[ci]&&cp[ci].fld.filter(f=>f.k==="d").length===0){const ot=cp.filter((p,i)=>i!==ci&&p.hp>0&&p.hand.length>0);if(ot.length>0){const t=ot[Math.random()*ot.length|0];const sc=t.hand.splice(Math.random()*t.hand.length|0,1)[0];cp[ci].hand.push(sc);addL("🦇 黑暗增幅：未防守，偷取"+t.char.n+"的1牌");setPls([...cp]);}}
-    addL("────────────────");let nx=nxA(ci,cp);if(r1&&nx<=ci){setR1(false);addL("📜 可以攻擊了！");setTn(2);nx=nxA(cp.length-1,cp);}else if(!r1&&nx<=ci)setTn(tn+1);setCi(nx);setPh("draw");setAn(0);setSel(null);setCpAb(null);setTarg(null);setDiscSel(null);};
+    const curAb2=gAb(ci);if(curAb2==="mol"&&cp[ci]&&cp[ci].fld.filter(f=>f.k==="d").length===0){const ot=cp.filter((p,i)=>i!==ci&&p.hp>0&&p.hand.length>0);if(ot.length>0){const t=ot[Math.random()*ot.length|0];const sc=t.hand.splice(Math.random()*t.hand.length|0,1)[0];cp[ci].hand.push(sc);addL(" 黑暗增幅：未防守，偷取"+t.char.n+"的1牌");setPls([...cp]);}}
+    addL("────────────────");let nx=nxA(ci,cp);if(r1&&nx<=ci){setR1(false);addL(" 可以攻擊了！");setTn(2);nx=nxA(cp.length-1,cp);}else if(!r1&&nx<=ci)setTn(tn+1);setCi(nx);setPh("draw");setAn(0);setSel(null);setCpAb(null);setTarg(null);setDiscSel(null);};
 
   const doDraw=()=>{if(!pls[ci]||am)return;setAm(true);let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]})),d=[...dk];
     const afterBomb=()=>{
       if(ps[ci].char.id==="odin"){const ot=ps.filter((p,i)=>i!==ci&&p.hp>0);if(ot.length>0){setCpAb(ot[Math.random()*ot.length|0].char.id);}}
       const curAb=gAb(ci);
       // 埃斯特: roll odd = extra draw
-      let extraDraw=0;if(curAb==="estel"){const ev=rl();if(ev%2===1){extraDraw=1;addL("☀️ 光龍之力！骰"+ev+"，多抽1張");}}
+      let extraDraw=0;if(curAb==="estel"){const ev=rl();if(ev%2===1){extraDraw=1;addL(" 光龍之力！骰"+ev+"，多抽1張");}}
       // 納迦: HP≤4 draw 3
-      let drawCnt=2+extraDraw;if(curAb==="naga"&&ps[ci].hp<=4){drawCnt=3+extraDraw;addL("🐍 絕地求生！抽3張");}
+      let drawCnt=2+extraDraw;if(curAb==="naga"&&ps[ci].hp<=4){drawCnt=3+extraDraw;addL(" 絕地求生！抽3張");}
       if(curAb==="apollo"&&ci===0){const t3=[];let ti=0;while(t3.length<3&&ti<d.length){if(d[ti].t!=="F")t3.push({...d[ti],_i:ti});ti++;}if(t3.length>=2){setApo({cards:t3,sel:[]});setPh("apollo");setAm(false);return;}}
       const r=drDk(drawCnt,d,ps[ci].hand,ps,ci);r.logs.forEach(l=>addL(l));d=r.deck;ps=r.players;setDk(d);setPls(ps);if(cW(ps,d)){setAm(false);return;}
-      if(skM[ci]){addL("⏳ 跳過！");setSkM(s=>({...s,[ci]:false}));doEnd(ps,d);setAm(false);return;}
+      if(skM[ci]){addL(" 跳過！");setSkM(s=>({...s,[ci]:false}));doEnd(ps,d);setAm(false);return;}
       if(ci===0&&r.fatesDrawn&&r.fatesDrawn.length>0){setFateShow({card:r.fatesDrawn[0],phase:"drawn"});setAm(false);setPh("fate");return;}
       // 埃莉絲 skip check
-      if(elisSkip[ci]){setElisSkip(prev=>({...prev,[ci]:false}));addL("✨ 精靈之力：本回合不能攻擊");}
+      if(elisSkip[ci]){setElisSkip(prev=>({...prev,[ci]:false}));addL(" 精靈之力：本回合不能攻擊");}
       // 莉莉絲: roll 1-3 force enemy discard
-      if(curAb==="lilith"){const lv=rl();if(lv<=3){const ot=ps.filter((p,i)=>i!==ci&&p.hp>0&&p.hand.length>0);if(ot.length>0){const t=ot[Math.random()*ot.length|0];const dc=t.hand.splice(Math.random()*t.hand.length|0,1)[0];addL("💋 魅惑之力！骰"+lv+"，"+t.char.n+"棄【"+dc.n+"】");}else addL("💋 骰"+lv+"但無目標");}else addL("💋 骰"+lv+"（4-6無效）");}
+      if(curAb==="lilith"){const lv=rl();if(lv<=3){const ot=ps.filter((p,i)=>i!==ci&&p.hp>0&&p.hand.length>0);if(ot.length>0){const t=ot[Math.random()*ot.length|0];const dc=t.hand.splice(Math.random()*t.hand.length|0,1)[0];addL(" 魅惑之力！骰"+lv+"，"+t.char.n+"棄【"+dc.n+"】");}else addL(" 骰"+lv+"但無目標");}else addL(" 骰"+lv+"（4-6無效）");}
       // 魅影: swap card with opponent
-      if(curAb==="specter"){const ot=ps.filter((p,i)=>i!==ci&&p.hp>0&&p.hand.length>0);if(ot.length>0&&ps[ci].hand.length>0){const t=ot[Math.random()*ot.length|0];const myC=ps[ci].hand.splice(Math.random()*ps[ci].hand.length|0,1)[0];const thC=t.hand.splice(Math.random()*t.hand.length|0,1)[0];ps[ci].hand.push(thC);t.hand.push(myC);addL("👤 靈魂之力：與"+t.char.n+"交換1牌");}}
+      if(curAb==="specter"){const ot=ps.filter((p,i)=>i!==ci&&p.hp>0&&p.hand.length>0);if(ot.length>0&&ps[ci].hand.length>0){const t=ot[Math.random()*ot.length|0];const myC=ps[ci].hand.splice(Math.random()*ps[ci].hand.length|0,1)[0];const thC=t.hand.splice(Math.random()*t.hand.length|0,1)[0];ps[ci].hand.push(thC);t.hand.push(myC);addL(" 靈魂之力：與"+t.char.n+"交換1牌");}}
       // 薩隆: auto-convert heal cards to attack bonus
-      if(curAb==="salon"){const hCards=ps[ci].hand.filter(c=>c.s==="h");if(hCards.length>0&&!r1){const hc=hCards[0];ps[ci].hand=ps[ci].hand.filter(c=>c.uid!==hc.uid);const cm2={...chm};cm2[ci]=(cm2[ci]||0)+3;setCh(cm2);addL("🔮 魔法增強：棄【"+hc.n+"】攻擊+3");}}
+      if(curAb==="salon"){const hCards=ps[ci].hand.filter(c=>c.s==="h");if(hCards.length>0&&!r1){const hc=hCards[0];ps[ci].hand=ps[ci].hand.filter(c=>c.uid!==hc.uid);const cm2={...chm};cm2[ci]=(cm2[ci]||0)+3;setCh(cm2);addL(" 魔法增強：棄【"+hc.n+"】攻擊+3");}}
       setPls(ps);setDk(d);
       setPh("action");setAxU(false);setAm(false);};
-    if(bmM[ci]){setBmM(prev=>({...prev,[ci]:false}));startDice("💣 時間炸彈",v=>{if(v>=4){ps[ci].hp=Math.max(0,ps[ci].hp-4);showFx("hit",4);addL("💥 骰"+v+"爆炸！-4HP");}else{const nx=nxA(ci,ps);setBmM(prev=>({...prev,[nx]:true}));addL("💣 骰"+v+"→"+ps[nx].char.n);}setPls(ps);setDk(d);if(cW(ps,d)){setAm(false);return;}afterBomb();});}
+    if(bmM[ci]){setBmM(prev=>({...prev,[ci]:false}));startDice(" 時間炸彈",v=>{if(v>=4){ps[ci].hp=Math.max(0,ps[ci].hp-4);showFx("hit",4);addL(" 骰"+v+"爆炸！-4HP");}else{const nx=nxA(ci,ps);setBmM(prev=>({...prev,[nx]:true}));addL(" 骰"+v+"→"+ps[nx].char.n);}setPls(ps);setDk(d);if(cW(ps,d)){setAm(false);return;}afterBomb();});}
     else afterBomb();};
 
   const apoConf=()=>{if(!apo||apo.sel.length!==2)return;let d=[...dk];const h=[...pls[ci].hand];apo.cards.filter(c=>apo.sel.includes(c.uid)).map(c=>c._i).sort((a,b)=>b-a).forEach(idx=>{if(idx<d.length)h.push(d.splice(idx,1)[0]);});const ps=pls.map((p,i)=>i===ci?{...p,hand:h}:p);setDk(d);setPls(ps);setApo(null);setPh("action");setAxU(false);};
-  const hlConf=()=>{if(!hlTg)return;let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]}));ps[0].hand=ps[0].hand.filter(c=>c.uid!==hlTg.cuid);const dd=[...disc];dd.push(hlTg.card);const ab=gAb(0);let hl=hlTg.card.hl||1;if(ab==="curie"){hl+=1;addL("⚗️ +1");}addL("🃏【"+hlTg.card.n+"】");if(hlTg.selected.length>0){hlTg.selected.forEach(idx=>{if(ps[idx]&&ps[idx].hp>0&&ps[idx].hp<ps[idx].mhp){ps[idx].hp=Math.min(ps[idx].mhp,ps[idx].hp+hl);addL("💊 "+ps[idx].char.n+" +"+hl+"HP");showFx("heal",hl);}});}let d2=[...dk];afterHeal(ab,ps,d2,dd);setDk(d2);setPls(ps);setDisc(dd);setHlTg(null);cW(ps,d2);};
+  const hlConf=()=>{if(!hlTg)return;let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]}));ps[0].hand=ps[0].hand.filter(c=>c.uid!==hlTg.cuid);const dd=[...disc];dd.push(hlTg.card);const ab=gAb(0);let hl=hlTg.card.hl||1;if(ab==="curie"){hl+=1;addL(" +1");}addL("【"+hlTg.card.n+"】");if(hlTg.selected.length>0){hlTg.selected.forEach(idx=>{if(ps[idx]&&ps[idx].hp>0&&ps[idx].hp<ps[idx].mhp){ps[idx].hp=Math.min(ps[idx].mhp,ps[idx].hp+hl);addL(" "+ps[idx].char.n+" +"+hl+"HP");showFx("heal",hl);}});}let d2=[...dk];afterHeal(ab,ps,d2,dd);setDk(d2);setPls(ps);setDisc(dd);setHlTg(null);cW(ps,d2);};
 
   const fatePlay=()=>{if(fateShow?.phase==="drawn")setFateShow({...fateShow,phase:"play"});};
-  const fateResolve=()=>{if(!fateShow)return;const card=fateShow.card;let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]}));ps[0].hand=ps[0].hand.filter(c=>c.uid!==card.uid);const dd=[...disc];dd.push(card);let d2=[...dk];addL("🌀【"+card.n+"】發動！");
-    if(card.id==="st"){ps.forEach(p=>{if(p.hp<=0)return;for(let x=0;x<2;x++)if(p.hand.length>0)p.hand.splice(Math.random()*p.hand.length|0,1);});addL("🌪️ 全員棄2張");}
-    else if(card.id==="sl"){const ot=ps.filter((p,i)=>i!==0&&p.hp>0&&p.hand.length>0);if(ot.length>0){const t=ot[Math.random()*ot.length|0];ps[0].hand.push(t.hand.splice(Math.random()*t.hand.length|0,1)[0]);addL("🫳 偷牌");}}
-    else if(card.id==="ti"){ps.forEach(p=>{if(p.hp<=0)return;for(let x=0;x<2;x++)if(d2.length>0){let cc=d2.shift();while(cc&&cc.t==="F")cc=d2.length>0?d2.shift():null;if(cc)p.hand.push(cc);}});addL("🌊 全員抽2張");}
-    else if(card.id==="bm"){setBmM(prev=>({...prev,[0]:true}));addL("💣 炸彈放置！");}
+  const fateResolve=()=>{if(!fateShow)return;const card=fateShow.card;let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]}));ps[0].hand=ps[0].hand.filter(c=>c.uid!==card.uid);const dd=[...disc];dd.push(card);let d2=[...dk];addL("【"+card.n+"】發動！");
+    if(card.id==="st"){ps.forEach(p=>{if(p.hp<=0)return;for(let x=0;x<2;x++)if(p.hand.length>0)p.hand.splice(Math.random()*p.hand.length|0,1);});addL(" 全員棄2張");}
+    else if(card.id==="sl"){const ot=ps.filter((p,i)=>i!==0&&p.hp>0&&p.hand.length>0);if(ot.length>0){const t=ot[Math.random()*ot.length|0];ps[0].hand.push(t.hand.splice(Math.random()*t.hand.length|0,1)[0]);addL(" 偷牌");}}
+    else if(card.id==="ti"){ps.forEach(p=>{if(p.hp<=0)return;for(let x=0;x<2;x++)if(d2.length>0){let cc=d2.shift();while(cc&&cc.t==="F")cc=d2.length>0?d2.shift():null;if(cc)p.hand.push(cc);}});addL(" 全員抽2張");}
+    else if(card.id==="bm"){setBmM(prev=>({...prev,[0]:true}));addL(" 炸彈放置！");}
     setDk(d2);setPls(ps);setDisc(dd);setFateShow(null);if(cW(ps,d2))return;
     const mf=ps[0].hand.filter(c=>c.t==="F");if(mf.length>0){setFateShow({card:mf[0],phase:"drawn"});setPh("fate");}else{setPh("action");setAxU(false);}};
 
@@ -305,46 +305,46 @@ function PactOfArcania(){
     if(r1&&card.s==="a")return;
     if(card.s==="a"&&(elisSkip[0]||an>=(ab==="genghis"?2:1)))return;
     if(card.s==="h"&&ps[0].hp>=ps[0].mhp)return;
-    if(card.s==="h"&&ab==="yalo"){addL("⚠️ 亞洛不能自我恢復");return;}
+    if(card.s==="h"&&ab==="yalo"){addL(" 亞洛不能自我恢復");return;}
     if(card.s==="d"&&ps[0].fld.filter(f=>f.k==="d").length>=2)return;
-    if(card.s==="d"&&ab==="ghost"){addL("⚠️ 幽靈不能用防禦卡");return;}
+    if(card.s==="d"&&ab==="ghost"){addL(" 幽靈不能用防禦卡");return;}
     if(card.s==="c"||card.id==="sh")return;
     if((card.id==="rc"||card.id==="ah")&&pls.filter(p=>p.hp>0).length>1&&tI==null){setHlTg({cuid,card,mode:card.id,targets:pls.map((p,i)=>p.hp>0?i:-1).filter(i=>i>=0),selected:[]});return;}
     if(card.s==="a"&&card.id!=="aa"&&tI==null){setTarg({cuid});return;}
-    ps[0].hand=ps[0].hand.filter(c=>c.uid!==cuid);let d=[...dk],dd=[...disc],cm={...chm};addL("🃏【"+card.n+"】");dd.push(card);
+    ps[0].hand=ps[0].hand.filter(c=>c.uid!==cuid);let d=[...dk],dd=[...disc],cm={...chm};addL("【"+card.n+"】");dd.push(card);
     if(card.s==="a"){
-      if(an===1&&ab==="genghis"){const nf=ps[0].hand.filter(c=>c.t!=="F");if(nf.length>0){const dc=nf[Math.random()*nf.length|0];ps[0].hand=ps[0].hand.filter(c=>c.uid!==dc.uid);dd.push(dc);addL("🐎 棄【"+dc.n+"】");}}
+      if(an===1&&ab==="genghis"){const nf=ps[0].hand.filter(c=>c.t!=="F");if(nf.length>0){const dc=nf[Math.random()*nf.length|0];ps[0].hand=ps[0].hand.filter(c=>c.uid!==dc.uid);dd.push(dc);addL(" 棄【"+dc.n+"】");}}
       if(ab==="zeus"||card.id==="fs"){setPls(ps);setDk(d);setDisc(dd);setCh(cm);setAm(true);
-        const doRoll=(v)=>{if(v===1){startDice("🎲 重擲",doRoll);return;}let fd=v;fd=calcDmg(fd,0,ps,cm);let p2=[...ps];
+        const doRoll=(v)=>{if(v===1){startDice(" 重擲",doRoll);return;}let fd=v;fd=calcDmg(fd,0,ps,cm);let p2=[...ps];
           if(card.id==="aa"){p2.filter((p,i)=>i!==0&&p.hp>0).forEach(t=>{const r=rAtk(fd,0,t.idx,p2,dd);r.logs.forEach(l=>addL(l));p2=r.ps;dd=r.disc;});}
           else{const r=rAtk(fd,0,tI,p2,dd);r.logs.forEach(l=>addL(l));p2=r.ps;dd=r.disc;}
           setPls(p2);setDisc(dd);setAm(false);cW(p2,d);};
-        startDice(ab==="zeus"?"⚡ 制裁神光":"🎲 命運打擊",doRoll);setAn(an+1);setTarg(null);return;}
+        startDice(ab==="zeus"?" 制裁神光":" 命運打擊",doRoll);setAn(an+1);setTarg(null);return;}
       let dmg=calcDmg(card.dm,0,ps,cm);let p2=[...ps];
       if(card.id==="aa"){p2.filter((p,i)=>i!==0&&p.hp>0).forEach(t=>{const r=rAtk(dmg,0,t.idx,p2,dd);r.logs.forEach(l=>addL(l));p2=r.ps;dd=r.disc;});}
       else{const r2=rAtk(dmg,0,tI,p2,dd);r2.logs.forEach(l=>addL(l));p2=r2.ps;dd=r2.disc;}
       setPls(p2);setDk(d);setDisc(dd);setCh(cm);setTarg(null);cW(p2,d);setAn(an+1);return;}
-    if(card.id==="df"){ps[0].fld.push({k:"d",uid:uid()});addL("🛡️ 防禦("+defVal(0)+")");
-      if(ab==="luna"&&ps[0].hp<ps[0].mhp){ps[0].hp=Math.min(ps[0].mhp,ps[0].hp+1);addL("🌙 月光守護+1HP");}}
-    else if(card.s==="h"){let hl=card.hl;if(ab==="curie"){hl+=1;addL("⚗️ +1");}ps[0].hp=Math.min(ps[0].mhp,ps[0].hp+hl);addL("💊 +"+hl+"HP");showFx("heal",hl);afterHeal(ab,ps,d,dd);setDk(d);}
-    else if(card.id==="ad"){const o=ps.filter((p,i)=>i!==0&&p.hp>0&&p.fld.length>0);if(o.length>0){o[0].fld.splice(0,1);addL("💔 破壞防禦");}}
-    else if(card.id==="th"){const o=ps.filter((p,i)=>i!==0&&p.hp>0);if(o.length>0){setSkM(s=>({...s,[o[0].idx]:true}));addL("⏳ "+o[0].char.n+"跳過");}}
-    else if(card.id==="ch"){cm[0]=(cm[0]||0)+3;addL("🔮 攻擊+3");}
+    if(card.id==="df"){ps[0].fld.push({k:"d",uid:uid()});addL(" 防禦("+defVal(0)+")");
+      if(ab==="luna"&&ps[0].hp<ps[0].mhp){ps[0].hp=Math.min(ps[0].mhp,ps[0].hp+1);addL(" 月光守護+1HP");}}
+    else if(card.s==="h"){let hl=card.hl;if(ab==="curie"){hl+=1;addL(" +1");}ps[0].hp=Math.min(ps[0].mhp,ps[0].hp+hl);addL(" +"+hl+"HP");showFx("heal",hl);afterHeal(ab,ps,d,dd);setDk(d);}
+    else if(card.id==="ad"){const o=ps.filter((p,i)=>i!==0&&p.hp>0&&p.fld.length>0);if(o.length>0){o[0].fld.splice(0,1);addL(" 破壞防禦");}}
+    else if(card.id==="th"){const o=ps.filter((p,i)=>i!==0&&p.hp>0);if(o.length>0){setSkM(s=>({...s,[o[0].idx]:true}));addL(" "+o[0].char.n+"跳過");}}
+    else if(card.id==="ch"){cm[0]=(cm[0]||0)+3;addL(" 攻擊+3");}
     setPls(ps);setDisc(dd);setCh(cm);cW(ps,d);};
 
-  const alexS=()=>{if(axU||ph!=="action"||ci!==0||gAb(0)!=="alexander")return;const sw=pls[0].hand.filter(c=>c.t!=="F");if(!sw.length||!dk.length)return;const ps=pls.map(p=>({...p,hand:[...p.hand]}));let d=[...dk],dd=[...disc];const dc=sw[Math.random()*sw.length|0];ps[0].hand=ps[0].hand.filter(c=>c.uid!==dc.uid);dd.push(dc);addL("🗡️ 棄【"+dc.n+"】");let nc=d.shift();while(nc&&nc.t==="F")nc=d.length>0?d.shift():null;if(nc){ps[0].hand.push(nc);addL("📥 換到【"+nc.n+"】");}setPls(ps);setDk(d);setDisc(dd);setAxU(true);};
+  const alexS=()=>{if(axU||ph!=="action"||ci!==0||gAb(0)!=="alexander")return;const sw=pls[0].hand.filter(c=>c.t!=="F");if(!sw.length||!dk.length)return;const ps=pls.map(p=>({...p,hand:[...p.hand]}));let d=[...dk],dd=[...disc];const dc=sw[Math.random()*sw.length|0];ps[0].hand=ps[0].hand.filter(c=>c.uid!==dc.uid);dd.push(dc);addL(" 棄【"+dc.n+"】");let nc=d.shift();while(nc&&nc.t==="F")nc=d.length>0?d.shift():null;if(nc){ps[0].hand.push(nc);addL(" 換到【"+nc.n+"】");}setPls(ps);setDk(d);setDisc(dd);setAxU(true);};
   // 基利: discard 1 card, get attack or defense from deck/discard
-  const kiliS=()=>{if(axU||ph!=="action"||ci!==0||gAb(0)!=="kili")return;const sw=pls[0].hand.filter(c=>c.t!=="F");if(!sw.length)return;const ps=pls.map(p=>({...p,hand:[...p.hand]}));let d=[...dk],dd=[...disc];const dc=sw[Math.random()*sw.length|0];ps[0].hand=ps[0].hand.filter(c=>c.uid!==dc.uid);dd.push(dc);addL("⚒️ 鍛造大師：棄【"+dc.n+"】");const src=[...d,...dd].filter(c=>c.s==="a"||c.s==="d");if(src.length>0){const nc=src[Math.random()*src.length|0];const inD=d.findIndex(c=>c.uid===nc.uid);if(inD>=0){d.splice(inD,1);}else{const inDd=dd.findIndex(c=>c.uid===nc.uid);if(inDd>=0)dd.splice(inDd,1);}ps[0].hand.push(nc);addL("⚒️ 獲得【"+nc.n+"】");}setPls(ps);setDk(d);setDisc(dd);setAxU(true);};
+  const kiliS=()=>{if(axU||ph!=="action"||ci!==0||gAb(0)!=="kili")return;const sw=pls[0].hand.filter(c=>c.t!=="F");if(!sw.length)return;const ps=pls.map(p=>({...p,hand:[...p.hand]}));let d=[...dk],dd=[...disc];const dc=sw[Math.random()*sw.length|0];ps[0].hand=ps[0].hand.filter(c=>c.uid!==dc.uid);dd.push(dc);addL(" 鍛造大師：棄【"+dc.n+"】");const src=[...d,...dd].filter(c=>c.s==="a"||c.s==="d");if(src.length>0){const nc=src[Math.random()*src.length|0];const inD=d.findIndex(c=>c.uid===nc.uid);if(inD>=0){d.splice(inD,1);}else{const inDd=dd.findIndex(c=>c.uid===nc.uid);if(inDd>=0)dd.splice(inDd,1);}ps[0].hand.push(nc);addL(" 獲得【"+nc.n+"】");}setPls(ps);setDk(d);setDisc(dd);setAxU(true);};
   // 亞格: discard 1 card to heal self or ally 2HP
-  const yageS=()=>{if(axU||ph!=="action"||ci!==0||gAb(0)!=="yage")return;const sw=pls[0].hand.filter(c=>c.t!=="F");if(!sw.length)return;if(pls[0].hp>=pls[0].mhp){addL("⚠️ 已滿血");return;}const ps=pls.map(p=>({...p,hand:[...p.hand]}));const dc=sw[Math.random()*sw.length|0];ps[0].hand=ps[0].hand.filter(c=>c.uid!==dc.uid);disc.push(dc);ps[0].hp=Math.min(ps[0].mhp,ps[0].hp+2);addL("💀 黑暗治癒：棄【"+dc.n+"】+2HP → "+ps[0].hp+"/"+ps[0].mhp);showFx("heal",2);setPls(ps);setAxU(true);};
+  const yageS=()=>{if(axU||ph!=="action"||ci!==0||gAb(0)!=="yage")return;const sw=pls[0].hand.filter(c=>c.t!=="F");if(!sw.length)return;if(pls[0].hp>=pls[0].mhp){addL(" 已滿血");return;}const ps=pls.map(p=>({...p,hand:[...p.hand]}));const dc=sw[Math.random()*sw.length|0];ps[0].hand=ps[0].hand.filter(c=>c.uid!==dc.uid);disc.push(dc);ps[0].hp=Math.min(ps[0].mhp,ps[0].hp+2);addL(" 黑暗治癒：棄【"+dc.n+"】+2HP → "+ps[0].hp+"/"+ps[0].mhp);showFx("heal",2);setPls(ps);setAxU(true);};
   // 亞洛: free heal ally 2HP (once per turn, no card needed)
-  const yaloS=()=>{if(axU||ph!=="action"||ci!==0||gAb(0)!=="yalo")return;const alive=pls.filter((p,i)=>i!==0&&p.hp>0&&p.hp<p.mhp);if(!alive.length){addL("⚠️ 無可治癒的隊友");return;}const ps=pls.map(p=>({...p,hand:[...p.hand]}));const t=alive[Math.random()*alive.length|0];ps[t.idx].hp=Math.min(ps[t.idx].mhp,ps[t.idx].hp+2);addL("💚 自然治癒："+ps[t.idx].char.n+" +2HP → "+ps[t.idx].hp+"/"+ps[t.idx].mhp);setPls(ps);setAxU(true);};
+  const yaloS=()=>{if(axU||ph!=="action"||ci!==0||gAb(0)!=="yalo")return;const alive=pls.filter((p,i)=>i!==0&&p.hp>0&&p.hp<p.mhp);if(!alive.length){addL(" 無可治癒的隊友");return;}const ps=pls.map(p=>({...p,hand:[...p.hand]}));const t=alive[Math.random()*alive.length|0];ps[t.idx].hp=Math.min(ps[t.idx].mhp,ps[t.idx].hp+2);addL(" 自然治癒："+ps[t.idx].char.n+" +2HP → "+ps[t.idx].hp+"/"+ps[t.idx].mhp);setPls(ps);setAxU(true);};
 
-  const resC=(cuid)=>{if(!pend)return;const card=pls[0].hand.find(c=>c.uid===cuid);if(!card)return;let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]}));ps[0].hand=ps[0].hand.filter(c=>c.uid!==cuid);const dd=[...disc];dd.push(card);addL("🛡️【"+card.n+"】");
-    if(card.id==="cs"){ps[pend.ai].hp=Math.max(0,ps[pend.ai].hp-pend.dmg);addL("🔄 反彈"+pend.dmg);showFx("hit",pend.dmg);}
-    else if(card.id==="ab"){const hl=Math.min(3,pend.dmg);ps[0].hp=Math.min(ps[0].mhp,ps[0].hp+hl);addL("💚 +"+hl+"HP");}
-    else if(card.id==="mr"){addL("🪞 無效！");}
-    else if(card.id==="sh"){addL("⚡🛡️ 擋下！");}
+  const resC=(cuid)=>{if(!pend)return;const card=pls[0].hand.find(c=>c.uid===cuid);if(!card)return;let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]}));ps[0].hand=ps[0].hand.filter(c=>c.uid!==cuid);const dd=[...disc];dd.push(card);addL("【"+card.n+"】");
+    if(card.id==="cs"){ps[pend.ai].hp=Math.max(0,ps[pend.ai].hp-pend.dmg);addL(" 反彈"+pend.dmg);showFx("hit",pend.dmg);}
+    else if(card.id==="ab"){const hl=Math.min(3,pend.dmg);ps[0].hp=Math.min(ps[0].mhp,ps[0].hp+hl);addL(" +"+hl+"HP");}
+    else if(card.id==="mr"){addL(" 無效！");}
+    else if(card.id==="sh"){addL(" 擋下！");}
     setPls(ps);setDisc(dd);setPend(null);cW(ps,dk);};
   const skRes=()=>{if(!pend)return;let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]}));const dd=[...disc];const r=rAtk(pend.dmg,pend.ai,0,ps,dd);r.logs.forEach(l=>addL(l));setPls(r.ps);setDisc(r.disc);setPend(null);cW(r.ps,dk);};
   useEffect(()=>{if(!pend&&ph==="respond")setTimeout(()=>{if(pls.length>0&&!cW(pls,dk))tryEnd(pls,dk);},500);},[pend]);
@@ -352,25 +352,25 @@ function PactOfArcania(){
   // AI
   useEffect(()=>{
     if(scr!=="game"||ci===0||!pls[ci]||pls[ci].hp<=0){if(scr==="game"&&pls[ci]&&pls[ci].hp<=0){const nx=nxA(ci,pls);if(nx!==ci){setCi(nx);setPh("draw");}}return;}
-    const tm=setTimeout(()=>{setAm(true);const ai=ci;addL("🤖 "+pls[ai].char.n+"("+pls[ai].char.p+")");
+    const tm=setTimeout(()=>{setAm(true);const ai=ci;addL(" "+pls[ai].char.n+"("+pls[ai].char.p+")");
       let ps=pls.map(p=>({...p,hand:[...p.hand],fld:[...p.fld]})),d=[...dk],dd=[...disc],cm={...chm};
-      if(bmM[ai]){setBmM(prev=>({...prev,[ai]:false}));const bv=rl();if(bv>=4){ps[ai].hp=Math.max(0,ps[ai].hp-4);addL("💥 炸彈-4HP");}else{const n2=nxA(ai,ps);setBmM(prev=>({...prev,[n2]:true}));addL("💣 →"+ps[n2].char.n);}if(cW(ps,d)){setPls(ps);setDk(d);setAm(false);return;}}
+      if(bmM[ai]){setBmM(prev=>({...prev,[ai]:false}));const bv=rl();if(bv>=4){ps[ai].hp=Math.max(0,ps[ai].hp-4);addL(" 炸彈-4HP");}else{const n2=nxA(ai,ps);setBmM(prev=>({...prev,[n2]:true}));addL(" →"+ps[n2].char.n);}if(cW(ps,d)){setPls(ps);setDk(d);setAm(false);return;}}
       let eAb=ps[ai].char.id;if(eAb==="odin"){const ot=ps.filter((p,i)=>i!==ai&&p.hp>0);if(ot.length>0)eAb=ot[Math.random()*ot.length|0].char.id;}
       let drawCnt=2;if(eAb==="naga"&&ps[ai].hp<=4)drawCnt=3;if(eAb==="estel"&&rl()%2===1)drawCnt++;
       const r2=drDk(drawCnt,d,ps[ai].hand,ps,ai);r2.logs.forEach(l=>addL(l));d=r2.deck;ps=r2.players;if(cW(ps,d)){setPls(ps);setDk(d);setAm(false);return;}
       if(skM[ai]){setSkM(s=>({...s,[ai]:false}));setPls(ps);setDk(d);setDisc(dd);doEnd(ps,d);setAm(false);return;}
       if(ps[ai].hp<=5){ps[ai].hand.filter(c=>c.s==="d").forEach(dc=>{if(ps[ai].fld.length>=2||eAb==="ghost")return;ps[ai].hand=ps[ai].hand.filter(c=>c.uid!==dc.uid);dd.push(dc);ps[ai].fld.push({k:"d",uid:uid()});
-        if(eAb==="luna"&&ps[ai].hp<ps[ai].mhp){ps[ai].hp++;addL("🌙 +1HP");}});}
+        if(eAb==="luna"&&ps[ai].hp<ps[ai].mhp){ps[ai].hp++;addL(" +1HP");}});}
       const pc=ps[ai].hand.find(c=>c.id==="ch");if(pc&&!r1){ps[ai].hand=ps[ai].hand.filter(c=>c.uid!==pc.uid);dd.push(pc);cm[ai]=(cm[ai]||0)+3;}
       if(!r1&&!elisSkip[ai]){const mxA=eAb==="genghis"?2:1;let an2=0;while(an2<mxA){const atks=ps[ai].hand.filter(c=>c.s==="a");if(!atks.length)break;if(an2===1&&eAb==="genghis"){const non=ps[ai].hand.filter(c=>c.s!=="a"&&c.t!=="F");if(!non.length)break;dd.push(non[0]);ps[ai].hand=ps[ai].hand.filter(c=>c.uid!==non[0].uid);}
-        atks.sort((a,b)=>(b.dm||0)-(a.dm||0));const ac=atks[0];ps[ai].hand=ps[ai].hand.filter(c=>c.uid!==ac.uid);dd.push(ac);addL("🤖【"+ac.n+"】");
+        atks.sort((a,b)=>(b.dm||0)-(a.dm||0));const ac=atks[0];ps[ai].hand=ps[ai].hand.filter(c=>c.uid!==ac.uid);dd.push(ac);addL("【"+ac.n+"】");
         let dmg=ac.dm||0;if(eAb==="zeus"||ac.id==="fs"){let v=rl();while(v===1)v=rl();dmg=v;}
         dmg=calcDmg(dmg,ai,ps,cm);
         if(ac.id==="aa"){const tgs=ps.filter((p,i)=>i!==ai&&p.hp>0);for(const t of tgs){if(t.idx===0&&t.hand.some(c=>c.s==="c"||c.id==="sh")){setPend({dmg,ai});setPls(ps);setDk(d);setDisc(dd);setCh(cm);setPh("respond");setAm(false);return;}const res=rAtk(dmg,ai,t.idx,ps,dd);res.logs.forEach(l=>addL(l));ps=res.ps;dd=res.disc;}}
         else{const tgs=ps.filter((p,i)=>i!==ai&&p.hp>0).sort((a,b)=>a.hp-b.hp);if(!tgs.length)break;const tg=tgs[0];if(tg.idx===0&&tg.hand.some(c=>c.s==="c"||c.id==="sh")){setPend({dmg,ai});setPls(ps);setDk(d);setDisc(dd);setCh(cm);setPh("respond");setAm(false);return;}const res=rAtk(dmg,ai,tg.idx,ps,dd);res.logs.forEach(l=>addL(l));ps=res.ps;dd=res.disc;}
         if(cW(ps,d)){setPls(ps);setDk(d);setDisc(dd);setAm(false);return;}an2++;}}
       if(elisSkip[ai])setElisSkip(prev=>({...prev,[ai]:false}));
-      if(ps[ai].hp<ps[ai].mhp&&eAb!=="yalo"){ps[ai].hand.filter(c=>c.s==="h").forEach(hc=>{if(ps[ai].hp>=ps[ai].mhp)return;ps[ai].hand=ps[ai].hand.filter(c=>c.uid!==hc.uid);dd.push(hc);let hl=hc.hl||1;if(eAb==="curie")hl+=1;ps[ai].hp=Math.min(ps[ai].mhp,ps[ai].hp+hl);addL("🤖 +"+hl+"HP");afterHeal(eAb,ps,d,dd);});}
+      if(ps[ai].hp<ps[ai].mhp&&eAb!=="yalo"){ps[ai].hand.filter(c=>c.s==="h").forEach(hc=>{if(ps[ai].hp>=ps[ai].mhp)return;ps[ai].hand=ps[ai].hand.filter(c=>c.uid!==hc.uid);dd.push(hc);let hl=hc.hl||1;if(eAb==="curie")hl+=1;ps[ai].hp=Math.min(ps[ai].mhp,ps[ai].hp+hl);addL(" +"+hl+"HP");afterHeal(eAb,ps,d,dd);});}
       ps[ai].hand.filter(c=>c.s==="d").forEach(dc=>{if(ps[ai].fld.length>=2||eAb==="ghost")return;ps[ai].hand=ps[ai].hand.filter(c=>c.uid!==dc.uid);dd.push(dc);ps[ai].fld.push({k:"d",uid:uid()});});
       setPls(ps);setDk(d);setDisc(dd);setCh(cm);if(cW(ps,d)){setAm(false);return;}setTimeout(()=>{tryEnd(ps,d);setAm(false);},400);
     },600);return()=>clearTimeout(tm);
@@ -394,8 +394,8 @@ function PactOfArcania(){
         <div style={{fontSize:sm?6:8,color:c.cl,fontWeight:800}}>{TN[c.t]}</div>
         <div style={{fontSize:sm?18:24,lineHeight:1,filter:"drop-shadow(0 0 8px "+c.cl+"50)"}}>{TI2[c.t]}</div>
         <div style={{fontWeight:800,color:"#E8E0F8",textAlign:"center",lineHeight:1.15,fontSize:sm?9:12}}>{c.n}</div>
-        {!sm&&c.dm&&<div style={{fontSize:8,color:c.cl,fontWeight:700,marginTop:"auto"}}>⚔️{c.dm}</div>}
-        {!sm&&c.hl&&<div style={{fontSize:8,color:grn,fontWeight:700,marginTop:"auto"}}>💊{c.hl}</div>}
+        {!sm&&c.dm&&<div style={{fontSize:8,color:c.cl,fontWeight:700,marginTop:"auto"}}>{c.dm}</div>}
+        {!sm&&c.hl&&<div style={{fontSize:8,color:grn,fontWeight:700,marginTop:"auto"}}>{c.hl}</div>}
       </div></div>);
   };
   const Bt=({children,onClick,color,disabled,flex,big})=>(<button onClick={disabled?undefined:onClick} style={{background:"linear-gradient(135deg,"+(color||"#888")+"18,"+(color||"#888")+"08)",border:"2px solid "+(color||"#888")+"40",color:color||"#888",padding:big?"14px 32px":"10px 24px",borderRadius:12,fontSize:big?15:13,fontWeight:800,cursor:disabled?"default":"pointer",opacity:disabled?.4:1,flex:flex?1:undefined,maxWidth:flex?200:undefined}}>{children}</button>);
@@ -421,12 +421,12 @@ function PactOfArcania(){
           <div style={{fontSize:8,color:"#585068",lineHeight:1.5}}>{c.d}{c.hp!==10?" · HP:"+c.hp:""}</div>
         </div>))}
       </div>
-      {pCh&&(<button onClick={()=>startG(pCh)} style={{marginTop:20,background:"#C8A05015",border:"2px solid #C8A05040",color:"#E8D898",padding:"12px 44px",borderRadius:14,fontSize:15,fontWeight:900,cursor:"pointer"}}>⚔️ 開戰</button>)}
+      {pCh&&(<button onClick={()=>startG(pCh)} style={{marginTop:20,background:"#C8A05015",border:"2px solid #C8A05040",color:"#E8D898",padding:"12px 44px",borderRadius:14,fontSize:15,fontWeight:900,cursor:"pointer"}}> 開戰</button>)}
     </div>);
 
   if(scr==="over")return(
     <div style={{width:"100%",minHeight:"100vh",background:"radial-gradient(ellipse,#120A20,#040210)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",color:"#E8E0F8",padding:24}}><style>{STY}</style>
-      <div style={{fontSize:72,marginBottom:16}}>{win===0?"🏆":"💀"}</div>
+      <div style={{fontSize:72,marginBottom:16}}>{win===0?"":""}</div>
       <div style={{fontSize:28,fontWeight:900,color:win===0?"#E8D898":red,marginBottom:28}}>{win===0?"VICTORY":"DEFEAT"}</div>
       <div style={{display:"flex",gap:14,marginBottom:32,flexWrap:"wrap",justifyContent:"center"}}>{pls.map(p=>(<div key={p.idx} style={{textAlign:"center",opacity:p.hp>0?1:.3,padding:"10px 14px",borderRadius:12,background:p.hp>0?p.char.c+"10":"transparent"}}><div style={{fontSize:32}}>{p.char.i}</div><div style={{fontSize:11,fontWeight:800,color:p.char.c}}>{p.char.n}</div><div style={{fontSize:18,fontWeight:900,color:p.hp>0?p.char.c:"#3A3050"}}>{p.hp}HP</div></div>))}</div>
       <button onClick={()=>{setScr("title");setPCh(null);}} style={{background:"#C8A05015",border:"2px solid #C8A05040",color:"#E8D898",padding:"12px 40px",borderRadius:12,fontSize:14,fontWeight:800,cursor:"pointer"}}>再來一場</button>
@@ -438,35 +438,35 @@ function PactOfArcania(){
       {fx&&fx.type==="hit"&&(<div key={fx.key} style={{position:"fixed",inset:0,background:"radial-gradient(circle,#D8484830,transparent 70%)",zIndex:45,pointerEvents:"none",animation:"atkFlash .6s ease-out forwards"}}><div style={{position:"absolute",top:"30%",left:"50%",transform:"translateX(-50%)",fontSize:48,fontWeight:900,color:red,textShadow:"0 0 20px #D8484880",animation:"dmgPop 1s ease-out forwards"}}>-{fx.value}</div></div>)}
       {fx&&fx.type==="heal"&&(<div key={fx.key} style={{position:"fixed",inset:0,pointerEvents:"none",zIndex:45}}><div style={{position:"absolute",top:"50%",left:"50%",transform:"translateX(-50%)",fontSize:40,fontWeight:900,color:grn,animation:"healPop 1s ease-out forwards"}}>+{fx.value}</div></div>)}
 
-      {fateShow&&fateShow.phase==="drawn"&&(<div onClick={fatePlay} style={{...ov,cursor:"pointer",background:"radial-gradient(circle at 50% 40%,#9060D040,#000000f0 60%)",zIndex:55}}><div style={{fontSize:14,letterSpacing:6,color:"#9060D0",fontWeight:800,marginBottom:20}}>── 命 運 降 臨 ──</div><div style={{width:110,minHeight:160,borderRadius:12,background:"linear-gradient(150deg,#1a0a2e,#0e0618)",border:"3px solid #9060D0",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:6,padding:12,boxShadow:"0 0 60px #9060D050",marginBottom:20}}><div style={{fontSize:36}}>🌀</div><div style={{fontWeight:900,color:"#E8E0F8",fontSize:16}}>{fateShow.card.n}</div><div style={{fontSize:9,color:"#8070A0",textAlign:"center"}}>{fateShow.card.id==="st"?"全員棄2張":fateShow.card.id==="sl"?"偷對手1牌":fateShow.card.id==="ti"?"全員抽2張":"炸彈放置"}</div></div><div style={{fontSize:18,color:"#E8D898",fontWeight:800,animation:"pulse2 .8s infinite"}}>👆 點擊發動</div></div>)}
-      {fateShow&&fateShow.phase==="play"&&(<div onClick={fateResolve} style={{...ov,cursor:"pointer",background:"radial-gradient(circle at 50% 30%,#9060D060,#000000f5 50%)",zIndex:55}}><div style={{fontSize:20,letterSpacing:8,color:gd,fontWeight:900,marginBottom:12}}>⚡ 命運發動 ⚡</div><div style={{fontSize:56,marginBottom:8}}>🌀</div><div style={{fontSize:26,fontWeight:900,color:"#E8E0F8",marginBottom:28}}>{fateShow.card.n}</div><div style={{fontSize:13,color:"#585068",animation:"pulse2 .8s infinite"}}>點擊確認</div></div>)}
+      {fateShow&&fateShow.phase==="drawn"&&(<div onClick={fatePlay} style={{...ov,cursor:"pointer",background:"radial-gradient(circle at 50% 40%,#9060D040,#000000f0 60%)",zIndex:55}}><div style={{fontSize:14,letterSpacing:6,color:"#9060D0",fontWeight:800,marginBottom:20}}>── 命 運 降 臨 ──</div><div style={{width:110,minHeight:160,borderRadius:12,background:"linear-gradient(150deg,#1a0a2e,#0e0618)",border:"3px solid #9060D0",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:6,padding:12,boxShadow:"0 0 60px #9060D050",marginBottom:20}}><div style={{fontSize:36}}></div><div style={{fontWeight:900,color:"#E8E0F8",fontSize:16}}>{fateShow.card.n}</div><div style={{fontSize:9,color:"#8070A0",textAlign:"center"}}>{fateShow.card.id==="st"?"全員棄2張":fateShow.card.id==="sl"?"偷對手1牌":fateShow.card.id==="ti"?"全員抽2張":"炸彈放置"}</div></div><div style={{fontSize:18,color:"#E8D898",fontWeight:800,animation:"pulse2 .8s infinite"}}> 點擊發動</div></div>)}
+      {fateShow&&fateShow.phase==="play"&&(<div onClick={fateResolve} style={{...ov,cursor:"pointer",background:"radial-gradient(circle at 50% 30%,#9060D060,#000000f5 50%)",zIndex:55}}><div style={{fontSize:20,letterSpacing:8,color:gd,fontWeight:900,marginBottom:12}}> 命運發動 </div><div style={{fontSize:56,marginBottom:8}}></div><div style={{fontSize:26,fontWeight:900,color:"#E8E0F8",marginBottom:28}}>{fateShow.card.n}</div><div style={{fontSize:13,color:"#585068",animation:"pulse2 .8s infinite"}}>點擊確認</div></div>)}
 
-      {dice&&(<div onClick={dice.spinning&&ci===0?stopDice:undefined} style={{...ov,cursor:dice.spinning&&ci===0?"pointer":"default"}}><div style={{fontSize:14,color:gd,letterSpacing:4,marginBottom:20,fontWeight:800}}>{dice.label}</div><div style={{fontSize:100,filter:"drop-shadow(0 0 24px #C8A05050)"}}>{DF[dice.v-1]}</div><div style={{fontSize:48,fontWeight:900,color:"#E8D898",marginTop:16}}>{dice.v}</div>{dice.spinning&&ci===0&&<div style={{marginTop:32,fontSize:22,color:"#E8D898",fontWeight:900,animation:"pulse2 .6s infinite"}}>👆 點擊畫面擲骰！</div>}{dice.spinning&&ci!==0&&<div style={{marginTop:28,color:"#585068",animation:"pulse2 1s infinite"}}>🤖 擲骰中...</div>}{!dice.spinning&&<div style={{marginTop:28,color:gd,fontSize:20,fontWeight:900}}>骰出 {dice.v}</div>}</div>)}
+      {dice&&(<div onClick={dice.spinning&&ci===0?stopDice:undefined} style={{...ov,cursor:dice.spinning&&ci===0?"pointer":"default"}}><div style={{fontSize:14,color:gd,letterSpacing:4,marginBottom:20,fontWeight:800}}>{dice.label}</div><div style={{fontSize:100,filter:"drop-shadow(0 0 24px #C8A05050)"}}>{DF[dice.v-1]}</div><div style={{fontSize:48,fontWeight:900,color:"#E8D898",marginTop:16}}>{dice.v}</div>{dice.spinning&&ci===0&&<div style={{marginTop:32,fontSize:22,color:"#E8D898",fontWeight:900,animation:"pulse2 .6s infinite"}}> 點擊畫面擲骰！</div>}{dice.spinning&&ci!==0&&<div style={{marginTop:28,color:"#585068",animation:"pulse2 1s infinite"}}> 擲骰中...</div>}{!dice.spinning&&<div style={{marginTop:28,color:gd,fontSize:20,fontWeight:900}}>骰出 {dice.v}</div>}</div>)}
 
-      {apo&&ph==="apollo"&&(<div style={ov}><div style={{fontSize:16,color:"#FF9848",fontWeight:800,marginBottom:16}}>☀️ 選2張（{apo.sel.length}/2）</div><div style={{display:"flex",gap:10,marginBottom:22}}>{apo.cards.map(c=>(<div key={c.uid} onClick={()=>{const s2=apo.sel.includes(c.uid)?apo.sel.filter(x=>x!==c.uid):[...apo.sel,c.uid];if(s2.length<=2)setApo({cards:apo.cards,sel:s2});}} style={{transform:apo.sel.includes(c.uid)?"translateY(-14px)":"none",transition:"all .2s"}}><Cd card={c} hl={apo.sel.includes(c.uid)}/></div>))}</div>{apo.sel.length===2&&<Bt onClick={apoConf} color="#FF9848" big>確認</Bt>}</div>)}
-      {targ&&(<div style={ov}><div style={{fontSize:16,color:"#E8D898",fontWeight:800,marginBottom:20}}>🎯 攻擊目標</div><div style={{display:"flex",gap:14,flexWrap:"wrap",justifyContent:"center"}}>{pls.filter((p,i)=>i!==0&&p.hp>0).map(p=>(<button key={p.idx} onClick={()=>{setTarg(null);playC(targ.cuid,p.idx);}} style={{padding:"16px 22px",borderRadius:14,cursor:"pointer",background:p.char.c+"12",border:"2px solid "+p.char.c+"44",color:p.char.c,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}><div style={{fontSize:36}}>{p.char.i}</div><div style={{fontSize:13,fontWeight:800}}>{p.char.n}</div><HB hp={p.hp} mx={p.mhp} clr={p.char.c} w="90px"/></button>))}</div><button onClick={()=>setTarg(null)} style={{marginTop:16,color:"#3A3050",background:"none",border:"none",cursor:"pointer"}}>取消</button></div>)}
-      {hlTg&&(<div style={ov}><div style={{fontSize:15,color:grn,fontWeight:800,marginBottom:16}}>💊 選擇恢復目標</div><div style={{display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center",marginBottom:20}}>{hlTg.targets.map(idx=>{const p=pls[idx];if(!p)return null;const isSel=hlTg.selected.includes(idx);return(<button key={idx} onClick={()=>setHlTg({...hlTg,selected:isSel?[]:[idx]})} style={{padding:"14px 18px",borderRadius:12,cursor:"pointer",background:isSel?grn+"18":p.char.c+"08",border:"2px solid "+(isSel?grn+"60":p.char.c+"20"),color:isSel?grn:p.char.c,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}><div style={{fontSize:28}}>{p.char.i}</div><div style={{fontSize:11,fontWeight:800}}>{idx===0?"👤自己":"🤖"+p.char.n}</div><HB hp={p.hp} mx={p.mhp} clr={isSel?grn:p.char.c} w="80px"/></button>);})}</div><div style={{display:"flex",gap:10}}><Bt onClick={hlConf} color={grn} big>{hlTg.selected.length?"確認":"不選擇"}</Bt><button onClick={()=>setHlTg(null)} style={{color:"#3A3050",background:"none",border:"none",cursor:"pointer"}}>取消</button></div></div>)}
-      {ph==="discard"&&discSel&&(<div style={ov}><div style={{fontSize:15,color:"#E8A020",fontWeight:800,marginBottom:16}}>🗑️ 棄{discSel.need}張（{discSel.selected.length}/{discSel.need}）</div><div style={{display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center",marginBottom:20,maxWidth:420}}>{pls[0].hand.map(c=>{const isSel=discSel.selected.includes(c.uid);const isFate=c.t==="F";return(<div key={c.uid} onClick={()=>{if(isFate)return;if(isSel)setDiscSel({...discSel,selected:discSel.selected.filter(x=>x!==c.uid)});else if(discSel.selected.length<discSel.need)setDiscSel({...discSel,selected:[...discSel.selected,c.uid]});}} style={{opacity:isFate?.15:isSel?1:.5,transform:isSel?"translateY(-10px)":"none",transition:"all .2s"}}><Cd card={c} hl={isSel}/></div>);})}</div>{discSel.selected.length===discSel.need&&<Bt onClick={discConfirm} color="#E8A020" big>確認棄牌</Bt>}</div>)}
+      {apo&&ph==="apollo"&&(<div style={ov}><div style={{fontSize:16,color:"#FF9848",fontWeight:800,marginBottom:16}}> 選2張（{apo.sel.length}/2）</div><div style={{display:"flex",gap:10,marginBottom:22}}>{apo.cards.map(c=>(<div key={c.uid} onClick={()=>{const s2=apo.sel.includes(c.uid)?apo.sel.filter(x=>x!==c.uid):[...apo.sel,c.uid];if(s2.length<=2)setApo({cards:apo.cards,sel:s2});}} style={{transform:apo.sel.includes(c.uid)?"translateY(-14px)":"none",transition:"all .2s"}}><Cd card={c} hl={apo.sel.includes(c.uid)}/></div>))}</div>{apo.sel.length===2&&<Bt onClick={apoConf} color="#FF9848" big>確認</Bt>}</div>)}
+      {targ&&(<div style={ov}><div style={{fontSize:16,color:"#E8D898",fontWeight:800,marginBottom:20}}> 攻擊目標</div><div style={{display:"flex",gap:14,flexWrap:"wrap",justifyContent:"center"}}>{pls.filter((p,i)=>i!==0&&p.hp>0).map(p=>(<button key={p.idx} onClick={()=>{setTarg(null);playC(targ.cuid,p.idx);}} style={{padding:"16px 22px",borderRadius:14,cursor:"pointer",background:p.char.c+"12",border:"2px solid "+p.char.c+"44",color:p.char.c,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}><div style={{fontSize:36}}>{p.char.i}</div><div style={{fontSize:13,fontWeight:800}}>{p.char.n}</div><HB hp={p.hp} mx={p.mhp} clr={p.char.c} w="90px"/></button>))}</div><button onClick={()=>setTarg(null)} style={{marginTop:16,color:"#3A3050",background:"none",border:"none",cursor:"pointer"}}>取消</button></div>)}
+      {hlTg&&(<div style={ov}><div style={{fontSize:15,color:grn,fontWeight:800,marginBottom:16}}> 選擇恢復目標</div><div style={{display:"flex",gap:10,flexWrap:"wrap",justifyContent:"center",marginBottom:20}}>{hlTg.targets.map(idx=>{const p=pls[idx];if(!p)return null;const isSel=hlTg.selected.includes(idx);return(<button key={idx} onClick={()=>setHlTg({...hlTg,selected:isSel?[]:[idx]})} style={{padding:"14px 18px",borderRadius:12,cursor:"pointer",background:isSel?grn+"18":p.char.c+"08",border:"2px solid "+(isSel?grn+"60":p.char.c+"20"),color:isSel?grn:p.char.c,display:"flex",flexDirection:"column",alignItems:"center",gap:4}}><div style={{fontSize:28}}>{p.char.i}</div><div style={{fontSize:11,fontWeight:800}}>{idx===0?"自己":""+p.char.n}</div><HB hp={p.hp} mx={p.mhp} clr={isSel?grn:p.char.c} w="80px"/></button>);})}</div><div style={{display:"flex",gap:10}}><Bt onClick={hlConf} color={grn} big>{hlTg.selected.length?"確認":"不選擇"}</Bt><button onClick={()=>setHlTg(null)} style={{color:"#3A3050",background:"none",border:"none",cursor:"pointer"}}>取消</button></div></div>)}
+      {ph==="discard"&&discSel&&(<div style={ov}><div style={{fontSize:15,color:"#E8A020",fontWeight:800,marginBottom:16}}> 棄{discSel.need}張（{discSel.selected.length}/{discSel.need}）</div><div style={{display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center",marginBottom:20,maxWidth:420}}>{pls[0].hand.map(c=>{const isSel=discSel.selected.includes(c.uid);const isFate=c.t==="F";return(<div key={c.uid} onClick={()=>{if(isFate)return;if(isSel)setDiscSel({...discSel,selected:discSel.selected.filter(x=>x!==c.uid)});else if(discSel.selected.length<discSel.need)setDiscSel({...discSel,selected:[...discSel.selected,c.uid]});}} style={{opacity:isFate?.15:isSel?1:.5,transform:isSel?"translateY(-10px)":"none",transition:"all .2s"}}><Cd card={c} hl={isSel}/></div>);})}</div>{discSel.selected.length===discSel.need&&<Bt onClick={discConfirm} color="#E8A020" big>確認棄牌</Bt>}</div>)}
 
-      <div style={{padding:"8px 14px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid "+bd,background:pn}}><img src={LOGO} alt="" style={{width:24,height:24,objectFit:"contain",opacity:0.4}}/><div style={{fontSize:12,color:ci===0?gd:red,fontWeight:800}}>{ci===0?"⚔️ 你":pls[ci]?.char.n} R{tn}</div><div style={{fontSize:9,color:"#484058"}}>牌堆{dk.length}</div></div>
+      <div style={{padding:"8px 14px",display:"flex",justifyContent:"space-between",alignItems:"center",borderBottom:"1px solid "+bd,background:pn}}><img src={LOGO} alt="" style={{width:24,height:24,objectFit:"contain",opacity:0.4}}/><div style={{fontSize:12,color:ci===0?gd:red,fontWeight:800}}>{ci===0?" 你":pls[ci]?.char.n} R{tn}</div><div style={{fontSize:9,color:"#484058"}}>牌堆{dk.length}</div></div>
 
       <div style={{padding:"6px 8px",background:pn,borderBottom:"1px solid "+bd,display:"flex",gap:6,overflowX:"auto"}}>{pls.filter((_,i)=>i!==0).map(p=>(<div key={p.idx} style={{flex:1,minWidth:100,padding:"8px 10px",borderRadius:10,background:p.hp>0?p.char.c+"08":"#040208",border:"1px solid "+(p.hp>0?p.char.c+"22":"#0A0814"),opacity:p.hp>0?1:.3}}>
-        <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:4}}><span style={{fontSize:16}}>{p.char.i}</span><div style={{flex:1}}><div style={{fontSize:10,fontWeight:800,color:p.char.c}}>{p.hp>0?"🤖":"💀"}{p.char.n}</div><HB hp={p.hp} mx={p.mhp} clr={p.char.c}/></div></div>
-        <div style={{display:"flex",gap:2,alignItems:"center"}}>{p.fld.map(f=>(<div key={f.uid} style={{width:18,height:20,borderRadius:4,background:"#4A90D908",border:"1px solid #4A90D928",fontSize:8,display:"flex",alignItems:"center",justifyContent:"center"}}>🔰</div>))}{bmM[p.idx]&&<span style={{fontSize:12,animation:"bombTick 1s infinite"}}>💣</span>}<span style={{fontSize:8,color:"#2A2438",marginLeft:"auto"}}>{p.hand.length}</span></div></div>))}</div>
+        <div style={{display:"flex",alignItems:"center",gap:5,marginBottom:4}}><span style={{fontSize:16}}>{p.char.i}</span><div style={{flex:1}}><div style={{fontSize:10,fontWeight:800,color:p.char.c}}>{p.hp>0?"":""}{p.char.n}</div><HB hp={p.hp} mx={p.mhp} clr={p.char.c}/></div></div>
+        <div style={{display:"flex",gap:2,alignItems:"center"}}>{p.fld.map(f=>(<div key={f.uid} style={{width:18,height:20,borderRadius:4,background:"#4A90D908",border:"1px solid #4A90D928",fontSize:8,display:"flex",alignItems:"center",justifyContent:"center"}}></div>))}{bmM[p.idx]&&<span style={{fontSize:12,animation:"bombTick 1s infinite"}}></span>}<span style={{fontSize:8,color:"#2A2438",marginLeft:"auto"}}>{p.hand.length}</span></div></div>))}</div>
 
-      <div ref={logR} style={{flex:1,padding:"6px 12px",overflowY:"auto",minHeight:70,maxHeight:160,background:bg}}>{log.map((l,i)=>{let clr="#585068";if(l.m.includes("❤️‍🔥")||l.m.includes("💀")||l.m.includes("💥"))clr=red;else if(l.m.includes("💊")||l.m.includes("💚")||l.m.includes("HP"))clr=grn;else if(l.m.includes("🌀")||l.m.includes("💣"))clr="#9060D0";else if(l.m.includes("⚔️")||l.m.includes("🏹"))clr="#E8945A";else if(l.m.includes("🤖"))clr="#484058";else if(l.m.includes("────"))clr="#1C1830";return(<div key={i} style={{fontSize:10,lineHeight:1.7,color:clr,fontWeight:l.m.includes("⚔️")?700:400}}>{l.m}</div>);})}</div>
+      <div ref={logR} style={{flex:1,padding:"6px 12px",overflowY:"auto",minHeight:70,maxHeight:160,background:bg}}>{log.map((l,i)=>{let clr="#585068";if(l.m.includes("")||l.m.includes("")||l.m.includes(""))clr=red;else if(l.m.includes("")||l.m.includes("")||l.m.includes("HP"))clr=grn;else if(l.m.includes("")||l.m.includes(""))clr="#9060D0";else if(l.m.includes("")||l.m.includes(""))clr="#E8945A";else if(l.m.includes(""))clr="#484058";else if(l.m.includes("────"))clr="#1C1830";return(<div key={i} style={{fontSize:10,lineHeight:1.7,color:clr,fontWeight:l.m.includes("")?700:400}}>{l.m}</div>);})}</div>
 
-      {ph==="respond"&&pend&&(<div style={{padding:"14px 16px",background:"linear-gradient(180deg,#D8484815,"+bg+")",borderTop:"2px solid #D8484830"}}><div style={{fontSize:13,fontWeight:800,color:red,marginBottom:10,textAlign:"center"}}>⚠️ {pend.dmg}點攻擊！</div><div style={{display:"flex",gap:6,justifyContent:"center",flexWrap:"wrap",alignItems:"center"}}>{pls[0].hand.filter(c=>c.s==="c"||c.id==="sh").map(c=>(<Cd key={c.uid} card={c} onClick={resC} sm hl/>))}<Bt onClick={skRes} color="#585068">承受</Bt></div></div>)}
+      {ph==="respond"&&pend&&(<div style={{padding:"14px 16px",background:"linear-gradient(180deg,#D8484815,"+bg+")",borderTop:"2px solid #D8484830"}}><div style={{fontSize:13,fontWeight:800,color:red,marginBottom:10,textAlign:"center"}}> {pend.dmg}點攻擊！</div><div style={{display:"flex",gap:6,justifyContent:"center",flexWrap:"wrap",alignItems:"center"}}>{pls[0].hand.filter(c=>c.s==="c"||c.id==="sh").map(c=>(<Cd key={c.uid} card={c} onClick={resC} sm hl/>))}<Bt onClick={skRes} color="#585068">承受</Bt></div></div>)}
 
       <div style={{borderTop:"1px solid "+bd,background:pn,padding:"8px 12px"}}>
-        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><div style={{fontSize:24}}>{pls[0].char.i}</div><div style={{flex:1}}><div style={{fontSize:12,fontWeight:800,color:pls[0].char.c}}>👤 {pls[0].char.n} <span style={{fontSize:8,color:"#484058"}}>{pls[0].char.p}</span></div><HB hp={pls[0].hp} mx={pls[0].mhp} clr={pls[0].char.c} big/></div></div>
-        <div style={{display:"flex",alignItems:"center",gap:4}}>{pls[0].fld.map(f=>(<div key={f.uid} style={{width:24,height:28,borderRadius:6,background:"#4A90D910",border:"1px solid #4A90D935",fontSize:11,display:"flex",alignItems:"center",justifyContent:"center"}}>🔰</div>))}{bmM[0]&&<span style={{fontSize:16,animation:"bombTick 1s infinite"}}>💣</span>}{chm[0]>0&&<span style={{fontSize:10,color:"#E8A020",background:"#E8A02012",padding:"2px 8px",borderRadius:6}}>🔮+{chm[0]}</span>}{elisSkip[0]&&<span style={{fontSize:9,color:"#D04040",background:"#D0404012",padding:"2px 6px",borderRadius:6}}>⛔攻擊封印</span>}</div>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}><div style={{fontSize:24}}>{pls[0].char.i}</div><div style={{flex:1}}><div style={{fontSize:12,fontWeight:800,color:pls[0].char.c}}> {pls[0].char.n} <span style={{fontSize:8,color:"#484058"}}>{pls[0].char.p}</span></div><HB hp={pls[0].hp} mx={pls[0].mhp} clr={pls[0].char.c} big/></div></div>
+        <div style={{display:"flex",alignItems:"center",gap:4}}>{pls[0].fld.map(f=>(<div key={f.uid} style={{width:24,height:28,borderRadius:6,background:"#4A90D910",border:"1px solid #4A90D935",fontSize:11,display:"flex",alignItems:"center",justifyContent:"center"}}></div>))}{bmM[0]&&<span style={{fontSize:16,animation:"bombTick 1s infinite"}}></span>}{chm[0]>0&&<span style={{fontSize:10,color:"#E8A020",background:"#E8A02012",padding:"2px 8px",borderRadius:6}}>+{chm[0]}</span>}{elisSkip[0]&&<span style={{fontSize:9,color:"#D04040",background:"#D0404012",padding:"2px 6px",borderRadius:6}}>攻擊封印</span>}</div>
       </div>
       <div style={{padding:"8px 6px 12px",background:bg,borderTop:"1px solid "+bd,overflowX:"auto"}}><div style={{display:"flex",gap:6,minHeight:114}}>{pls[0].hand.map(c=>{const cp=canP(c);return(<Cd key={c.uid} card={c} dim={!cp} onClick={ph==="respond"?(cp?resC:null):cp?(cuid)=>{if(c.s==="a"&&c.id!=="aa"){setSel(cuid);playC(cuid,null);}else playC(cuid,null);}:()=>setSel(c.uid===sel?null:c.uid)}/>);})}</div></div>
       <div style={{padding:"8px 14px 18px",background:bg,display:"flex",gap:8,justifyContent:"center",flexWrap:"wrap"}}>
-        {ph==="draw"&&ci===0&&<Bt onClick={doDraw} color="#4A90D9" disabled={am} flex big>📥 抽牌</Bt>}
-        {ph==="action"&&ci===0&&(<>{ab2==="alexander"&&!axU&&pls[0].hand.filter(c=>c.t!=="F").length>0&&dk.length>0&&<Bt onClick={alexS} color="#E8945A">🗡️ 換牌</Bt>}{ab2==="kili"&&!axU&&pls[0].hand.filter(c=>c.t!=="F").length>0&&<Bt onClick={kiliS} color="#B08030">⚒️ 鍛造</Bt>}{ab2==="yage"&&!axU&&pls[0].hand.filter(c=>c.t!=="F").length>0&&pls[0].hp<pls[0].mhp&&<Bt onClick={yageS} color="#B03080">💀 棄牌治癒</Bt>}{ab2==="yalo"&&!axU&&<Bt onClick={yaloS} color="#38A858">💚 治癒隊友</Bt>}<Bt onClick={()=>tryEnd()} flex big>結束回合</Bt></>)}
-        {ci!==0&&ph!=="respond"&&<div style={{color:"#2A2438",fontSize:12,padding:12,animation:"pulse2 1.5s infinite"}}>🤖 思考中...</div>}
+        {ph==="draw"&&ci===0&&<Bt onClick={doDraw} color="#4A90D9" disabled={am} flex big> 抽牌</Bt>}
+        {ph==="action"&&ci===0&&(<>{ab2==="alexander"&&!axU&&pls[0].hand.filter(c=>c.t!=="F").length>0&&dk.length>0&&<Bt onClick={alexS} color="#E8945A"> 換牌</Bt>}{ab2==="kili"&&!axU&&pls[0].hand.filter(c=>c.t!=="F").length>0&&<Bt onClick={kiliS} color="#B08030"> 鍛造</Bt>}{ab2==="yage"&&!axU&&pls[0].hand.filter(c=>c.t!=="F").length>0&&pls[0].hp<pls[0].mhp&&<Bt onClick={yageS} color="#B03080"> 棄牌治癒</Bt>}{ab2==="yalo"&&!axU&&<Bt onClick={yaloS} color="#38A858"> 治癒隊友</Bt>}<Bt onClick={()=>tryEnd()} flex big>結束回合</Bt></>)}
+        {ci!==0&&ph!=="respond"&&<div style={{color:"#2A2438",fontSize:12,padding:12,animation:"pulse2 1.5s infinite"}}> 思考中...</div>}
       </div>
     </div>
   );

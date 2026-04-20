@@ -2,10 +2,10 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 // ━━━ CONSTANTS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const R = { W: "狼人", S: "預言家", D: "醫生", V: "村民", H: "獵人" };
-const RICON = { 狼人: "🐺", 預言家: "🔮", 醫生: "💉", 村民: "👤", 獵人: "🏹" };
+const RICON = { 狼人: "", 預言家: "", 醫生: "", 村民: "", 獵人: "" };
 const RCOL = { 狼人: "#ff4757", 預言家: "#c084fc", 醫生: "#34d399", 村民: "#60a5fa", 獵人: "#fbbf24" };
 const NAMES = ["月影", "星辰", "幽蘭", "風鈴", "雪見", "紫霧", "曉夢"];
-const AVATARS = ["🌙", "⭐", "🌸", "🎐", "❄️", "💜", "🌅"];
+const AVATARS = ["", "", "", "", "", "", ""];
 
 function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
@@ -24,10 +24,10 @@ class AIBrain {
   docTgt(did,ps){const al=ps.filter(p=>p.alive);const c=al.filter(p=>p.id!==this.lp);if(!c.length){this.lp=null;return pick(al);}if(Math.random()<0.3){const s=c.find(p=>p.id===did);if(s){this.lp=s.id;return s;}}c.sort((a,b)=>(this.sus[did]?.[a.id]??0.5)-(this.sus[did]?.[b.id]??0.5));this.lp=c[0].id;return c[0];}
   getVote(vid,vr,ps){const al=ps.filter(p=>p.alive&&p.id!==vid);if(!al.length)return null;if(vr===R.W){const nw=al.filter(p=>p.role!==R.W);if(!nw.length)return pick(al);if(this.pa!=null){const pl=nw.find(p=>p.id===0);if(pl&&Math.random()>0.35)return pl;}for(const r of[R.S,R.D,R.H,R.V]){const t=nw.filter(p=>p.role===r);if(t.length)return pick(t);}return pick(nw);}al.sort((a,b)=>(this.sus[vid]?.[b.id]??0.5)-(this.sus[vid]?.[a.id]??0.5));const r=Math.random();if(r<0.6)return al[0];if(r<0.85&&al[1])return al[1];return pick(al);}
   react(sp,ps,type,tid){if(!type)return null;const al=ps.filter(p=>p.alive&&p.id!==sp.id);if(!al.length)return null;if(type==="accuse"&&tid!=null){if(sp.id===tid&&sp.role===R.W)return pick(["你指控我？我才覺得你可疑！有什麼證據嗎？","無中生有！我是清白的，亂指控只會害好人。","笑話，我從第一天就在幫村民分析。"]);if(sp.id===tid)return pick(["你懷疑我？可以理解，但我真的是好人。","先別急著投我，再討論看看。"]);if(sp.role===R.W){const t=ps.find(p=>p.id===tid);return t?pick([`同意！${t.name}確實很可疑。`,`我也覺得${t.name}有問題。`]):null;}const t=ps.find(p=>p.id===tid);return t&&t.role===R.W?pick([`你說得有道理，${t.name}確實需要解釋。`,`讓我再想想...有點道理。`]):null;}if(type==="defend"){return sp.role===R.W?pick(["空口白話誰都會說。","辯解不太有說服力。"]):pick(["暫時相信你，先看看其他人。","說法還算合理。"]);}return null;}
-  genSpeech(sp,ps,d){const al=ps.filter(p=>p.alive&&p.id!==sp.id);if(!al.length)return null;let mx=0,st=al[0];al.forEach(p=>{const s=this.sus[sp.id]?.[p.id]??0.5;if(s>mx){mx=s;st=p;}});if(sp.role===R.W){const nw=al.filter(p=>p.role!==R.W);const fr=nw.length?pick(nw):pick(al);this.recAcc(sp.id,fr.id);return pick([`${fr.name}從一開始就很低調，這種人最可疑。`,`${fr.name}的發言前後矛盾，我越想越不對。`,`有沒有人注意${fr.name}好像在引導投票？`,`我是村民，覺得${fr.name}是狼人機率很高。`,d>2?`時間不多了，我強烈懷疑${fr.name}。`:`先觀察，但${fr.name}讓我不安。`]);}if(sp.role===R.S){const ck=Object.entries(this.sr);if(ck.length&&(Math.random()>0.2||d>1)){const[tid,isW]=pick(ck);const tp=ps.find(p=>p.id===parseInt(tid));if(tp&&tp.alive){if(isW){this.recAcc(sp.id,tp.id);return pick([`我跳預言家！昨晚查了${tp.name}，是狼人！請投他！`,`緊急！我是預言家，${tp.name}是狼人🐺！`]);}return pick([`我是預言家，驗過${tp.name}是好人。`,`報告，${tp.name}是清白的。`]);}}this.recAcc(sp.id,st.id);return pick([`直覺告訴我${st.name}很可疑。`,`${st.name}表現不正常。`]);}if(sp.role===R.D)return pick([`冷靜分析，${st.name}需要解釋。`,`觀察了每人的反應，${st.name}不對。`,`保護好關鍵角色，懷疑${st.name}。`]);if(sp.role===R.H)return pick([`我有底牌不怕被投，${st.name}解釋清楚。`,`我盯上${st.name}了。`]);this.recAcc(sp.id,st.id);return pick([`觀察到${st.name}行為很奇怪。`,`${st.name}關鍵時刻沉默讓我擔心。`,`靠邏輯覺得${st.name}最可疑。`,d===1?`第一天資訊不多，但${st.name}讓我預感不好。`:`第${d}天了，指控${st.name}。`]);}
+  genSpeech(sp,ps,d){const al=ps.filter(p=>p.alive&&p.id!==sp.id);if(!al.length)return null;let mx=0,st=al[0];al.forEach(p=>{const s=this.sus[sp.id]?.[p.id]??0.5;if(s>mx){mx=s;st=p;}});if(sp.role===R.W){const nw=al.filter(p=>p.role!==R.W);const fr=nw.length?pick(nw):pick(al);this.recAcc(sp.id,fr.id);return pick([`${fr.name}從一開始就很低調，這種人最可疑。`,`${fr.name}的發言前後矛盾，我越想越不對。`,`有沒有人注意${fr.name}好像在引導投票？`,`我是村民，覺得${fr.name}是狼人機率很高。`,d>2?`時間不多了，我強烈懷疑${fr.name}。`:`先觀察，但${fr.name}讓我不安。`]);}if(sp.role===R.S){const ck=Object.entries(this.sr);if(ck.length&&(Math.random()>0.2||d>1)){const[tid,isW]=pick(ck);const tp=ps.find(p=>p.id===parseInt(tid));if(tp&&tp.alive){if(isW){this.recAcc(sp.id,tp.id);return pick([`我跳預言家！昨晚查了${tp.name}，是狼人！請投他！`,`緊急！我是預言家，${tp.name}是狼人！`]);}return pick([`我是預言家，驗過${tp.name}是好人。`,`報告，${tp.name}是清白的。`]);}}this.recAcc(sp.id,st.id);return pick([`直覺告訴我${st.name}很可疑。`,`${st.name}表現不正常。`]);}if(sp.role===R.D)return pick([`冷靜分析，${st.name}需要解釋。`,`觀察了每人的反應，${st.name}不對。`,`保護好關鍵角色，懷疑${st.name}。`]);if(sp.role===R.H)return pick([`我有底牌不怕被投，${st.name}解釋清楚。`,`我盯上${st.name}了。`]);this.recAcc(sp.id,st.id);return pick([`觀察到${st.name}行為很奇怪。`,`${st.name}關鍵時刻沉默讓我擔心。`,`靠邏輯覺得${st.name}最可疑。`,d===1?`第一天資訊不多，但${st.name}讓我預感不好。`:`第${d}天了，指控${st.name}。`]);}
 }
 
-function initGame(){const pool=shuffle([R.W,R.W,R.S,R.D,R.H,R.V,R.V,R.V]);return[{id:0,name:"你",avatar:"🎭",role:pool[0],alive:true,isPlayer:true},...NAMES.map((n,i)=>({id:i+1,name:n,avatar:AVATARS[i],role:pool[i+1],alive:true,isPlayer:false}))];}
+function initGame(){const pool=shuffle([R.W,R.W,R.S,R.D,R.H,R.V,R.V,R.V]);return[{id:0,name:"你",avatar:"",role:pool[0],alive:true,isPlayer:true},...NAMES.map((n,i)=>({id:i+1,name:n,avatar:AVATARS[i],role:pool[i+1],alive:true,isPlayer:false}))];}
 
 // ━━━ GLOBAL CSS ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const CSS = `
@@ -96,7 +96,7 @@ function SpeechPanel({players,me,onChoice,seerResults}){
   if(mode==="accuse"){
     return(
       <div style={{textAlign:"center",animation:"slideUp .3s ease"}}>
-        <p style={{fontSize:12,color:"#ff4757",marginBottom:10,fontWeight:700,letterSpacing:2}}>🎯 選擇指控對象</p>
+        <p style={{fontSize:12,color:"#ff4757",marginBottom:10,fontWeight:700,letterSpacing:2}}> 選擇指控對象</p>
         <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center",marginBottom:10}}>
           {alive.map(p=><TBtn key={p.id} p={p} onClick={()=>{setMode(null);onChoice("accuse",p.id);}} color="#ff4757"/>)}
         </div>
@@ -105,15 +105,15 @@ function SpeechPanel({players,me,onChoice,seerResults}){
     );
   }
   const opts=[];
-  opts.push({key:"accuse",icon:"🎯",label:"指控某人",desc:"指出你懷疑的對象",color:"#ff4757"});
-  opts.push({key:"defend",icon:"🛡️",label:"為自己辯護",desc:"降低別人對你的懷疑",color:"#60a5fa"});
-  if(me.role===R.S&&Object.keys(seerResults||{}).length>0) opts.push({key:"claim",icon:"🔮",label:"跳預言家",desc:"公布查驗結果",color:"#c084fc"});
-  if(me.role===R.H) opts.push({key:"hint",icon:"🏹",label:"暗示底牌",desc:"威懾狼人",color:"#fbbf24"});
-  if(me.role===R.W) opts.push({key:"frame",icon:"🎭",label:"栽贓好人",desc:"引導大家投好人",color:"#c084fc"});
-  opts.push({key:"silent",icon:"🤫",label:"保持沉默",desc:"觀察局勢",color:"#555"});
+  opts.push({key:"accuse",icon:"",label:"指控某人",desc:"指出你懷疑的對象",color:"#ff4757"});
+  opts.push({key:"defend",icon:"",label:"為自己辯護",desc:"降低別人對你的懷疑",color:"#60a5fa"});
+  if(me.role===R.S&&Object.keys(seerResults||{}).length>0) opts.push({key:"claim",icon:"",label:"跳預言家",desc:"公布查驗結果",color:"#c084fc"});
+  if(me.role===R.H) opts.push({key:"hint",icon:"",label:"暗示底牌",desc:"威懾狼人",color:"#fbbf24"});
+  if(me.role===R.W) opts.push({key:"frame",icon:"",label:"栽贓好人",desc:"引導大家投好人",color:"#c084fc"});
+  opts.push({key:"silent",icon:"",label:"保持沉默",desc:"觀察局勢",color:"#555"});
   return(
     <div style={{textAlign:"center",animation:"slideUp .3s ease"}}>
-      <p style={{fontSize:11,color:"#999",marginBottom:12,fontWeight:600,letterSpacing:3,textTransform:"uppercase"}}>💬 你的發言</p>
+      <p style={{fontSize:11,color:"#999",marginBottom:12,fontWeight:600,letterSpacing:3,textTransform:"uppercase"}}> 你的發言</p>
       <div style={{display:"flex",flexDirection:"column",gap:6,maxWidth:340,margin:"0 auto"}}>
         {opts.map(o=><SpeechOpt key={o.key} {...o} onClick={()=>{if(o.key==="accuse"||o.key==="frame")setMode("accuse");else onChoice(o.key,null);}}/>)}
       </div>
@@ -184,27 +184,27 @@ export default function WerewolfGame(){
   const enterGame=()=>{setScreen("game");startNight(players,1);};
 
   // ━━━ NIGHT FLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  const startNight=async(ps,n)=>{const num=n||dayNum+1;setDayNum(num);setPhase("night");setNightAnim(true);ndRef.current={wk:null,ds:null};setVoteTally(null);await wait(500);log(`🌙 第 ${num} 個夜晚，所有人閉眼...`,"phase");await wait(700);beginWolf(ps);};
-  const beginWolf=async ps=>{const me=ps.find(p=>p.id===0);log("🐺 狼人請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.W){const tm=ps.filter(p=>p.alive&&p.role===R.W&&p.id!==0);if(tm.length)log(`隊友：${tm.map(t=>t.avatar+t.name).join("、")}`,"wolfinfo");setNightStep("wolf");}else{setBusy(true);await wait(1400);const b=brainRef.current;const t=b.wolfKill(ps.filter(p=>p.alive&&p.role===R.W),ps);ndRef.current.wk=t?t.id:null;log("🐺 狼人閉眼。","phase");await wait(400);beginSeer(ps);setBusy(false);}};
-  const onWolf=async tid=>{ndRef.current.wk=tid;const t=players.find(p=>p.id===tid);log(`🔪 鎖定：${t.name}`,"action");setNightStep("");await wait(500);log("🐺 狼人閉眼。","phase");await wait(400);beginSeer(players);};
-  const beginSeer=async ps=>{const me=ps.find(p=>p.id===0);log("🔮 預言家請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.S){setNightStep("seer");}else{setBusy(true);await wait(1100);const b=brainRef.current;ps.filter(p=>p.alive&&p.role===R.S&&!p.isPlayer).forEach(s=>{const t=b.seerTgt(s.id,ps);if(t)b.recSeer(t.id,t.role===R.W);});log("🔮 預言家閉眼。","phase");await wait(400);beginDoc(ps);setBusy(false);}};
-  const onSeer=async tid=>{const t=players.find(p=>p.id===tid);const isW=t.role===R.W;brainRef.current.recSeer(tid,isW);setPSeer(prev=>({...prev,[tid]:isW}));log(`🔮 ${t.name} ${isW?"── 🐺 狼人！":"── ✅ 好人"}`,isW?"danger":"safe");setNightStep("");await wait(700);log("🔮 預言家閉眼。","phase");await wait(400);beginDoc(players);};
-  const beginDoc=async ps=>{const me=ps.find(p=>p.id===0);log("💉 醫生請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.D){setNightStep("doctor");}else{setBusy(true);await wait(1100);const b=brainRef.current;const docs=ps.filter(p=>p.alive&&p.role===R.D&&!p.isPlayer);if(docs.length){const t=b.docTgt(docs[0].id,ps);if(t)ndRef.current.ds=t.id;}log("💉 醫生閉眼。","phase");await wait(400);resolveNight(ps);setBusy(false);}};
-  const onDoc=async tid=>{ndRef.current.ds=tid;setLastProt(tid);const t=players.find(p=>p.id===tid);log(`🛡️ 守護：${t.name}`,"action");setNightStep("");await wait(500);log("💉 醫生閉眼。","phase");await wait(400);resolveNight(players);};
+  const startNight=async(ps,n)=>{const num=n||dayNum+1;setDayNum(num);setPhase("night");setNightAnim(true);ndRef.current={wk:null,ds:null};setVoteTally(null);await wait(500);log(` 第 ${num} 個夜晚，所有人閉眼...`,"phase");await wait(700);beginWolf(ps);};
+  const beginWolf=async ps=>{const me=ps.find(p=>p.id===0);log(" 狼人請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.W){const tm=ps.filter(p=>p.alive&&p.role===R.W&&p.id!==0);if(tm.length)log(`隊友：${tm.map(t=>t.avatar+t.name).join("、")}`,"wolfinfo");setNightStep("wolf");}else{setBusy(true);await wait(1400);const b=brainRef.current;const t=b.wolfKill(ps.filter(p=>p.alive&&p.role===R.W),ps);ndRef.current.wk=t?t.id:null;log(" 狼人閉眼。","phase");await wait(400);beginSeer(ps);setBusy(false);}};
+  const onWolf=async tid=>{ndRef.current.wk=tid;const t=players.find(p=>p.id===tid);log(` 鎖定：${t.name}`,"action");setNightStep("");await wait(500);log(" 狼人閉眼。","phase");await wait(400);beginSeer(players);};
+  const beginSeer=async ps=>{const me=ps.find(p=>p.id===0);log(" 預言家請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.S){setNightStep("seer");}else{setBusy(true);await wait(1100);const b=brainRef.current;ps.filter(p=>p.alive&&p.role===R.S&&!p.isPlayer).forEach(s=>{const t=b.seerTgt(s.id,ps);if(t)b.recSeer(t.id,t.role===R.W);});log(" 預言家閉眼。","phase");await wait(400);beginDoc(ps);setBusy(false);}};
+  const onSeer=async tid=>{const t=players.find(p=>p.id===tid);const isW=t.role===R.W;brainRef.current.recSeer(tid,isW);setPSeer(prev=>({...prev,[tid]:isW}));log(` ${t.name} ${isW?"──  狼人！":"──  好人"}`,isW?"danger":"safe");setNightStep("");await wait(700);log(" 預言家閉眼。","phase");await wait(400);beginDoc(players);};
+  const beginDoc=async ps=>{const me=ps.find(p=>p.id===0);log(" 醫生請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.D){setNightStep("doctor");}else{setBusy(true);await wait(1100);const b=brainRef.current;const docs=ps.filter(p=>p.alive&&p.role===R.D&&!p.isPlayer);if(docs.length){const t=b.docTgt(docs[0].id,ps);if(t)ndRef.current.ds=t.id;}log(" 醫生閉眼。","phase");await wait(400);resolveNight(ps);setBusy(false);}};
+  const onDoc=async tid=>{ndRef.current.ds=tid;setLastProt(tid);const t=players.find(p=>p.id===tid);log(` 守護：${t.name}`,"action");setNightStep("");await wait(500);log(" 醫生閉眼。","phase");await wait(400);resolveNight(players);};
 
-  const resolveNight=async ps=>{setBusy(true);await wait(1200);const{wk,ds}=ndRef.current;setPhase("day");setNightStep("");setNightAnim(false);const b=brainRef.current;b.pa=null;if(wk!=null&&wk!==ds){const v=ps.find(p=>p.id===wk);let np=ps.map(p=>p.id===wk?{...p,alive:false}:p);setPlayers(np);b.recDeath(wk);log(`☀️ 天亮了，第 ${dayNum} 天白天`,"phase");log(pick([`昨夜，${v.name} 倒在了血泊中... 身份：${v.role}${RICON[v.role]}`,`${v.name} 在沉睡中離開了... 身份：${v.role}${RICON[v.role]}`]),"death");if(v.role===R.H){await wait(800);np=await handleHunter(v,np);}const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}setBusy(false);return;}await wait(1000);b.updSus(np);runDay(np);}else{log(`☀️ 天亮了，第 ${dayNum} 天白天`,"phase");log(pick(["平安夜！醫生成功守護了目標！","所有人安全度過了夜晚。"]),"safe");await wait(1000);b.updSus(ps);runDay(ps);}setBusy(false);};
+  const resolveNight=async ps=>{setBusy(true);await wait(1200);const{wk,ds}=ndRef.current;setPhase("day");setNightStep("");setNightAnim(false);const b=brainRef.current;b.pa=null;if(wk!=null&&wk!==ds){const v=ps.find(p=>p.id===wk);let np=ps.map(p=>p.id===wk?{...p,alive:false}:p);setPlayers(np);b.recDeath(wk);log(` 天亮了，第 ${dayNum} 天白天`,"phase");log(pick([`昨夜，${v.name} 倒在了血泊中... 身份：${v.role}${RICON[v.role]}`,`${v.name} 在沉睡中離開了... 身份：${v.role}${RICON[v.role]}`]),"death");if(v.role===R.H){await wait(800);np=await handleHunter(v,np);}const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}setBusy(false);return;}await wait(1000);b.updSus(np);runDay(np);}else{log(` 天亮了，第 ${dayNum} 天白天`,"phase");log(pick(["平安夜！醫生成功守護了目標！","所有人安全度過了夜晚。"]),"safe");await wait(1000);b.updSus(ps);runDay(ps);}setBusy(false);};
 
   // ━━━ DAY FLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  const runDay=async ps=>{setBusy(true);const b=brainRef.current;const alive=ps.filter(p=>p.alive&&!p.isPlayer);const order=shuffle(alive).slice(0,Math.min(4,alive.length));const me=ps.find(p=>p.id===0);const half=Math.ceil(order.length/2);for(let i=0;i<half;i++){await wait(800+Math.random()*600);const sp=b.genSpeech(order[i],ps,dayNum);if(sp)log(sp,"chat",order[i]);}if(me.alive){await wait(400);setShowSpeech(true);setBusy(false);return;}for(let i=half;i<order.length;i++){await wait(800+Math.random()*600);const sp=b.genSpeech(order[i],ps,dayNum);if(sp)log(sp,"chat",order[i]);}await wait(500);log("🗳️ 討論結束，開始投票！","phase");setVotingOpen(true);setPVoted(false);setBusy(false);};
+  const runDay=async ps=>{setBusy(true);const b=brainRef.current;const alive=ps.filter(p=>p.alive&&!p.isPlayer);const order=shuffle(alive).slice(0,Math.min(4,alive.length));const me=ps.find(p=>p.id===0);const half=Math.ceil(order.length/2);for(let i=0;i<half;i++){await wait(800+Math.random()*600);const sp=b.genSpeech(order[i],ps,dayNum);if(sp)log(sp,"chat",order[i]);}if(me.alive){await wait(400);setShowSpeech(true);setBusy(false);return;}for(let i=half;i<order.length;i++){await wait(800+Math.random()*600);const sp=b.genSpeech(order[i],ps,dayNum);if(sp)log(sp,"chat",order[i]);}await wait(500);log(" 討論結束，開始投票！","phase");setVotingOpen(true);setPVoted(false);setBusy(false);};
 
-  const onPlayerSpeech=async(type,tid)=>{setShowSpeech(false);setBusy(true);const me=players[0];const b=brainRef.current;const alive=players.filter(p=>p.alive&&!p.isPlayer);if(type==="accuse"||type==="frame"){const t=players.find(p=>p.id===tid);b.setPA(tid);b.recAcc(0,tid);log(me.role===R.W?`我覺得${t.name}非常可疑，大家注意他！`:`我指控${t.name}！他的行為很不正常。`,"playerchat",me);await wait(600);for(const r of shuffle(alive).slice(0,2)){await wait(500+Math.random()*400);const rx=b.react(r,players,"accuse",tid);if(rx)log(rx,"chat",r);}}else if(type==="defend"){log("我是好人！你們可以觀察我的表現，我沒有可疑行為。","playerchat",me);await wait(600);const r=pick(alive);const rx=b.react(r,players,"defend",null);if(rx)log(rx,"chat",r);}else if(type==="claim"){const ck=Object.entries(pSeer);if(ck.length){const res=ck.map(([id,isW])=>{const p=players.find(pp=>pp.id===parseInt(id));return p?`${p.name}${isW?"是狼人🐺":"是好人✅"}`:""}).filter(Boolean).join("，");log(`我跳預言家！查驗結果：${res}`,"playerchat",me);await wait(600);const wolves=alive.filter(p=>p.role===R.W);if(wolves.length&&Math.random()>0.4){await wait(500);log(pick(["你是假預言家吧？我才是真的！","別聽他的，他在騙人！"]),"chat",pick(wolves));}}}else if(type==="hint"){log("投我的人要三思。我有底牌，狼人不會想讓我死。","playerchat",me);}else if(type==="silent"){log("（你保持沉默，觀察局勢）","dim");}await wait(500);for(const sp of shuffle(alive).slice(0,2)){await wait(700+Math.random()*500);const speech=b.genSpeech(sp,players,dayNum);if(speech)log(speech,"chat",sp);}await wait(500);log("🗳️ 討論結束，開始投票！","phase");b.updSus(players);setVotingOpen(true);setPVoted(false);setBusy(false);};
+  const onPlayerSpeech=async(type,tid)=>{setShowSpeech(false);setBusy(true);const me=players[0];const b=brainRef.current;const alive=players.filter(p=>p.alive&&!p.isPlayer);if(type==="accuse"||type==="frame"){const t=players.find(p=>p.id===tid);b.setPA(tid);b.recAcc(0,tid);log(me.role===R.W?`我覺得${t.name}非常可疑，大家注意他！`:`我指控${t.name}！他的行為很不正常。`,"playerchat",me);await wait(600);for(const r of shuffle(alive).slice(0,2)){await wait(500+Math.random()*400);const rx=b.react(r,players,"accuse",tid);if(rx)log(rx,"chat",r);}}else if(type==="defend"){log("我是好人！你們可以觀察我的表現，我沒有可疑行為。","playerchat",me);await wait(600);const r=pick(alive);const rx=b.react(r,players,"defend",null);if(rx)log(rx,"chat",r);}else if(type==="claim"){const ck=Object.entries(pSeer);if(ck.length){const res=ck.map(([id,isW])=>{const p=players.find(pp=>pp.id===parseInt(id));return p?`${p.name}${isW?"是狼人":"是好人"}`:""}).filter(Boolean).join("，");log(`我跳預言家！查驗結果：${res}`,"playerchat",me);await wait(600);const wolves=alive.filter(p=>p.role===R.W);if(wolves.length&&Math.random()>0.4){await wait(500);log(pick(["你是假預言家吧？我才是真的！","別聽他的，他在騙人！"]),"chat",pick(wolves));}}}else if(type==="hint"){log("投我的人要三思。我有底牌，狼人不會想讓我死。","playerchat",me);}else if(type==="silent"){log("（你保持沉默，觀察局勢）","dim");}await wait(500);for(const sp of shuffle(alive).slice(0,2)){await wait(700+Math.random()*500);const speech=b.genSpeech(sp,players,dayNum);if(speech)log(speech,"chat",sp);}await wait(500);log(" 討論結束，開始投票！","phase");b.updSus(players);setVotingOpen(true);setPVoted(false);setBusy(false);};
 
   // ━━━ VOTE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  const doVote=async vid=>{if(pVoted)return;setPVoted(true);setBusy(true);const b=brainRef.current;const t=players.find(p=>p.id===vid);if(players[0].alive)log(`你投了 ${t.name}`,"vote",players[0]);const tally={};if(players[0].alive)tally[vid]=1;for(const ai of players.filter(p=>p.alive&&!p.isPlayer)){await wait(300+Math.random()*200);const vt=b.getVote(ai.id,ai.role,players);if(vt){tally[vt.id]=(tally[vt.id]||0)+1;log(`${ai.name} → ${vt.name}`,"vote",ai);}}await wait(500);setVoteTally(tally);await wait(1000);let maxV=0,outId=null;Object.entries(tally).forEach(([id,c])=>{if(c>maxV){maxV=c;outId=parseInt(id);}});const ties=Object.entries(tally).filter(([_,c])=>c===maxV);if(ties.length>1){log(`⚖️ 平票（${maxV}票），無人被放逐。`,"phase");setVotingOpen(false);await wait(1000);startNight(players);setBusy(false);return;}const out=players.find(p=>p.id===outId);let np=players.map(p=>p.id===outId?{...p,alive:false}:p);setPlayers(np);log(`☠️ ${out.name} 以 ${maxV} 票被放逐`,"elim");await wait(400);if(!out.isPlayer){log(`💬 ${out.name}：「${out.role===R.W?pick(["哼...你們贏了這次。","可惜，差一點。"]):pick(["我是好人，你們投錯了！","冤枉...希望你們找到真狼。"])}」`,"chat",out);await wait(500);}log(`📋 身份：${out.role} ${RICON[out.role]}`,"reveal");setVotingOpen(false);if(out.role===R.H){await wait(800);np=await handleHunter(out,np);}const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}setBusy(false);return;}await wait(1000);startNight(np);setBusy(false);};
+  const doVote=async vid=>{if(pVoted)return;setPVoted(true);setBusy(true);const b=brainRef.current;const t=players.find(p=>p.id===vid);if(players[0].alive)log(`你投了 ${t.name}`,"vote",players[0]);const tally={};if(players[0].alive)tally[vid]=1;for(const ai of players.filter(p=>p.alive&&!p.isPlayer)){await wait(300+Math.random()*200);const vt=b.getVote(ai.id,ai.role,players);if(vt){tally[vt.id]=(tally[vt.id]||0)+1;log(`${ai.name} → ${vt.name}`,"vote",ai);}}await wait(500);setVoteTally(tally);await wait(1000);let maxV=0,outId=null;Object.entries(tally).forEach(([id,c])=>{if(c>maxV){maxV=c;outId=parseInt(id);}});const ties=Object.entries(tally).filter(([_,c])=>c===maxV);if(ties.length>1){log(` 平票（${maxV}票），無人被放逐。`,"phase");setVotingOpen(false);await wait(1000);startNight(players);setBusy(false);return;}const out=players.find(p=>p.id===outId);let np=players.map(p=>p.id===outId?{...p,alive:false}:p);setPlayers(np);log(` ${out.name} 以 ${maxV} 票被放逐`,"elim");await wait(400);if(!out.isPlayer){log(` ${out.name}：「${out.role===R.W?pick(["哼...你們贏了這次。","可惜，差一點。"]):pick(["我是好人，你們投錯了！","冤枉...希望你們找到真狼。"])}」`,"chat",out);await wait(500);}log(` 身份：${out.role} ${RICON[out.role]}`,"reveal");setVotingOpen(false);if(out.role===R.H){await wait(800);np=await handleHunter(out,np);}const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}setBusy(false);return;}await wait(1000);startNight(np);setBusy(false);};
 
   // ━━━ HUNTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  const handleHunter=async(dead,ps)=>{if(dead.isPlayer)return new Promise(res=>setHunterModal({ps,resolve:res}));const b=brainRef.current;const targets=ps.filter(p=>p.alive&&p.id!==dead.id);const se=Object.entries(b.sus[dead.id]||{}).filter(([id])=>{const p=ps.find(pp=>pp.id===parseInt(id));return p&&p.alive&&p.id!==dead.id;}).sort((a,b2)=>b2[1]-a[1]);const t=se.length?ps.find(p=>p.id===parseInt(se[0][0])):pick(targets);log(`🏹 ${dead.name}是獵人！帶走了 ${t.name}（${t.role}${RICON[t.role]}）`,"hunter");const np=ps.map(p=>p.id===t.id?{...p,alive:false}:p);setPlayers(np);await wait(800);return np;};
-  const confirmHunter=tid=>{if(!hunterModal)return;const t=hunterModal.ps.find(p=>p.id===tid);log(`🏹 你帶走了 ${t.name}（${t.role}${RICON[t.role]}）`,"hunter");const np=hunterModal.ps.map(p=>p.id===tid?{...p,alive:false}:p);setPlayers(np);const res=hunterModal.resolve;setHunterModal(null);const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}return;}res(np);};
+  const handleHunter=async(dead,ps)=>{if(dead.isPlayer)return new Promise(res=>setHunterModal({ps,resolve:res}));const b=brainRef.current;const targets=ps.filter(p=>p.alive&&p.id!==dead.id);const se=Object.entries(b.sus[dead.id]||{}).filter(([id])=>{const p=ps.find(pp=>pp.id===parseInt(id));return p&&p.alive&&p.id!==dead.id;}).sort((a,b2)=>b2[1]-a[1]);const t=se.length?ps.find(p=>p.id===parseInt(se[0][0])):pick(targets);log(` ${dead.name}是獵人！帶走了 ${t.name}（${t.role}${RICON[t.role]}）`,"hunter");const np=ps.map(p=>p.id===t.id?{...p,alive:false}:p);setPlayers(np);await wait(800);return np;};
+  const confirmHunter=tid=>{if(!hunterModal)return;const t=hunterModal.ps.find(p=>p.id===tid);log(` 你帶走了 ${t.name}（${t.role}${RICON[t.role]}）`,"hunter");const np=hunterModal.ps.map(p=>p.id===tid?{...p,alive:false}:p);setPlayers(np);const res=hunterModal.resolve;setHunterModal(null);const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}return;}res(np);};
   const doNight=tid=>{if(nightStep==="wolf")onWolf(tid);else if(nightStep==="seer")onSeer(tid);else if(nightStep==="doctor")onDoc(tid);};
 
   // ━━━ STYLES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -221,7 +221,7 @@ export default function WerewolfGame(){
         <Particles count={30} color="rgba(200,180,255,.06)"/>
         <div style={{position:"absolute",bottom:0,left:0,right:0,height:"30%",background:"linear-gradient(0deg,rgba(8,8,14,1) 0%,transparent 100%)",pointerEvents:"none",zIndex:1}}/>
         <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:28,position:"relative",zIndex:2}}>
-          <div style={{fontSize:88,marginBottom:28,animation:"breathe 4s ease infinite"}}>🐺</div>
+          <div style={{fontSize:88,marginBottom:28,animation:"breathe 4s ease infinite"}}></div>
           <h1 style={{fontFamily:"'Cinzel',serif",fontSize:52,fontWeight:900,letterSpacing:16,margin:0,color:"#fff",textShadow:"0 0 60px rgba(255,71,87,.2),0 2px 4px rgba(0,0,0,.5)"}}>狼人殺</h1>
           <p style={{fontFamily:"'Cinzel',serif",fontSize:11,letterSpacing:14,color:"#4a4a5a",marginTop:12}}>WEREWOLF</p>
           <div style={{width:100,height:1,background:"linear-gradient(90deg,transparent,rgba(255,71,87,.2),transparent)",margin:"32px auto"}}/>
@@ -280,7 +280,7 @@ export default function WerewolfGame(){
         <Particles count={30} color={c+"14"}/>
         <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:24,position:"relative",zIndex:2}}>
           <div style={{textAlign:"center",padding:"44px 28px",maxWidth:440,width:"100%",background:"rgba(255,255,255,.015)",borderRadius:32,border:"1px solid rgba(255,255,255,.05)",backdropFilter:"blur(16px)",boxShadow:`0 20px 80px ${c}08`}}>
-            <div style={{fontSize:76,marginBottom:16,filter:`drop-shadow(0 0 20px ${c}30)`}}>{isWin?"🏆":"💀"}</div>
+            <div style={{fontSize:76,marginBottom:16,filter:`drop-shadow(0 0 20px ${c}30)`}}>{isWin?"":""}</div>
             <h1 style={{fontFamily:"'Cinzel',serif",fontSize:34,fontWeight:900,color:c,margin:"0 0 6px",letterSpacing:8,textShadow:`0 0 30px ${c}25`}}>{isWin?"勝利":"落敗"}</h1>
             <p style={{fontSize:12,color:"#555",marginBottom:24}}>{winner==="good"?"好人陣營消滅了所有狼人！":"狼人佔領了村莊..."}</p>
             <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:8,marginBottom:28}}>
@@ -322,13 +322,13 @@ export default function WerewolfGame(){
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px",background:"rgba(8,8,14,.92)",borderBottom:"1px solid rgba(255,255,255,.04)",position:"sticky",top:0,zIndex:10,flexShrink:0,backdropFilter:"blur(24px)"}}>
         <div style={{display:"flex",alignItems:"center",gap:12}}>
           <div style={{display:"flex",alignItems:"center",gap:6}}>
-            <span style={{fontSize:18}}>{nightAnim?"🌙":"☀️"}</span>
+            <span style={{fontSize:18}}>{nightAnim?"":""}</span>
             <span style={{fontFamily:"'Cinzel',serif",fontSize:14,fontWeight:800,letterSpacing:2,color:nightAnim?"#8ba4ff":"#ffd32a"}}>{nightAnim?"NIGHT":"DAY"} {dayNum}</span>
           </div>
           <div style={{fontSize:10,color:"#555",padding:"4px 12px",background:"rgba(255,255,255,.03)",borderRadius:20,fontWeight:600,letterSpacing:1,border:"1px solid rgba(255,255,255,.03)"}}>{aliveN} 存活</div>
         </div>
         <div style={{fontSize:11,fontWeight:800,padding:"5px 14px",borderRadius:20,background:`linear-gradient(135deg,${RCOL[me.role]}12,${RCOL[me.role]}06)`,border:`1px solid ${RCOL[me.role]}30`,color:RCOL[me.role],display:"flex",alignItems:"center",gap:5,letterSpacing:1}}>
-          {RICON[me.role]}<span>{me.role}</span>{!me.alive&&<span style={{opacity:.5}}>☠️</span>}
+          {RICON[me.role]}<span>{me.role}</span>{!me.alive&&<span style={{opacity:.5}}></span>}
         </div>
       </div>
 
@@ -336,7 +336,7 @@ export default function WerewolfGame(){
       <div style={{display:"flex",gap:3,padding:"10px 10px",justifyContent:"center",flexWrap:"wrap",borderBottom:"1px solid rgba(255,255,255,.025)",background:"rgba(255,255,255,.005)",flexShrink:0,position:"relative",zIndex:1}}>
         {players.map(p=>(
           <div key={p.id} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"6px 9px",borderRadius:14,minWidth:44,opacity:p.alive?1:.12,background:p.isPlayer?`linear-gradient(180deg,${RCOL[me.role]}08,transparent)`:"transparent",border:p.isPlayer?`1.5px solid ${RCOL[me.role]}20`:"1.5px solid transparent",transition:"all .6s cubic-bezier(.4,0,.2,1)"}}>
-            <span style={{fontSize:20,lineHeight:1,transition:"all .3s",filter:p.alive?"none":"grayscale(1)"}}>{p.alive?p.avatar:"💀"}</span>
+            <span style={{fontSize:20,lineHeight:1,transition:"all .3s",filter:p.alive?"none":"grayscale(1)"}}>{p.alive?p.avatar:""}</span>
             <span style={{fontSize:9,color:p.alive?"#666":"#222",fontWeight:600,letterSpacing:.5}}>{p.name}</span>
           </div>
         ))}
@@ -386,9 +386,9 @@ export default function WerewolfGame(){
         {["wolf","seer","doctor"].includes(nightStep)&&me.alive&&(
           <div style={{textAlign:"center",animation:"slideUp .3s ease"}}>
             <p style={{fontSize:11,color:nc,marginBottom:12,fontWeight:800,letterSpacing:3}}>
-              {nightStep==="wolf"?"🔪 選擇獵殺目標":nightStep==="seer"?"🔮 選擇查驗對象":"🛡️ 選擇守護對象"}
+              {nightStep==="wolf"?" 選擇獵殺目標":nightStep==="seer"?" 選擇查驗對象":" 選擇守護對象"}
             </p>
-            {nightStep==="doctor"&&lastProt!=null&&(<p style={{fontSize:10,color:"#555",marginBottom:8}}>⚠️ 不可連守（上次：{players.find(p=>p.id===lastProt)?.name}）</p>)}
+            {nightStep==="doctor"&&lastProt!=null&&(<p style={{fontSize:10,color:"#555",marginBottom:8}}> 不可連守（上次：{players.find(p=>p.id===lastProt)?.name}）</p>)}
             <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center"}}>
               {nt.map(p=><TBtn key={p.id} p={p} onClick={()=>doNight(p.id)} color={nc}/>)}
             </div>
@@ -407,7 +407,7 @@ export default function WerewolfGame(){
       {hunterModal&&(
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.88)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:50,padding:20,backdropFilter:"blur(12px)",animation:"fadeIn .3s ease"}}>
           <div style={{background:"linear-gradient(180deg,#1a1a30,#0e0e1a)",border:"1px solid rgba(245,158,11,.15)",borderRadius:28,padding:"36px 28px",maxWidth:380,width:"100%",textAlign:"center",boxShadow:"0 24px 80px rgba(0,0,0,.6),0 0 40px rgba(245,158,11,.05)"}}>
-            <div style={{fontSize:56,marginBottom:16,filter:"drop-shadow(0 0 20px rgba(245,158,11,.3))"}}>🏹</div>
+            <div style={{fontSize:56,marginBottom:16,filter:"drop-shadow(0 0 20px rgba(245,158,11,.3))"}}></div>
             <h3 style={{fontFamily:"'Cinzel',serif",color:"#fbbf24",margin:"0 0 8px",fontSize:22,fontWeight:900,letterSpacing:6}}>獵人技能</h3>
             <p style={{color:"#666",fontSize:12,marginBottom:20}}>選擇一名玩家帶走</p>
             <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center"}}>

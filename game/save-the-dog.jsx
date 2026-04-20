@@ -180,7 +180,7 @@ const rawLevels = [
     obs: [{ x: .6, y: -.19, w: .33, h: .028 }, { x: .35, y: -.12, w: .04, h: .105 }, { x: .14, y: -.28, w: .26, h: .025 }, { x: .5, y: -.38, w: .035, h: .134 }, { x: .74, y: -.46, w: .11, h: .086 }] },
   { label: "5", bc: 13, bs: 3.8, dogX: .5,
     obs: [{ x: .21, y: -.13, w: .14, h: .095 }, { x: .65, y: -.13, w: .14, h: .095 }, { x: .36, y: -.27, w: .28, h: .025 }, { x: .06, y: -.37, w: .04, h: .163 }, { x: .9, y: -.37, w: .04, h: .163 }, { x: .29, y: -.44, w: .16, h: .021 }, { x: .55, y: -.44, w: .16, h: .021 }] },
-  { label: "★", bc: 16, bs: 4.2, dogX: .5,
+  { label: "", bc: 16, bs: 4.2, dogX: .5,
     obs: [{ x: .25, y: -.19, w: .5, h: .028 }, { x: .16, y: -.37, w: .04, h: .153 }, { x: .8, y: -.37, w: .04, h: .153 }, { x: .34, y: -.35, w: .11, h: .086 }, { x: .55, y: -.35, w: .11, h: .086 }, { x: .25, y: -.5, w: .2, h: .021 }, { x: .55, y: -.5, w: .2, h: .021 }, { x: .39, y: -.62, w: .23, h: .028 }] },
 ];
 function buildLevels(W, H, GND, DR) {
@@ -332,7 +332,10 @@ export default function App() {
 
   const resize = useCallback(() => {
     const c = ref.current; if (!c) return;
-    const W = window.innerWidth, H = window.innerHeight;
+    const host = c.parentElement;
+    const rect = host ? host.getBoundingClientRect() : { width: window.innerWidth, height: window.innerHeight };
+    const W = Math.max(320, Math.floor(rect.width));
+    const H = Math.max(320, Math.floor(rect.height));
     c.width = W; c.height = H; c.style.width = W + "px"; c.style.height = H + "px";
     const sc = Math.min(W / BASE_W, H / BASE_H);
     const GND = Math.round(H * .88);
@@ -408,8 +411,8 @@ export default function App() {
         ctx.beginPath(); ctx.roundRect(-bw / 2, -bh / 2, bw, bh, bh / 2); ctx.fill(); ctx.shadowBlur = 0;
         ctx.fillStyle = "#fff"; ctx.font = `bold ${Math.round(bh * .45)}px 'Helvetica Neue','PingFang TC',sans-serif`;
         ctx.fillText("開始遊戲", 0, bh * .16); ctx.restore();
-        ctx.fillStyle = "rgba(80,50,30,.1)"; ctx.font = `${Math.round(W * .025)}px sans-serif`;
-        ctx.fillText("HAO0321 ©Studio", W / 2, H - H * .015);
+        ctx.fillStyle = "rgba(80,50,30,.1)"; ctx.font = `${Math.min(14, Math.round(W * .018))}px sans-serif`;
+        ctx.fillText("HAO0321 ©Studio", W / 2, H - 8);
         raf.current = requestAnimationFrame(loop); return;
       }
 
@@ -503,7 +506,7 @@ export default function App() {
       ctx.fillStyle = "#fff"; ctx.shadowColor = "rgba(0,0,0,.05)"; ctx.shadowBlur = 4;
       ctx.beginPath(); ctx.roundRect(W - pd - W * .17, pd, W * .17, bH * .9, bR); ctx.fill(); ctx.shadowBlur = 0;
       ctx.fillStyle = "#E65100"; ctx.font = `bold ${Math.round(bH * .45)}px sans-serif`;
-      ctx.fillText(`🐝×${lvl.bc}`, W - pd - W * .085, pd + bH * .6);
+      ctx.fillText(`×${lvl.bc}`, W - pd - W * .085, pd + bH * .6);
       const barY = GND + (H - GND) * .35, barH = H * .015, barPad = W * .08;
       if (s.phase === "ready") {
         ctx.textAlign = "center"; ctx.fillStyle = "#4E342E";
@@ -519,7 +522,7 @@ export default function App() {
         ctx.beginPath(); ctx.roundRect(barPad, barY, (W - barPad * 2) * pct, barH, barH / 2); ctx.fill();
         ctx.textAlign = "center"; ctx.fillStyle = "#4E342E";
         ctx.font = `bold ${Math.round(fs * .85)}px 'Helvetica Neue','PingFang TC',sans-serif`;
-        ctx.fillText(isD ? `✏️ ${Math.ceil(s.drawTimer / 60)}秒` : `⏱ ${Math.ceil(s.timer / 60)}秒`, W / 2, barY - barH * .8);
+        ctx.fillText(isD ? ` ${Math.ceil(s.drawTimer / 60)}秒` : ` ${Math.ceil(s.timer / 60)}秒`, W / 2, barY - barH * .8);
       }
       if (s.phase === "win" || s.phase === "lose") {
         ctx.fillStyle = s.phase === "win" ? "rgba(255,255,255,.4)" : "rgba(0,0,0,.2)"; ctx.fillRect(0, 0, W, H);
@@ -529,18 +532,18 @@ export default function App() {
         ctx.textAlign = "center";
         if (s.phase === "win") {
           ctx.fillStyle = "#FF6E40"; ctx.font = `bold ${Math.round(W * .065)}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText("🎉 狗狗得救了！", W / 2, H / 2 - ch * .08);
+          ctx.fillText(" 狗狗得救了！", W / 2, H / 2 - ch * .08);
           ctx.fillStyle = "#8D6E63"; ctx.font = `${Math.round(W * .035)}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText(s.level + 1 < s.levels.length ? "點擊下一關 →" : "🏆 全部通關！", W / 2, H / 2 + ch * .28);
+          ctx.fillText(s.level + 1 < s.levels.length ? "點擊下一關 →" : " 全部通關！", W / 2, H / 2 + ch * .28);
         } else {
           ctx.fillStyle = "#E53935"; ctx.font = `bold ${Math.round(W * .065)}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText("💀 被叮了！", W / 2, H / 2 - ch * .08);
+          ctx.fillText(" 被叮了！", W / 2, H / 2 - ch * .08);
           ctx.fillStyle = "#8D6E63"; ctx.font = `${Math.round(W * .035)}px 'Helvetica Neue','PingFang TC',sans-serif`;
           ctx.fillText("點擊重試", W / 2, H / 2 + ch * .28);
         }
       }
-      ctx.fillStyle = "rgba(80,50,30,.07)"; ctx.font = `${Math.round(W * .023)}px sans-serif`;
-      ctx.textAlign = "center"; ctx.fillText("HAO0321 ©Studio", W / 2, H - H * .01);
+      ctx.fillStyle = "rgba(80,50,30,.07)"; ctx.font = `${Math.min(13, Math.round(W * .016))}px sans-serif`;
+      ctx.textAlign = "center"; ctx.fillText("HAO0321 ©Studio", W / 2, H - 6);
       ctx.restore();
       raf.current = requestAnimationFrame(loop);
     };
@@ -551,7 +554,7 @@ export default function App() {
   }, [gp, init, finalize]);
 
   return (
-    <div style={{ position: "fixed", inset: 0, overflow: "hidden", background: "#795548", userSelect: "none", WebkitUserSelect: "none" }}>
+    <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: "#795548", userSelect: "none", WebkitUserSelect: "none" }}>
       <canvas ref={ref} style={{ display: "block", touchAction: "none", cursor: "crosshair" }} />
     </div>
   );

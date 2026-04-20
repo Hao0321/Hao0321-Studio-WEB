@@ -55,7 +55,7 @@ input:focus{border-color:var(--acc)}
 .cd .rk{font-size:1.15rem;font-weight:800;line-height:1}.cd .st{font-size:.9rem;line-height:1;margin-top:1px}
 .cd.red{color:var(--red)}.cd.black{color:var(--blk)}
 .cd.back{background:linear-gradient(135deg,var(--acc),var(--accD));border-color:var(--accD)}
-.cd.back::after{content:'✦';color:rgba(255,255,255,.3);font-size:1.2rem}
+.cd.back::after{content:'';color:rgba(255,255,255,.3);font-size:1.2rem}
 .cd.person{border-color:var(--gold);box-shadow:0 0 0 2px var(--gold),0 2px 8px var(--shadow)}
 .cd.fate{border-color:var(--accD);box-shadow:0 0 0 2px var(--accD),0 2px 8px var(--shadow)}
 .cd.out{opacity:.15;transform:scale(.9)}
@@ -226,23 +226,23 @@ const L={
   deal1:'發一張',auto:'自動發牌',pause:'暫停',
   paired:'已配對拿走的牌',result:'占卜結果',
   prec:'配對紀錄',restart:'重新占卜',
-  gen:'📷 生成分享圖片',share:'📤 分享到社群',
-  hist:'📜 占卜歷史紀錄',histE:'尚無占卜紀錄',
-  longP:'長按圖片即可儲存或分享',dl:'💾 下載圖片',
+  gen:' 生成分享圖片',share:' 分享到社群',
+  hist:' 占卜歷史紀錄',histE:'尚無占卜紀錄',
+  longP:'長按圖片即可儲存或分享',dl:' 下載圖片',
   scanQR:'掃描 QR Code 來占卜',
   lv:['大吉','吉','平','凶'],rl:['最佳','良好','普通','最弱'],
   rmTxt:'此位置的牌已全部被命運收走，代表這個面向近期變數極大。保持開放心態，靜觀其變。',
-  sumT:'✦ 占卜師總結 ✦',sumOv:'近期整體運勢：',
+  sumT:' 占卜師總結 ',sumOv:'近期整體運勢：',
   sn:{1:'整體運勢',2:'未來愛情',3:'健康',4:'過去愛情',5:'人（自身）',6:'人際/貴人',7:'過去財富',8:'事業',9:'未來財富',10:'命（命運）'},
   snS:{1:'整體',2:'愛情',3:'健康',4:'愛情',5:'人命',6:'人際',7:'財運',8:'事業',9:'財運',10:'命'},
   suit:{'♠':'黑桃','♥':'紅心','♦':'方塊','♣':'梅花'},
   logP:(c,s)=>`人牌：${c} → ${s}號位`,logF:(c,s)=>`命牌：${c} → ${s}號位`,
   logD:(c,s,n)=>`發牌：${c} → ${s}號（${n}）`,
   logM:(i,c1,s,c2)=>`配對！${i}號 ${c1} ＝ ${s}號 ${c2}`,
-  logPR:'⚡ 人牌已被拿走，5號位加入發牌輪序',logFR:'⚡ 命牌已被拿走，10號位加入發牌輪序',
+  logPR:' 人牌已被拿走，5號位加入發牌輪序',logFR:' 命牌已被拿走，10號位加入發牌輪序',
   logFill:(c,s)=>`補牌：${c} → ${s}號`,
   logEnd:'── 人牌與命牌皆已配對，占卜結束 ──',logDeck:'── 牌已發完 ──',
-  dsL:'發牌順序：',dsP:'⚡人牌已拿走',dsF:'⚡命牌已拿走',
+  dsL:'發牌順序：',dsP:'人牌已拿走',dsF:'命牌已拿走',
   stk:(n,rm,cur)=>{let t=`此位置經歷了${rm.length}次更迭——`;if(rm.length===1){t+=`最初的 ${rm[0]} 被命運帶走，暗示原本的走向已被改變。`;if(cur)t+=`現在的 ${cur} 取而代之，代表新的局面正在形成。`}else{t+=`連續多次更迭表示此面向正在劇烈變化中。`;if(cur)t+=`最終停留在 ${cur}，這是反覆洗禮後的結果。`}return t},
   sumOpen:[
     '整體來看，你近期的運勢非常好，多方面都有正面的能量在推動你前進。',
@@ -252,7 +252,7 @@ const L={
   sumLove:['未來的發展比過去更好，感情正在往好的方向走。','需要留意感情可能遇到一些考驗，多用心經營。','感情狀態維持穩定，沒有太大變化。'],
   sumMoney:['未來的財運比現在好，有機會看到收入增長或新的賺錢機會。','要注意開源節流，近期財務上可能有壓力。','財務狀況維持穩定，不會有太大的起伏。'],
   sumClose:['總的來說，你正處於一個不錯的時期，好好把握當下的機會。','總的來說，近期雖然有些挑戰，但這些都是暫時的。保持耐心，一切都會慢慢好起來的。'],
-  sumStk:n=>`⚡ 這次占卜中牌陣經歷了${n}次配對更迭，顯示你近期的命運變動較大，需要隨機應變。`,
+  sumStk:n=>` 這次占卜中牌陣經歷了${n}次配對更迭，顯示你近期的命運變動較大，需要隨機應變。`,
 },
 'en':{
   ln:'EN',title:'Cards of Fate',sub:'Poker Divination · Folk Method',
@@ -267,29 +267,29 @@ const L={
   deal1:'Deal One',auto:'Auto Deal',pause:'Pause',
   paired:'Matched & Removed',result:'Reading Results',
   prec:'Match Records',restart:'New Reading',
-  gen:'📷 Generate Image',share:'📤 Share',
-  hist:'📜 Reading History',histE:'No readings yet',
-  longP:'Long press to save or share',dl:'💾 Download',
+  gen:' Generate Image',share:' Share',
+  hist:' Reading History',histE:'No readings yet',
+  longP:'Long press to save or share',dl:' Download',
   scanQR:'Scan to try your fortune',
   lv:['Excellent','Good','Fair','Caution'],rl:['Best','Good','Average','Weakest'],
   rmTxt:'All cards at this position have been claimed by fate. This aspect is in flux — stay open and observe.',
-  sumT:'✦ Diviner\'s Summary ✦',sumOv:'Overall Fortune: ',
+  sumT:' Diviner\'s Summary ',sumOv:'Overall Fortune: ',
   sn:{1:'Overall',2:'Future Love',3:'Health',4:'Past Love',5:'Self',6:'Social/Allies',7:'Past Wealth',8:'Career',9:'Future Wealth',10:'Fate'},
   snS:{1:'Overall',2:'Love',3:'Health',4:'Love',5:'Self',6:'Social',7:'Wealth',8:'Career',9:'Wealth',10:'Fate'},
   suit:{'♠':'Spades','♥':'Hearts','♦':'Diamonds','♣':'Clubs'},
   logP:(c,s)=>`Self card: ${c} → slot ${s}`,logF:(c,s)=>`Fate card: ${c} → slot ${s}`,
   logD:(c,s,n)=>`Deal: ${c} → slot ${s} (${n})`,
   logM:(i,c1,s,c2)=>`Match! Slot ${i} ${c1} = Slot ${s} ${c2}`,
-  logPR:'⚡ Self card removed, slot 5 joins deal rotation',logFR:'⚡ Fate card removed, slot 10 joins deal rotation',
+  logPR:' Self card removed, slot 5 joins deal rotation',logFR:' Fate card removed, slot 10 joins deal rotation',
   logFill:(c,s)=>`Fill: ${c} → slot ${s}`,
   logEnd:'── Both Self & Fate matched — reading complete ──',logDeck:'── Deck exhausted ──',
-  dsL:'Deal order: ',dsP:'⚡Self removed',dsF:'⚡Fate removed',
+  dsL:'Deal order: ',dsP:'Self removed',dsF:'Fate removed',
   stk:(n,rm,cur)=>{let t=`This position changed ${rm.length} time(s) — `;if(rm.length===1){t+=`The original ${rm[0]} was taken by fate, suggesting a shift in direction.`;if(cur)t+=` Now ${cur} has taken its place, signaling a new chapter.`}else{t+=`Multiple changes indicate this aspect is in rapid flux.`;if(cur)t+=` It finally settled on ${cur} after repeated shifts.`}return t},
   sumOpen:['Overall, your fortune looks very strong. Positive energy is pushing you forward in many areas.','Overall, your fortune is quite good. There are minor challenges, but the general direction is positive.','Your fortune is fairly neutral right now — no major waves, but some areas need attention.','Your fortune faces some challenges ahead. Several areas need your careful attention and adjustment.'],
   sumLove:['Future love prospects look better than the past — things are moving in a good direction.','Be mindful of potential relationship challenges ahead. Invest more heart into your connections.','Your love life remains stable without major changes.'],
   sumMoney:['Future finances look stronger — expect income growth or new opportunities.','Watch your spending — financial pressure may be ahead.','Finances remain stable without major fluctuations.'],
   sumClose:['All in all, you\'re in a good period. Seize the opportunities in front of you.','All in all, the challenges ahead are temporary. Stay patient — things will improve.'],
-  sumStk:n=>`⚡ The reading saw ${n} pair removals, indicating significant shifts in your near-term fate. Stay adaptable.`,
+  sumStk:n=>` The reading saw ${n} pair removals, indicating significant shifts in your near-term fate. Stay adaptable.`,
 },
 'ja':{
   ln:'日本語',title:'運命の札',sub:'トランプ占い · 民間伝承',
@@ -304,29 +304,29 @@ const L={
   deal1:'1枚配る',auto:'自動配札',pause:'一時停止',
   paired:'ペア消去された札',result:'占い結果',
   prec:'ペア記録',restart:'もう一度占う',
-  gen:'📷 シェア画像を生成',share:'📤 共有する',
-  hist:'📜 占い履歴',histE:'まだ履歴がありません',
-  longP:'長押しで画像を保存・共有',dl:'💾 ダウンロード',
+  gen:' シェア画像を生成',share:' 共有する',
+  hist:' 占い履歴',histE:'まだ履歴がありません',
+  longP:'長押しで画像を保存・共有',dl:' ダウンロード',
   scanQR:'QRコードをスキャンして占う',
   lv:['大吉','吉','平','凶'],rl:['最良','良','普通','弱'],
   rmTxt:'この位置の全ての札が運命に回収されました。この面は変動が大きく、まだ定まっていません。心を開いて見守りましょう。',
-  sumT:'✦ 占い師の総括 ✦',sumOv:'総合運勢：',
+  sumT:' 占い師の総括 ',sumOv:'総合運勢：',
   sn:{1:'総合運',2:'未来の恋愛',3:'健康',4:'過去の恋愛',5:'自分',6:'対人運',7:'過去の金運',8:'仕事運',9:'未来の金運',10:'運命'},
   snS:{1:'総合',2:'恋愛',3:'健康',4:'恋愛',5:'自分',6:'対人',7:'金運',8:'仕事',9:'金運',10:'運命'},
   suit:{'♠':'スペード','♥':'ハート','♦':'ダイヤ','♣':'クラブ'},
   logP:(c,s)=>`自分札：${c} → ${s}番`,logF:(c,s)=>`運命札：${c} → ${s}番`,
   logD:(c,s,n)=>`配札：${c} → ${s}番（${n}）`,
   logM:(i,c1,s,c2)=>`ペア！${i}番 ${c1} ＝ ${s}番 ${c2}`,
-  logPR:'⚡ 自分札が消去、5番が配札順に追加',logFR:'⚡ 運命札が消去、10番が配札順に追加',
+  logPR:' 自分札が消去、5番が配札順に追加',logFR:' 運命札が消去、10番が配札順に追加',
   logFill:(c,s)=>`補充：${c} → ${s}番`,
   logEnd:'── 自分札と運命札がペア消去、占い終了 ──',logDeck:'── 山札が尽きました ──',
-  dsL:'配札順：',dsP:'⚡自分札消去',dsF:'⚡運命札消去',
+  dsL:'配札順：',dsP:'自分札消去',dsF:'運命札消去',
   stk:(n,rm,cur)=>{let t=`この位置は${rm.length}回更迭しました——`;if(rm.length===1){t+=`最初の${rm[0]}は運命に持ち去られ、元の方向が変わったことを示しています。`;if(cur)t+=`現在の${cur}が代わりに入り、新たな局面が形成されています。`}else{t+=`複数回の更迭は、この面が激しく変化中であることを示します。`;if(cur)t+=`最終的に${cur}に落ち着きました。`}return t},
   sumOpen:['全体的に、最近の運勢は非常に良好です。多方面でポジティブなエネルギーが前進を後押ししています。','全体的に、最近の運勢はまずまずです。小さな課題はありますが、大きな方向性は良好です。','最近の運勢はやや平穏で、大きな波はありませんが、注意が必要な点もあります。','最近の運勢にはいくつかの課題があり、複数の面で特別な注意と調整が必要です。'],
   sumLove:['未来の恋愛は過去より良くなりそうです。良い方向に向かっています。','恋愛面で試練がある可能性があります。心を込めて関係を育てましょう。','恋愛は安定しており、大きな変化はなさそうです。'],
   sumMoney:['今後の金運は改善の兆しがあり、収入増や新しいチャンスが期待できます。','支出に注意が必要です。近い将来、財務面で圧力があるかもしれません。','財務状況は安定しており、大きな変動はなさそうです。'],
   sumClose:['総じて、良い時期にあります。目の前のチャンスをしっかり掴みましょう。','総じて、課題は一時的なものです。忍耐を持てば、状況は徐々に好転します。'],
-  sumStk:n=>`⚡ 今回の占いで${n}回のペア消去がありました。近い将来の運命の変動が大きいことを示しています。臨機応変に対応しましょう。`,
+  sumStk:n=>` 今回の占いで${n}回のペア消去がありました。近い将来の運命の変動が大きいことを示しています。臨機応変に対応しましょう。`,
 }};
 
 // ===== MULTILINGUAL INTERPRETATIONS =====
@@ -532,7 +532,7 @@ function rBoard(id){
     let ex=i===5?'person':i===10?'fate':'';
     let h=`<span class="lb">${T.sn[i]}</span>`;
     if(top)h+=ch(top,ex+' da');
-    else if(rc>0)h+='<div class="cd out" style="border:1.5px dashed var(--border)"><span class="rk" style="font-size:.7rem;color:var(--border)">✕</span></div>';
+    else if(rc>0)h+='<div class="cd out" style="border:1.5px dashed var(--border)"><span class="rk" style="font-size:.7rem;color:var(--border)"></span></div>';
     else h+='<div class="ph"></div>';
     h+=`<span class="nm">${i}</span>`;
     const ts=d.cards.length+rc;if(ts>1)h+=`<span class="stk">${ts}</span>`;
@@ -599,17 +599,17 @@ function showR(){
       if(interp){
         h+=`<div class="re">${interp.e}</div>`;
         h+=`<div class="rt">${interp.d}</div>`;
-        h+=`<div class="ra">💡 ${interp.a}</div>`;
+        h+=`<div class="ra"> ${interp.a}</div>`;
       }
       if(stkTxt)h+=`<div class="rt" style="margin-top:6px;color:var(--accD);font-size:.72rem">⟡ ${stkTxt}</div>`;
       h+=`<div class="rsu">${sn(top.suit)} ${T.snS[s]||''} #${si+1} (${T.rl[si]})</div></div>`;
     }else{
-      h+='<div class="cd out" style="border:1.5px dashed var(--border)"><span class="rk" style="color:var(--border)">✕</span></div>';
+      h+='<div class="cd out" style="border:1.5px dashed var(--border)"><span class="rk" style="color:var(--border)"></span></div>';
       h+=`<div class="nf"><div class="rt" style="color:var(--txtL)">${T.rmTxt}</div></div>`;
     }
     h+='</div>';
     const rmC=bd[s].rm,allC=bd[s].cards.filter(Boolean);
-    if(rmC.length>0){h+=`<div class="rst">📚 ${[...rmC,...allC].map((c,idx)=>`<span style="color:${cc(c.suit)==='red'?'var(--red)':'var(--blk)'};${idx<rmC.length?'text-decoration:line-through;opacity:.5':''}">${c.suit}${c.rank}</span>`).join(' → ')}</div>`}
+    if(rmC.length>0){h+=`<div class="rst"> ${[...rmC,...allC].map((c,idx)=>`<span style="color:${cc(c.suit)==='red'?'var(--red)':'var(--blk)'};${idx<rmC.length?'text-decoration:line-through;opacity:.5':''}">${c.suit}${c.rank}</span>`).join(' → ')}</div>`}
     h+='</div>';res.innerHTML+=h;
   });
 }
@@ -623,15 +623,15 @@ function genSummary(){
   const avg=tn?tt/tn:1.5;
   const oi=avg>=2.5?0:avg>=1.8?1:avg>=1?2:3;
   let scH='<div class="sms">';
-  Object.entries(scores).forEach(([n,s])=>{const a=s.n?s.t/s.n:0;const si=a>=2.5?0:a>=1.8?1:a>=1?2:3;scH+=`<div class="sci"><div class="scc">${n}</div><div class="scv s${si}">${['★★★','★★☆','★☆☆','☆☆☆'][si]}</div></div>`});
+  Object.entries(scores).forEach(([n,s])=>{const a=s.n?s.t/s.n:0;const si=a>=2.5?0:a>=1.8?1:a>=1?2:3;scH+=`<div class="sci"><div class="scc">${n}</div><div class="scv s${si}">${['','','',''][si]}</div></div>`});
   scH+='</div>';
   let sm=T.sumOpen[oi];
   const l4=gTop(4),l2=gTop(2);
-  if(l4&&l2){const l4s=(SRANK.love).indexOf(l4.suit),l2s=(SRANK.love).indexOf(l2.suit);sm+='\n\n💕 '+(l2s<l4s?T.sumLove[0]:l2s>l4s?T.sumLove[1]:T.sumLove[2])}
+  if(l4&&l2){const l4s=(SRANK.love).indexOf(l4.suit),l2s=(SRANK.love).indexOf(l2.suit);sm+='\n\n '+(l2s<l4s?T.sumLove[0]:l2s>l4s?T.sumLove[1]:T.sumLove[2])}
   const m7=gTop(7),m9=gTop(9);
-  if(m7&&m9){const m7s=(SRANK.wealth).indexOf(m7.suit),m9s=(SRANK.wealth).indexOf(m9.suit);sm+='\n\n💰 '+(m9s<m7s?T.sumMoney[0]:m9s>m7s?T.sumMoney[1]:T.sumMoney[2])}
-  const car=gTop(8);if(car){const ci=getInterp(car,8);if(ci)sm+='\n\n💼 '+ci.e+'。'}
-  const hea=gTop(3);if(hea){const hi=getInterp(hea,3);if(hi)sm+='\n\n🏥 '+hi.e+'。'}
+  if(m7&&m9){const m7s=(SRANK.wealth).indexOf(m7.suit),m9s=(SRANK.wealth).indexOf(m9.suit);sm+='\n\n '+(m9s<m7s?T.sumMoney[0]:m9s>m7s?T.sumMoney[1]:T.sumMoney[2])}
+  const car=gTop(8);if(car){const ci=getInterp(car,8);if(ci)sm+='\n\n '+ci.e+'。'}
+  const hea=gTop(3);if(hea){const hi=getInterp(hea,3);if(hi)sm+='\n\n '+hi.e+'。'}
   sm+='\n\n'+(avg>=2?T.sumClose[0]:T.sumClose[1]);
   let ts=0;for(let i=1;i<=10;i++)ts+=bd[i].rm.length;
   if(ts>=5)sm+='\n\n'+T.sumStk(ts);
@@ -686,7 +686,7 @@ function genShare(){
     roundRect(ctx,46,y-12,bw,18,3);ctx.fill();
     ctx.fillStyle='#fff';ctx.font='bold 11px "Noto Serif TC","Noto Serif JP",serif';ctx.textAlign='left';ctx.fillText(lv,52,y);
     ctx.fillStyle='#2c2820';ctx.font='bold 14px "Noto Serif TC","Noto Serif JP",serif';ctx.fillText(`${T.sn[s]}　${sn(top.suit)}${top.rank}`,50+bw+6,y);y+=18;
-    if(interp){ctx.fillStyle='#2c2820';ctx.font='13px "Noto Serif TC","Noto Serif JP",serif';wrapText(ctx,interp.e,50,W-100).forEach(l=>{ctx.fillText(l,50,y);y+=18});ctx.fillStyle='#a07850';ctx.font='11px "Noto Serif TC","Noto Serif JP",serif';ctx.fillText('💡 '+interp.a,50,y);y+=16}
+    if(interp){ctx.fillStyle='#2c2820';ctx.font='13px "Noto Serif TC","Noto Serif JP",serif';wrapText(ctx,interp.e,50,W-100).forEach(l=>{ctx.fillText(l,50,y);y+=18});ctx.fillStyle='#a07850';ctx.font='11px "Noto Serif TC","Noto Serif JP",serif';ctx.fillText(' '+interp.a,50,y);y+=16}
     y+=8;
   });
   ctx.fillStyle='#d8d0c4';ctx.font='11px "Noto Serif TC","Noto Serif JP",serif';ctx.textAlign='center';ctx.fillText(T.title+' · '+T.sub,W/2,H-20);
@@ -696,7 +696,7 @@ function genShare(){
 function dlShare(){const c=document.getElementById('shareCanvas');const a=document.createElement('a');a.download=T.title+'.png';a.href=c.toDataURL('image/png');a.click()}
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath()}
 function wrapText(ctx,text,x,maxW){const lines=[];let line='';for(let i=0;i<text.length;i++){const test=line+text[i];if(ctx.measureText(test).width>maxW&&line){lines.push(line);line=text[i]}else line=test}if(line)lines.push(line);return lines}
-function webShare(){genShare();setTimeout(async()=>{try{const c=document.getElementById('shareCanvas');const blob=await new Promise(r=>c.toBlob(r,'image/png'));const f=new File([blob],T.title+'.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({title:T.title,text:T.title+' 🃏',files:[f]});else alert('Browser does not support file sharing.')}catch(e){}},500)}
+function webShare(){genShare();setTimeout(async()=>{try{const c=document.getElementById('shareCanvas');const blob=await new Promise(r=>c.toBlob(r,'image/png'));const f=new File([blob],T.title+'.png',{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[f]}))await navigator.share({title:T.title,text:T.title+' ',files:[f]});else alert('Browser does not support file sharing.')}catch(e){}},500)}
 
 function restart(){
   dn=false;sA();personRemoved=false;fateRemoved=false;

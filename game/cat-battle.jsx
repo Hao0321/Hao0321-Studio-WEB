@@ -122,7 +122,7 @@ function Title({onStart}){
       {[...Array(15)].map((_,i)=>(
         <div key={i} style={{position:"absolute",left:`${2+Math.random()*96}%`,top:-15,
           fontSize:10+Math.random()*10,opacity:0,pointerEvents:"none",
-          animation:`petal ${5+Math.random()*7}s linear infinite`,animationDelay:`${Math.random()*7}s`}}>🌸</div>
+          animation:`petal ${5+Math.random()*7}s linear infinite`,animationDelay:`${Math.random()*7}s`}}></div>
       ))}
       <div style={{textAlign:"center",zIndex:2,opacity:show?1:0,transform:show?"none":"translateY(16px)",
         transition:"all .8s cubic-bezier(.16,1,.3,1)"}}>
@@ -163,7 +163,7 @@ function CatSVG({sz=16,c="#fff"}){
 
 // ════════ SELECT ════════
 function SelectScreen({stages,save,onPick,onUpgrade,onBack}){
-  const icons=["🌸","🎋","🍁","⛩️","❄️","🌋","💀","🐉"];
+  const icons=["","","","","","","",""];
   return(
     <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",
       background:"linear-gradient(180deg,#FDFBF7,#FFF8E1)",userSelect:"none",overflow:"auto"}}>
@@ -171,21 +171,21 @@ function SelectScreen({stages,save,onPick,onUpgrade,onBack}){
         borderBottom:"1px solid #EDE7DD",flexShrink:0}}>
         <button onClick={onBack} style={{background:"#FFF",border:"1.5px solid #E0D5C5",borderRadius:10,
           color:"#8D6E63",padding:"4px 10px",fontSize:11,fontWeight:700}}>←</button>
-        <span style={{color:"#4E342E",fontSize:15,fontWeight:900,letterSpacing:2,flex:1}}>🗺️ ステージ</span>
+        <span style={{color:"#4E342E",fontSize:15,fontWeight:900,letterSpacing:2,flex:1}}> ステージ</span>
         <div style={{display:"flex",alignItems:"center",gap:4,background:"#FFF8E1",padding:"3px 10px",
           borderRadius:8,border:"1px solid #FFE0B240"}}>
-          <span style={{fontSize:10}}>🪙</span>
+          <span style={{fontSize:10}}></span>
           <span style={{fontSize:12,fontWeight:900,color:"#E65100"}}>{save.coins}</span>
         </div>
         <button onClick={onUpgrade} style={{
           background:"linear-gradient(135deg,#FFB74D,#FF9800)",border:"none",borderRadius:10,
           color:"#fff",padding:"4px 12px",fontSize:11,fontWeight:900,
-          boxShadow:"0 2px 8px rgba(255,152,0,.25)"}}>⬆ 強化</button>
+          boxShadow:"0 2px 8px rgba(255,152,0,.25)"}}> 強化</button>
       </div>
       <div style={{flex:1,padding:"6px 12px",display:"flex",flexDirection:"column",gap:6}}>
         {stages.map((s,i)=>{
           const ok=i===0||save.cleared.includes(i-1),done=save.cleared.includes(i);
-          const stars=done?s.diff<=2?"⭐⭐⭐":s.diff<=3?"⭐⭐":"⭐":"";
+          const stars=done?s.diff<=2?"":s.diff<=3?"":"":"";
           return(
             <button key={i} onClick={()=>ok&&onPick(i)} style={{
               padding:"10px 14px",borderRadius:12,textAlign:"left",
@@ -197,7 +197,7 @@ function SelectScreen({stages,save,onPick,onUpgrade,onBack}){
               <div style={{width:36,height:36,borderRadius:9,display:"flex",alignItems:"center",justifyContent:"center",
                 fontSize:16,background:`linear-gradient(135deg,${s.sky1},${s.sky2})`,
                 boxShadow:"0 2px 6px rgba(0,0,0,.08)",flexShrink:0}}>
-                {done?"⭐":ok?icons[i]:"🔒"}
+                {done?"":ok?icons[i]:""}
               </div>
               <div style={{flex:1,minWidth:0}}>
                 <div style={{color:"#3E2723",fontSize:13,fontWeight:900,display:"flex",alignItems:"center",gap:4}}>
@@ -206,7 +206,7 @@ function SelectScreen({stages,save,onPick,onUpgrade,onBack}){
                   {s.diff>=4&&<span style={{fontSize:8,background:"#F3E5F5",color:"#7B1FA2",padding:"1px 5px",borderRadius:4,fontWeight:700}}>地獄</span>}
                 </div>
                 <div style={{color:"#BCAAA4",fontSize:9,fontWeight:500,marginTop:1}}>
-                  {s.sub} · {s.enemies.length}波 · 🪙{s.reward} {stars}
+                  {s.sub} · {s.enemies.length}波 · {s.reward} {stars}
                 </div>
               </div>
               {ok&&<div style={{color:"#FF7043",fontSize:14,fontWeight:900,flexShrink:0}}>▶</div>}
@@ -251,21 +251,21 @@ function UpgradeScreen({save,setSave,onBack}){
         borderBottom:"1px solid #EDE7DD",flexShrink:0}}>
         <button onClick={onBack} style={{background:"#FFF",border:"1.5px solid #E0D5C5",borderRadius:10,
           color:"#8D6E63",padding:"4px 10px",fontSize:11,fontWeight:700}}>← 戻る</button>
-        <span style={{color:"#4E342E",fontSize:15,fontWeight:900,letterSpacing:2,flex:1}}>⬆ 強化工房</span>
+        <span style={{color:"#4E342E",fontSize:15,fontWeight:900,letterSpacing:2,flex:1}}> 強化工房</span>
         <div style={{display:"flex",alignItems:"center",gap:4,background:"#FFF8E1",padding:"3px 10px",
           borderRadius:8,border:"1px solid #FFE0B240"}}>
-          <span style={{fontSize:10}}>🪙</span>
+          <span style={{fontSize:10}}></span>
           <span style={{fontSize:12,fontWeight:900,color:"#E65100"}}>{save.coins}</span>
         </div>
       </div>
 
       <div style={{flex:1,padding:"8px 12px",display:"flex",flexDirection:"column",gap:6,overflow:"auto"}}>
         {/* Base upgrades */}
-        <div style={{fontSize:11,fontWeight:900,color:"#8D6E63",letterSpacing:2,marginTop:4}}>🏯 基地強化</div>
+        <div style={{fontSize:11,fontWeight:900,color:"#8D6E63",letterSpacing:2,marginTop:4}}> 基地強化</div>
         {[
-          {name:"錢包容量",desc:`金幣生產速度 +${save.walletLvl*15}%`,lv:save.walletLvl,max:8,fn:upgradeWallet,cost:statUpgradeCost(save.walletLvl),icon:"💰",clr:"#FFB74D"},
-          {name:"貓咪大砲",desc:`大砲傷害 ${50+save.cannonLvl*30}`,lv:save.cannonLvl,max:8,fn:upgradeCannon,cost:statUpgradeCost(save.cannonLvl),icon:"💥",clr:"#EF5350"},
-          {name:"城堡耐久",desc:`基地HP ${1400+save.baseHpLvl*200}`,lv:save.baseHpLvl,max:8,fn:upgradeBase,cost:statUpgradeCost(save.baseHpLvl),icon:"🏰",clr:"#66BB6A"},
+          {name:"錢包容量",desc:`金幣生產速度 +${save.walletLvl*15}%`,lv:save.walletLvl,max:8,fn:upgradeWallet,cost:statUpgradeCost(save.walletLvl),icon:"",clr:"#FFB74D"},
+          {name:"貓咪大砲",desc:`大砲傷害 ${50+save.cannonLvl*30}`,lv:save.cannonLvl,max:8,fn:upgradeCannon,cost:statUpgradeCost(save.cannonLvl),icon:"",clr:"#EF5350"},
+          {name:"城堡耐久",desc:`基地HP ${1400+save.baseHpLvl*200}`,lv:save.baseHpLvl,max:8,fn:upgradeBase,cost:statUpgradeCost(save.baseHpLvl),icon:"",clr:"#66BB6A"},
         ].map((u,i)=>(
           <div key={i} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 12px",
             background:"#FFF",borderRadius:12,border:"1px solid #EDE7DD"}}>
@@ -288,13 +288,13 @@ function UpgradeScreen({save,setSave,onBack}){
                 background:save.coins>=u.cost&&u.lv<u.max?"linear-gradient(135deg,#FFB74D,#FF9800)":"#E0E0E0",
                 color:save.coins>=u.cost&&u.lv<u.max?"#fff":"#999",
                 opacity:u.lv>=u.max?.4:1}}>
-              {u.lv>=u.max?"MAX":`🪙${u.cost}`}
+              {u.lv>=u.max?"MAX":`${u.cost}`}
             </button>
           </div>
         ))}
 
         {/* Cat upgrades */}
-        <div style={{fontSize:11,fontWeight:900,color:"#8D6E63",letterSpacing:2,marginTop:8}}>🐱 貓咪強化</div>
+        <div style={{fontSize:11,fontWeight:900,color:"#8D6E63",letterSpacing:2,marginTop:8}}> 貓咪強化</div>
         {BASE_CATS.map((c,i)=>{
           const lv=save.catLvl[i],cost=catUpgradeCost(lv),maxed=lv>=10;
           const hpN=Math.floor(c.hp*(1+(lv-1)*.15));
@@ -322,7 +322,7 @@ function UpgradeScreen({save,setSave,onBack}){
                 style={{padding:"3px 8px",borderRadius:7,border:"none",fontSize:9,fontWeight:900,
                   background:save.coins>=cost&&!maxed?`linear-gradient(135deg,${c.clr},${c.clr2})`:"#E0E0E0",
                   color:save.coins>=cost&&!maxed?"#fff":"#999",opacity:maxed?.4:1}}>
-                {maxed?"MAX":`🪙${cost}`}
+                {maxed?"MAX":`${cost}`}
               </button>
             </div>
           );
@@ -339,13 +339,13 @@ function ResultScreen({won,name,reward,onRetry,onMenu}){
     <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
       background:won?"linear-gradient(180deg,#FFF8E1,#FFFDE7,#F9FBE7)":"linear-gradient(180deg,#FBE9E7,#FFEBEE,#FCE4EC)",
       userSelect:"none"}}>
-      <div style={{fontSize:52,marginBottom:8,animation:"popScale .5s cubic-bezier(.16,1,.3,1)"}}>{won?"🏆":"😿"}</div>
+      <div style={{fontSize:52,marginBottom:8,animation:"popScale .5s cubic-bezier(.16,1,.3,1)"}}>{won?"":""}</div>
       <h1 style={{fontSize:"clamp(22px,6vw,36px)",fontWeight:900,color:won?"#E65100":"#C62828",marginBottom:4}}>
         {won?"勝利！":"敗北..."}</h1>
       <p style={{color:"#BCAAA4",fontSize:11,marginBottom:8}}>{name}</p>
       <div style={{display:"flex",alignItems:"center",gap:4,padding:"6px 16px",background:"rgba(255,248,225,.8)",
         borderRadius:10,border:"1px solid #FFE0B240",marginBottom:24}}>
-        <span style={{fontSize:14}}>🪙</span>
+        <span style={{fontSize:14}}></span>
         <span style={{fontSize:16,fontWeight:900,color:"#E65100"}}>+{reward}</span>
       </div>
       <div style={{display:"flex",gap:8}}>
@@ -703,10 +703,10 @@ function GameScreen({stage,save,onEnd,onBack}){
       <div style={{padding:"3px 8px",display:"flex",alignItems:"center",gap:4,
         background:"rgba(255,253,245,.95)",backdropFilter:"blur(6px)",
         borderBottom:"1px solid #EDE7DD",flexShrink:0,minHeight:32}}>
-        <button onClick={onBack} style={{background:"none",border:"none",color:"#BCAAA4",fontSize:13,padding:"0 3px",fontWeight:700}}>✕</button>
+        <button onClick={onBack} style={{background:"none",border:"none",color:"#BCAAA4",fontSize:13,padding:"0 3px",fontWeight:700}}></button>
 
         <div style={{flex:1,display:"flex",alignItems:"center",gap:4}}>
-          <span style={{fontSize:7,fontWeight:900,color:"#43A047",whiteSpace:"nowrap"}}>🏯我方</span>
+          <span style={{fontSize:7,fontWeight:900,color:"#43A047",whiteSpace:"nowrap"}}>我方</span>
           <div style={{flex:1,height:5,background:"#EFEBE9",borderRadius:3,overflow:"hidden",maxWidth:100}}>
             <div style={{height:"100%",borderRadius:3,transition:"width .3s",width:`${ppct}%`,
               background:ppct>50?"linear-gradient(90deg,#81C784,#43A047)":ppct>20?"linear-gradient(90deg,#FFB74D,#F57C00)":"linear-gradient(90deg,#EF5350,#D32F2F)"}}/>
@@ -716,8 +716,8 @@ function GameScreen({stage,save,onEnd,onBack}){
 
         <div style={{display:"flex",alignItems:"center",gap:6,padding:"1px 6px",
           background:"rgba(255,248,225,.8)",borderRadius:6,border:"1px solid #FFE0B230"}}>
-          <span style={{fontSize:7,color:"#BCAAA4",fontWeight:700}}>⚔{wave}</span>
-          <span style={{fontSize:12,fontWeight:900,color:"#E65100",lineHeight:1}}>💰{money}</span>
+          <span style={{fontSize:7,color:"#BCAAA4",fontWeight:700}}>{wave}</span>
+          <span style={{fontSize:12,fontWeight:900,color:"#E65100",lineHeight:1}}>{money}</span>
           {combo>0&&<span style={{fontSize:9,fontWeight:900,color:"#FF6D00",
             animation:"popScale .3s ease"}}>×{combo}</span>}
         </div>
@@ -728,7 +728,7 @@ function GameScreen({stage,save,onEnd,onBack}){
             <div style={{height:"100%",borderRadius:3,transition:"width .3s",width:`${epct}%`,
               background:"linear-gradient(90deg,#EF5350,#B71C1C)",float:"right"}}/>
           </div>
-          <span style={{fontSize:7,fontWeight:900,color:"#D32F2F",whiteSpace:"nowrap"}}>敵方👹</span>
+          <span style={{fontSize:7,fontWeight:900,color:"#D32F2F",whiteSpace:"nowrap"}}>敵方</span>
         </div>
 
         {/* Speed button */}
@@ -742,7 +742,7 @@ function GameScreen({stage,save,onEnd,onBack}){
         <button onClick={()=>setPaused(p=>!p)} style={{
           background:paused?"#FF7043":"rgba(255,255,255,.8)",border:paused?"none":"1.5px solid #E0D5C5",
           borderRadius:6,color:paused?"#FFF":"#8D6E63",padding:"1px 6px",fontSize:9,fontWeight:900}}>
-          {paused?"▶":"⏸"}
+          {paused?"▶":""}
         </button>
       </div>
 
@@ -753,10 +753,10 @@ function GameScreen({stage,save,onEnd,onBack}){
         <canvas ref={cvs} style={{width:"100%",height:"100%",display:"block",touchAction:"none"}}/>
         {paused&&<div style={{position:"absolute",inset:0,background:"rgba(255,253,245,.8)",backdropFilter:"blur(3px)",
           display:"flex",alignItems:"center",justifyContent:"center",
-          fontSize:16,color:"#5D4037",fontWeight:900,letterSpacing:6}}>⏸ 一時停止</div>}
+          fontSize:16,color:"#5D4037",fontWeight:900,letterSpacing:6}}> 一時停止</div>}
         {over&&<div style={{position:"absolute",inset:0,background:"rgba(255,253,245,.6)",backdropFilter:"blur(2px)",
           display:"flex",alignItems:"center",justifyContent:"center"}}>
-          <div style={{fontSize:30,animation:"floatBob .5s ease-in-out infinite"}}>{ehp<=0?"🎉":"😿"}</div>
+          <div style={{fontSize:30,animation:"floatBob .5s ease-in-out infinite"}}>{ehp<=0?"":""}</div>
         </div>}
       </div>
 
@@ -778,7 +778,7 @@ function GameScreen({stage,save,onEnd,onBack}){
           {cannonReady<100&&<div style={{position:"absolute",bottom:0,left:0,right:0,
             height:`${cannonReady}%`,background:"linear-gradient(0deg,#FFE0B2,#FFCC80)",
             transition:"height .3s",borderRadius:"0 0 12px 12px"}}/>}
-          <span style={{fontSize:18,position:"relative",zIndex:1}}>💥</span>
+          <span style={{fontSize:18,position:"relative",zIndex:1}}></span>
           <span style={{fontSize:7,fontWeight:900,position:"relative",zIndex:1}}>
             {cannonReady>=100?"発射!":` ${cannonReady}%`}
           </span>

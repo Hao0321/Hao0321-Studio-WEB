@@ -1238,7 +1238,7 @@ function FlightGame({ onBack }) {
           // Highlight start positions for each player
           const startPlayer = Array.from({length:players}, (_,pi) => pi).find(pi => getActualPos(0, pi) === i);
           const isStart = startPlayer !== undefined;
-          return <div key={i} style={{ position:'absolute', left:x-12, top:y-12, width:24, height:24, borderRadius:'50%', background: isStart ? pColors[startPlayer] + '33' : COLORS.bgCard, border: isStart ? `2px solid ${pColors[startPlayer]}` : `1px solid ${COLORS.border}`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:8, color: isStart ? pColors[startPlayer] : COLORS.textMuted }}>{isStart ? '★' : i}</div>;
+          return <div key={i} style={{ position:'absolute', left:x-12, top:y-12, width:24, height:24, borderRadius:'50%', background: isStart ? pColors[startPlayer] + '33' : COLORS.bgCard, border: isStart ? `2px solid ${pColors[startPlayer]}` : `1px solid ${COLORS.border}`, display:'flex', alignItems:'center', justifyContent:'center', fontSize:8, color: isStart ? pColors[startPlayer] : COLORS.textMuted }}>{isStart ? '' : i}</div>;
         })}
         {/* Home */}
         <div style={{ position:'absolute', left:155, top:155, width:50, height:50, borderRadius:'50%', background:COLORS.gold, opacity:0.2 }}/>
@@ -1649,9 +1649,9 @@ function MahjongTile({ tile, onClick, selected, small, faceDown, drawn }) {
     }
     // Flower tiles
     if (t.suit === '花') {
-      const flowers = {'春':'🌸','夏':'☀','秋':'🍂','冬':'❄','梅':'🌺','蘭':'🌿','竹':'🎋','菊':'🌼'};
+      const flowers = {'春':'','夏':'','秋':'','冬':'','梅':'','蘭':'','竹':'','菊':''};
       return (<>
-        <span style={{ fontSize: s?12:16 }}>{flowers[t.display]||'🌸'}</span>
+        <span style={{ fontSize: s?12:16 }}>{flowers[t.display]||''}</span>
         <span style={{ fontSize: s?8:10, color:col, fontFamily:font, marginTop:1 }}>{t.display}</span>
       </>);
     }
@@ -1682,7 +1682,7 @@ function MahjongTile({ tile, onClick, selected, small, faceDown, drawn }) {
     // 條 (Bamboo): number + bamboo lines
     if (t.suit === '條') {
       if (t.num === 1) {
-        return <span style={{ fontSize: s?16:24, lineHeight:1 }}>🐦</span>;
+        return <span style={{ fontSize: s?16:24, lineHeight:1 }}></span>;
       }
       const bars = Math.min(t.num, 9);
       const bh2 = s ? 2 : 3;

@@ -1,55 +1,55 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ═══════════════════════════════════════════
-// 🎮 HAO SURVIVOR v2 — 全面重製版
+//  HAO SURVIVOR v2 — 全面重製版
 // ═══════════════════════════════════════════
 
 const PLAYER_R = 18;
 const XP_PER_LEVEL = [0,5,8,12,16,20,25,30,36,42,50,58,68,78,90,104,120,138,158,180,205,232,262,295,330,370,415,465,520,580,999];
 
 const CHARACTERS = [
-  { id:"knight", name:"劍士・騎", desc:"近戰爆發型", emoji:"⚔️", color:"#ff6b6b", hp:120, atk:18, speed:3.5, atkRange:70, atkSpeed:400, weapon:"劍氣斬" },
-  { id:"mage", name:"法師・幻", desc:"遠程魔法AOE", emoji:"🔮", color:"#a78bfa", hp:85, atk:14, speed:3.2, atkRange:170, atkSpeed:600, weapon:"魔法彈" },
-  { id:"archer", name:"弓手・疾", desc:"極速連射", emoji:"🏹", color:"#34d399", hp:95, atk:11, speed:4.2, atkRange:200, atkSpeed:280, weapon:"連射箭" },
-  { id:"tank", name:"守衛・盾", desc:"肉盾坦克", emoji:"🛡️", color:"#60a5fa", hp:200, atk:10, speed:2.5, atkRange:55, atkSpeed:500, weapon:"盾擊" },
+  { id:"knight", name:"劍士・騎", desc:"近戰爆發型", emoji:"", color:"#ff6b6b", hp:120, atk:18, speed:3.5, atkRange:70, atkSpeed:400, weapon:"劍氣斬" },
+  { id:"mage", name:"法師・幻", desc:"遠程魔法AOE", emoji:"", color:"#a78bfa", hp:85, atk:14, speed:3.2, atkRange:170, atkSpeed:600, weapon:"魔法彈" },
+  { id:"archer", name:"弓手・疾", desc:"極速連射", emoji:"", color:"#34d399", hp:95, atk:11, speed:4.2, atkRange:200, atkSpeed:280, weapon:"連射箭" },
+  { id:"tank", name:"守衛・盾", desc:"肉盾坦克", emoji:"", color:"#60a5fa", hp:200, atk:10, speed:2.5, atkRange:55, atkSpeed:500, weapon:"盾擊" },
 ];
 
 const ALL_SKILLS = [
-  { id:"atk_up", name:"攻擊強化", desc:"攻擊力 +25%", icon:"⚔️", apply:(p)=>{p.atk*=1.25;} },
-  { id:"hp_up", name:"生命強化", desc:"最大HP +40", icon:"❤️", apply:(p)=>{p.maxHp+=40;p.hp+=40;} },
-  { id:"speed_up", name:"疾風步", desc:"移速 +20%", icon:"💨", apply:(p)=>{p.speed*=1.2;} },
-  { id:"atk_speed", name:"急速攻擊", desc:"攻速 +25%", icon:"⚡", apply:(p)=>{p.atkSpeed*=0.75;} },
-  { id:"range_up", name:"射程延伸", desc:"射程 +30%", icon:"🎯", apply:(p)=>{p.atkRange*=1.3;} },
-  { id:"heal", name:"治癒之光", desc:"回復 40 HP", icon:"💚", apply:(p)=>{p.hp=Math.min(p.hp+40,p.maxHp);} },
-  { id:"crit", name:"致命一擊", desc:"暴擊率 +12%", icon:"💥", apply:(p)=>{p.critRate=(p.critRate||0.05)+0.12;} },
-  { id:"shield", name:"能量護盾", desc:"護盾 +25", icon:"🔰", apply:(p)=>{p.shield=(p.shield||0)+25;} },
-  { id:"lifesteal", name:"嗜血", desc:"吸血 5%（上限8/次）", icon:"🧛", apply:(p)=>{p.lifesteal=Math.min((p.lifesteal||0)+0.05,0.15);} },
-  { id:"multi", name:"多重射擊", desc:"彈幕 +1", icon:"✨", apply:(p)=>{p.multiShot=(p.multiShot||1)+1;} },
-  { id:"explosion", name:"爆裂彈", desc:"子彈爆炸AOE", icon:"💣", apply:(p)=>{p.explosive=true;} },
-  { id:"magnet", name:"經驗磁鐵", desc:"拾取範圍 ×2", icon:"🧲", apply:(p)=>{p.magnetRange=(p.magnetRange||80)*2;} },
-  { id:"swarm", name:"怪物狂潮", desc:"召喚滿版弱怪農經驗！", icon:"🌊", apply:(p)=>{p._triggerSwarm=true;} },
-  { id:"orbital", name:"守護光環", desc:"環繞火球自動傷害", icon:"🔥", apply:(p)=>{p.orbitals=(p.orbitals||0)+1;} },
-  { id:"thorns", name:"荊棘反甲", desc:"被打反彈 30% 傷害", icon:"🌹", apply:(p)=>{p.thorns=(p.thorns||0)+0.3;} },
-  { id:"freeze", name:"冰霜光環", desc:"周圍敵人減速 40%", icon:"❄️", apply:(p)=>{p.freezeAura=(p.freezeAura||0)+40;p.freezeRange=(p.freezeRange||100)+30;} },
-  { id:"dodge", name:"閃避本能", desc:"15% 機率完全閃避", icon:"🌀", apply:(p)=>{p.dodgeRate=(p.dodgeRate||0)+0.15;} },
-  { id:"regen", name:"生命再生", desc:"每秒回復 2 HP", icon:"🍀", apply:(p)=>{p.regen=(p.regen||0)+2;} },
+  { id:"atk_up", name:"攻擊強化", desc:"攻擊力 +25%", icon:"", apply:(p)=>{p.atk*=1.25;} },
+  { id:"hp_up", name:"生命強化", desc:"最大HP +40", icon:"", apply:(p)=>{p.maxHp+=40;p.hp+=40;} },
+  { id:"speed_up", name:"疾風步", desc:"移速 +20%", icon:"", apply:(p)=>{p.speed*=1.2;} },
+  { id:"atk_speed", name:"急速攻擊", desc:"攻速 +25%", icon:"", apply:(p)=>{p.atkSpeed*=0.75;} },
+  { id:"range_up", name:"射程延伸", desc:"射程 +30%", icon:"", apply:(p)=>{p.atkRange*=1.3;} },
+  { id:"heal", name:"治癒之光", desc:"回復 40 HP", icon:"", apply:(p)=>{p.hp=Math.min(p.hp+40,p.maxHp);} },
+  { id:"crit", name:"致命一擊", desc:"暴擊率 +12%", icon:"", apply:(p)=>{p.critRate=(p.critRate||0.05)+0.12;} },
+  { id:"shield", name:"能量護盾", desc:"護盾 +25", icon:"", apply:(p)=>{p.shield=(p.shield||0)+25;} },
+  { id:"lifesteal", name:"嗜血", desc:"吸血 5%（上限8/次）", icon:"", apply:(p)=>{p.lifesteal=Math.min((p.lifesteal||0)+0.05,0.15);} },
+  { id:"multi", name:"多重射擊", desc:"彈幕 +1", icon:"", apply:(p)=>{p.multiShot=(p.multiShot||1)+1;} },
+  { id:"explosion", name:"爆裂彈", desc:"子彈爆炸AOE", icon:"", apply:(p)=>{p.explosive=true;} },
+  { id:"magnet", name:"經驗磁鐵", desc:"拾取範圍 ×2", icon:"", apply:(p)=>{p.magnetRange=(p.magnetRange||80)*2;} },
+  { id:"swarm", name:"怪物狂潮", desc:"召喚滿版弱怪農經驗！", icon:"", apply:(p)=>{p._triggerSwarm=true;} },
+  { id:"orbital", name:"守護光環", desc:"環繞火球自動傷害", icon:"", apply:(p)=>{p.orbitals=(p.orbitals||0)+1;} },
+  { id:"thorns", name:"荊棘反甲", desc:"被打反彈 30% 傷害", icon:"", apply:(p)=>{p.thorns=(p.thorns||0)+0.3;} },
+  { id:"freeze", name:"冰霜光環", desc:"周圍敵人減速 40%", icon:"", apply:(p)=>{p.freezeAura=(p.freezeAura||0)+40;p.freezeRange=(p.freezeRange||100)+30;} },
+  { id:"dodge", name:"閃避本能", desc:"15% 機率完全閃避", icon:"", apply:(p)=>{p.dodgeRate=(p.dodgeRate||0)+0.15;} },
+  { id:"regen", name:"生命再生", desc:"每秒回復 2 HP", icon:"", apply:(p)=>{p.regen=(p.regen||0)+2;} },
 ];
 
 const ENEMY_TYPES = [
-  { name:"史萊姆", emoji:"🟢", hp:12, atk:5, speed:1.2, r:10, xp:1, color:"#4ade80" },
-  { name:"蝙蝠", emoji:"🦇", hp:8, atk:7, speed:3, r:8, xp:1, color:"#c084fc" },
-  { name:"骷髏", emoji:"💀", hp:25, atk:10, speed:1.5, r:12, xp:2, color:"#e2e8f0" },
-  { name:"惡魔", emoji:"👿", hp:40, atk:14, speed:1.8, r:14, xp:3, color:"#f87171" },
-  { name:"暗影", emoji:"👻", hp:30, atk:11, speed:2.5, r:11, xp:2, color:"#818cf8" },
-  { name:"毒蜘蛛", emoji:"🕷️", hp:20, atk:8, speed:2.2, r:9, xp:2, color:"#a3e635", ranged:true, shootCD:2000 },
-  { name:"火焰魔", emoji:"🔥", hp:55, atk:18, speed:1.3, r:13, xp:4, color:"#fb923c" },
-  { name:"冰霜巫", emoji:"🧊", hp:35, atk:12, speed:1.6, r:11, xp:3, color:"#67e8f9", ranged:true, shootCD:1800 },
+  { name:"史萊姆", emoji:"", hp:12, atk:5, speed:1.2, r:10, xp:1, color:"#4ade80" },
+  { name:"蝙蝠", emoji:"", hp:8, atk:7, speed:3, r:8, xp:1, color:"#c084fc" },
+  { name:"骷髏", emoji:"", hp:25, atk:10, speed:1.5, r:12, xp:2, color:"#e2e8f0" },
+  { name:"惡魔", emoji:"", hp:40, atk:14, speed:1.8, r:14, xp:3, color:"#f87171" },
+  { name:"暗影", emoji:"", hp:30, atk:11, speed:2.5, r:11, xp:2, color:"#818cf8" },
+  { name:"毒蜘蛛", emoji:"", hp:20, atk:8, speed:2.2, r:9, xp:2, color:"#a3e635", ranged:true, shootCD:2000 },
+  { name:"火焰魔", emoji:"", hp:55, atk:18, speed:1.3, r:13, xp:4, color:"#fb923c" },
+  { name:"冰霜巫", emoji:"", hp:35, atk:12, speed:1.6, r:11, xp:3, color:"#67e8f9", ranged:true, shootCD:1800 },
 ];
 
 const BOSS_TYPES = [
-  { name:"骨龍", emoji:"🐉", hp:1200, atk:30, speed:1.2, r:36, xp:50, color:"#ef4444" },
-  { name:"暗黑騎士", emoji:"🗡️", hp:2000, atk:40, speed:1.4, r:34, xp:70, color:"#7c3aed" },
-  { name:"魔王", emoji:"👑", hp:3000, atk:50, speed:1, r:42, xp:100, color:"#f59e0b" },
+  { name:"骨龍", emoji:"", hp:1200, atk:30, speed:1.2, r:36, xp:50, color:"#ef4444" },
+  { name:"暗黑騎士", emoji:"", hp:2000, atk:40, speed:1.4, r:34, xp:70, color:"#7c3aed" },
+  { name:"魔王", emoji:"", hp:3000, atk:50, speed:1, r:42, xp:100, color:"#f59e0b" },
 ];
 
 const STAGES = [
@@ -660,7 +660,7 @@ export default function HaoSurvivor() {
       }
       if(e.isBoss){
         ctx.font="bold 13px sans-serif"; ctx.fillStyle="#fbbf24";
-        ctx.fillText(`👑 ${e.name}`,ex,ey-e.r-22);
+        ctx.fillText(` ${e.name}`,ex,ey-e.r-22);
       }
     });
 
@@ -712,7 +712,7 @@ export default function HaoSurvivor() {
         ctx.beginPath(); ctx.arc(oox,ooy,7,0,Math.PI*2);
         ctx.fillStyle="#fb923c"; ctx.fill();
         ctx.font="10px serif"; ctx.textAlign="center"; ctx.textBaseline="middle";
-        ctx.fillText("🔥",oox,ooy);
+        ctx.fillText("",oox,ooy);
         ctx.restore();
       }
     }
@@ -730,7 +730,7 @@ export default function HaoSurvivor() {
       const countdown = Math.max(0, Math.ceil(3 - (g.time - g.finalWaveTime)));
       ctx.save(); ctx.textAlign="center"; ctx.font="bold 24px sans-serif";
       ctx.fillStyle="#ef4444"; ctx.globalAlpha=0.6+Math.sin(g.time*8)*0.3;
-      ctx.fillText(`⚠️ BOSS 即將出現 ${countdown}`,W/2,H/2-60);
+      ctx.fillText(` BOSS 即將出現 ${countdown}`,W/2,H/2-60);
       ctx.restore();
     }
 
@@ -778,12 +778,12 @@ export default function HaoSurvivor() {
     ctx.fillText(`${Math.ceil(p.hp)}/${p.maxHp}`,hpX2+3,hpY2+7);
     if(p.shield>0){
       ctx.fillStyle="#60a5fa"; ctx.font="bold 11px sans-serif";
-      ctx.fillText(`🔰${Math.ceil(p.shield)}`,hpX2+hpW2+6,hpY2+8);
+      ctx.fillText(`${Math.ceil(p.shield)}`,hpX2+hpW2+6,hpY2+8);
     }
 
     ctx.textAlign="right"; ctx.font="bold 13px sans-serif"; ctx.fillStyle="#e2e8f0";
-    ctx.fillText(`🗡️${g.kills}`,W-10,22);
-    ctx.fillText(`🌊${Math.min(g.wave,g.maxWaves)}/${g.maxWaves}${g.bossSpawned&&!g.bossDefeated?" 👑":""}`,W-10,40);
+    ctx.fillText(`${g.kills}`,W-10,22);
+    ctx.fillText(`${Math.min(g.wave,g.maxWaves)}/${g.maxWaves}${g.bossSpawned&&!g.bossDefeated?" ":""}`,W-10,40);
 
     if(g.killCombo>=3){
       ctx.textAlign="center"; ctx.font=`bold ${16+Math.min(g.killCombo,20)}px sans-serif`;
@@ -895,11 +895,11 @@ export default function HaoSurvivor() {
     return (
       <div style={S.root}><style>{KF}</style>
         <div style={S.center}>
-          <div style={{fontSize:80,animation:"float 2s ease-in-out infinite",filter:"drop-shadow(0 0 40px #fbbf2466)"}}>⚔️</div>
+          <div style={{fontSize:80,animation:"float 2s ease-in-out infinite",filter:"drop-shadow(0 0 40px #fbbf2466)"}}></div>
           <h1 style={S.title}>HAO SURVIVOR</h1>
           <p style={{fontSize:14,color:"#64748b",letterSpacing:6,margin:0}}>卡通RPG生存射擊</p>
           <button style={S.btnGold} onClick={()=>setScreen("select")}>開始遊戲</button>
-          <p style={{fontSize:12,color:"#475569",margin:0}}>🕹️ WASD / 觸控搖桿 移動 · 自動攻擊</p>
+          <p style={{fontSize:12,color:"#475569",margin:0}}> WASD / 觸控搖桿 移動 · 自動攻擊</p>
         </div>
       </div>
     );
@@ -922,7 +922,7 @@ export default function HaoSurvivor() {
                 <div style={{fontSize:14,fontWeight:800,color:c.color,marginTop:4}}>{c.name}</div>
                 <div style={{fontSize:11,color:"#64748b",margin:"3px 0 6px"}}>{c.desc}</div>
                 <div style={{display:"flex",justifyContent:"center",gap:6,fontSize:11,color:"#94a3b8"}}>
-                  <span>❤️{c.hp}</span><span>⚔️{c.atk}</span><span>💨{c.speed}</span>
+                  <span>{c.hp}</span><span>{c.atk}</span><span>{c.speed}</span>
                 </div>
               </div>
             ))}
@@ -935,14 +935,14 @@ export default function HaoSurvivor() {
                   borderColor:selectedStage===i?"#fbbf24":"#1e293b",
                   opacity:i<stagesUnlocked?1:0.35,
                 }}>
-                <div style={{fontSize:13,fontWeight:700}}>{i<stagesUnlocked?`第${s.id}章`:"🔒"} {s.name}</div>
+                <div style={{fontSize:13,fontWeight:700}}>{i<stagesUnlocked?`第${s.id}章`:""} {s.name}</div>
                 <div style={{fontSize:11,color:"#64748b"}}>{s.waves}波+BOSS</div>
               </div>
             ))}
           </div>
           <div style={{display:"flex",gap:12,marginTop:20,justifyContent:"center"}}>
             <button style={S.btnGhost} onClick={()=>setScreen("title")}>← 返回</button>
-            <button style={{...S.btnGold,opacity:selectedChar!==null?1:0.4}} onClick={startGame}>⚔️ 出發！</button>
+            <button style={{...S.btnGold,opacity:selectedChar!==null?1:0.4}} onClick={startGame}> 出發！</button>
           </div>
         </div>
       </div>
@@ -970,7 +970,7 @@ export default function HaoSurvivor() {
         {screen==="levelup" && (
           <div style={S.overlay}>
             <div style={{...S.levelUpBox,animation:"scaleIn 0.25s ease-out"}}>
-              <div style={{fontSize:36}}>⬆️</div>
+              <div style={{fontSize:36}}></div>
               <h2 style={{fontSize:22,fontWeight:900,color:"#fbbf24",margin:"4px 0"}}>升級！</h2>
               <p style={{fontSize:12,color:"#94a3b8",margin:"0 0 12px"}}>選擇一項技能</p>
               <div style={{display:"flex",flexDirection:"column",gap:8}}>
@@ -1005,12 +1005,12 @@ export default function HaoSurvivor() {
     return (
       <div style={S.root}><style>{KF}</style>
         <div style={S.center}>
-          <div style={{fontSize:60}}>💀</div>
+          <div style={{fontSize:60}}></div>
           <h1 style={{fontSize:34,fontWeight:900,color:"#ef4444",margin:0}}>陣亡</h1>
           <div style={S.resultBox}>
-            <div>🗡️ 擊殺 {gameStats.kills}</div>
-            <div>⏱️ 存活 {Math.floor(gameStats.time)}s</div>
-            <div>📊 等級 Lv.{gameStats.level}</div>
+            <div> 擊殺 {gameStats.kills}</div>
+            <div> 存活 {Math.floor(gameStats.time)}s</div>
+            <div> 等級 Lv.{gameStats.level}</div>
           </div>
           <div style={{display:"flex",gap:12}}>
             <button style={S.btnGhost} onClick={()=>setScreen("title")}>主選單</button>
@@ -1025,13 +1025,13 @@ export default function HaoSurvivor() {
     return (
       <div style={S.root}><style>{KF}</style>
         <div style={S.center}>
-          <div style={{fontSize:60,animation:"float 1.5s ease-in-out infinite"}}>🏆</div>
+          <div style={{fontSize:60,animation:"float 1.5s ease-in-out infinite"}}></div>
           <h1 style={{fontSize:34,fontWeight:900,color:"#fbbf24",margin:0}}>通關！</h1>
           <p style={{color:"#94a3b8",fontSize:13,margin:0}}>{STAGES[selectedStage].name} 已征服</p>
           <div style={S.resultBox}>
-            <div>🗡️ 擊殺 {gameStats.kills}</div>
-            <div>⏱️ 時間 {Math.floor(gameStats.time)}s</div>
-            <div>📊 等級 Lv.{gameStats.level}</div>
+            <div> 擊殺 {gameStats.kills}</div>
+            <div> 時間 {Math.floor(gameStats.time)}s</div>
+            <div> 等級 Lv.{gameStats.level}</div>
           </div>
           <div style={{display:"flex",gap:12}}>
             <button style={S.btnGhost} onClick={()=>setScreen("title")}>主選單</button>

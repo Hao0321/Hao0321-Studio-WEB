@@ -259,7 +259,7 @@ export default function SplatRing() {
         ctx.fillStyle = C.text; ctx.font = "700 " + goScoreSize + "px 'Trebuchet MS',sans-serif"; ctx.fillText(g.score + " 分", CX, CY + 10);
         ctx.fillStyle = C.dim; ctx.font = "12px 'Trebuchet MS',sans-serif";
         ctx.fillText("ROUND " + g.round + " ● " + Math.round(g.painted.size / SEG * 100) + "%", CX, CY + 34);
-        if (g.score >= g.best && g.score > 0) { ctx.fillStyle = C.yellow; ctx.font = "700 13px 'Trebuchet MS',sans-serif"; ctx.fillText("★ NEW RECORD ★", CX, CY + 56); }
+        if (g.score >= g.best && g.score > 0) { ctx.fillStyle = C.yellow; ctx.font = "700 13px 'Trebuchet MS',sans-serif"; ctx.fillText(" NEW RECORD ", CX, CY + 56); }
         ctx.globalAlpha = 0.4 + Math.sin(Date.now() / 350) * 0.6;
         ctx.fillStyle = C.cyan; ctx.font = "600 14px 'Trebuchet MS',sans-serif"; ctx.fillText("點擊重來", CX, CY + 88); ctx.globalAlpha = 1;
         raf.current = requestAnimationFrame(loop); return;
@@ -417,7 +417,7 @@ export default function SplatRing() {
           ctx.globalAlpha = 0.3 + Math.sin(Date.now() / 100) * 0.25;
           ctx.fillStyle = ob.big ? C.orange : C.yellow;
           ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-          ctx.fillText("⚠", ax, ay); ctx.restore();
+          ctx.fillText("", ax, ay); ctx.restore();
         }
       });
 

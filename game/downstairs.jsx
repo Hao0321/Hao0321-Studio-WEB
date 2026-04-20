@@ -500,7 +500,7 @@ export default function Game() {
         rr(ctx, ix + 2, iy + 2, 66 * pct, 16, 8); ctx.fill();
         ctx.font = "700 9px 'Baloo 2',sans-serif";
         ctx.textAlign = "left"; ctx.fillStyle = C.cyan;
-        ctx.fillText("⬆ REVERSE", ix + 8, iy + 11);
+        ctx.fillText(" REVERSE", ix + 8, iy + 11);
         ix += 76;
       }
       if (d.shield) {
@@ -508,7 +508,7 @@ export default function Game() {
         rr(ctx, ix, iy, 56, 20, 10); ctx.fill();
         ctx.font = "700 9px 'Baloo 2',sans-serif";
         ctx.textAlign = "left"; ctx.fillStyle = C.mint;
-        ctx.fillText("🛡 SHIELD", ix + 6, iy + 11);
+        ctx.fillText(" SHIELD", ix + 6, iy + 11);
         ix += 62;
       }
       if (d.magnet) {
@@ -519,7 +519,7 @@ export default function Game() {
         rr(ctx, ix + 2, iy + 2, 58 * pct, 16, 8); ctx.fill();
         ctx.font = "700 9px 'Baloo 2',sans-serif";
         ctx.textAlign = "left"; ctx.fillStyle = C.blue;
-        ctx.fillText("🧲 MAGNET", ix + 6, iy + 11);
+        ctx.fillText(" MAGNET", ix + 6, iy + 11);
       }
 
       ctx.restore();
@@ -582,7 +582,7 @@ export default function Game() {
 
           {state === "menu" && (
             <Ov>
-              <div style={{ fontSize: 56, marginBottom: 8, animation: "bf 2s ease-in-out infinite" }}>🦑</div>
+              <div style={{ fontSize: 56, marginBottom: 8, animation: "bf 2s ease-in-out infinite" }}></div>
               <div style={{
                 padding: "12px 20px", borderRadius: 12, background: C.white,
                 border: "1px solid #eee", boxShadow: "0 2px 8px rgba(0,0,0,.03)",
@@ -604,8 +604,8 @@ export default function Game() {
               </div>
               <div style={{ display: "flex", gap: 5, marginBottom: 14, flexWrap: "wrap", justifyContent: "center", maxWidth: 280 }}>
                 {[
-                  { c: C.cyan, l: "⬆ 反轉" }, { c: C.mint, l: "🛡 護盾" },
-                  { c: "#d4a017", l: "⭐ 星星" }, { c: C.blue, l: "🧲 磁鐵" },
+                  { c: C.cyan, l: " 反轉" }, { c: C.mint, l: " 護盾" },
+                  { c: "#d4a017", l: " 星星" }, { c: C.blue, l: " 磁鐵" },
                 ].map((t2, i) => (
                   <span key={i} style={{
                     padding: "2px 8px", borderRadius: 10, background: t2.c + "15",
@@ -620,7 +620,7 @@ export default function Game() {
 
           {state === "gameover" && (
             <Ov>
-              <div style={{ fontSize: 44, marginBottom: 4, animation: "bf 1.5s ease-in-out infinite" }}>💀</div>
+              <div style={{ fontSize: 44, marginBottom: 4, animation: "bf 1.5s ease-in-out infinite" }}></div>
               <p style={{ fontSize: 24, fontWeight: 800, color: C.red, margin: "0 0 10px" }}>SPLATTED!</p>
               <div style={{
                 padding: "14px 32px", borderRadius: 14, background: C.white,
@@ -630,7 +630,7 @@ export default function Game() {
                 <p style={{ color: C.pink, fontSize: 40, fontWeight: 800, margin: 0, lineHeight: 1 }}>{score}</p>
                 <p style={{ color: C.dark, fontSize: 10, opacity: .35, fontWeight: 700, margin: "3px 0 0" }}>SCORE</p>
                 {score >= best && score > 0 && (
-                  <p style={{ color: "#d4a017", fontSize: 12, fontWeight: 800, margin: "5px 0 0" }}>🏆 NEW BEST!</p>
+                  <p style={{ color: "#d4a017", fontSize: 12, fontWeight: 800, margin: "5px 0 0" }}> NEW BEST!</p>
                 )}
                 {best > 0 && <p style={{ color: C.purple, fontSize: 9, opacity: .4, fontWeight: 700, margin: "3px 0 0" }}>BEST: {best}</p>}
               </div>

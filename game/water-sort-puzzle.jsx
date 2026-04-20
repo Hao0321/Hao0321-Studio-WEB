@@ -172,7 +172,7 @@ function Bottle({ segments, selected, completed, onClick, shakeError, idx }) {
         {completed && (
           <text x={bw/2} y={bh/2+neckH+2} textAnchor="middle" dominantBaseline="central"
             fontSize={18} fill="rgba(100,255,170,.9)"
-            style={{filter:"drop-shadow(0 0 4px rgba(100,255,170,.5))"}}>✦</text>
+            style={{filter:"drop-shadow(0 0 4px rgba(100,255,170,.5))"}}></text>
         )}
       </svg>
 
@@ -372,7 +372,7 @@ export default function WaterSortPuzzle() {
       {/* Win */}
       {won && (
         <div style={{textAlign:"center",marginBottom:16,zIndex:10,animation:"fadeIn .6s ease"}}>
-          <div style={{fontSize:40,marginBottom:4,animation:"starSpin 3s linear infinite",display:"inline-block"}}>✦</div>
+          <div style={{fontSize:40,marginBottom:4,animation:"starSpin 3s linear infinite",display:"inline-block"}}></div>
           <div style={{
             fontSize:22,fontWeight:200,letterSpacing:10,
             background:"linear-gradient(135deg,rgba(100,255,170,.95),rgba(60,200,255,.8))",

@@ -8,7 +8,7 @@ const RV = {}; B2R.forEach((r, i) => (RV[r] = i));
 const SV = { "♦": 0, "♣": 1, "♥": 2, "♠": 3 };
 const cardVal = (c) => RV[c.rank] * 4 + SV[c.suit];
 const CL = { single: "單張", pair: "對子", triple: "三條", straight: "順子", flush: "同花", fullhouse: "葫蘆", fourofakind: "鐵支", straightflush: "同花順" };
-const PM = [{ n: "你", a: "👤" }, { n: "東風", a: "🌸" }, { n: "南風", a: "🎋" }, { n: "西風", a: "🌊" }];
+const PM = [{ n: "你", a: "" }, { n: "東風", a: "" }, { n: "南風", a: "" }, { n: "西風", a: "" }];
 
 function mkDeck(jokers) {
   const d = [];
@@ -196,7 +196,7 @@ function Card({ card, selected, onClick, faceDown, small, tiny, disabled, highli
         <div style={{ position: "absolute", inset: tiny ? 1 : 3, borderRadius: tiny ? 1 : small ? 3 : 5,
           background: "repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(212,175,55,.04) 3px,rgba(212,175,55,.04) 6px)",
           border: "1px solid rgba(212,175,55,.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ fontSize: tiny ? 5 : small ? 9 : 14, color: "rgba(212,175,55,.12)" }}>✦</span>
+          <span style={{ fontSize: tiny ? 5 : small ? 9 : 14, color: "rgba(212,175,55,.12)" }}></span>
         </div>
         {glow && <div style={{ position: "absolute", inset: 0, borderRadius: tiny ? 2 : small ? 5 : 8, border: "1px solid rgba(212,175,55,.3)", animation: "br 1.5s infinite" }} />}
       </div>
@@ -223,7 +223,7 @@ function Card({ card, selected, onClick, faceDown, small, tiny, disabled, highli
       <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
         fontSize: tiny ? 12 : small ? 20 : 32, color: isJ ? (card.jcolor === "red" ? "#b71c1c" : "#1a1a2e") : isRed ? "#b71c1c" : "#1a1a2e",
         filter: selected ? "drop-shadow(0 0 8px rgba(212,175,55,.4))" : "" }}>
-        {isJ ? "🃏" : card.suit}
+        {isJ ? "" : card.suit}
       </div>
       {!tiny && !isJ && (
         <div style={{ position: "absolute", bottom: small ? 3 : 5, right: small ? 3 : 6, lineHeight: 1, transform: "rotate(180deg)" }}>
@@ -293,7 +293,7 @@ function WinScreen({ won, msg, onAgain, onBack, fwt }) {
     <TableBG>
       <Fireworks active={fwt} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 16, animation: "screenFade .5s" }}>
-        <div style={{ fontSize: 64, animation: "winPop .6s cubic-bezier(.34,1.56,.64,1)" }}>{won ? "🏆" : "💀"}</div>
+        <div style={{ fontSize: 64, animation: "winPop .6s cubic-bezier(.34,1.56,.64,1)" }}>{won ? "" : ""}</div>
         <h2 style={{
           fontSize: 30, fontWeight: 900, fontFamily: "'Playfair Display'",
           background: won ? "linear-gradient(135deg,#4ecdc4,#fff,#4ecdc4)" : "linear-gradient(135deg,#e85d75,#fff,#e85d75)",
@@ -574,7 +574,7 @@ function BigTwoGame({ onBack }) {
         </div>
       </div>
       <HandArea cards={hands[0] || []} selected={sel} onToggle={toggle} disabled={!myTurn} onPlay={play} onPass={pass} canPlay={cP} canPass={cPa}
-        status={myTurn ? "你的回合" + (sT ? " · " + CL[sT] + (cP ? " ✓" : " ✗") : "") : "等待中"} />
+        status={myTurn ? "你的回合" + (sT ? " · " + CL[sT] + (cP ? " " : " ") : "") : "等待中"} />
     </TableBG>
   );
 }
@@ -676,7 +676,7 @@ function OldMaidGame({ onBack }) {
   const chkW = (hs2) => { if (!hs2[0].length) { setWin(0); setMsg("你贏了！"); setFw(f => f + 1); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return true; }
     if (!hs2[1].length) { setWin(1); setMsg("你持有鬼牌！"); setPh("over"); return true; } return false; };
   const draw = (idx) => { const c = hs[1][idx]; const n1 = hs[1].filter((_, i) => i !== idx); const n0 = remP([...hs[0], c]);
-    const nh = [n0, n1]; setHs(nh); setMsg("抽到 " + (c.isJoker ? "🃏" : c.rank + c.suit)); if (!chkW(nh)) setTn(1); };
+    const nh = [n0, n1]; setHs(nh); setMsg("抽到 " + (c.isJoker ? "" : c.rank + c.suit)); if (!chkW(nh)) setTn(1); };
 
   useEffect(() => {
     if (ph !== "play" || tn !== 1 || win !== null) return; setAiP(true);
@@ -691,7 +691,7 @@ function OldMaidGame({ onBack }) {
       <TableBG>
         <TopBar title="抽鬼牌" onBack={onBack} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, animation: "su .5s" }}>
-          <div style={{ fontSize: 48 }}>🃏</div>
+          <div style={{ fontSize: 48 }}></div>
           <h2 style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Playfair Display'", color: "#d4af37" }}>抽鬼牌</h2>
           <p style={{ fontSize: 11, color: "rgba(232,228,218,.3)", textAlign: "center", maxWidth: 260, lineHeight: 1.8 }}>配對相同點數，從對手抽牌。最後持有鬼牌的人輸！</p>
           <GoldBtn onClick={start}>開始</GoldBtn>
@@ -707,7 +707,7 @@ function OldMaidGame({ onBack }) {
       <TopBar title="抽鬼牌" onBack={onBack} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: 10, gap: 6 }}>
         <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 10, color: "rgba(232,228,218,.3)", marginBottom: 4 }}>🌸 對手 · {hs[1].length}張 {tn === 0 ? "← 點擊抽牌" : ""}</div>
+          <div style={{ fontSize: 10, color: "rgba(232,228,218,.3)", marginBottom: 4 }}> 對手 · {hs[1].length}張 {tn === 0 ? "← 點擊抽牌" : ""}</div>
           <div style={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
             {hs[1].map((c, i) => (
               <div key={c.id} style={{ animation: "dc .15s " + (i * .015) + "s both" }} onClick={() => tn === 0 && draw(i)}>
@@ -845,7 +845,7 @@ function SevensGame({ onBack }) {
       <TableBG>
         <TopBar title="排七" onBack={onBack} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, animation: "su .5s" }}>
-          <div style={{ fontSize: 48 }}>7️⃣</div>
+          <div style={{ fontSize: 48 }}>7⃣</div>
           <h2 style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Playfair Display'", color: "#d4af37" }}>排七</h2>
           <p style={{ fontSize: 11, color: "rgba(232,228,218,.3)", textAlign: "center", maxWidth: 280, lineHeight: 1.8 }}>
             從7開始，依序向兩端延伸放牌（6←7→8）。沒有可放的牌就PASS，累計3次PASS淘汰。最先出完所有手牌的玩家獲勝！
@@ -961,7 +961,7 @@ function SevensGame({ onBack }) {
               border: showHint ? "1px solid rgba(78,205,196,.25)" : "1px solid rgba(212,175,55,.12)",
               color: showHint ? "#4ecdc4" : "rgba(212,175,55,.5)"
             }}>
-              {showHint ? "隱藏提示" : "💡 提示"}
+              {showHint ? "隱藏提示" : " 提示"}
             </button>
           )}
         </div>
@@ -1060,7 +1060,7 @@ function TexasGame({ onBack }) {
       <TableBG>
         <TopBar title="德州撲克" onBack={onBack} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, animation: "su .5s" }}>
-          <div style={{ fontSize: 48 }}>💰</div>
+          <div style={{ fontSize: 48 }}></div>
           <h2 style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Playfair Display'", color: "#d4af37" }}>德州撲克</h2>
           <p style={{ fontSize: 11, color: "rgba(232,228,218,.3)", textAlign: "center", maxWidth: 260, lineHeight: 1.8 }}>簡化版德州撲克，你 vs 莊家</p>
           <div style={{ display: "flex", gap: 6 }}>
@@ -1481,7 +1481,7 @@ function DDZGame({ onBack }) {
       <TableBG>
         <TopBar title="鬥地主" onBack={onBack} />
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 14, animation: "su .5s" }}>
-          <div style={{ fontSize: 48 }}>👑</div>
+          <div style={{ fontSize: 48 }}></div>
           <h2 style={{ fontSize: 22, fontWeight: 900, fontFamily: "'Playfair Display'", color: "#d4af37" }}>鬥地主</h2>
           <p style={{ fontSize: 11, color: "rgba(232,228,218,.3)", textAlign: "center", maxWidth: 280, lineHeight: 1.8 }}>
             你是地主對抗農民！完整規則：單張、對子、三條、三帶一、三帶二、順子、連對、飛機、四帶二、炸彈、火箭
@@ -1547,19 +1547,19 @@ function DDZGame({ onBack }) {
         </div>
       </div>
       <HandArea cards={hs[0] || []} selected={sel} onToggle={toggle} disabled={!myTurn} onPlay={play} onPass={pass} canPlay={cP} canPass={cPa}
-        status={myTurn ? ("你的回合 👑" + (co ? " · " + DDZ_NAMES[co.t] + (cP ? " ✓" : " ✗") : "")) : "等待中"} />
+        status={myTurn ? ("你的回合 " + (co ? " · " + DDZ_NAMES[co.t] + (cP ? " " : " ") : "")) : "等待中"} />
     </TableBG>
   );
 }
 
 /* ══════════ GAME HUB ══════════ */
 const GAMES = [
-  { id: "b2", n: "大老二", s: "Big Two", i: "🀄", d: "經典撲克，比大小出牌", c: "#d4af37" },
-  { id: "bj", n: "21點", s: "Blackjack", i: "🃏", d: "挑戰莊家，不要爆牌", c: "#e85d75" },
-  { id: "om", n: "抽鬼牌", s: "Old Maid", i: "👻", d: "配對消牌，避開鬼牌", c: "#9b59b6" },
-  { id: "s7", n: "排七", s: "Sevens", i: "7️⃣", d: "從7延伸，提示可出牌", c: "#4ecdc4" },
-  { id: "tx", n: "德州撲克", s: "Hold'em", i: "💰", d: "下注博弈，五張定輸贏", c: "#f39c12" },
-  { id: "dz", n: "鬥地主", s: "Dou Di Zhu", i: "👑", d: "完整規則：順子連對飛機炸彈", c: "#e74c3c" },
+  { id: "b2", n: "大老二", s: "Big Two", i: "", d: "經典撲克，比大小出牌", c: "#d4af37" },
+  { id: "bj", n: "21點", s: "Blackjack", i: "", d: "挑戰莊家，不要爆牌", c: "#e85d75" },
+  { id: "om", n: "抽鬼牌", s: "Old Maid", i: "", d: "配對消牌，避開鬼牌", c: "#9b59b6" },
+  { id: "s7", n: "排七", s: "Sevens", i: "7⃣", d: "從7延伸，提示可出牌", c: "#4ecdc4" },
+  { id: "tx", n: "德州撲克", s: "Hold'em", i: "", d: "下注博弈，五張定輸贏", c: "#f39c12" },
+  { id: "dz", n: "鬥地主", s: "Dou Di Zhu", i: "", d: "完整規則：順子連對飛機炸彈", c: "#e74c3c" },
 ];
 
 export default function App() {

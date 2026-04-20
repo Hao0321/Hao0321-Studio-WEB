@@ -150,14 +150,14 @@ canvas#cv{display:block;width:100%;height:100%;position:absolute;top:0;left:0}
 <!-- HUD -->
 <div class="hud" id="hud" style="display:none">
   <div><div class="hs" id="hs">0</div><div class="hcb" id="hcb">COMBO x2</div><div class="hci" id="hci"></div></div>
-  <div class="hr"><div class="hb" id="hb">BEST: 0</div><div class="ht" id="ht">0.0s</div><div class="hco" id="hco">🪙 0</div></div>
+  <div class="hr"><div class="hb" id="hb">BEST: 0</div><div class="ht" id="ht">0.0s</div><div class="hco" id="hco"> 0</div></div>
 </div>
 <!-- HUD Buttons (pause + mute) -->
 <div class="hud-btns" id="hudBtns" style="display:none">
-  <button class="hud-btn" id="bPause" title="Pause (ESC)">⏸</button>
-  <button class="hud-btn" id="bMute" title="Mute">🔊</button>
+  <button class="hud-btn" id="bPause" title="Pause (ESC)"></button>
+  <button class="hud-btn" id="bMute" title="Mute"></button>
 </div>
-<div class="hpu"><div class="pui" id="puSl" style="border-color:var(--c)">🐌</div><div class="pui" id="puMg" style="border-color:var(--y)">🧲</div><div class="pui" id="puSh" style="border-color:var(--g)">🔬</div><div class="pui" id="puGh" style="border-color:var(--p)">👻</div></div>
+<div class="hpu"><div class="pui" id="puSl" style="border-color:var(--c)"></div><div class="pui" id="puMg" style="border-color:var(--y)"></div><div class="pui" id="puSh" style="border-color:var(--g)"></div><div class="pui" id="puGh" style="border-color:var(--p)"></div></div>
 <div class="sb" id="sb"><span class="sbl">SHIELD</span><div class="sbg"><div class="sbf" id="sf"></div></div></div>
 <div class="tut" id="tut" style="display:none">Move mouse / touch to dodge</div>
 
@@ -174,21 +174,21 @@ canvas#cv{display:block;width:100%;height:100%;position:absolute;top:0;left:0}
   <div class="tg">DODGE<br>MASTER</div><div class="ts">NEON SURVIVAL</div>
   <button class="b" id="bPlay">PLAY</button>
   <div style="display:flex;gap:4px;margin-top:3px"><button class="b s2 sm" id="bHub">HUB</button></div>
-  <div style="margin-top:8px;font-size:.48rem;color:rgba(255,255,255,.22)" id="mc">🪙 0</div>
+  <div style="margin-top:8px;font-size:.48rem;color:rgba(255,255,255,.22)" id="mc"> 0</div>
 </div>
 
 <!-- GAME OVER -->
 <div class="ov h" id="S1">
   <div class="gol">SYSTEM FAILURE</div>
   <div class="gos" id="goSc">0</div>
-  <div class="gonr" id="goNR" style="display:none">★ NEW RECORD ★</div>
+  <div class="gonr" id="goNR" style="display:none"> NEW RECORD </div>
   <div class="gob" id="goB">BEST: 0</div>
   <div class="gost">
     <div style="text-align:center"><div class="gosv" id="goT">0s</div><div class="gosl">SURVIVE</div></div>
     <div style="text-align:center"><div class="gosv" id="goC">0</div><div class="gosl">MAX COMBO</div></div>
     <div style="text-align:center"><div class="gosv" id="goD">0</div><div class="gosl">DODGED</div></div>
   </div>
-  <div class="goce" id="goCE">+0 🪙</div>
+  <div class="goce" id="goCE">+0 </div>
   <div class="goads">
     <button class="b gr sm" id="bRev">▶ REVIVE +3s</button>
     <button class="b or sm" id="bDbl">▶ 2x COINS</button>
@@ -206,7 +206,7 @@ canvas#cv{display:block;width:100%;height:100%;position:absolute;top:0;left:0}
 <!-- HUB -->
 <div class="panel h" id="pHub">
   <div class="pt">COMMAND CENTER</div><div class="psub">HUB</div>
-  <div class="pco" id="hubCo">🪙 0</div>
+  <div class="pco" id="hubCo"> 0</div>
   <div class="tabs">
     <div class="tab a" data-t="tChar">CHARS</div>
     <div class="tab" data-t="tGacha">GACHA</div>
@@ -219,8 +219,8 @@ canvas#cv{display:block;width:100%;height:100%;position:absolute;top:0;left:0}
   <div class="tc" id="tGacha">
     <div class="gat">— DRAW CHARACTERS —</div>
     <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin-bottom:6px">
-      <button class="b xs or" id="bG1">x1 — 50🪙</button>
-      <button class="b xs" id="bG10">x10 — 450🪙</button>
+      <button class="b xs or" id="bG1">x1 — 50</button>
+      <button class="b xs" id="bG10">x10 — 450</button>
       <button class="b xs gr" id="bGAd">▶ FREE PULL</button>
     </div>
     <div style="font-size:.36rem;color:rgba(255,255,255,.2);font-family:Rajdhani;margin-top:4px">Common 10% · Rare 50% · Epic 28% · Legendary 12%</div>
@@ -228,9 +228,9 @@ canvas#cv{display:block;width:100%;height:100%;position:absolute;top:0;left:0}
   </div>
   <div class="tc" id="tWheel">
     <div style="font-size:.42rem;color:rgba(255,255,255,.25);margin-bottom:4px">Spin for prizes!</div>
-    <div class="whw"><div class="whp">🔻</div><canvas class="whcv" id="whl" width="400" height="400"></canvas></div>
+    <div class="whw"><div class="whp"></div><canvas class="whcv" id="whl" width="400" height="400"></canvas></div>
     <div style="display:flex;gap:4px;margin-top:6px">
-      <button class="b sm or" id="bWSpin">SPIN 30🪙</button>
+      <button class="b sm or" id="bWSpin">SPIN 30</button>
       <button class="b sm gr" id="bWAd">▶ FREE SPIN</button>
     </div>
     <div class="adz" style="margin-top:6px">Watch ad = 1 free spin</div>
@@ -248,7 +248,7 @@ canvas#cv{display:block;width:100%;height:100%;position:absolute;top:0;left:0}
   <div class="tc" id="tShop">
     <div class="psub">BOOST SHOP (1 game each)</div>
     <div class="mil" id="sList"></div>
-    <button class="b xs gr" id="bShopAd">▶ AD = FREE 50🪙</button>
+    <button class="b xs gr" id="bShopAd">▶ AD = FREE 50</button>
     <div class="adz" style="margin-top:6px">Watch ad = 50 coins</div>
   </div>
   <button class="b s2 sm" id="bHubBack" style="margin-top:8px">BACK</button>
@@ -271,7 +271,7 @@ canvas#cv{display:block;width:100%;height:100%;position:absolute;top:0;left:0}
 <!-- BONUS SPIN MODAL (game over) -->
 <div class="modal" id="mBon">
   <div class="pt" style="margin-bottom:4px">BONUS SPIN</div>
-  <div class="whw"><div class="whp">🔻</div><canvas class="whcv" id="whl2" width="400" height="400"></canvas></div>
+  <div class="whw"><div class="whp"></div><canvas class="whcv" id="whl2" width="400" height="400"></canvas></div>
   <button class="b xs" style="margin-top:8px;display:none" id="bBonOK">COLLECT</button>
 </div>
 
@@ -300,17 +300,17 @@ const sfx={
 
 // DATA
 const CHARS=[
-  {id:'neo',n:'NEO',e:'⚡',cl:'#00f0ff',r:'common',sk:'Starter',ds:'No special ability',hb:1,sp:1,sc:1,cn:1},
-  {id:'phantom',n:'PHANTOM',e:'👻',cl:'#aa44ff',r:'rare',sk:'Phase Shift',ds:'Hitbox -15%',hb:.85,sp:1,sc:1,cn:1},
-  {id:'blitz',n:'BLITZ',e:'⚡',cl:'#ffe600',r:'rare',sk:'Overdrive',ds:'Speed +20%',hb:1,sp:1.2,sc:1,cn:1},
-  {id:'vault',n:'VAULT',e:'💰',cl:'#ffaa00',r:'rare',sk:'Gold Rush',ds:'Coins +50%',hb:1,sp:1,sc:1,cn:1.5},
-  {id:'pulse',n:'PULSE',e:'💗',cl:'#ff4488',r:'rare',sk:'Heartbeat',ds:'Score +15%',hb:1,sp:1,sc:1.15,cn:1},
-  {id:'glitch',n:'GLITCH',e:'🔮',cl:'#ff00ff',r:'epic',sk:'Corrupted',ds:'Hitbox -20%, Score +20%',hb:.8,sp:1,sc:1.2,cn:1},
-  {id:'zero',n:'ZERO',e:'🌀',cl:'#00ff88',r:'epic',sk:'Null Field',ds:'Shield +1.5s',hb:1,sp:1,sc:1,cn:1,sb:1.5},
-  {id:'chrono',n:'CHRONO',e:'⏳',cl:'#ff8800',r:'epic',sk:'Time Warp',ds:'Obstacles -12% speed',hb:1,sp:1,sc:1,cn:1,os:.88},
-  {id:'pixel',n:'PIXEL',e:'🎮',cl:'#44ff88',r:'epic',sk:'8-Bit',ds:'Coins +40%, Hitbox -10%',hb:.9,sp:1,sc:1,cn:1.4},
-  {id:'nova',n:'NOVA',e:'🌟',cl:'#ffffff',r:'legendary',sk:'Supernova',ds:'All +15%, Coins +80%',hb:.85,sp:1.15,sc:1.15,cn:1.8},
-  {id:'void',n:'VOID',e:'🕳️',cl:'#8800ff',r:'legendary',sk:'Void Walker',ds:'Hitbox -30%, Score +30%',hb:.7,sp:1,sc:1.3,cn:1},
+  {id:'neo',n:'NEO',e:'',cl:'#00f0ff',r:'common',sk:'Starter',ds:'No special ability',hb:1,sp:1,sc:1,cn:1},
+  {id:'phantom',n:'PHANTOM',e:'',cl:'#aa44ff',r:'rare',sk:'Phase Shift',ds:'Hitbox -15%',hb:.85,sp:1,sc:1,cn:1},
+  {id:'blitz',n:'BLITZ',e:'',cl:'#ffe600',r:'rare',sk:'Overdrive',ds:'Speed +20%',hb:1,sp:1.2,sc:1,cn:1},
+  {id:'vault',n:'VAULT',e:'',cl:'#ffaa00',r:'rare',sk:'Gold Rush',ds:'Coins +50%',hb:1,sp:1,sc:1,cn:1.5},
+  {id:'pulse',n:'PULSE',e:'',cl:'#ff4488',r:'rare',sk:'Heartbeat',ds:'Score +15%',hb:1,sp:1,sc:1.15,cn:1},
+  {id:'glitch',n:'GLITCH',e:'',cl:'#ff00ff',r:'epic',sk:'Corrupted',ds:'Hitbox -20%, Score +20%',hb:.8,sp:1,sc:1.2,cn:1},
+  {id:'zero',n:'ZERO',e:'',cl:'#00ff88',r:'epic',sk:'Null Field',ds:'Shield +1.5s',hb:1,sp:1,sc:1,cn:1,sb:1.5},
+  {id:'chrono',n:'CHRONO',e:'',cl:'#ff8800',r:'epic',sk:'Time Warp',ds:'Obstacles -12% speed',hb:1,sp:1,sc:1,cn:1,os:.88},
+  {id:'pixel',n:'PIXEL',e:'',cl:'#44ff88',r:'epic',sk:'8-Bit',ds:'Coins +40%, Hitbox -10%',hb:.9,sp:1,sc:1,cn:1.4},
+  {id:'nova',n:'NOVA',e:'',cl:'#ffffff',r:'legendary',sk:'Supernova',ds:'All +15%, Coins +80%',hb:.85,sp:1.15,sc:1.15,cn:1.8},
+  {id:'void',n:'VOID',e:'',cl:'#8800ff',r:'legendary',sk:'Void Walker',ds:'Hitbox -30%, Score +30%',hb:.7,sp:1,sc:1.3,cn:1},
   {id:'omega',n:'OMEGA',e:'Ω',cl:'#ff2244',r:'legendary',sk:'Endgame',ds:'Spd+25% Sc+25% Coins+60%',hb:1,sp:1.25,sc:1.25,cn:1.6},
 ];
 // FIX: Rates sum to 100
@@ -320,29 +320,29 @@ const RNAME={common:'COMMON',rare:'RARE',epic:'EPIC',legendary:'LEGENDARY'};
 const RCLS={common:'rc',rare:'rr',epic:'re',legendary:'rl'};
 
 const PUPS=[
-  {id:'Sl',e:'🐌',cl:'#00f0ff',nm:'Slow Time',dur:5,ef:'slow'},
-  {id:'Mg',e:'🧲',cl:'#ffe600',nm:'Coin Magnet',dur:6,ef:'magnet'},
-  {id:'Sh',e:'🔬',cl:'#00ff88',nm:'Shrink',dur:4,ef:'shrink'},
-  {id:'Gh',e:'👻',cl:'#aa44ff',nm:'Ghost Mode',dur:3,ef:'ghost'}
+  {id:'Sl',e:'',cl:'#00f0ff',nm:'Slow Time',dur:5,ef:'slow'},
+  {id:'Mg',e:'',cl:'#ffe600',nm:'Coin Magnet',dur:6,ef:'magnet'},
+  {id:'Sh',e:'',cl:'#00ff88',nm:'Shrink',dur:4,ef:'shrink'},
+  {id:'Gh',e:'',cl:'#aa44ff',nm:'Ghost Mode',dur:3,ef:'ghost'}
 ];
 
 // FIX: Shop items are consumable (bought per game, removed after use)
 const SHOP_ITEMS=[
-  {id:'headstart',nm:'Head Start Shield',ds:'Start with 2s shield (1 game)',cost:40,e:'🛡️'},
-  {id:'coinboost',nm:'Coin Boost +25%',ds:'+25% coins (1 game)',cost:50,e:'💎'},
-  {id:'slowstart',nm:'Slow Start',ds:'Slower difficulty (1 game)',cost:35,e:'🐢'},
+  {id:'headstart',nm:'Head Start Shield',ds:'Start with 2s shield (1 game)',cost:40,e:''},
+  {id:'coinboost',nm:'Coin Boost +25%',ds:'+25% coins (1 game)',cost:50,e:''},
+  {id:'slowstart',nm:'Slow Start',ds:'Slower difficulty (1 game)',cost:35,e:''},
 ];
 
 const WHEEL=[
-  {l:'10🪙',e:'🪙',co:10,bg:'#1a1a2a'},{l:'25🪙',e:'💰',co:25,bg:'#141424'},
-  {l:'50🪙',e:'💎',co:50,bg:'#1a1a2a'},{l:'RARE Box',e:'📦',ga:'rare',bg:'#141424'},
-  {l:'100🪙',e:'🤑',co:100,bg:'#1a1a2a'},{l:'5🪙',e:'🪙',co:5,bg:'#141424'},
-  {l:'EPIC Box',e:'🎁',ga:'epic',bg:'#1a1a2a'},{l:'30🪙',e:'💰',co:30,bg:'#141424'}
+  {l:'10',e:'',co:10,bg:'#1a1a2a'},{l:'25',e:'',co:25,bg:'#141424'},
+  {l:'50',e:'',co:50,bg:'#1a1a2a'},{l:'RARE Box',e:'',ga:'rare',bg:'#141424'},
+  {l:'100',e:'',co:100,bg:'#1a1a2a'},{l:'5',e:'',co:5,bg:'#141424'},
+  {l:'EPIC Box',e:'',ga:'epic',bg:'#1a1a2a'},{l:'30',e:'',co:30,bg:'#141424'}
 ];
 
 const DAILY=[
-  {d:1,co:20,e:'🪙'},{d:2,co:30,e:'🪙'},{d:3,co:50,e:'💰'},
-  {d:4,co:40,e:'🪙'},{d:5,co:80,e:'💎'},{d:6,co:60,e:'💰'},{d:7,co:150,e:'🎁'}
+  {d:1,co:20,e:''},{d:2,co:30,e:''},{d:3,co:50,e:''},
+  {d:4,co:40,e:''},{d:5,co:80,e:''},{d:6,co:60,e:''},{d:7,co:150,e:''}
 ];
 
 const MISSIONS=[
@@ -485,7 +485,7 @@ function startGame(){
 
   $('S0').classList.add('h');$('S1').classList.add('h');$('pHub').classList.add('h');
   $('hud').style.display='flex';$('sb').classList.toggle('a',shieldOn);
-  $('hb').textContent='BEST: '+D.best;$('hco').textContent='🪙 '+D.co;
+  $('hb').textContent='BEST: '+D.best;$('hco').textContent=' '+D.co;
   $('hci').innerHTML=`<div class="hcii" style="background:${h2r(curChar.cl,.12)};border-color:${curChar.cl}">${curChar.e}</div><span class="hcn">${curChar.n}</span>`;
   PUPS.forEach(p=>$('pu'+p.id)?.classList.remove('a'));
 
@@ -511,7 +511,7 @@ function endGame(){
 
   $('goSc').textContent=score;$('goT').textContent=sTime.toFixed(1)+'s';
   $('goC').textContent=maxCombo;$('goD').textContent=dodged;
-  $('goCE').textContent='+'+earned+' 🪙';$('goCE').style.color='var(--y)';
+  $('goCE').textContent='+'+earned+' ';$('goCE').style.color='var(--y)';
   $('goNR').style.display=isNew?'block':'none';$('goB').textContent='BEST: '+D.best;
   $('bRev').style.display=canRevive?'':'none';
   $('bDbl').style.display='';$('bDbl').disabled=false;$('bDbl').textContent='▶ 2x COINS';
@@ -520,7 +520,7 @@ function endGame(){
 }
 
 function revive(){
-  // 🎯AD 1: Revive
+  // AD 1: Revive
   simAd(()=>{
     canRevive=false;
     shieldMax=3+(curChar.sb||0);shieldLeft=shieldMax;
@@ -531,17 +531,17 @@ function revive(){
 }
 
 function doubleCo(){
-  // 🎯AD 2: Double Coins
+  // AD 2: Double Coins
   simAd(()=>{
     canDouble=false;D.co+=sessionCoins;saveData();
-    $('goCE').textContent='+'+sessionCoins*2+' 🪙 (2x!)';$('goCE').style.color='var(--g)';
-    $('bDbl').disabled=true;$('bDbl').textContent='✓ DOUBLED';
+    $('goCE').textContent='+'+sessionCoins*2+'  (2x!)';$('goCE').style.color='var(--g)';
+    $('bDbl').disabled=true;$('bDbl').textContent=' DOUBLED';
     sfx.win();updateAllCoins();
   });
 }
 
 function bonusSpin(){
-  // 🎯AD 3: Bonus Spin after death
+  // AD 3: Bonus Spin after death
   simAd(()=>{
     $('S1').classList.add('h');
     spinWheel('whl2','mBon','bBonOK',()=>{$('S1').classList.remove('h')});
@@ -593,7 +593,7 @@ function update(delta){
     const dx=P.x-c.x,dy=P.y-c.y;
     if(Math.sqrt(dx*dx+dy*dy)<P.r+14){
       const v=Math.ceil(curChar.cn*(gameBufs.coinboost?1.25:1));
-      D.co+=v;sessionCoins+=v;addFloat(c.x,c.y,'+'+v+'🪙','#ffe600');sfx.coin();cnItems.splice(i,1);continue;
+      D.co+=v;sessionCoins+=v;addFloat(c.x,c.y,'+'+v+'','#ffe600');sfx.coin();cnItems.splice(i,1);continue;
     }
     if(c.life<=0)cnItems.splice(i,1);
   }
@@ -609,7 +609,7 @@ function update(delta){
   }
 
   comboTmr-=delta;if(comboTmr<=0)comboCt=0;
-  $('hs').textContent=score;$('ht').textContent=sTime.toFixed(1)+'s';$('hco').textContent='🪙 '+D.co;
+  $('hs').textContent=score;$('ht').textContent=sTime.toFixed(1)+'s';$('hco').textContent=' '+D.co;
   if(comboCt>=5){$('hcb').classList.add('a');$('hcb').textContent='COMBO x'+(comboCt>=30?6:comboCt>=20?4:comboCt>=10?3:2)}else $('hcb').classList.remove('a');
 
   for(let i=parts.length-1;i>=0;i--){const p=parts[i];p.x+=p.vx;p.y+=p.vy;p.vx*=.96;p.vy*=.96;p.life-=p.dc;if(p.life<=0)parts.splice(i,1)}
@@ -633,7 +633,7 @@ function renderChars(){
   CHARS.forEach(c=>{
     const ul=D.ul.includes(c.id),sel=D.sel===c.id;
     const d=document.createElement('div');d.className='cc'+(sel?' sel':'')+(ul?'':' lk');
-    d.innerHTML=`<div class="ccr ${RCLS[c.r]}">${RNAME[c.r]}</div>${ul?`<div class="cci" style="background:${h2r(c.cl,.1)};border:2px solid ${c.cl}">${c.e}</div>`:`<div class="cci" style="background:rgba(255,255,255,.02);border:2px solid rgba(255,255,255,.06)">🔒</div>`}<div class="ccn" style="color:${ul?c.cl:'rgba(255,255,255,.2)'}">${c.n}</div><div class="ccsk">${ul?c.ds:'LOCKED'}</div>`;
+    d.innerHTML=`<div class="ccr ${RCLS[c.r]}">${RNAME[c.r]}</div>${ul?`<div class="cci" style="background:${h2r(c.cl,.1)};border:2px solid ${c.cl}">${c.e}</div>`:`<div class="cci" style="background:rgba(255,255,255,.02);border:2px solid rgba(255,255,255,.06)"></div>`}<div class="ccn" style="color:${ul?c.cl:'rgba(255,255,255,.2)'}">${c.n}</div><div class="ccsk">${ul?c.ds:'LOCKED'}</div>`;
     if(ul&&!sel)d.onclick=()=>{D.sel=c.id;saveData();renderChars();tone(1000,.05,'sine',.03)};
     g.appendChild(d);
   });
@@ -661,7 +661,7 @@ function showGachaResult(res,idx){
   $('gName').textContent=c.n;$('gName').style.color=c.cl;
   $('gRar').textContent=RNAME[c.r];$('gRar').style.color=RCOL[c.r];
   $('gSkill').textContent=c.sk+' — '+c.ds;
-  if(!isNew){$('gDupe').style.display='block';$('gDupe').textContent='DUPLICATE → +25🪙';D.co+=25;saveData()}
+  if(!isNew){$('gDupe').style.display='block';$('gDupe').textContent='DUPLICATE → +25';D.co+=25;saveData()}
   else $('gDupe').style.display='none';
   $('mGacha').classList.add('show');
   gachaQ=res.slice(idx+1);
@@ -767,7 +767,7 @@ function renderMissions(){
     let cur=0;if(m.k==='uc')cur=D.ul.length;else cur=D[m.k]||0;
     const done=cur>=m.tg,pct=Math.min(cur/m.tg,1);
     const el=document.createElement('div');el.className='mi';
-    el.innerHTML=`<div style="flex:1"><div class="min">${m.nm}</div><div class="mib"><div class="mibf" style="width:${pct*100}%"></div></div><div class="mip">${Math.min(cur,m.tg)}/${m.tg}</div></div><div style="text-align:right"><div class="mir">${m.rw}🪙</div>${claimed?'<span style="font-size:.36rem;color:var(--g)">✓</span>':''}${!claimed&&done?'<button class="b xs gr" style="margin-top:2px">CLAIM</button>':''}</div>`;
+    el.innerHTML=`<div style="flex:1"><div class="min">${m.nm}</div><div class="mib"><div class="mibf" style="width:${pct*100}%"></div></div><div class="mip">${Math.min(cur,m.tg)}/${m.tg}</div></div><div style="text-align:right"><div class="mir">${m.rw}</div>${claimed?'<span style="font-size:.36rem;color:var(--g)"></span>':''}${!claimed&&done?'<button class="b xs gr" style="margin-top:2px">CLAIM</button>':''}</div>`;
     if(!claimed&&done)el.querySelector('button').onclick=()=>{D.cm.push(m.id);D.co+=m.rw;saveData();sfx.win();renderMissions();updateAllCoins()};
     l.appendChild(el);
   });
@@ -780,7 +780,7 @@ function renderShop(){
     // FIX: Check buffs array for owned status (consumable)
     const owned=D.buffs.includes(it.id);
     const el=document.createElement('div');el.className='si';
-    el.innerHTML=`<div style="flex:1"><div class="min">${it.e} ${it.nm}</div><div class="mip">${it.ds}</div></div>${owned?'<span style="font-size:.42rem;color:var(--g)">READY</span>':`<button class="b xs or" ${D.co<it.cost?'disabled':''}>${it.cost}🪙</button>`}`;
+    el.innerHTML=`<div style="flex:1"><div class="min">${it.e} ${it.nm}</div><div class="mip">${it.ds}</div></div>${owned?'<span style="font-size:.42rem;color:var(--g)">READY</span>':`<button class="b xs or" ${D.co<it.cost?'disabled':''}>${it.cost}</button>`}`;
     if(!owned){el.querySelector('button').onclick=()=>{
       if(D.co>=it.cost){D.co-=it.cost;D.buffs.push(it.id);saveData();sfx.win();renderShop();updateAllCoins()}
     }}
@@ -800,7 +800,7 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   if(t.dataset.t==='tShop')renderShop();
 });
 
-function updateAllCoins(){$('mc').textContent='🪙 '+D.co;$('hubCo').textContent='🪙 '+D.co}
+function updateAllCoins(){$('mc').textContent=' '+D.co;$('hubCo').textContent=' '+D.co}
 
 // EVENTS
 $('bPlay').onclick=startGame;
@@ -813,12 +813,12 @@ $('bHub').onclick=()=>{initA();$('S0').classList.add('h');$('pHub').classList.re
 $('bHubBack').onclick=()=>{$('pHub').classList.add('h');$('S0').classList.remove('h');updateAllCoins()};
 $('bG1').onclick=()=>{if(D.co>=50){D.co-=50;saveData();doGacha(1);updateAllCoins()}};
 $('bG10').onclick=()=>{if(D.co>=450){D.co-=450;saveData();doGacha(10);updateAllCoins()}};
-$('bGAd').onclick=()=>simAd(()=>doGacha(1)); // 🎯AD 4
+$('bGAd').onclick=()=>simAd(()=>doGacha(1)); // AD 4
 $('bWSpin').onclick=()=>{if(D.co>=30&&!spinning){D.co-=30;saveData();updateAllCoins();spinWheel('whl','pHub','bHubBack')}};
-$('bWAd').onclick=()=>{if(!spinning)simAd(()=>spinWheel('whl','pHub','bHubBack'))}; // 🎯AD 5
+$('bWAd').onclick=()=>{if(!spinning)simAd(()=>spinWheel('whl','pHub','bHubBack'))}; // AD 5
 $('bClaim').onclick=()=>claimDaily(1);
-$('bClaimAd').onclick=()=>simAd(()=>claimDaily(2)); // 🎯AD 6
-$('bShopAd').onclick=()=>simAd(()=>{D.co+=50;saveData();renderShop();updateAllCoins();sfx.coin()}); // 🎯AD 7
+$('bClaimAd').onclick=()=>simAd(()=>claimDaily(2)); // AD 6
+$('bShopAd').onclick=()=>simAd(()=>{D.co+=50;saveData();renderShop();updateAllCoins();sfx.coin()}); // AD 7
 
 // INIT
 updateAllCoins();drawWheel('whl');drawWheel('whl2');
@@ -867,7 +867,7 @@ $('bQuit').onclick=quitToMenu;
 
 function toggleMute(){
   muted=!muted;
-  $('bMute').textContent=muted?'🔇':'🔊';
+  $('bMute').textContent=muted?'':'';
   if(ac){
     if(muted)ac.suspend();
     else ac.resume();
@@ -890,20 +890,20 @@ document.addEventListener('visibilitychange',()=>{
 
 // ===== SHARE SYSTEM =====
 $('bShareTw').onclick=()=>{
-  const text=`🎮 DODGE MASTER\n⚡ Score: ${score}\n⏱ Survived: ${sTime.toFixed(1)}s\n🔥 Max Combo: x${maxCombo}\nCan you beat me?`;
+  const text=` DODGE MASTER\n Score: ${score}\n Survived: ${sTime.toFixed(1)}s\n Max Combo: x${maxCombo}\nCan you beat me?`;
   window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(text),'_blank');
 };
 $('bShareCopy').onclick=()=>{
-  const text=`🎮 DODGE MASTER | Score: ${score} | ${sTime.toFixed(1)}s | Combo x${maxCombo}`;
+  const text=` DODGE MASTER | Score: ${score} | ${sTime.toFixed(1)}s | Combo x${maxCombo}`;
   navigator.clipboard?.writeText(text).then(()=>{
-    $('bShareCopy').textContent='✓ COPIED!';
+    $('bShareCopy').textContent=' COPIED!';
     setTimeout(()=>$('bShareCopy').textContent='COPY SCORE',2000);
   });
 };
 
 lastT=performance.now();requestAnimationFrame(loop);
 
-// 🎯 AD TOUCHPOINTS SUMMARY:
+//  AD TOUCHPOINTS SUMMARY:
 // 1. bRev — Revive with shield (death screen)
 // 2. bDbl — Double coins earned (death screen)
 // 3. bBon — Bonus wheel spin (death screen)

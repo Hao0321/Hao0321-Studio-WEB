@@ -3,55 +3,55 @@ import { useState, useCallback, useEffect, useRef } from "react";
 /* ═══════════════ GAME DATA ═══════════════ */
 const BS=28;
 const P=[
-  {id:0, n:"起點",     t:"start",   g:0,c:"#FF8A65",pr:0,   e:"🏁",r:[0]},
-  {id:1, n:"台北101",  t:"prop",    g:1,c:"#ef4444",pr:600, e:"🏙️",r:[60,180,360,900,1600,2500]},
-  {id:2, n:"命運",     t:"fate",    g:0,c:"#a855f7",pr:0,   e:"🔮",r:[0]},
-  {id:3, n:"西門町",   t:"prop",    g:1,c:"#ef4444",pr:600, e:"🎭",r:[60,180,360,900,1600,2500]},
-  {id:4, n:"繳稅",     t:"tax",     g:0,c:"#64748b",pr:0,   e:"💸",r:[200]},
-  {id:5, n:"高鐵站",   t:"station", g:9,c:"#14b8a6",pr:2000,e:"🚄",r:[250]},
-  {id:6, n:"九份老街", t:"prop",    g:2,c:"#3b82f6",pr:1000,e:"🏮",r:[100,300,600,1400,2200,3500]},
-  {id:7, n:"機會",     t:"chance",  g:0,c:"#f59e0b",pr:0,   e:"🎴",r:[0]},
-  {id:8, n:"日月潭",   t:"prop",    g:2,c:"#3b82f6",pr:1000,e:"🌊",r:[100,300,600,1400,2200,3500]},
-  {id:9, n:"阿里山",   t:"prop",    g:2,c:"#3b82f6",pr:1200,e:"⛰️",r:[120,360,720,1600,2600,4000]},
-  {id:10,n:"探險廣場", t:"visit",   g:0,c:"#22c55e",pr:0,   e:"🗺️",r:[0]},
-  {id:11,n:"墾丁",     t:"prop",    g:3,c:"#eab308",pr:1400,e:"🏖️",r:[140,420,840,1800,2800,4500]},
-  {id:12,n:"電力公司", t:"util",    g:9,c:"#78716c",pr:1500,e:"⚡",r:[150]},
-  {id:13,n:"太魯閣",   t:"prop",    g:3,c:"#eab308",pr:1400,e:"🏔️",r:[140,420,840,1800,2800,4500]},
-  {id:14,n:"台南古都", t:"prop",    g:3,c:"#eab308",pr:1600,e:"🏯",r:[160,480,960,2000,3200,5000]},
-  {id:15,n:"捷運站",   t:"station", g:9,c:"#14b8a6",pr:2000,e:"🚇",r:[250]},
-  {id:16,n:"夜市",     t:"prop",    g:4,c:"#ec4899",pr:1800,e:"🍜",r:[180,540,1080,2200,3600,5500]},
-  {id:17,n:"命運",     t:"fate",    g:0,c:"#a855f7",pr:0,   e:"🔮",r:[0]},
-  {id:18,n:"鼎泰豐",   t:"prop",    g:4,c:"#ec4899",pr:1800,e:"🥟",r:[180,540,1080,2200,3600,5500]},
-  {id:19,n:"故宮",     t:"prop",    g:4,c:"#ec4899",pr:2000,e:"🏛️",r:[200,600,1200,2400,4000,6000]},
-  {id:20,n:"休息站",   t:"free",    g:0,c:"#22c55e",pr:0,   e:"🍵",r:[0]},
-  {id:21,n:"信義區",   t:"prop",    g:5,c:"#22c55e",pr:2200,e:"🏢",r:[220,660,1320,2600,4200,6500]},
-  {id:22,n:"機會",     t:"chance",  g:0,c:"#f59e0b",pr:0,   e:"🎴",r:[0]},
-  {id:23,n:"大安森林", t:"prop",    g:5,c:"#22c55e",pr:2200,e:"🌳",r:[220,660,1320,2600,4200,6500]},
-  {id:24,n:"陽明山",   t:"prop",    g:5,c:"#22c55e",pr:2400,e:"🌸",r:[240,720,1440,2800,4600,7000]},
-  {id:25,n:"桃園機場", t:"station", g:9,c:"#14b8a6",pr:2000,e:"✈️",r:[250]},
-  {id:26,n:"奢華酒店", t:"prop",    g:6,c:"#8b5cf6",pr:3500,e:"🏨",r:[350,1050,2100,4200,6500,9000]},
-  {id:27,n:"帝寶",     t:"prop",    g:6,c:"#8b5cf6",pr:4000,e:"👑",r:[500,1500,3000,6000,9000,12000]},
+  {id:0, n:"起點",     t:"start",   g:0,c:"#FF8A65",pr:0,   e:"",r:[0]},
+  {id:1, n:"台北101",  t:"prop",    g:1,c:"#ef4444",pr:600, e:"",r:[60,180,360,900,1600,2500]},
+  {id:2, n:"命運",     t:"fate",    g:0,c:"#a855f7",pr:0,   e:"",r:[0]},
+  {id:3, n:"西門町",   t:"prop",    g:1,c:"#ef4444",pr:600, e:"",r:[60,180,360,900,1600,2500]},
+  {id:4, n:"繳稅",     t:"tax",     g:0,c:"#64748b",pr:0,   e:"",r:[200]},
+  {id:5, n:"高鐵站",   t:"station", g:9,c:"#14b8a6",pr:2000,e:"",r:[250]},
+  {id:6, n:"九份老街", t:"prop",    g:2,c:"#3b82f6",pr:1000,e:"",r:[100,300,600,1400,2200,3500]},
+  {id:7, n:"機會",     t:"chance",  g:0,c:"#f59e0b",pr:0,   e:"",r:[0]},
+  {id:8, n:"日月潭",   t:"prop",    g:2,c:"#3b82f6",pr:1000,e:"",r:[100,300,600,1400,2200,3500]},
+  {id:9, n:"阿里山",   t:"prop",    g:2,c:"#3b82f6",pr:1200,e:"",r:[120,360,720,1600,2600,4000]},
+  {id:10,n:"探險廣場", t:"visit",   g:0,c:"#22c55e",pr:0,   e:"",r:[0]},
+  {id:11,n:"墾丁",     t:"prop",    g:3,c:"#eab308",pr:1400,e:"",r:[140,420,840,1800,2800,4500]},
+  {id:12,n:"電力公司", t:"util",    g:9,c:"#78716c",pr:1500,e:"",r:[150]},
+  {id:13,n:"太魯閣",   t:"prop",    g:3,c:"#eab308",pr:1400,e:"",r:[140,420,840,1800,2800,4500]},
+  {id:14,n:"台南古都", t:"prop",    g:3,c:"#eab308",pr:1600,e:"",r:[160,480,960,2000,3200,5000]},
+  {id:15,n:"捷運站",   t:"station", g:9,c:"#14b8a6",pr:2000,e:"",r:[250]},
+  {id:16,n:"夜市",     t:"prop",    g:4,c:"#ec4899",pr:1800,e:"",r:[180,540,1080,2200,3600,5500]},
+  {id:17,n:"命運",     t:"fate",    g:0,c:"#a855f7",pr:0,   e:"",r:[0]},
+  {id:18,n:"鼎泰豐",   t:"prop",    g:4,c:"#ec4899",pr:1800,e:"",r:[180,540,1080,2200,3600,5500]},
+  {id:19,n:"故宮",     t:"prop",    g:4,c:"#ec4899",pr:2000,e:"",r:[200,600,1200,2400,4000,6000]},
+  {id:20,n:"休息站",   t:"free",    g:0,c:"#22c55e",pr:0,   e:"",r:[0]},
+  {id:21,n:"信義區",   t:"prop",    g:5,c:"#22c55e",pr:2200,e:"",r:[220,660,1320,2600,4200,6500]},
+  {id:22,n:"機會",     t:"chance",  g:0,c:"#f59e0b",pr:0,   e:"",r:[0]},
+  {id:23,n:"大安森林", t:"prop",    g:5,c:"#22c55e",pr:2200,e:"",r:[220,660,1320,2600,4200,6500]},
+  {id:24,n:"陽明山",   t:"prop",    g:5,c:"#22c55e",pr:2400,e:"",r:[240,720,1440,2800,4600,7000]},
+  {id:25,n:"桃園機場", t:"station", g:9,c:"#14b8a6",pr:2000,e:"",r:[250]},
+  {id:26,n:"奢華酒店", t:"prop",    g:6,c:"#8b5cf6",pr:3500,e:"",r:[350,1050,2100,4200,6500,9000]},
+  {id:27,n:"帝寶",     t:"prop",    g:6,c:"#8b5cf6",pr:4000,e:"",r:[500,1500,3000,6000,9000,12000]},
 ];
 const HC={1:500,2:500,3:1000,4:1000,5:1500,6:2000};
 const WHEEL=[
-  {text:"中了刮刮樂！",amt:2000,e:"🎉",bg:"#ef4444"},{text:"退稅回饋金",amt:1500,e:"💰",bg:"#3b82f6"},
-  {text:"房屋漏水",amt:-800,e:"🔧",bg:"#64748b"},{text:"朋友還錢",amt:500,e:"🎁",bg:"#a855f7"},
-  {text:"看醫生",amt:-1000,e:"🏥",bg:"#f97316"},{text:"基金獲利！",amt:2500,e:"📈",bg:"#22c55e"},
-  {text:"超速罰單",amt:-500,e:"🚗",bg:"#eab308"},{text:"年終獎金",amt:3000,e:"🏆",bg:"#ec4899"},
-  {text:"直播大賣",amt:2000,e:"📱",bg:"#14b8a6"},{text:"手機摔碎",amt:-600,e:"💔",bg:"#78716c"},
-  {text:"撿到紅包！",amt:800,e:"🧧",bg:"#ef4444"},{text:"Podcast業配",amt:1800,e:"🎙️",bg:"#8b5cf6"},
+  {text:"中了刮刮樂！",amt:2000,e:"",bg:"#ef4444"},{text:"退稅回饋金",amt:1500,e:"",bg:"#3b82f6"},
+  {text:"房屋漏水",amt:-800,e:"",bg:"#64748b"},{text:"朋友還錢",amt:500,e:"",bg:"#a855f7"},
+  {text:"看醫生",amt:-1000,e:"",bg:"#f97316"},{text:"基金獲利！",amt:2500,e:"",bg:"#22c55e"},
+  {text:"超速罰單",amt:-500,e:"",bg:"#eab308"},{text:"年終獎金",amt:3000,e:"",bg:"#ec4899"},
+  {text:"直播大賣",amt:2000,e:"",bg:"#14b8a6"},{text:"手機摔碎",amt:-600,e:"",bg:"#78716c"},
+  {text:"撿到紅包！",amt:800,e:"",bg:"#ef4444"},{text:"Podcast業配",amt:1800,e:"",bg:"#8b5cf6"},
 ];
 const GEV=[
-  {text:"🌪️ 颱風天！每人 -$500",fn:ps=>ps.map(p=>p.bk?p:{...p,money:Math.max(0,p.money-500)})},
-  {text:"📈 股市大漲！每人 +$1000",fn:ps=>ps.map(p=>p.bk?p:{...p,money:p.money+1000})},
-  {text:"🎆 國慶日快樂！",fn:ps=>ps},
-  {text:"🏗️ 都更補助！最窮 +$2000",fn:ps=>{const m=Math.min(...ps.filter(p=>!p.bk).map(p=>p.money));return ps.map(p=>p.money===m&&!p.bk?{...p,money:p.money+2000}:p);}},
-  {text:"💸 通膨！最有錢 -$1500",fn:ps=>{const m=Math.max(...ps.filter(p=>!p.bk).map(p=>p.money));return ps.map(p=>p.money===m&&!p.bk?{...p,money:Math.max(0,p.money-1500)}:p);}},
-  {text:"🧧 政府發紅包！每人 +$800",fn:ps=>ps.map(p=>p.bk?p:{...p,money:p.money+800})},
+  {text:" 颱風天！每人 -$500",fn:ps=>ps.map(p=>p.bk?p:{...p,money:Math.max(0,p.money-500)})},
+  {text:" 股市大漲！每人 +$1000",fn:ps=>ps.map(p=>p.bk?p:{...p,money:p.money+1000})},
+  {text:" 國慶日快樂！",fn:ps=>ps},
+  {text:" 都更補助！最窮 +$2000",fn:ps=>{const m=Math.min(...ps.filter(p=>!p.bk).map(p=>p.money));return ps.map(p=>p.money===m&&!p.bk?{...p,money:p.money+2000}:p);}},
+  {text:" 通膨！最有錢 -$1500",fn:ps=>{const m=Math.max(...ps.filter(p=>!p.bk).map(p=>p.money));return ps.map(p=>p.money===m&&!p.bk?{...p,money:Math.max(0,p.money-1500)}:p);}},
+  {text:" 政府發紅包！每人 +$800",fn:ps=>ps.map(p=>p.bk?p:{...p,money:p.money+800})},
 ];
 const PC=["#f97316","#3b82f6","#a855f7","#22c55e"];
 const PN=["你","電腦A","電腦B","電腦C"];
-const PA=["🦊","🐺","🐱","🐸"];
+const PA=["","","",""];
 
 const c2g=id=>{if(id<=7)return{c:7-id,r:7};if(id<=13)return{c:0,r:7-(id-7)};if(id<=21)return{c:id-14,r:0};return{c:7,r:id-21};};
 const getRent=(p,hs,ow,oid)=>{if(p.t!=="prop")return p.r[0]||0;const h=hs[p.id]||0;let rent=p.r[h]||p.r[0];if(h===0){const g=P.filter(x=>x.g===p.g&&x.g>0);if(g.every(x=>ow[x.id]===oid))rent*=2;}return rent;};
@@ -157,7 +157,7 @@ function Info({prop,ow,hs,ps,onClose,onBuild,canB}){
           {prop.pr>0&&<div style={{fontSize:13,color:"#94a3b8"}}>售價 ${prop.pr.toLocaleString()}</div>}</div>
       </div>
       {ip&&<div style={{background:"#f8fafc",borderRadius:14,padding:"12px 14px",marginBottom:14}}>
-        {[["空地",0],["🏠×1",1],["🏠×2",2],["🏠×3",3],["🏠×4",4],["🏨飯店",5]].map(([l,i])=>
+        {[["空地",0],["×1",1],["×2",2],["×3",3],["×4",4],["飯店",5]].map(([l,i])=>
           <div key={i} style={{display:"flex",justifyContent:"space-between",padding:"4px 0",
             fontSize:13,color:i===h?"#f97316":i===5?"#8b5cf6":"#64748b",
             fontWeight:i===h||i===5?700:400,
@@ -178,7 +178,7 @@ function Info({prop,ow,hs,ps,onClose,onBuild,canB}){
         {canB&&ip&&h<5&&<button onClick={()=>onBuild(prop)} style={{
           flex:1,padding:"11px 0",background:"linear-gradient(135deg,#22c55e,#16a34a)",
           border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",
-          boxShadow:"0 4px 14px rgba(34,197,94,0.3)"}}>{h<4?`🏠 蓋房 $${cost}`:`🏨 升級飯店 $${cost}`}</button>}
+          boxShadow:"0 4px 14px rgba(34,197,94,0.3)"}}>{h<4?` 蓋房 $${cost}`:` 升級飯店 $${cost}`}</button>}
         <button onClick={onClose} style={{flex:canB&&ip&&h<5?0:1,minWidth:80,padding:"11px 0",
           background:"#f1f5f9",border:"none",borderRadius:12,color:"#94a3b8",fontSize:13,fontWeight:600,cursor:"pointer"}}>關閉</button>
       </div>
@@ -229,7 +229,7 @@ export default function Game(){
   const startSolo=(n)=>{const p=Array.from({length:1+n},(_,i)=>({id:i,name:PN[i],money:6000,position:0,color:PC[i],bk:false,isAI:i>0}));
     const ap={};p.forEach(x=>{ap[x.id]=0;});setPs(p);setAPos(ap);setCur(0);setOw({});setHs({});setWinner(null);
     setLog([]);setShowBuy(false);setWheelOn(false);setMoving(false);setRolling(false);setTc(0);setLocked(false);
-    setMsg("擲骰子吧！");addLog("🎮 遊戲開始！");setMode("solo");setMySlot(0);setScr("game");};
+    setMsg("擲骰子吧！");addLog(" 遊戲開始！");setMode("solo");setMySlot(0);setScr("game");};
 
   // ══════ BUILD ══════
   const buildH=(prop)=>{const g=gs.current,p=g.ps[g.cur],h=g.hs[prop.id]||0;if(h>=5)return;
@@ -237,7 +237,7 @@ export default function Game(){
     const grp=P.filter(x=>x.g===prop.g&&x.g>0);if(!grp.every(x=>g.ow[x.id]===p.id)){setMsg("需集滿同色！");return;}
     const up=g.ps.map(x=>({...x}));up[g.cur].money-=cost;const nh={...g.hs,[prop.id]:h+1};
     showM(g.cur,-cost);setPs(up);setHs(nh);
-    addLog(`${p.name} ${prop.n} ${h<4?`🏠×${h+1}`:"🏨"}`);pop();setInfoP(null);
+    addLog(`${p.name} ${prop.n} ${h<4?`×${h+1}`:""}`);pop();setInfoP(null);
   };
 
   // ══════ ROLL ══════
@@ -272,10 +272,10 @@ export default function Game(){
     if(o[cell.id]===c){setMsg(`自己的地盤！`);endTurn(p,o,h);return;}
     if(pl.money<cell.pr){setMsg("資金不足！");endTurn(p,o,h);return;}
     if(pl.isAI){if(aiWants(pl,cell,o)){const up=p.map(x=>({...x}));up[c].money-=cell.pr;const no={...o,[cell.id]:c};
-      showM(c,-cell.pr);setMsg(`🤖 ${pl.name} 買 ${cell.n}`);addLog(`🤖 ${pl.name} 買 ${cell.n}`);
+      showM(c,-cell.pr);setMsg(` ${pl.name} 買 ${cell.n}`);addLog(` ${pl.name} 買 ${cell.n}`);
       setPs(up);setOw(no);const{hs:nh,built}=aiBuild(up[c],no,{...h});
-      if(built){addLog(`🤖 ${pl.name} ${built.n} 蓋房`);setHs(nh);setPs([...up]);}
-      endTurn(up,no,built?nh:h);}else{setMsg(`🤖 ${pl.name} 跳過`);endTurn(p,o,h);}return;}
+      if(built){addLog(` ${pl.name} ${built.n} 蓋房`);setHs(nh);setPs([...up]);}
+      endTurn(up,no,built?nh:h);}else{setMsg(` ${pl.name} 跳過`);endTurn(p,o,h);}return;}
     setBuyPr(cell);setShowBuy(true);setMsg(`${cell.e} ${cell.n} — $${cell.pr}`);
     };
 
@@ -290,7 +290,7 @@ export default function Game(){
     up[g.cur].money-=buyPr.pr;const no={...g.ow,[buyPr.id]:g.cur};showM(g.cur,-buyPr.pr);
     addLog(`${up[g.cur].name} 買 ${buyPr.n}`);pop();setPs(up);setOw(no);setShowBuy(false);setBuyPr(null);endTurn(up,no,g.hs);};
   const skipBuyAct=()=>{addLog(`${gs.current.ps[gs.current.cur].name} 跳過`);setShowBuy(false);setBuyPr(null);endTurn();};
-  const checkWin=(p)=>{const a=p.filter(x=>!x.bk);if(a.length===1){setWinner(a[0]);setMsg(`🏆 ${a[0].name} 獲勝！`);addLog(`🏆 ${a[0].name} 贏了！`);pop();if(!a[0].isAI&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(Math.max(1,Math.floor((a[0].money||0)/1000)));}};
+  const checkWin=(p)=>{const a=p.filter(x=>!x.bk);if(a.length===1){setWinner(a[0]);setMsg(` ${a[0].name} 獲勝！`);addLog(` ${a[0].name} 贏了！`);pop();if(!a[0].isAI&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(Math.max(1,Math.floor((a[0].money||0)/1000)));}};
 
   const endTurn=(uP,uO,uH)=>{setLocked(true);const g=gs.current;let p=uP||g.ps,o=uO||g.ow,h=uH||g.hs;
     if(g.winner||p.filter(x=>!x.bk).length<=1)return;
@@ -300,11 +300,11 @@ export default function Game(){
       setGEv(ev);shake();p=ev.fn(p.map(x=>({...x})));
       // Post-event bankruptcy sweep
       p=p.map(x=>x.bk?x:(x.money<=0?{...x,bk:true}:x));
-      p.filter(x=>x.bk).forEach(x=>addLog(`💀 ${x.name} 破產！`));
+      p.filter(x=>x.bk).forEach(x=>addLog(` ${x.name} 破產！`));
       setPs(p);addLog(ev.text);setTimeout(()=>setGEv(null),3000);
       if(p.filter(x=>!x.bk).length<=1){checkWin(p);return;}}
     const delay=p[next]?.isAI?1000:500;
-    setTimeout(()=>{setCur(next);if(p[next]?.isAI){setMsg(`🤖 ${p[next].name} ...`);setTimeout(()=>{if(!gs.current.winner)exeRoll();},900);}
+    setTimeout(()=>{setCur(next);if(p[next]?.isAI){setMsg(` ${p[next].name} ...`);setTimeout(()=>{if(!gs.current.winner)exeRoll();},900);}
       else{setMsg("擲骰子吧！");setLocked(false);}},delay);};
 
   const goMenu=()=>{if(pollRef.current)clearInterval(pollRef.current);setScr("menu");setMode(null);setWinner(null);setShowBuy(false);setWheelOn(false);};
@@ -323,7 +323,7 @@ export default function Game(){
           boxShadow:"0 20px 60px rgba(30,27,46,0.3)"}}>
           <div style={{position:"absolute",top:0,left:0,right:0,bottom:0,
             background:"radial-gradient(circle at 30% 20%,rgba(249,115,22,0.15),transparent 60%)",pointerEvents:"none"}}/>
-          <div style={{fontSize:56,marginBottom:8,animation:"bounce 2.5s ease-in-out infinite",position:"relative"}}>🎲</div>
+          <div style={{fontSize:56,marginBottom:8,animation:"bounce 2.5s ease-in-out infinite",position:"relative"}}></div>
           <h1 style={{fontSize:32,fontWeight:800,color:"#fff",letterSpacing:3,margin:"0 0 4px",position:"relative"}}>台灣大富翁</h1>
           <p style={{fontSize:11,color:"rgba(255,255,255,0.4)",letterSpacing:8,fontWeight:600,position:"relative"}}>TAIWAN MONOPOLY</p>
         </div>
@@ -334,7 +334,7 @@ export default function Game(){
           <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:12}}>
             <div style={{width:40,height:40,borderRadius:12,background:"linear-gradient(135deg,#f97316,#ea580c)",
               display:"flex",alignItems:"center",justifyContent:"center",fontSize:20,
-              boxShadow:"0 4px 12px rgba(249,115,22,0.3)"}}>🎮</div>
+              boxShadow:"0 4px 12px rgba(249,115,22,0.3)"}}></div>
             <div style={{textAlign:"left"}}><div style={{fontSize:15,fontWeight:800,color:"#1e1b2e"}}>單人模式</div>
               <div style={{fontSize:11,color:"#94a3b8"}}>對抗超強 AI 電腦</div></div>
           </div>
@@ -353,7 +353,7 @@ export default function Game(){
         </div>
 
         <div style={{marginTop:14,display:"flex",gap:5,justifyContent:"center",flexWrap:"wrap"}}>
-          {["🏠 蓋房","🎡 轉盤","🌪️ 事件","🤖 AI"].map(f=>
+          {[" 蓋房"," 轉盤"," 事件"," AI"].map(f=>
             <span key={f} style={{fontSize:10,background:"#1e1b2e",color:"#f97316",
               padding:"4px 10px",borderRadius:20,fontWeight:700,letterSpacing:0.5}}>{f}</span>)}
         </div>
@@ -381,14 +381,14 @@ export default function Game(){
     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:6,padding:"0 4px"}}>
       <div style={{display:"flex",alignItems:"center",gap:6}}>
         <div style={{width:28,height:28,borderRadius:8,background:"linear-gradient(135deg,#1e1b2e,#312e81)",
-          display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}>🎲</div>
+          display:"flex",alignItems:"center",justifyContent:"center",fontSize:14}}></div>
         <span style={{fontSize:13,fontWeight:800,color:"#1e1b2e",letterSpacing:1}}>台灣大富翁</span>
       </div>
       <div style={{display:"flex",alignItems:"center",gap:6}}>
         <span style={{fontSize:10,color:"#cbd5e1",fontWeight:700}}>R{tc}</span>
         <button onClick={goMenu} style={{width:28,height:28,borderRadius:8,background:"#f1f5f9",
           border:"none",fontSize:12,cursor:"pointer",color:"#94a3b8",display:"flex",
-          alignItems:"center",justifyContent:"center"}}>✕</button>
+          alignItems:"center",justifyContent:"center"}}></button>
       </div>
     </div>
 
@@ -409,7 +409,7 @@ export default function Game(){
             display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,
             boxShadow:p.id===cur?`0 0 0 2.5px ${p.color}30`:"none"}}>{PA[p.id]}</div>
           <span style={{fontSize:10,fontWeight:800,color:p.bk?"#cbd5e1":"#334155"}}>
-            {p.name}{p.bk&&" 💀"}
+            {p.name}{p.bk&&" "}
           </span>
         </div>
         <div style={{fontSize:15,fontWeight:900,color:p.color,letterSpacing:0.5}}>${p.money.toLocaleString()}</div>
@@ -454,7 +454,7 @@ export default function Game(){
             {h>0&&h<5&&<div style={{position:"absolute",bottom:2,left:3,display:"flex",gap:1}}>
               {Array.from({length:h}).map((_,i)=><div key={i} style={{width:5,height:6,
                 background:"#16a34a",borderRadius:"1px 1px 0 0",boxShadow:"0 -1px 0 #22c55e"}}/>)}</div>}
-            {h===5&&<div style={{position:"absolute",bottom:1,left:3,fontSize:8}}>🏨</div>}
+            {h===5&&<div style={{position:"absolute",bottom:1,left:3,fontSize:8}}></div>}
             <span style={{fontSize:Math.max(13,cPx*0.26),lineHeight:1}}>{prop.e}</span>
             <span style={{fontSize:Math.max(7,cPx*0.115),color:"#64748b",textAlign:"center",
               lineHeight:1.1,marginTop:1,fontWeight:700,padding:"0 1px",letterSpacing:-0.3}}>{prop.n}</span>
@@ -513,7 +513,7 @@ export default function Game(){
                 border:"2px solid #e5e2de",borderRadius:12,color:"#94a3b8",fontSize:13,
                 fontWeight:700,cursor:"pointer"}}>跳過</button>
             </div>:winner?<div style={{textAlign:"center",animation:"scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1)"}}>
-              <div style={{fontSize:48,marginBottom:6}}>🏆</div>
+              <div style={{fontSize:48,marginBottom:6}}></div>
               <div style={{fontSize:20,fontWeight:900,color:winner.color,marginBottom:10,
                 textShadow:`0 0 20px ${winner.color}30`}}>{winner.name} 獲勝！</div>
               <button onClick={goMenu} style={{padding:"10px 28px",
@@ -529,13 +529,13 @@ export default function Game(){
                 cursor:canRoll?"pointer":"default",
                 boxShadow:canRoll?"0 6px 20px rgba(249,115,22,0.3)":"none",
                 transform:canRoll?"scale(1)":"scale(0.97)"}}>
-                {rolling?"🎲 ...":moving?"🏃 移動中":!isMyTurn?"🤖 AI":"🎲 擲骰子"}
+                {rolling?" ...":moving?" 移動中":!isMyTurn?" AI":" 擲骰子"}
               </button>
               {myBld.length>0&&canB&&!rolling&&!moving&&
                 <button onClick={()=>setInfoP(myBld[0])} style={{padding:"6px 16px",
                   background:"linear-gradient(135deg,#fef3c7,#fde68a)",border:"1.5px solid #fbbf24",
                   borderRadius:10,fontSize:10,fontWeight:700,color:"#92400e",
-                  cursor:"pointer",animation:"scaleIn 0.3s ease"}}>🏠 蓋房子</button>}
+                  cursor:"pointer",animation:"scaleIn 0.3s ease"}}> 蓋房子</button>}
             </>}
           </div>
         </div>

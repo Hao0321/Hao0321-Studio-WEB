@@ -6,11 +6,11 @@ const d=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),cl=(v,a,b)=>Math.max(a,Math.min(b,v))
 
 const FORTS=[
   {n:"營火",hp:80,r:30,wHp:0,wSeg:0,wk:0,tu:0,cost:{},desc:"基礎營地"},
-  {n:"木柵欄",hp:150,r:50,wHp:40,wSeg:8,wk:1,tu:0,cost:{w:25},desc:"🔓 城牆防禦 · 1位工人"},
-  {n:"木屋堡壘",hp:300,r:68,wHp:70,wSeg:10,wk:2,tu:0,cost:{w:50,s:20},desc:"🔓 強化城牆 · 2位工人"},
-  {n:"石牆要塞",hp:500,r:88,wHp:120,wSeg:12,wk:3,tu:1,cost:{w:80,s:60},desc:"🔓 防禦砲塔 · 3位工人"},
-  {n:"哨塔城堡",hp:800,r:108,wHp:180,wSeg:14,wk:4,tu:2,cost:{w:120,s:100,f:40},desc:"🔓 征服能力 · 雙砲塔"},
-  {n:"烈焰王城",hp:1200,r:130,wHp:250,wSeg:16,wk:5,tu:3,cost:{w:180,s:150,f:80},desc:"👑 最終形態"},
+  {n:"木柵欄",hp:150,r:50,wHp:40,wSeg:8,wk:1,tu:0,cost:{w:25},desc:" 城牆防禦 · 1位工人"},
+  {n:"木屋堡壘",hp:300,r:68,wHp:70,wSeg:10,wk:2,tu:0,cost:{w:50,s:20},desc:" 強化城牆 · 2位工人"},
+  {n:"石牆要塞",hp:500,r:88,wHp:120,wSeg:12,wk:3,tu:1,cost:{w:80,s:60},desc:" 防禦砲塔 · 3位工人"},
+  {n:"哨塔城堡",hp:800,r:108,wHp:180,wSeg:14,wk:4,tu:2,cost:{w:120,s:100,f:40},desc:" 征服能力 · 雙砲塔"},
+  {n:"烈焰王城",hp:1200,r:130,wHp:250,wSeg:16,wk:5,tu:3,cost:{w:180,s:150,f:80},desc:" 最終形態"},
 ];
 
 function mkWorld(){const t=[],r=[],a=[];for(let i=0;i<180;i++){let x,y;do{x=rn(60,WW-60);y=rn(60,WH-60)}while(d({x,y},{x:FX,y:FY})<200);t.push({id:i,x,y,hp:4+ri(0,2),mhp:5,t:ri(0,4),sz:rn(.85,1.15),sh:0})}for(let i=0;i<70;i++){let x,y;do{x=rn(60,WW-60);y=rn(60,WH-60)}while(d({x,y},{x:FX,y:FY})<200);r.push({id:i+400,x,y,hp:5+ri(0,2),mhp:6,sz:rn(.75,1.1),sh:0})}for(let i=0;i<24;i++){let x,y;do{x=rn(120,WW-120);y=rn(120,WH-120)}while(d({x,y},{x:FX,y:FY})<300);a.push({id:i+700,x,y,hp:3,mhp:3,t:Math.random()>.4?"deer":"rabbit",vx:0,vy:0,wt:ri(40,150),fl:false,dir:1,an:0})}const v=[];for(let i=0;i<3;i++){const aa=((i/3)*Math.PI*2)+rn(-.3,.3),dd=800+rn(0,400);v.push({id:i,x:cl(FX+Math.cos(aa)*dd,200,WW-200),y:cl(FY+Math.sin(aa)*dd,200,WH-200),hp:60+i*30,mhp:60+i*30,lv:i,nm:["狼巢","冰窟","暗堡"][i],con:false,rt:ri(300,600),sol:3+i*2})}return{trees:t,rocks:r,animals:a,villages:v}}
@@ -48,18 +48,18 @@ export default function EmberGame(){
       // AUTO INTERACT
       if(p.acd<=0){let acted=false;
         let nt=null,nd=AR;for(let t of g.trees){const dd=d(p,t);if(dd<nd){nd=dd;nt=t}}
-        if(nt){nt.hp--;nt.sh=6;p.acd=ACD;acted=true;p.sw=true;g.pt.push({x:nt.x+rn(-5,5),y:nt.y-8,vx:rn(-1.5,1.5),vy:rn(-2.5,-.5),life:22,c:"#6a4"});if(nt.hp<=0){const a=3+ri(0,4);g.res.w+=a;g.dr.push({x:nt.x,y:nt.y-12,text:`+${a}`,icon:"🪵",life:50,c:"#d4a46a"});for(let i=0;i<5;i++)g.pt.push({x:nt.x+rn(-8,8),y:nt.y-rn(0,12),vx:rn(-2,2),vy:rn(-3,-1),life:ri(12,25),c:"#a86"})}}g.trees=g.trees.filter(t=>t.hp>0);
-        if(!acted){let nr=null,nrd=AR;for(let r of g.rocks){const dd=d(p,r);if(dd<nrd){nrd=dd;nr=r}}if(nr){nr.hp--;nr.sh=5;p.acd=ACD;acted=true;p.sw=true;g.pt.push({x:nr.x,y:nr.y-3,vx:rn(-1,1),vy:rn(-2,-.5),life:15,c:"#999"});if(nr.hp<=0){const a=2+ri(0,4);g.res.s+=a;g.dr.push({x:nr.x,y:nr.y-12,text:`+${a}`,icon:"🪨",life:50,c:"#a0aab8"})}}g.rocks=g.rocks.filter(r=>r.hp>0)}
-        if(!acted){let na=null,nad=AR;for(let a of g.animals){const dd=d(p,a);if(dd<nad){nad=dd;na=a}}if(na){na.hp--;p.acd=ACD;acted=true;p.sw=true;na.fl=true;const fx=na.x-p.x,fy=na.y-p.y,fl2=Math.hypot(fx,fy)||1;na.vx=fx/fl2*3.5;na.vy=fy/fl2*3.5;g.pt.push({x:na.x,y:na.y,vx:rn(-1,1),vy:rn(-1.5,-.3),life:14,c:"#c44"});if(na.hp<=0){const a=na.t==="deer"?5+ri(0,3):2+ri(0,3);g.res.f+=a;g.dr.push({x:na.x,y:na.y-12,text:`+${a}`,icon:"🍖",life:50,c:"#e8a050"})}}g.animals=g.animals.filter(a=>a.hp>0)}
-        if(!acted){let ne=null,ned=AR+8;for(let e of g.enemies){const dd=d(p,e);if(dd<ned){ned=dd;ne=e}}if(ne){ne.hp-=2+Math.floor(g.fort.lv*.5);p.acd=ACD;p.sw=true;const fx=ne.x-p.x,fy=ne.y-p.y,fl2=Math.hypot(fx,fy)||1;ne.kb=8;ne.kbx=fx/fl2*5;ne.kby=fy/fl2*5;g.pt.push({x:ne.x,y:ne.y,vx:rn(-2,2),vy:rn(-2,0),life:16,c:"#f55"});if(ne.hp<=0){g.kills++;g.dr.push({x:ne.x,y:ne.y-8,text:"擊殺",icon:"💀",life:40,c:"#f66"});if(Math.random()<.45){const a=ri(1,5);g.res.f+=a}}}g.enemies=g.enemies.filter(e=>e.hp>0)}
-        if(!acted){for(let v of g.villages){if(!v.con&&d(p,v)<60){v.hp-=3;p.acd=ACD;p.sw=true;g.pt.push({x:v.x+rn(-10,10),y:v.y+rn(-10,5),vx:rn(-1,1),vy:rn(-2,-.5),life:18,c:"#fa0"});if(v.hp<=0){v.con=true;g.con++;g.res.w+=30+v.lv*20;g.res.s+=20+v.lv*15;g.res.f+=15+v.lv*10;addM(`🏴 征服 ${v.nm}！大量資源入手`,"#ffcc44");p.mhp+=3;p.hp=p.mhp}break}}}}
+        if(nt){nt.hp--;nt.sh=6;p.acd=ACD;acted=true;p.sw=true;g.pt.push({x:nt.x+rn(-5,5),y:nt.y-8,vx:rn(-1.5,1.5),vy:rn(-2.5,-.5),life:22,c:"#6a4"});if(nt.hp<=0){const a=3+ri(0,4);g.res.w+=a;g.dr.push({x:nt.x,y:nt.y-12,text:`+${a}`,icon:"",life:50,c:"#d4a46a"});for(let i=0;i<5;i++)g.pt.push({x:nt.x+rn(-8,8),y:nt.y-rn(0,12),vx:rn(-2,2),vy:rn(-3,-1),life:ri(12,25),c:"#a86"})}}g.trees=g.trees.filter(t=>t.hp>0);
+        if(!acted){let nr=null,nrd=AR;for(let r of g.rocks){const dd=d(p,r);if(dd<nrd){nrd=dd;nr=r}}if(nr){nr.hp--;nr.sh=5;p.acd=ACD;acted=true;p.sw=true;g.pt.push({x:nr.x,y:nr.y-3,vx:rn(-1,1),vy:rn(-2,-.5),life:15,c:"#999"});if(nr.hp<=0){const a=2+ri(0,4);g.res.s+=a;g.dr.push({x:nr.x,y:nr.y-12,text:`+${a}`,icon:"",life:50,c:"#a0aab8"})}}g.rocks=g.rocks.filter(r=>r.hp>0)}
+        if(!acted){let na=null,nad=AR;for(let a of g.animals){const dd=d(p,a);if(dd<nad){nad=dd;na=a}}if(na){na.hp--;p.acd=ACD;acted=true;p.sw=true;na.fl=true;const fx=na.x-p.x,fy=na.y-p.y,fl2=Math.hypot(fx,fy)||1;na.vx=fx/fl2*3.5;na.vy=fy/fl2*3.5;g.pt.push({x:na.x,y:na.y,vx:rn(-1,1),vy:rn(-1.5,-.3),life:14,c:"#c44"});if(na.hp<=0){const a=na.t==="deer"?5+ri(0,3):2+ri(0,3);g.res.f+=a;g.dr.push({x:na.x,y:na.y-12,text:`+${a}`,icon:"",life:50,c:"#e8a050"})}}g.animals=g.animals.filter(a=>a.hp>0)}
+        if(!acted){let ne=null,ned=AR+8;for(let e of g.enemies){const dd=d(p,e);if(dd<ned){ned=dd;ne=e}}if(ne){ne.hp-=2+Math.floor(g.fort.lv*.5);p.acd=ACD;p.sw=true;const fx=ne.x-p.x,fy=ne.y-p.y,fl2=Math.hypot(fx,fy)||1;ne.kb=8;ne.kbx=fx/fl2*5;ne.kby=fy/fl2*5;g.pt.push({x:ne.x,y:ne.y,vx:rn(-2,2),vy:rn(-2,0),life:16,c:"#f55"});if(ne.hp<=0){g.kills++;g.dr.push({x:ne.x,y:ne.y-8,text:"擊殺",icon:"",life:40,c:"#f66"});if(Math.random()<.45){const a=ri(1,5);g.res.f+=a}}}g.enemies=g.enemies.filter(e=>e.hp>0)}
+        if(!acted){for(let v of g.villages){if(!v.con&&d(p,v)<60){v.hp-=3;p.acd=ACD;p.sw=true;g.pt.push({x:v.x+rn(-10,10),y:v.y+rn(-10,5),vx:rn(-1,1),vy:rn(-2,-.5),life:18,c:"#fa0"});if(v.hp<=0){v.con=true;g.con++;g.res.w+=30+v.lv*20;g.res.s+=20+v.lv*15;g.res.f+=15+v.lv*10;addM(` 征服 ${v.nm}！大量資源入手`,"#ffcc44");p.mhp+=3;p.hp=p.mhp}break}}}}
 
       // TIME
-      g.time++;const dp=(g.time%DLEN)/DLEN,isN=dp>.65;if(g.time>0&&g.time%DLEN===0){g.day++;addM(g.day<=SAFE_DAYS?`☀️ 第 ${g.day} 天 — 安全期（第${SAFE_DAYS}天後入夜有敵人）`:`☀️ 第 ${g.day} 天破曉`,g.day<=SAFE_DAYS?"#88ddaa":"#88ccff")}
+      g.time++;const dp=(g.time%DLEN)/DLEN,isN=dp>.65;if(g.time>0&&g.time%DLEN===0){g.day++;addM(g.day<=SAFE_DAYS?` 第 ${g.day} 天 — 安全期（第${SAFE_DAYS}天後入夜有敵人）`:` 第 ${g.day} 天破曉`,g.day<=SAFE_DAYS?"#88ddaa":"#88ccff")}
 
       // WORKERS
       const mxW=FORTS[g.fort.lv].wk;while(g.workers.length<mxW)g.workers.push({id:Date.now()+g.workers.length,x:FX+rn(-30,30),y:FY+rn(-30,30),tgt:null,carry:null,amt:0,st:"idle"});while(g.workers.length>mxW)g.workers.pop();
-      for(let wk of g.workers){if(wk.st==="idle"){const all=[...g.trees.map(t=>({...t,rt:"w"})),...g.rocks.map(r=>({...r,rt:"s"})),...g.animals.filter(a=>!a.fl).map(a=>({...a,rt:"f"}))].sort((a,b)=>d(a,{x:FX,y:FY})-d(b,{x:FX,y:FY}));const tg=all.find(r=>d(r,{x:FX,y:FY})<500);if(tg){wk.tgt=tg;wk.st="go"}}else if(wk.st==="go"&&wk.tgt){const dd2=d(wk,wk.tgt);if(dd2<20){const rt=wk.tgt.rt;if(rt==="w"){const t=g.trees.find(t=>t.id===wk.tgt.id);if(t){t.hp-=.05;t.sh=2;if(t.hp<=0){wk.carry=rt;wk.amt=3+ri(0,3);wk.st="ret"}}}else if(rt==="s"){const r=g.rocks.find(r=>r.id===wk.tgt.id);if(r){r.hp-=.04;r.sh=1.5;if(r.hp<=0){wk.carry=rt;wk.amt=2+ri(0,3);wk.st="ret"}}}else{const a=g.animals.find(a=>a.id===wk.tgt.id);if(a){a.hp-=.06;if(a.hp<=0){wk.carry=rt;wk.amt=3+ri(0,2);wk.st="ret"}}}g.trees=g.trees.filter(t=>t.hp>0);g.rocks=g.rocks.filter(r=>r.hp>0);g.animals=g.animals.filter(a=>a.hp>0);if(!wk.carry){const rt=wk.tgt.rt;const st=rt==="w"?g.trees.find(t=>t.id===wk.tgt.id):rt==="s"?g.rocks.find(r=>r.id===wk.tgt.id):g.animals.find(a=>a.id===wk.tgt.id);if(!st){wk.st="idle";wk.tgt=null}}}else{const a2=ag(wk,wk.tgt);wk.x+=Math.cos(a2)*1.4;wk.y+=Math.sin(a2)*1.4}}else if(wk.st==="ret"){const dd2=d(wk,{x:FX,y:FY});if(dd2<40){g.res[wk.carry]+=wk.amt;g.dr.push({x:FX+rn(-15,15),y:FY-20,text:`+${wk.amt}`,icon:wk.carry==="w"?"🪵":wk.carry==="s"?"🪨":"🍖",life:40,c:wk.carry==="w"?"#c96":wk.carry==="s"?"#bbc":"#ea8"});wk.carry=null;wk.amt=0;wk.st="idle";wk.tgt=null}else{const a2=ag(wk,{x:FX,y:FY});wk.x+=Math.cos(a2)*1.6;wk.y+=Math.sin(a2)*1.6}}}
+      for(let wk of g.workers){if(wk.st==="idle"){const all=[...g.trees.map(t=>({...t,rt:"w"})),...g.rocks.map(r=>({...r,rt:"s"})),...g.animals.filter(a=>!a.fl).map(a=>({...a,rt:"f"}))].sort((a,b)=>d(a,{x:FX,y:FY})-d(b,{x:FX,y:FY}));const tg=all.find(r=>d(r,{x:FX,y:FY})<500);if(tg){wk.tgt=tg;wk.st="go"}}else if(wk.st==="go"&&wk.tgt){const dd2=d(wk,wk.tgt);if(dd2<20){const rt=wk.tgt.rt;if(rt==="w"){const t=g.trees.find(t=>t.id===wk.tgt.id);if(t){t.hp-=.05;t.sh=2;if(t.hp<=0){wk.carry=rt;wk.amt=3+ri(0,3);wk.st="ret"}}}else if(rt==="s"){const r=g.rocks.find(r=>r.id===wk.tgt.id);if(r){r.hp-=.04;r.sh=1.5;if(r.hp<=0){wk.carry=rt;wk.amt=2+ri(0,3);wk.st="ret"}}}else{const a=g.animals.find(a=>a.id===wk.tgt.id);if(a){a.hp-=.06;if(a.hp<=0){wk.carry=rt;wk.amt=3+ri(0,2);wk.st="ret"}}}g.trees=g.trees.filter(t=>t.hp>0);g.rocks=g.rocks.filter(r=>r.hp>0);g.animals=g.animals.filter(a=>a.hp>0);if(!wk.carry){const rt=wk.tgt.rt;const st=rt==="w"?g.trees.find(t=>t.id===wk.tgt.id):rt==="s"?g.rocks.find(r=>r.id===wk.tgt.id):g.animals.find(a=>a.id===wk.tgt.id);if(!st){wk.st="idle";wk.tgt=null}}}else{const a2=ag(wk,wk.tgt);wk.x+=Math.cos(a2)*1.4;wk.y+=Math.sin(a2)*1.4}}else if(wk.st==="ret"){const dd2=d(wk,{x:FX,y:FY});if(dd2<40){g.res[wk.carry]+=wk.amt;g.dr.push({x:FX+rn(-15,15),y:FY-20,text:`+${wk.amt}`,icon:wk.carry==="w"?"":wk.carry==="s"?"":"",life:40,c:wk.carry==="w"?"#c96":wk.carry==="s"?"#bbc":"#ea8"});wk.carry=null;wk.amt=0;wk.st="idle";wk.tgt=null}else{const a2=ag(wk,{x:FX,y:FY});wk.x+=Math.cos(a2)*1.6;wk.y+=Math.sin(a2)*1.6}}}
 
       // TURRETS
       const mxT=FORTS[g.fort.lv].tu;while(g.turrets.length<mxT){const ta=(g.turrets.length/(mxT||1))*Math.PI*2;g.turrets.push({id:g.turrets.length,a:ta,cd:0})}
@@ -74,10 +74,10 @@ export default function EmberGame(){
 
       // ENEMIES
       if(isN&&g.day>SAFE_DAYS){g.esp--;const rate=Math.max(50,180-(g.day-SAFE_DAYS)*10);if(g.esp<=0&&g.enemies.length<8+(g.day-SAFE_DAYS)*2){g.esp=rate;const ea=rn(0,Math.PI*2),sd=550+rn(0,300),boss=Math.random()<.03+(g.day-SAFE_DAYS)*.01;g.enemies.push({id:Date.now()+ri(0,9999),x:cl(FX+Math.cos(ea)*sd,40,WW-40),y:cl(FY+Math.sin(ea)*sd,40,WH-40),hp:boss?12+(g.day-SAFE_DAYS)*2:2+Math.floor((g.day-SAFE_DAYS)*.5),mhp:boss?12+(g.day-SAFE_DAYS)*2:2+Math.floor((g.day-SAFE_DAYS)*.5),spd:boss?.6:.7+Math.min((g.day-SAFE_DAYS)*.04,.7),dmg:boss?3:1,t:boss?"boss":(Math.random()>.5?"wolf":"frost"),kb:0,kbx:0,kby:0,acd:0})}}
-      for(let v of g.villages){if(v.con||g.day<=SAFE_DAYS+1)continue;v.rt--;if(v.rt<=0){v.rt=ri(600,1000)-Math.max(0,(g.day-SAFE_DAYS))*8;for(let i=0;i<v.sol;i++)g.enemies.push({id:Date.now()+ri(0,99999),x:v.x+rn(-20,20),y:v.y+rn(-20,20),hp:3+v.lv*2,mhp:3+v.lv*2,spd:.8+v.lv*.1,dmg:1+Math.floor(v.lv*.5),t:"raid",kb:0,kbx:0,kby:0,acd:0});addM(`⚔️ ${v.nm}派出突襲隊！`,"#ff8866")}}
+      for(let v of g.villages){if(v.con||g.day<=SAFE_DAYS+1)continue;v.rt--;if(v.rt<=0){v.rt=ri(600,1000)-Math.max(0,(g.day-SAFE_DAYS))*8;for(let i=0;i<v.sol;i++)g.enemies.push({id:Date.now()+ri(0,99999),x:v.x+rn(-20,20),y:v.y+rn(-20,20),hp:3+v.lv*2,mhp:3+v.lv*2,spd:.8+v.lv*.1,dmg:1+Math.floor(v.lv*.5),t:"raid",kb:0,kbx:0,kby:0,acd:0});addM(` ${v.nm}派出突襲隊！`,"#ff8866")}}
 
       const fp={x:FX,y:FY};
-      for(let e of g.enemies){if(e.kb>0){e.x+=e.kbx;e.y+=e.kby;e.kbx*=.85;e.kby*=.85;e.kb--;continue}e.acd=Math.max(0,(e.acd||0)-1);if(d(e,p)<24&&e.acd<=0&&p.inv<=0){p.hp-=e.dmg;p.inv=30;e.acd=50;g.pt.push({x:p.x,y:p.y-5,vx:rn(-2,2),vy:rn(-2,0),life:15,c:"#f44"});if(p.hp<=0){g.over=true;setUi(pr=>({...pr,screen:"over",kills:g.kills,day:g.day,flv:g.fort.lv,con:g.con}));if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(g.day*100+g.kills+g.con*500)}continue}const dTF=d(e,fp),fR=FORTS[g.fort.lv].r;if(g.walls.length>0&&dTF<fR+80){let cw=null,cd2=999;for(let w of g.walls){if(w.hp<=0)continue;const wd=d(e,{x:w.mx,y:w.my});if(wd<cd2){cd2=wd;cw=w}}if(cw&&cd2<fR+30){if(cd2>18){const wa=ag(e,{x:cw.mx,y:cw.my});e.x+=Math.cos(wa)*e.spd;e.y+=Math.sin(wa)*e.spd}else if(e.acd<=0){cw.hp-=e.dmg;e.acd=50;g.pt.push({x:cw.mx+rn(-5,5),y:cw.my+rn(-5,5),vx:rn(-1,1),vy:rn(-1.5,-.3),life:15,c:g.fort.lv>=3?"#889":"#a86"});if(cw.hp<=0)addM("⚠️ 城牆被突破！","#ff4444")}continue}}const tgt=d(e,p)<200?p:fp;const ea2=ag(e,tgt);e.x+=Math.cos(ea2)*e.spd;e.y+=Math.sin(ea2)*e.spd;if(dTF<fR+10&&e.acd<=0){const wA=g.walls.filter(w=>w.hp>0).length;if(wA===0||g.walls.length===0){g.fort.hp-=e.dmg;e.acd=60;g.pt.push({x:FX+rn(-12,12),y:FY+rn(-12,12),vx:rn(-1,1),vy:rn(-2,0),life:20,c:"#fa0"});if(g.fort.hp<=0){g.over=true;setUi(pr=>({...pr,screen:"over",kills:g.kills,day:g.day,flv:g.fort.lv,con:g.con}));if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(g.day*100+g.kills+g.con*500)}}}}
+      for(let e of g.enemies){if(e.kb>0){e.x+=e.kbx;e.y+=e.kby;e.kbx*=.85;e.kby*=.85;e.kb--;continue}e.acd=Math.max(0,(e.acd||0)-1);if(d(e,p)<24&&e.acd<=0&&p.inv<=0){p.hp-=e.dmg;p.inv=30;e.acd=50;g.pt.push({x:p.x,y:p.y-5,vx:rn(-2,2),vy:rn(-2,0),life:15,c:"#f44"});if(p.hp<=0){g.over=true;setUi(pr=>({...pr,screen:"over",kills:g.kills,day:g.day,flv:g.fort.lv,con:g.con}));if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(g.day*100+g.kills+g.con*500)}continue}const dTF=d(e,fp),fR=FORTS[g.fort.lv].r;if(g.walls.length>0&&dTF<fR+80){let cw=null,cd2=999;for(let w of g.walls){if(w.hp<=0)continue;const wd=d(e,{x:w.mx,y:w.my});if(wd<cd2){cd2=wd;cw=w}}if(cw&&cd2<fR+30){if(cd2>18){const wa=ag(e,{x:cw.mx,y:cw.my});e.x+=Math.cos(wa)*e.spd;e.y+=Math.sin(wa)*e.spd}else if(e.acd<=0){cw.hp-=e.dmg;e.acd=50;g.pt.push({x:cw.mx+rn(-5,5),y:cw.my+rn(-5,5),vx:rn(-1,1),vy:rn(-1.5,-.3),life:15,c:g.fort.lv>=3?"#889":"#a86"});if(cw.hp<=0)addM(" 城牆被突破！","#ff4444")}continue}}const tgt=d(e,p)<200?p:fp;const ea2=ag(e,tgt);e.x+=Math.cos(ea2)*e.spd;e.y+=Math.sin(ea2)*e.spd;if(dTF<fR+10&&e.acd<=0){const wA=g.walls.filter(w=>w.hp>0).length;if(wA===0||g.walls.length===0){g.fort.hp-=e.dmg;e.acd=60;g.pt.push({x:FX+rn(-12,12),y:FY+rn(-12,12),vx:rn(-1,1),vy:rn(-2,0),life:20,c:"#fa0"});if(g.fort.hp<=0){g.over=true;setUi(pr=>({...pr,screen:"over",kills:g.kills,day:g.day,flv:g.fort.lv,con:g.con}));if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(g.day*100+g.kills+g.con*500)}}}}
 
       if(d(p,fp)<FORTS[g.fort.lv].r+35&&f%70===0)p.hp=Math.min(p.mhp,p.hp+1);
       for(let t of g.trees)if(t.sh>0)t.sh*=.8;for(let r of g.rocks)if(r.sh>0)r.sh*=.8;
@@ -117,9 +117,9 @@ export default function EmberGame(){
     anim=requestAnimationFrame(tick);return()=>{cancelAnimationFrame(anim);window.removeEventListener("resize",resize)}
   },[ui.screen]);
 
-  const upgF=()=>{const g=G.current;if(!g)return;const nl=g.fort.lv+1;if(nl>=FORTS.length){addM("已達最高等級！");return}const c2=FORTS[nl].cost;if((c2.w||0)>g.res.w||(c2.s||0)>g.res.s||(c2.f||0)>g.res.f){addM("⚠️ 資源不足！","#ff8866");return}g.res.w-=c2.w||0;g.res.s-=c2.s||0;g.res.f-=c2.f||0;g.fort.lv=nl;g.fort.mhp=FORTS[nl].hp;g.fort.hp=FORTS[nl].hp;g.walls=mkWalls(nl);addM(`🏰 升級為 ${FORTS[nl].n}！`,"#ffcc44");for(let i=0;i<20;i++)g.pt.push({x:FX+rn(-40,40),y:FY+rn(-40,10),vx:rn(-2,2),vy:rn(-3,-1),life:ri(20,40),c:Math.random()>.5?"#fa0":"#ff6"});setUi(p=>({...p,showU:false}))};
-  const repW=()=>{const g=G.current;if(!g||g.walls.length===0)return;const br=g.walls.filter(w=>w.hp<w.mhp);if(!br.length){addM("城牆完好！");return}const cost=br.length*3;if(g.res.w<cost){addM("⚠️ 木材不足！","#ff8866");return}g.res.w-=cost;for(let w of br)w.hp=w.mhp;addM("🔧 城牆已修復！","#88ccff")};
-  const eat=()=>{const g=G.current;if(!g)return;if(g.res.f>=3){g.res.f-=3;g.p.hp=Math.min(g.p.mhp,g.p.hp+5);addM("🍖 恢復體力！")}else addM("⚠️ 食物不足！","#ff8866")};
+  const upgF=()=>{const g=G.current;if(!g)return;const nl=g.fort.lv+1;if(nl>=FORTS.length){addM("已達最高等級！");return}const c2=FORTS[nl].cost;if((c2.w||0)>g.res.w||(c2.s||0)>g.res.s||(c2.f||0)>g.res.f){addM(" 資源不足！","#ff8866");return}g.res.w-=c2.w||0;g.res.s-=c2.s||0;g.res.f-=c2.f||0;g.fort.lv=nl;g.fort.mhp=FORTS[nl].hp;g.fort.hp=FORTS[nl].hp;g.walls=mkWalls(nl);addM(` 升級為 ${FORTS[nl].n}！`,"#ffcc44");for(let i=0;i<20;i++)g.pt.push({x:FX+rn(-40,40),y:FY+rn(-40,10),vx:rn(-2,2),vy:rn(-3,-1),life:ri(20,40),c:Math.random()>.5?"#fa0":"#ff6"});setUi(p=>({...p,showU:false}))};
+  const repW=()=>{const g=G.current;if(!g||g.walls.length===0)return;const br=g.walls.filter(w=>w.hp<w.mhp);if(!br.length){addM("城牆完好！");return}const cost=br.length*3;if(g.res.w<cost){addM(" 木材不足！","#ff8866");return}g.res.w-=cost;for(let w of br)w.hp=w.mhp;addM(" 城牆已修復！","#88ccff")};
+  const eat=()=>{const g=G.current;if(!g)return;if(g.res.f>=3){g.res.f-=3;g.p.hp=Math.min(g.p.mhp,g.p.hp+5);addM(" 恢復體力！")}else addM(" 食物不足！","#ff8866")};
 
   /* ═══════════════════════ CSS ═══════════════════════ */
   const CSS=`@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Cinzel:wght@700;900&display=swap');
@@ -144,7 +144,7 @@ export default function EmberGame(){
       {/* Decorative lines */}
       <div style={{position:"absolute",top:"15%",left:"50%",transform:"translateX(-50%)",width:200,height:1,background:"linear-gradient(90deg,transparent,rgba(180,140,80,.3),transparent)"}}/>
       <div style={{position:"absolute",bottom:"18%",left:"50%",transform:"translateX(-50%)",width:200,height:1,background:"linear-gradient(90deg,transparent,rgba(180,140,80,.3),transparent)"}}/>
-      <div style={{animation:"float 3s ease-in-out infinite, glow 4s ease-in-out infinite",fontSize:100,marginBottom:12}}>🔥</div>
+      <div style={{animation:"float 3s ease-in-out infinite, glow 4s ease-in-out infinite",fontSize:100,marginBottom:12}}></div>
       <h1 style={{fontFamily:"'Cinzel',serif",fontSize:48,fontWeight:900,letterSpacing:12,...goldText,animation:"fadeUp 1s ease-out",lineHeight:1.2}}>餘燼荒原</h1>
       <p style={{fontFamily:"'Cinzel',serif",fontSize:12,letterSpacing:16,color:"#5a4a3a",marginBottom:30,marginTop:4}}>ASHEN FRONTIER</p>
       <div style={{...panel,padding:"16px 24px",marginBottom:30,animation:"fadeUp 1s ease-out .2s both",maxWidth:300}}>
@@ -156,8 +156,8 @@ export default function EmberGame(){
       </div>
       <button onClick={init} style={{...panel,background:"linear-gradient(180deg,rgba(160,80,20,.7),rgba(120,50,10,.8))",border:"1px solid rgba(220,160,60,.35)",color:"#ffe0b0",padding:"14px 52px",fontSize:17,fontWeight:800,letterSpacing:8,cursor:"pointer",boxShadow:"0 4px 25px rgba(200,100,20,.3), inset 0 1px 0 rgba(255,200,120,.15)",animation:"fadeUp 1s ease-out .4s both",transition:"all .15s"}} onMouseDown={e=>e.target.style.transform="scale(.96)"} onMouseUp={e=>e.target.style.transform="scale(1)"}>點 燃 火 種</button>
       <div style={{marginTop:28,fontSize:10,color:"#3a3028",textAlign:"center",lineHeight:2.2,animation:"fadeUp 1s ease-out .6s both"}}>
-        <span style={{color:"#5a4a38"}}>📱 觸控拖曳移動</span> · <span style={{color:"#5a4a38"}}>靠近自動互動</span><br/>
-        <span style={{color:"#4a3a28"}}>⌨️ WASD 移動</span>
+        <span style={{color:"#5a4a38"}}> 觸控拖曳移動</span> · <span style={{color:"#5a4a38"}}>靠近自動互動</span><br/>
+        <span style={{color:"#4a3a28"}}> WASD 移動</span>
       </div>
       <p style={{fontSize:8,color:"#2a2018",marginTop:20,letterSpacing:4}}>HAO0321 ©STUDIO</p>
     </div>
@@ -167,7 +167,7 @@ export default function EmberGame(){
   if(ui.screen==="over")return(
     <div style={{width:"100%",height:"100vh",background:"radial-gradient(ellipse at 50% 40%, #1a1018 0%, #0c080a 60%, #060408 100%)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",fontFamily:"'Noto Sans TC',sans-serif",color:"#c8d8e8"}}>
       <style>{CSS}</style>
-      <div style={{fontSize:70,marginBottom:16,filter:"drop-shadow(0 0 20px rgba(200,60,60,.3))",animation:"fadeUp .8s ease-out"}}>💀</div>
+      <div style={{fontSize:70,marginBottom:16,filter:"drop-shadow(0 0 20px rgba(200,60,60,.3))",animation:"fadeUp .8s ease-out"}}></div>
       <h1 style={{fontFamily:"'Cinzel',serif",fontSize:34,fontWeight:900,color:"#c08080",letterSpacing:8,marginBottom:8,textShadow:"0 0 15px rgba(200,80,80,.2)",animation:"fadeUp .8s ease-out .1s both"}}>城市陷落</h1>
       <p style={{fontSize:11,color:"#5a4a4a",marginBottom:24,animation:"fadeUp .8s ease-out .15s both"}}>永恆的黑暗吞噬了最後的餘燼</p>
       <div style={{...panel,padding:20,marginBottom:24,minWidth:250,animation:"fadeUp .8s ease-out .2s both"}}>
@@ -198,23 +198,23 @@ export default function EmberGame(){
           <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
             <div style={{display:"flex",alignItems:"center",gap:6}}>
               <div style={{width:28,height:28,borderRadius:"50%",background:ui.night?"radial-gradient(circle,#2a3a6a,#1a1a3a)":"radial-gradient(circle,#4a3a20,#2a2010)",border:goldBorder,display:"flex",alignItems:"center",justifyContent:"center",fontSize:14,boxShadow:ui.night?"0 0 10px rgba(60,80,160,.3)":"0 0 10px rgba(200,150,60,.3)"}}>
-                {ui.night?"🌙":"☀️"}
+                {ui.night?"":""}
               </div>
               <div>
                 <div style={{...goldText,fontWeight:800,fontSize:14,lineHeight:1}}>第 {ui.day} 天</div>
                 <div style={{fontSize:8,color:"#5a4a3a",marginTop:1}}>{ui.day<=SAFE_DAYS?`安全期 ${SAFE_DAYS-ui.day+1}天`:ui.night?"夜晚 · 危險":"白天 · 安全"}</div>
               </div>
             </div>
-            {ui.night&&ui.day>SAFE_DAYS&&<div style={{fontSize:10,color:"#c87060",background:"rgba(160,40,30,.15)",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(160,40,30,.2)",animation:"barGlow 2s infinite"}}>⚔ {ui.en} 來襲</div>}
+            {ui.night&&ui.day>SAFE_DAYS&&<div style={{fontSize:10,color:"#c87060",background:"rgba(160,40,30,.15)",padding:"3px 10px",borderRadius:3,border:"1px solid rgba(160,40,30,.2)",animation:"barGlow 2s infinite"}}> {ui.en} 來襲</div>}
             <div style={{display:"flex",gap:10,fontSize:10}}>
-              <span style={{color:"#a08070"}}>💀 {ui.kills}</span>
-              <span style={{color:"#80a080"}}>🏴 {ui.con}</span>
+              <span style={{color:"#a08070"}}> {ui.kills}</span>
+              <span style={{color:"#80a080"}}> {ui.con}</span>
             </div>
           </div>
 
           {/* Resources row */}
           <div style={{display:"flex",gap:5,marginBottom:8}}>
-            {[{i:"🪵",v:ui.w,n:"木材",c:"#c8a060",bg:"rgba(160,120,50,.08)"},{i:"🪨",v:ui.s,n:"石頭",c:"#90a0b0",bg:"rgba(120,140,160,.08)"},{i:"🍖",v:ui.f,n:"食物",c:"#c89050",bg:"rgba(180,120,50,.08)"}].map(r=>(
+            {[{i:"",v:ui.w,n:"木材",c:"#c8a060",bg:"rgba(160,120,50,.08)"},{i:"",v:ui.s,n:"石頭",c:"#90a0b0",bg:"rgba(120,140,160,.08)"},{i:"",v:ui.f,n:"食物",c:"#c89050",bg:"rgba(180,120,50,.08)"}].map(r=>(
               <div key={r.n} style={{flex:1,background:r.bg,border:goldBorder,borderRadius:3,padding:"6px 8px",display:"flex",alignItems:"center",gap:6}}>
                 <span style={{fontSize:16,filter:"drop-shadow(0 1px 2px rgba(0,0,0,.5))"}}>{r.i}</span>
                 <div>
@@ -229,7 +229,7 @@ export default function EmberGame(){
           <div style={{display:"flex",gap:8}}>
             <div style={{flex:1}}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
-                <span style={{fontSize:9,...goldText}}>❤️ 玩家</span>
+                <span style={{fontSize:9,...goldText}}> 玩家</span>
                 <span style={{fontSize:9,color:"#5a4a3a"}}>{ui.hp}/{ui.mhp}</span>
               </div>
               <div style={{height:7,background:"rgba(0,0,0,.4)",borderRadius:2,border:"1px solid rgba(180,140,80,.1)",overflow:"hidden",position:"relative"}}>
@@ -239,7 +239,7 @@ export default function EmberGame(){
             </div>
             <div style={{flex:1}}>
               <div style={{display:"flex",justifyContent:"space-between",marginBottom:3}}>
-                <span style={{fontSize:9,...goldText}}>🏰 {FORTS[ui.flv].n}</span>
+                <span style={{fontSize:9,...goldText}}> {FORTS[ui.flv].n}</span>
                 <span style={{fontSize:9,color:"#5a4a3a"}}>{ui.fhp}/{ui.fmhp}</span>
               </div>
               <div style={{height:7,background:"rgba(0,0,0,.4)",borderRadius:2,border:"1px solid rgba(180,140,80,.1)",overflow:"hidden",position:"relative"}}>
@@ -262,7 +262,7 @@ export default function EmberGame(){
         {(ui.vil||[]).map(v=>(
           <div key={v.id} style={{...panel,padding:"3px 8px",marginBottom:3,fontSize:9,color:v.con?"#80a870":"#b07060",display:"flex",alignItems:"center",gap:4}}>
             <span style={{width:4,height:4,borderRadius:"50%",background:v.con?"#6a8":"#c66"}}/>
-            {v.con?"✓":"⚔"} {v.nm}
+            {v.con?"":""} {v.nm}
           </div>
         ))}
       </div>
@@ -270,9 +270,9 @@ export default function EmberGame(){
       {/* ═══ BOTTOM ACTION BAR ═══ */}
       <div style={{position:"absolute",bottom:12,left:"50%",transform:"translateX(-50%)",display:"flex",gap:6,zIndex:10}}>
         {[
-          {icon:"🏗",label:"升級",action:()=>setUi(p=>({...p,showU:!p.showU})),accent:"rgba(180,140,60,.15)",bc:"rgba(180,140,60,.2)"},
-          {icon:"🔧",label:"修牆",action:repW,accent:"rgba(100,160,180,.15)",bc:"rgba(100,160,180,.2)"},
-          {icon:"🍖",label:"進食",action:eat,accent:"rgba(180,120,50,.15)",bc:"rgba(180,120,50,.2)"},
+          {icon:"",label:"升級",action:()=>setUi(p=>({...p,showU:!p.showU})),accent:"rgba(180,140,60,.15)",bc:"rgba(180,140,60,.2)"},
+          {icon:"",label:"修牆",action:repW,accent:"rgba(100,160,180,.15)",bc:"rgba(100,160,180,.2)"},
+          {icon:"",label:"進食",action:eat,accent:"rgba(180,120,50,.15)",bc:"rgba(180,120,50,.2)"},
         ].map(b=>(
           <button key={b.label} onClick={b.action} style={{background:`linear-gradient(180deg,${b.accent},rgba(10,8,6,.9))`,border:`1px solid ${b.bc}`,borderRadius:4,padding:"8px 14px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,minWidth:56,boxShadow:"0 2px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.03)",transition:"all .12s"}} onMouseDown={e=>e.currentTarget.style.transform="scale(.93)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>
             <span style={{fontSize:18,filter:"drop-shadow(0 1px 3px rgba(0,0,0,.5))"}}>{b.icon}</span>
@@ -299,17 +299,17 @@ export default function EmberGame(){
                   <div style={{fontSize:10,color:"#7a8a6a",textAlign:"center",marginBottom:10}}>{nc.desc}</div>
                   <div style={{display:"flex",justifyContent:"center",gap:8}}>
                     {nc.cost.w&&<div style={{textAlign:"center",background:"rgba(0,0,0,.2)",borderRadius:3,padding:"4px 10px",border:"1px solid rgba(180,140,80,.08)"}}>
-                      <div style={{fontSize:14}}>🪵</div>
+                      <div style={{fontSize:14}}></div>
                       <div style={{fontSize:12,color:ui.w>=nc.cost.w?"#a0c880":"#c08060",fontWeight:700}}>{nc.cost.w}</div>
                       <div style={{fontSize:8,color:"#4a3a2a"}}>有 {ui.w}</div>
                     </div>}
                     {nc.cost.s&&<div style={{textAlign:"center",background:"rgba(0,0,0,.2)",borderRadius:3,padding:"4px 10px",border:"1px solid rgba(180,140,80,.08)"}}>
-                      <div style={{fontSize:14}}>🪨</div>
+                      <div style={{fontSize:14}}></div>
                       <div style={{fontSize:12,color:ui.s>=nc.cost.s?"#a0c880":"#c08060",fontWeight:700}}>{nc.cost.s}</div>
                       <div style={{fontSize:8,color:"#4a3a2a"}}>有 {ui.s}</div>
                     </div>}
                     {nc.cost.f&&<div style={{textAlign:"center",background:"rgba(0,0,0,.2)",borderRadius:3,padding:"4px 10px",border:"1px solid rgba(180,140,80,.08)"}}>
-                      <div style={{fontSize:14}}>🍖</div>
+                      <div style={{fontSize:14}}></div>
                       <div style={{fontSize:12,color:ui.f>=nc.cost.f?"#a0c880":"#c08060",fontWeight:700}}>{nc.cost.f}</div>
                       <div style={{fontSize:8,color:"#4a3a2a"}}>有 {ui.f}</div>
                     </div>}
@@ -317,13 +317,13 @@ export default function EmberGame(){
                 </div>
                 <button onClick={upgF} style={{width:"100%",padding:11,fontSize:13,fontWeight:800,...goldText,background:"linear-gradient(180deg,rgba(160,80,20,.6),rgba(120,50,10,.7))",border:"1px solid rgba(220,160,60,.3)",borderRadius:3,cursor:"pointer",letterSpacing:4,boxShadow:"0 2px 12px rgba(200,100,20,.2), inset 0 1px 0 rgba(255,200,120,.1)"}}>升 級</button>
               </>
-            ):<div style={{fontSize:13,textAlign:"center",padding:16,...goldText}}>👑 已達最終形態</div>}
+            ):<div style={{fontSize:13,textAlign:"center",padding:16,...goldText}}> 已達最終形態</div>}
 
             {/* Unlock list */}
             <div style={{marginTop:10,paddingTop:8,borderTop:goldBorder}}>
               <div style={{fontSize:8,color:"#4a3a28",textAlign:"center",marginBottom:6,letterSpacing:3}}>解鎖進度</div>
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:3}}>
-                {[{lv:1,t:"城牆",i:"🧱"},{lv:1,t:"工人",i:"👷"},{lv:2,t:"強化",i:"🔨"},{lv:3,t:"砲塔",i:"🗼"},{lv:4,t:"征服",i:"⚔️"},{lv:5,t:"王城",i:"👑"}].map((u,i)=>(
+                {[{lv:1,t:"城牆",i:""},{lv:1,t:"工人",i:""},{lv:2,t:"強化",i:""},{lv:3,t:"砲塔",i:""},{lv:4,t:"征服",i:""},{lv:5,t:"王城",i:""}].map((u,i)=>(
                   <div key={i} style={{fontSize:8,padding:"3px 0",textAlign:"center",borderRadius:2,background:ui.flv>=u.lv?"rgba(100,160,80,.08)":"rgba(0,0,0,.2)",color:ui.flv>=u.lv?"#8aaa70":"#3a3028",border:`1px solid ${ui.flv>=u.lv?"rgba(100,160,80,.12)":"rgba(255,255,255,.02)"}`}}>
                     {u.i} {u.t}
                   </div>
