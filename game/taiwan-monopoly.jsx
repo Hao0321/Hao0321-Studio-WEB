@@ -226,7 +226,7 @@ export default function Game(){
   const shake=()=>{setShk(true);setTimeout(()=>setShk(false),600);};
 
   // ══════ SOLO ══════
-  const startSolo=(n)=>{const p=Array.from({length:1+n},(_,i)=>({id:i,name:PN[i],money:15000,position:0,color:PC[i],bk:false,isAI:i>0}));
+  const startSolo=(n)=>{const p=Array.from({length:1+n},(_,i)=>({id:i,name:PN[i],money:6000,position:0,color:PC[i],bk:false,isAI:i>0}));
     const ap={};p.forEach(x=>{ap[x.id]=0;});setPs(p);setAPos(ap);setCur(0);setOw({});setHs({});setWinner(null);
     setLog([]);setShowBuy(false);setWheelOn(false);setMoving(false);setRolling(false);setTc(0);setLocked(false);
     setMsg("擲骰子吧！");addLog("🎮 遊戲開始！");setMode("solo");setMySlot(0);setScr("game");};
@@ -252,7 +252,7 @@ export default function Game(){
       setAPos(p=>({...p,[g.cur]:pos}));if(pos===0&&step>0)passed=true;
       if(step<steps)setTimeout(tick,145);else setTimeout(()=>finishMove(pos,passed),200);};setTimeout(tick,160);};
   const finishMove=(np,passed)=>{setMoving(false);const g=gs.current;const up=g.ps.map(p=>({...p}));
-    up[g.cur].position=np;if(passed){up[g.cur].money+=2000;showM(g.cur,2000);addLog(`${up[g.cur].name} 起點 +$2,000`);}
+    up[g.cur].position=np;if(passed){up[g.cur].money+=800;showM(g.cur,800);addLog(`${up[g.cur].name} 起點 +$800`);}
     setPs(up);handleLand(up,g.ow,g.hs,g.cur,np);};
 
   // ══════ LANDING ══════
@@ -297,7 +297,12 @@ export default function Game(){
     let next=(g.cur+1)%p.length,guard=0;while(p[next]?.bk&&guard++<p.length)next=(next+1)%p.length;
     const ntc=(g.tc||0)+1;setTc(ntc);
     if(ntc>0&&ntc%8===0&&Math.random()>0.3){const ev=GEV[Math.floor(Math.random()*GEV.length)];
-      setGEv(ev);shake();p=ev.fn(p.map(x=>({...x})));setPs(p);addLog(ev.text);setTimeout(()=>setGEv(null),3000);}
+      setGEv(ev);shake();p=ev.fn(p.map(x=>({...x})));
+      // Post-event bankruptcy sweep
+      p=p.map(x=>x.bk?x:(x.money<=0?{...x,bk:true}:x));
+      p.filter(x=>x.bk).forEach(x=>addLog(`💀 ${x.name} 破產！`));
+      setPs(p);addLog(ev.text);setTimeout(()=>setGEv(null),3000);
+      if(p.filter(x=>!x.bk).length<=1){checkWin(p);return;}}
     const delay=p[next]?.isAI?1000:500;
     setTimeout(()=>{setCur(next);if(p[next]?.isAI){setMsg(`🤖 ${p[next].name} ...`);setTimeout(()=>{if(!gs.current.winner)exeRoll();},900);}
       else{setMsg("擲骰子吧！");setLocked(false);}},delay);};
