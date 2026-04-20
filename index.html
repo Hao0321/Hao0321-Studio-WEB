@@ -1236,6 +1236,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
       position: relative;
       z-index: 2;
     }
@@ -1252,6 +1254,7 @@
       transition: color 0.3s;
     }
     footer a:hover { color: var(--glow-blue); }
+    .footer-nav { display: flex; gap: 18px; flex-wrap: wrap; }
 
     /* ===== SECTION DIVIDER ===== */
     .sector-divider {
@@ -1643,6 +1646,13 @@
 
   <footer>
     <p>&copy; 2026 Hao0321 Studio. All rights reserved.</p>
+    <nav class="footer-nav">
+      <a href="/about.html">About</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="https://game.hao0321.com/">Games</a>
+      <a href="mailto:lo246179268@gmail.com">Contact</a>
+    </nav>
     <a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="回到頂部">Back to top &uarr;</a>
   </footer>
 

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>使用條款 — Hao0321 Studio</title>
+  <meta name="description" content="Hao0321 Studio 網站使用條款 — 規範您使用本站的權利與義務。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#00b4ff" />
+  <link rel="canonical" href="https://hao0321.com/terms.html" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="使用條款 — Hao0321 Studio" />
+  <meta property="og:description" content="Hao0321 Studio 網站使用條款。" />
+  <meta property="og:url" content="https://hao0321.com/terms.html" />
+  <meta property="og:locale" content="zh_TW" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --void: #050508; --hull: #0a0a12; --steel: #1a1a2a;
+      --glow-blue: #00b4ff; --glow-cyan: #00e5ff; --glow-white: #e0e8ff;
+      --dim: #8888aa; --text: #d0d8ee; --radius: 12px;
+      --font-head: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+      --font-body: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--void); color: var(--text); font-family: var(--font-body); line-height: 1.85; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+    ::selection { background: var(--glow-blue); color: var(--void); }
+    a { color: var(--glow-cyan); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--glow-white); }
+
+    .bg-grid { position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image: linear-gradient(rgba(0,180,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); }
+
+    nav.topnav { position: sticky; top: 0; z-index: 100;
+      background: rgba(5,5,8,0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0,180,255,0.12); padding: 18px 5vw;
+      display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-family: var(--font-head); font-weight: 700; font-size: 1rem; color: var(--glow-white); letter-spacing: 0.04em; }
+    .logo span { color: var(--glow-blue); }
+    .back-link { font-family: var(--font-head); font-size: 0.82rem; color: var(--dim); letter-spacing: 0.08em; }
+    .back-link:hover { color: var(--glow-cyan); }
+
+    main { max-width: 780px; margin: 0 auto; padding: 60px 5vw 100px; }
+    .doc-label { font-family: var(--font-head); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.22em; color: var(--glow-blue); text-transform: uppercase; margin-bottom: 14px; display: inline-flex; align-items: center; gap: 10px; }
+    .doc-label::before { content: ''; width: 28px; height: 1px; background: var(--glow-blue); }
+    h1 { font-family: var(--font-head); font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; color: var(--glow-white); margin-bottom: 12px; line-height: 1.15; }
+    .updated { font-family: var(--font-head); font-size: 0.78rem; color: var(--dim); letter-spacing: 0.06em; margin-bottom: 48px; padding-bottom: 22px; border-bottom: 1px dashed rgba(136,136,170,0.2); }
+    h2 { font-family: var(--font-head); font-size: 1.25rem; font-weight: 700; color: var(--glow-white); margin: 40px 0 14px; padding-left: 16px; position: relative; }
+    h2::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 2px; background: linear-gradient(180deg, var(--glow-blue), var(--glow-cyan)); }
+    h3 { font-family: var(--font-head); font-size: 1rem; font-weight: 600; color: var(--glow-cyan); margin: 24px 0 10px; }
+    p, li { font-size: 0.94rem; color: var(--text); margin-bottom: 14px; }
+    ul, ol { padding-left: 24px; margin-bottom: 14px; }
+    li { margin-bottom: 8px; }
+    strong { color: var(--glow-white); font-weight: 600; }
+    code { font-family: 'JetBrains Mono', monospace; background: rgba(0,180,255,0.08); border: 1px solid rgba(0,180,255,0.18); padding: 1px 6px; border-radius: 4px; font-size: 0.84rem; color: var(--glow-cyan); }
+
+    .toc { background: rgba(26,26,42,0.5); border: 1px solid rgba(0,180,255,0.14); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 44px; }
+    .toc strong { font-family: var(--font-head); font-size: 0.78rem; letter-spacing: 0.14em; color: var(--glow-blue); text-transform: uppercase; display: block; margin-bottom: 10px; }
+    .toc ol { padding-left: 20px; margin: 0; columns: 2; column-gap: 24px; }
+    .toc li { margin-bottom: 5px; font-size: 0.88rem; }
+    .toc a { color: var(--text); }
+    .toc a:hover { color: var(--glow-cyan); }
+
+    .notice {
+      background: rgba(255,170,0,0.08);
+      border-left: 3px solid #ffaa00;
+      padding: 14px 18px;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .notice strong { color: #ffaa00; }
+
+    footer { border-top: 1px solid rgba(0,180,255,0.1); padding: 36px 5vw; text-align: center; font-size: 0.78rem; color: var(--dim); }
+    footer .links { margin-bottom: 12px; display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; }
+    footer a { color: var(--dim); }
+    footer a:hover { color: var(--glow-cyan); }
+
+    @media (max-width: 600px) {
+      .toc ol { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <nav class="topnav">
+    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
+    <a href="/" class="back-link">← 回首頁</a>
+  </nav>
+
+  <main>
+    <div class="doc-label">Legal / Terms</div>
+    <h1>使用條款</h1>
+    <p class="updated">最後更新：2026 年 4 月 21 日 · 生效日期：2026 年 4 月 21 日</p>
+
+    <div class="toc">
+      <strong>目次</strong>
+      <ol>
+        <li><a href="#accept">接受條款</a></li>
+        <li><a href="#service">服務說明</a></li>
+        <li><a href="#account">帳號與資格</a></li>
+        <li><a href="#conduct">使用者行為準則</a></li>
+        <li><a href="#ip">智慧財產權</a></li>
+        <li><a href="#ugc">使用者產生內容</a></li>
+        <li><a href="#third">第三方連結</a></li>
+        <li><a href="#ads">廣告與贊助</a></li>
+        <li><a href="#disclaim">免責聲明</a></li>
+        <li><a href="#liability">責任限制</a></li>
+        <li><a href="#termination">終止</a></li>
+        <li><a href="#law">準據法與管轄</a></li>
+        <li><a href="#changes">條款變更</a></li>
+        <li><a href="#contact">聯絡</a></li>
+      </ol>
+    </div>
+
+    <div class="notice">
+      <strong>重要提示</strong>：Hao0321 Studio 的所有遊戲與工具均以「現狀」提供，僅供個人娛樂與學習使用。使用本站前請先閱讀完整條款。
+    </div>
+
+    <h2 id="accept">1. 接受條款</h2>
+    <p>歡迎使用 Hao0321 Studio（以下簡稱「工作室」、「我們」）經營的網站 <code>hao0321.com</code> 及其子網域（包含 <code>game.hao0321.com</code>、<code>api.hao0321.com</code> 等，統稱「本站」）。</p>
+    <p>當您造訪、瀏覽、註冊、登入、或以任何方式使用本站時，即表示您已閱讀、理解並同意受本使用條款（以下簡稱「本條款」）與我們的<a href="/privacy.html">隱私權政策</a>約束。若您不同意，請立即停止使用本站。</p>
+
+    <h2 id="service">2. 服務說明</h2>
+    <p>本站提供以下免費服務：</p>
+    <ul>
+      <li><strong>瀏覽器小遊戲合集</strong>（遊戲大廳）— 14 款以上原創網頁遊戲，免費遊玩。</li>
+      <li><strong>帳號與排行榜系統</strong> — 透過 Google 登入後可記錄最佳分數、累積金幣、解鎖成就、每日簽到。</li>
+      <li><strong>作品集展示</strong> — 工作室 AI 教學、影視動畫、音樂等作品。</li>
+      <li><strong>免費開發工具</strong>（如 <code>/Social_Analytics</code> YouTube 社群分析、<code>/pipeline</code> 動畫流程展示）。</li>
+    </ul>
+    <p>本站完全免費。我們可能會在頁面上放置 Google AdSense 廣告以維持營運，但從不向使用者收費。</p>
+
+    <h2 id="account">3. 帳號與資格</h2>
+    <h3>3.1 年齡限制</h3>
+    <p>使用本站的帳號功能需年滿 <strong>13 歲</strong>。若您所在地區法律有更嚴格的年齡規定（如歐洲經濟區部分國家要求 16 歲），請遵守您當地法律。未滿年齡下限者應在家長或法定代理人監護下使用本站的純瀏覽功能，不應註冊帳號。</p>
+
+    <h3>3.2 Google 登入</h3>
+    <p>本站採用 Google OAuth 登入，不另設密碼。您使用 Google 帳號登入即代表您：</p>
+    <ul>
+      <li>是該 Google 帳號的合法擁有者。</li>
+      <li>授權我們存取您的 Google 顯示姓名與公開頭貼（見<a href="/privacy.html">隱私權政策</a> §2）。</li>
+      <li>同意遵守 <a href="https://policies.google.com/terms" target="_blank" rel="noopener">Google 服務條款</a>。</li>
+    </ul>
+
+    <h3>3.3 帳號安全</h3>
+    <p>您有責任妥善保管您的 Google 帳號安全（密碼、兩步驟驗證）。因您帳號被他人盜用所造成的所有行為由您自行承擔。</p>
+
+    <h2 id="conduct">4. 使用者行為準則</h2>
+    <p>使用本站時，您同意 <strong>不</strong> 從事以下行為：</p>
+    <ul>
+      <li>以任何自動化工具（機器人、腳本、爬蟲）大量請求本站 API 或灌水排行榜。</li>
+      <li>以任何手段作弊、偽造分數、繞過遊戲機制。一經發現我們有權清除您的紀錄或終止您的帳號。</li>
+      <li>嘗試反向工程、解譯、反組譯本站的客戶端程式碼，或探測 API 漏洞。發現安全漏洞請依<a href="/.well-known/security.txt">負責任揭露</a>通報。</li>
+      <li>繞過或試圖破解本站的安全措施（CSRF 保護、速率限制、Cloudflare 防護等）。</li>
+      <li>使用本站散佈惡意軟體、釣魚連結、仇恨言論、成人內容。</li>
+      <li>上傳侵害他人著作權、商標、隱私、名譽的內容。</li>
+      <li>假冒他人身分（包括但不限於使用他人姓名、頭像）。</li>
+      <li>進行會對本站基礎設施造成不成比例負擔的行為。</li>
+    </ul>
+    <p>違反上述準則，我們保留在不通知的情況下暫停或終止您存取本站服務的權利。</p>
+
+    <h2 id="ip">5. 智慧財產權</h2>
+    <h3>5.1 工作室權利</h3>
+    <p>本站上的所有<strong>原創內容</strong>，包括但不限於：</p>
+    <ul>
+      <li>遊戲原始碼、遊戲設計、美術素材、音樂、音效</li>
+      <li>網站文案、視覺設計、UI/UX</li>
+      <li>Hao0321 Studio 商標、標識、配色方案</li>
+      <li>部落格文章、教學內容、開發日誌</li>
+    </ul>
+    <p>均為 Hao0321 Studio 所有，受中華民國著作權法、商標法及相關國際條約保護。未經事前書面同意，您不得複製、修改、散佈、商業使用、或製作衍生作品。</p>
+
+    <h3>5.2 有限使用授權</h3>
+    <p>在您遵守本條款的前提下，我們授予您一個<strong>有限、非專屬、不可轉讓、可撤回</strong>的授權，允許您：</p>
+    <ul>
+      <li>透過瀏覽器存取與遊玩本站的所有公開遊戲與工具。</li>
+      <li>分享本站連結至社交媒體或通訊軟體。</li>
+      <li>截圖或短片錄製個人遊玩片段，上傳至您的個人社交帳號（請註明出處 <code>hao0321.com</code>）。</li>
+    </ul>
+
+    <h3>5.3 第三方資產</h3>
+    <p>本站可能使用以下第三方資源，版權歸原作者：字型（Google Fonts — SIL Open Font License、Helvetica Neue）、React / React-DOM（MIT License）、Cloudflare Workers / D1 技術堆疊。</p>
+
+    <h2 id="ugc">6. 使用者產生內容</h2>
+    <p>目前本站的使用者產生內容有限（僅限遊戲分數、收藏清單）。您透過本站產生的：</p>
+    <ul>
+      <li><strong>遊戲分數、排行榜紀錄、成就</strong>：您擁有這些紀錄的使用權；我們擁有公開展示與統計的權利（例如顯示在排行榜）。</li>
+      <li><strong>Google 帳號顯示姓名與頭像</strong>：權利歸屬 Google 與您，我們僅在排行榜與個人資料頁面展示。</li>
+    </ul>
+    <p>如果未來開放使用者提交內容（評論、自製關卡等），我們將於功能上線時更新本條款。</p>
+
+    <h2 id="third">7. 第三方連結</h2>
+    <p>本站可能連結至第三方網站（Google、Discord、YouTube、Instagram、Gumroad 等）。我們對這些第三方網站的內容、隱私政策、使用條款均不負責。離開本站後請自行審慎評估。</p>
+
+    <h2 id="ads">8. 廣告與贊助</h2>
+    <p>本站透過 Google AdSense 投放廣告。廣告內容由 Google 根據演算法自動投放，我們不對廣告所推廣的產品或服務背書、保證其品質或真實性。</p>
+    <p>如您透過本站廣告購買商品或服務，相關交易屬於您與廣告主之間的私人契約，與本站無關。</p>
+
+    <h2 id="disclaim">9. 免責聲明</h2>
+    <p>本站的所有服務（遊戲、工具、API、內容）均以「<strong>現狀</strong>」（AS IS）及「<strong>現有可用範圍</strong>」（AS AVAILABLE）提供，我們對以下事項<strong>不做任何明示或暗示保證</strong>：</p>
+    <ul>
+      <li>服務會持續運作、不會中斷、完全無錯誤。</li>
+      <li>服務符合您的特定需求或預期。</li>
+      <li>網站上的資訊完全正確、即時、完整。</li>
+      <li>排行榜分數絕對公平（雖然我們會盡力防弊）。</li>
+      <li>帳號資料永久不會因意外而遺失（雖然我們有備援）。</li>
+    </ul>
+    <p>我們建議您不要把不能遺失的重要資料或時間投入本站服務。</p>
+
+    <h2 id="liability">10. 責任限制</h2>
+    <p>在法律允許的最大範圍內，Hao0321 Studio 及其營運者對您或任何第三方因使用或無法使用本站所產生的任何<strong>直接、間接、附帶、特殊、懲罰性或衍生性損害</strong>（包括但不限於利潤損失、商譽損失、資料損失、替代服務成本）不負任何責任，無論是基於契約、侵權、嚴格責任或其他法理。</p>
+    <p>本條款未禁止但法律允許追究的責任上限，不超過您在過去 12 個月內就使用本站所支付給工作室的金額（因本站完全免費，該金額為新台幣零元）。</p>
+
+    <h2 id="termination">11. 終止</h2>
+    <h3>11.1 您主動終止</h3>
+    <p>您隨時可以停止使用本站。您可以在<a href="https://game.hao0321.com/">遊戲大廳</a>登出，或寄信要求刪除帳號（見<a href="/privacy.html#rights">隱私權政策 §8</a>）。</p>
+
+    <h3>11.2 我們主動終止</h3>
+    <p>若我們判定您違反本條款（特別是第 4 節行為準則），我們保留以下權利而無須事先通知：</p>
+    <ul>
+      <li>暫停或終止您的帳號。</li>
+      <li>刪除您的遊戲紀錄、排行榜排名、金幣餘額。</li>
+      <li>封鎖您的 IP 或 Google 帳號再度註冊。</li>
+      <li>必要時，依法律要求配合主管機關調查。</li>
+    </ul>
+
+    <h2 id="law">12. 準據法與管轄</h2>
+    <p>本條款之解釋與適用，以及因本條款所生之爭議，均以<strong>中華民國（台灣）</strong>法律為準據法。若有訴訟之必要，雙方合意以<strong>臺灣臺北地方法院</strong>為第一審管轄法院，但不排除消費者保護法或其他強制規定所賦予之管轄權。</p>
+
+    <h2 id="changes">13. 條款變更</h2>
+    <p>我們可能會不定期更新本條款。重大變更時將於本頁頂部更新「最後更新」日期，並於首頁顯示公告至少 7 天。若您在變更生效後繼續使用本站，即視為接受新版條款。若您不同意變更內容，請停止使用本站並聯絡我們刪除帳號。</p>
+
+    <h2 id="contact">14. 聯絡</h2>
+    <p>對本條款有任何疑問，請聯絡：</p>
+    <ul>
+      <li><strong>Email</strong>：<a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a></li>
+      <li><strong>網站</strong>：<a href="https://hao0321.com">hao0321.com</a></li>
+    </ul>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

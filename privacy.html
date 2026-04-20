@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>隱私權政策 — Hao0321 Studio</title>
+  <meta name="description" content="Hao0321 Studio 網站隱私權政策 — 說明我們如何收集、使用、保護您的個人資料。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#00b4ff" />
+  <link rel="canonical" href="https://hao0321.com/privacy.html" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="隱私權政策 — Hao0321 Studio" />
+  <meta property="og:description" content="Hao0321 Studio 網站隱私權政策。" />
+  <meta property="og:url" content="https://hao0321.com/privacy.html" />
+  <meta property="og:locale" content="zh_TW" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --void: #050508;
+      --hull: #0a0a12;
+      --steel: #1a1a2a;
+      --glow-blue: #00b4ff;
+      --glow-cyan: #00e5ff;
+      --glow-white: #e0e8ff;
+      --dim: #8888aa;
+      --text: #d0d8ee;
+      --radius: 12px;
+      --font-head: 'Space Grotesk', 'Noto Sans TC', sans-serif;
+      --font-body: 'Inter', 'Noto Sans TC', sans-serif;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--void);
+      color: var(--text);
+      font-family: var(--font-body);
+      line-height: 1.85;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    ::selection { background: var(--glow-blue); color: var(--void); }
+    a { color: var(--glow-cyan); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--glow-white); }
+
+    .bg-grid {
+      position: fixed; inset: 0; z-index: -1; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,180,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,180,255,0.025) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    }
+
+    nav.topnav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(5,5,8,0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(0,180,255,0.12);
+      padding: 18px 5vw;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .logo {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--glow-white);
+      letter-spacing: 0.04em;
+    }
+    .logo span { color: var(--glow-blue); }
+    .back-link {
+      font-family: var(--font-head);
+      font-size: 0.82rem;
+      color: var(--dim);
+      letter-spacing: 0.08em;
+    }
+    .back-link:hover { color: var(--glow-cyan); }
+
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 60px 5vw 100px;
+    }
+    .doc-label {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      color: var(--glow-blue);
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: inline-flex; align-items: center; gap: 10px;
+    }
+    .doc-label::before {
+      content: ''; width: 28px; height: 1px;
+      background: var(--glow-blue);
+    }
+    h1 {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700;
+      color: var(--glow-white);
+      margin-bottom: 12px;
+      line-height: 1.15;
+    }
+    .updated {
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      color: var(--dim);
+      letter-spacing: 0.06em;
+      margin-bottom: 48px;
+      padding-bottom: 22px;
+      border-bottom: 1px dashed rgba(136,136,170,0.2);
+    }
+    h2 {
+      font-family: var(--font-head);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--glow-white);
+      margin: 40px 0 14px;
+      padding-left: 16px;
+      position: relative;
+    }
+    h2::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 8px;
+      width: 3px; border-radius: 2px;
+      background: linear-gradient(180deg, var(--glow-blue), var(--glow-cyan));
+    }
+    h3 {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--glow-cyan);
+      margin: 24px 0 10px;
+    }
+    p, li {
+      font-size: 0.94rem;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    ul, ol { padding-left: 24px; margin-bottom: 14px; }
+    li { margin-bottom: 8px; }
+    strong { color: var(--glow-white); font-weight: 600; }
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(0,180,255,0.08);
+      border: 1px solid rgba(0,180,255,0.18);
+      padding: 1px 6px; border-radius: 4px;
+      font-size: 0.84rem;
+      color: var(--glow-cyan);
+    }
+    .toc {
+      background: rgba(26,26,42,0.5);
+      border: 1px solid rgba(0,180,255,0.14);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 44px;
+    }
+    .toc strong {
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      color: var(--glow-blue);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 10px;
+    }
+    .toc ol {
+      padding-left: 20px; margin: 0;
+      columns: 2; column-gap: 24px;
+    }
+    .toc li { margin-bottom: 5px; font-size: 0.88rem; }
+    .toc a { color: var(--text); }
+    .toc a:hover { color: var(--glow-cyan); }
+
+    footer {
+      border-top: 1px solid rgba(0,180,255,0.1);
+      padding: 36px 5vw;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--dim);
+    }
+    footer .links { margin-bottom: 12px; display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; }
+    footer a { color: var(--dim); }
+    footer a:hover { color: var(--glow-cyan); }
+
+    @media (max-width: 600px) {
+      .toc ol { columns: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <nav class="topnav">
+    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
+    <a href="/" class="back-link">← 回首頁</a>
+  </nav>
+
+  <main>
+    <div class="doc-label">Legal / Privacy</div>
+    <h1>隱私權政策</h1>
+    <p class="updated">最後更新：2026 年 4 月 21 日</p>
+
+    <div class="toc">
+      <strong>目次</strong>
+      <ol>
+        <li><a href="#overview">總覽</a></li>
+        <li><a href="#collect">我們收集的資料</a></li>
+        <li><a href="#use">資料用途</a></li>
+        <li><a href="#cookies">Cookie 與追蹤技術</a></li>
+        <li><a href="#third-party">第三方服務</a></li>
+        <li><a href="#ads">廣告</a></li>
+        <li><a href="#retention">資料保留期間</a></li>
+        <li><a href="#rights">您的權利</a></li>
+        <li><a href="#children">兒童隱私</a></li>
+        <li><a href="#security">資料安全</a></li>
+        <li><a href="#changes">政策變更</a></li>
+        <li><a href="#contact">聯絡我們</a></li>
+      </ol>
+    </div>
+
+    <h2 id="overview">1. 總覽</h2>
+    <p>Hao0321 Studio（以下簡稱「我們」、「本站」或「工作室」）經營 <code>hao0321.com</code> 及其子網域（包含 <code>game.hao0321.com</code>、<code>api.hao0321.com</code> 等）。本政策說明當您造訪我們的網站、使用遊戲大廳、或與我們的服務互動時，我們如何收集、使用、揭露及保護您的個人資料。</p>
+    <p>我們對使用者隱私非常重視。使用本站即表示您已閱讀並同意本隱私權政策。若您不同意，請停止使用本站。</p>
+    <p>本政策的原則很簡單：<strong>我們只收集提供服務真正必要的最少資料</strong>，不把您的個人資料賣給任何第三方，也不會用來做跨站廣告追蹤（AdSense 例外，見第 6 節）。</p>
+
+    <h2 id="collect">2. 我們收集的資料</h2>
+
+    <h3>2.1 您主動提供的資料</h3>
+    <ul>
+      <li><strong>Google 帳號基本資訊</strong>：當您在遊戲大廳使用「登入」功能，透過 Google Sign-In（OAuth）授權後，我們會接收您的 Google 帳號 <strong>姓名、公開頭貼 URL、Google 使用者 ID（<code>sub</code>）</strong>。我們不會存取您的 Gmail 內容、聯絡人、日曆或其他 Google 服務資料。</li>
+      <li><strong>遊戲互動資料</strong>：您在遊戲中的分數、最佳紀錄、遊玩次數、簽到紀錄、金幣餘額、解鎖的成就。這些資料關聯到您的帳號，用來驅動排行榜、個人檔案、成就等功能。</li>
+      <li><strong>電子郵件</strong>：若您主動透過聯絡信箱與我們往來，我們會保留往來紀錄以便後續回覆。</li>
+    </ul>
+
+    <h3>2.2 自動收集的資料</h3>
+    <ul>
+      <li><strong>技術資訊</strong>：IP 位址、瀏覽器類型與版本、作業系統、裝置類型、語言設定、造訪時間戳記。由 Cloudflare（我們的 CDN / 網域代管）與我們的伺服器存取日誌記錄，用於偵測濫用與效能調校。</li>
+      <li><strong>使用分析</strong>：您造訪哪些頁面、停留時間、點擊哪些遊戲。這些是匿名彙總資料，不與個人身分連結。</li>
+      <li><strong>本機儲存（<code>localStorage</code>）</strong>：為了讓您不用每次都重新登入，我們在您的瀏覽器本機儲存 JWT 登入憑證、使用者顯示資訊（姓名、頭像、金幣數）以及收藏遊戲清單。這些資料只存在您的裝置上，不會傳到我們的伺服器。</li>
+    </ul>
+
+    <h2 id="use">3. 資料用途</h2>
+    <p>我們收集的資料僅用於以下目的：</p>
+    <ul>
+      <li><strong>提供核心服務</strong>：帳號登入、遊戲進度同步、排行榜排名、個人檔案展示、每日簽到、成就解鎖。</li>
+      <li><strong>改善網站體驗</strong>：透過使用分析找出哪些遊戲受歡迎、哪些頁面有問題，優先改進。</li>
+      <li><strong>防止濫用</strong>：阻擋自動化機器人、偵測異常高分以維護排行榜公平性、限制 API 濫用。</li>
+      <li><strong>法律遵循</strong>：如法律要求，我們可能保留或揭露特定資料給主管機關。</li>
+    </ul>
+    <p>我們<strong>不會</strong>：</p>
+    <ul>
+      <li>把您的個人資料賣給任何第三方。</li>
+      <li>使用您的 Google 帳號資料做除了身分辨識以外的任何事。</li>
+      <li>主動寄行銷信給您（我們沒有郵件行銷名單）。</li>
+    </ul>
+
+    <h2 id="cookies">4. Cookie 與追蹤技術</h2>
+    <p>我們使用以下類型的儲存技術：</p>
+    <ul>
+      <li><strong>必要 <code>localStorage</code>（本機儲存）</strong>：儲存您的登入憑證與使用者偏好（收藏、語言）。這些不是傳統 Cookie，只存在您的瀏覽器中，不會自動傳送給我們的伺服器。</li>
+      <li><strong>Cloudflare 必要 Cookie</strong>：我們的 CDN 供應商 Cloudflare 可能設定 <code>__cf_bm</code> 等 Cookie 用於機器人辨識與安全性，這些是服務運作必需。</li>
+      <li><strong>Google Sign-In Cookie</strong>：由 Google 帳號登入流程所設定，用於完成 OAuth 認證。</li>
+      <li><strong>Google AdSense Cookie</strong>：若 AdSense 生效，Google 會設定相關 Cookie 用於廣告投放與成效衡量（見第 6 節）。</li>
+    </ul>
+    <p>您可以隨時透過瀏覽器設定清除本機儲存與 Cookie。清除後您需要重新登入，收藏清單會歸零，但帳號資料仍會保留在我們的資料庫中。</p>
+
+    <h2 id="third-party">5. 第三方服務</h2>
+    <p>本站整合以下第三方服務，每個服務都有自己的隱私權政策，您使用這些服務即表示同意該服務的條款：</p>
+    <ul>
+      <li><strong>Google Sign-In / Google Identity Services</strong> — 用於登入認證。資料由 Google 處理。<br /><a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google 隱私權政策</a></li>
+      <li><strong>Google AdSense</strong> — 用於網站廣告（審核通過後啟用）。<br /><a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener">Google 廣告政策</a></li>
+      <li><strong>Cloudflare</strong> — 提供網站代管、CDN、DNS、安全防護。<br /><a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener">Cloudflare 隱私權政策</a></li>
+      <li><strong>Cloudflare Workers + D1</strong> — 我們的後端 API 與資料庫，用於儲存帳號、分數、簽到紀錄。由 Cloudflare 在全球資料中心託管。</li>
+    </ul>
+
+    <h2 id="ads">6. 廣告</h2>
+    <p>本站透過 Google AdSense 投放廣告。AdSense 為第三方供應商，可能使用 Cookie 根據您造訪本站及其他網站的歷程，為您提供個人化廣告。</p>
+    <ul>
+      <li>您可以前往 <a href="https://adssettings.google.com" target="_blank" rel="noopener">Google 廣告設定</a> 停用個人化廣告。</li>
+      <li>若您在歐洲經濟區（EEA）或英國，依據 GDPR，您會在首次造訪時看到同意橫幅（由 Google 提供）。</li>
+      <li>我們本身不存取 AdSense Cookie 的內容，也不會用廣告資料做任何分析。</li>
+    </ul>
+
+    <h2 id="retention">7. 資料保留期間</h2>
+    <ul>
+      <li><strong>帳號資料</strong>：在您主動要求刪除帳號之前持續保留，以維持排行榜紀錄完整性。</li>
+      <li><strong>伺服器日誌</strong>：Cloudflare 預設保留 30 天以內。</li>
+      <li><strong>本機儲存</strong>：儲存在您的裝置上，您可隨時清除。</li>
+      <li><strong>聯絡往來郵件</strong>：保留 2 年以便追蹤問題，之後刪除。</li>
+    </ul>
+
+    <h2 id="rights">8. 您的權利</h2>
+    <p>對於我們持有的您的個人資料，您享有以下權利：</p>
+    <ul>
+      <li><strong>查詢權</strong>：您可以查看個人檔案中的所有資料（登入後在遊戲大廳「個人」頁面）。</li>
+      <li><strong>更正權</strong>：若顯示姓名或頭貼有誤，請透過 Google 帳號更新（我們會自動同步）。</li>
+      <li><strong>刪除權</strong>：您可以寄信要求我們刪除您的帳號與所有關聯資料。我們會在 30 天內完成。</li>
+      <li><strong>資料可攜權</strong>：您可以要求匯出您的資料副本（JSON 格式）。</li>
+      <li><strong>撤回同意權</strong>：您可以隨時登出並停止使用本站；您的資料仍會保留，除非您另外要求刪除。</li>
+    </ul>
+    <p>所有權利行使請寄 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>，主旨註明「隱私權請求」。</p>
+
+    <h2 id="children">9. 兒童隱私</h2>
+    <p>本站的服務不針對 <strong>13 歲以下</strong>兒童設計。我們不會故意收集 13 歲以下兒童的個人資料。若您是家長，發現您的孩子在未經您同意下向我們提供了個人資料，請立即聯絡我們，我們會儘速刪除。</p>
+
+    <h2 id="security">10. 資料安全</h2>
+    <p>我們採取以下技術與管理措施保護您的資料：</p>
+    <ul>
+      <li>全站使用 HTTPS 加密傳輸（TLS 1.3）。</li>
+      <li>JWT 認證使用強隨機密鑰簽章，存放於 Cloudflare Secrets 而非原始碼。</li>
+      <li>資料庫由 Cloudflare D1 託管，享有 Cloudflare 的企業級安全防護。</li>
+      <li>API 端點對未授權請求一律回傳 <code>401</code>，不洩漏任何訊息。</li>
+      <li>伺服器日誌不儲存密碼或敏感認證資料（我們本來就沒有密碼，都靠 Google OAuth）。</li>
+    </ul>
+    <p>儘管我們盡力保護，但網際網路傳輸並非絕對安全。若您發現任何安全疑慮，請查閱我們的 <a href="/.well-known/security.txt">security.txt</a> 或寄信通報。</p>
+
+    <h2 id="changes">11. 政策變更</h2>
+    <p>我們可能不定期更新本政策。重大變更時，我們會在本頁頂部更新「最後更新」日期，並於首頁顯示通知至少 7 天。繼續使用本站即視為接受變更後的政策。</p>
+
+    <h2 id="contact">12. 聯絡我們</h2>
+    <p>若您對本政策或我們的資料處理方式有任何問題，請透過以下方式聯絡：</p>
+    <ul>
+      <li><strong>Email</strong>：<a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a></li>
+      <li><strong>工作室網址</strong>：<a href="https://hao0321.com">hao0321.com</a></li>
+      <li><strong>安全性通報</strong>：<a href="/.well-known/security.txt">/.well-known/security.txt</a></li>
+    </ul>
+    <p>我們會盡力在 7 個工作天內回覆。</p>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>
