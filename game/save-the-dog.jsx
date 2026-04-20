@@ -393,7 +393,7 @@ export default function App() {
       if (!lvl) { raf.current = requestAnimationFrame(loop); return; }
       ctx.clearRect(0, 0, W, H);
       renderBg(ctx, f, W, H, GND);
-      const fs = Math.round(W * .04);
+      const fs = Math.min(20, Math.round(16 * sc));
 
       if (s.phase === "menu") {
         for (const o of lvl.obs) renderOb(ctx, o);
@@ -401,11 +401,12 @@ export default function App() {
         for (let i = 0; i < 5; i++) { const a = (Math.PI * 2 / 5) * i + f * .015;
           renderBee(ctx, { x: W / 2 + Math.cos(a) * W * .2, y: GND - H * .15 + Math.sin(a) * H * .06, wt: i * 18, rage: 0 }, f, sc); }
         ctx.textAlign = "center";
-        ctx.fillStyle = "#4E342E"; ctx.font = `bold ${W * .1}px 'Helvetica Neue','PingFang TC',sans-serif`;
+        const titleFs = Math.min(56, Math.round(42 * sc));
+        ctx.fillStyle = "#4E342E"; ctx.font = `bold ${titleFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
         ctx.fillText("拯救狗狗", W / 2, H * .16);
         ctx.fillStyle = "#6D4C41"; ctx.font = `${fs}px 'Helvetica Neue','PingFang TC',sans-serif`;
-        ctx.fillText("畫線保護狗狗 · 蜜蜂會把線推走！", W / 2, H * .21);
-        const pu = .93 + Math.sin(f * .06) * .07, bw = W * .38, bh = H * .06;
+        ctx.fillText("畫線保護狗狗 · 蜜蜂會把線推走", W / 2, H * .21);
+        const pu = .93 + Math.sin(f * .06) * .07, bw = Math.min(280, W * .38), bh = Math.min(52, H * .06);
         ctx.save(); ctx.translate(W / 2, GND + (H - GND) / 2); ctx.scale(pu, pu);
         ctx.fillStyle = "#FF6E40"; ctx.shadowColor = "rgba(0,0,0,.1)"; ctx.shadowBlur = 5;
         ctx.beginPath(); ctx.roundRect(-bw / 2, -bh / 2, bw, bh, bh / 2); ctx.fill(); ctx.shadowBlur = 0;
@@ -522,23 +523,25 @@ export default function App() {
         ctx.beginPath(); ctx.roundRect(barPad, barY, (W - barPad * 2) * pct, barH, barH / 2); ctx.fill();
         ctx.textAlign = "center"; ctx.fillStyle = "#4E342E";
         ctx.font = `bold ${Math.round(fs * .85)}px 'Helvetica Neue','PingFang TC',sans-serif`;
-        ctx.fillText(isD ? ` ${Math.ceil(s.drawTimer / 60)}秒` : ` ${Math.ceil(s.timer / 60)}秒`, W / 2, barY - barH * .8);
+        ctx.fillText(isD ? `${Math.ceil(s.drawTimer / 60)}秒` : `${Math.ceil(s.timer / 60)}秒`, W / 2, barY - barH * .8);
       }
       if (s.phase === "win" || s.phase === "lose") {
         ctx.fillStyle = s.phase === "win" ? "rgba(255,255,255,.4)" : "rgba(0,0,0,.2)"; ctx.fillRect(0, 0, W, H);
-        const cw = W * .75, ch = H * .15;
+        const cw = Math.min(420, W * .75), ch = Math.min(160, H * .22);
         ctx.fillStyle = "#fff"; ctx.shadowColor = "rgba(0,0,0,.1)"; ctx.shadowBlur = 14;
-        ctx.beginPath(); ctx.roundRect((W - cw) / 2, (H - ch) / 2, cw, ch, W * .04); ctx.fill(); ctx.shadowBlur = 0;
+        ctx.beginPath(); ctx.roundRect((W - cw) / 2, (H - ch) / 2, cw, ch, 22); ctx.fill(); ctx.shadowBlur = 0;
         ctx.textAlign = "center";
+        const bigFs = Math.min(36, Math.round(26 * sc));
+        const smFs = Math.min(18, Math.round(14 * sc));
         if (s.phase === "win") {
-          ctx.fillStyle = "#FF6E40"; ctx.font = `bold ${Math.round(W * .065)}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText(" 狗狗得救了！", W / 2, H / 2 - ch * .08);
-          ctx.fillStyle = "#8D6E63"; ctx.font = `${Math.round(W * .035)}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText(s.level + 1 < s.levels.length ? "點擊下一關 →" : " 全部通關！", W / 2, H / 2 + ch * .28);
+          ctx.fillStyle = "#FF6E40"; ctx.font = `bold ${bigFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
+          ctx.fillText("狗狗得救了", W / 2, H / 2 - ch * .08);
+          ctx.fillStyle = "#8D6E63"; ctx.font = `${smFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
+          ctx.fillText(s.level + 1 < s.levels.length ? "點擊下一關" : "全部通關", W / 2, H / 2 + ch * .28);
         } else {
-          ctx.fillStyle = "#E53935"; ctx.font = `bold ${Math.round(W * .065)}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText(" 被叮了！", W / 2, H / 2 - ch * .08);
-          ctx.fillStyle = "#8D6E63"; ctx.font = `${Math.round(W * .035)}px 'Helvetica Neue','PingFang TC',sans-serif`;
+          ctx.fillStyle = "#E53935"; ctx.font = `bold ${bigFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
+          ctx.fillText("被叮了", W / 2, H / 2 - ch * .08);
+          ctx.fillStyle = "#8D6E63"; ctx.font = `${smFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
           ctx.fillText("點擊重試", W / 2, H / 2 + ch * .28);
         }
       }
