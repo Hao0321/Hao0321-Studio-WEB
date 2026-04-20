@@ -18,6 +18,11 @@ function err(msg, status = 400) {
   return json({ error: msg }, status);
 }
 
+async function readJson(req) {
+  try { return await req.json(); }
+  catch { return null; }
+}
+
 // Simple JWT (HS256-like using HMAC)
 async function signToken(payload, secret) {
   const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
@@ -110,7 +115,9 @@ export default {
     try {
       // ===== AUTH =====
       if (path === 'auth/google') {
-        const { token } = await req.json();
+        const body = await readJson(req);
+        if (!body || !body.token) return err('token required');
+        const { token } = body;
         // Verify Google ID token
         const gRes = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + token);
         if (!gRes.ok) return err('Invalid Google token', 401);
@@ -179,7 +186,8 @@ export default {
 
       // ===== PLAY COUNT =====
       if (path === 'play' && req.method === 'POST') {
-        const { game } = await req.json();
+        const body = await readJson(req);
+        const game = body && body.game;
         if (!game) return err('game required');
         await env.DB.prepare('UPDATE play_counts SET count = count + 1 WHERE game_id = ?').bind(game).run();
         return json({ ok: true });
@@ -196,8 +204,11 @@ export default {
       if (path === 'score' && req.method === 'POST') {
         const u = await getUser(req, env);
         if (!u) return err('Unauthorized', 401);
-        const { game, score } = await req.json();
+        const body = await readJson(req);
+        if (!body) return err('body required');
+        const { game, score } = body;
         if (!game || score === undefined) return err('game and score required');
+        if (typeof score !== 'number' || !Number.isFinite(score) || score < 0 || score > 1e9) return err('invalid score');
 
         // Record score
         await env.DB.prepare('INSERT INTO scores (user_id, game_id, score) VALUES (?, ?, ?)').bind(u.uid, game, score).run();
