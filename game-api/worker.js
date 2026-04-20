@@ -60,17 +60,18 @@ function genId() {
 
 // ── Achievements ──────────────────────────────────────────────
 // Thresholds for incremental achievements; order matters for display.
+// `tier` drives the frontend badge color (bronze|silver|gold|legend).
 const ACHIEVEMENTS = {
-  first_login:  { name: '初次見面',   desc: '首次登入 Hao0321 遊戲大廳', icon: '👋' },
-  first_win:    { name: '首戰告捷',   desc: '第一次上傳分數',             icon: '🎯' },
-  streak_3:     { name: '三日堅持',   desc: '連續簽到 3 天',               icon: '🔥' },
-  streak_7:     { name: '七日達人',   desc: '連續簽到 7 天',               icon: '⭐' },
-  streak_30:    { name: '月度玩家',   desc: '連續簽到 30 天',              icon: '🏅' },
-  coins_50:     { name: '小富翁',     desc: '累積 50 金幣',                icon: '◈' },
-  coins_200:    { name: '金庫',       desc: '累積 200 金幣',               icon: '💰' },
-  coins_1000:   { name: '大戶',       desc: '累積 1000 金幣',              icon: '👑' },
-  played_5:     { name: '玩家',       desc: '玩過 5 款不同遊戲',           icon: '🎮' },
-  played_all:   { name: '收藏家',     desc: '玩過全部 14 款遊戲',          icon: '🏆' },
+  first_login:  { name: '初次見面',   desc: '首次登入 Hao0321 遊戲大廳', tier: 'bronze' },
+  first_win:    { name: '首戰告捷',   desc: '第一次上傳分數',             tier: 'bronze' },
+  streak_3:     { name: '三日堅持',   desc: '連續簽到 3 天',               tier: 'bronze' },
+  streak_7:     { name: '七日達人',   desc: '連續簽到 7 天',               tier: 'silver' },
+  streak_30:    { name: '月度玩家',   desc: '連續簽到 30 天',              tier: 'gold'   },
+  coins_50:     { name: '小富翁',     desc: '累積 50 金幣',                tier: 'bronze' },
+  coins_200:    { name: '金庫',       desc: '累積 200 金幣',               tier: 'silver' },
+  coins_1000:   { name: '大戶',       desc: '累積 1000 金幣',              tier: 'gold'   },
+  played_5:     { name: '玩家',       desc: '玩過 5 款不同遊戲',           tier: 'silver' },
+  played_all:   { name: '收藏家',     desc: '玩過全部 14 款遊戲',          tier: 'legend' },
 };
 
 // Insert achievement if not already unlocked; returns achievement_id or null.

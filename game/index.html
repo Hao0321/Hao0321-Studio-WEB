@@ -7,7 +7,7 @@
   <meta name="description" content="Hao0321 Studio 原創小遊戲合集 — 免費遊玩，隨時暢玩。策略、動作、益智、卡牌多種類型。" />
   <meta name="author" content="Hao0321 Studio" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#a855f7" />
+  <meta name="theme-color" content="#2d4fbe" />
   <link rel="canonical" href="https://game.hao0321.com/" />
   <link rel="icon" type="image/svg+xml" href="https://hao0321.com/favicon.svg" />
 
@@ -23,674 +23,1073 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="遊戲大廳 — Hao0321 Studio" />
   <meta name="twitter:description" content="免費遊玩的原創小遊戲合集 — 策略、動作、益智、卡牌，在瀏覽器裡隨時開玩。" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Zen+Maru+Gothic:wght@500;700;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9106945071014808" crossorigin="anonymous"></script>
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <style>
-    :root{--bg:#0a0a0f;--bg2:#12121a;--bg3:#1a1a28;--purple:#a855f7;--pink:#ff2d7b;--text:#f0f0f0;--text2:#a0a0b0;--text3:#555568;--glow-purple:rgba(168,85,247,0.15);--glow-pink:rgba(255,45,123,0.15);--grad:linear-gradient(135deg,#a855f7,#ff2d7b);--radius:14px}
+    :root{
+      /* Palette */
+      --blue-deep:#1c3594;--blue-mid:#2d4fbe;--blue-sky:#3b6fe0;--blue-line:#6996ff;
+      --pink:#ff2d7b;--pink-soft:#ff6db4;--pink-deep:#d81b60;
+      --cyan:#4de5ff;--mint:#6be5c7;--yellow:#ffd851;
+      --ink:#0e1a3f;--text:#f4f8ff;--muted:#b8c7f0;
+      --card:#ffffff;--card-soft:#f6f8ff;
+      --shadow-pink:0 10px 30px rgba(255,45,123,0.35);
+      --shadow-cyan:0 10px 30px rgba(77,229,255,0.28);
+      --shadow-soft:0 8px 24px rgba(28,53,148,0.25);
+      --radius-pill:100px;--radius-card:22px;--radius-sm:14px;
+    }
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{background:var(--bg);color:var(--text);font-family:'Inter','Noto Sans TC',sans-serif;font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh}
-    ::selection{background:var(--pink);color:#fff}a{color:inherit}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{
+      background:var(--blue-mid);
+      color:var(--text);
+      font-family:'M PLUS Rounded 1c','Zen Maru Gothic','Noto Sans TC',sans-serif;
+      font-weight:500;line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      min-height:100vh;
+      overflow-x:hidden;
+      padding-bottom:88px;
+    }
+    ::selection{background:var(--pink);color:#fff}
+    a{color:inherit;text-decoration:none}
+    button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
-    .grid-bg{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(168,85,247,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(168,85,247,0.03) 1px,transparent 1px);background-size:60px 60px}
+    /* ═════════ Background blueprint ═════════ */
+    .bg-blueprint{
+      position:fixed;inset:0;z-index:-2;pointer-events:none;
+      background:
+        radial-gradient(ellipse at 80% 10%, rgba(77,229,255,0.20) 0%, transparent 50%),
+        radial-gradient(ellipse at 10% 90%, rgba(255,45,123,0.18) 0%, transparent 55%),
+        linear-gradient(135deg, var(--blue-deep) 0%, var(--blue-mid) 50%, var(--blue-sky) 100%);
+    }
+    .bg-grid{
+      position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+      background-size:44px 44px;
+      mask-image:radial-gradient(ellipse at center, rgba(0,0,0,0.8), transparent 90%);
+      -webkit-mask-image:radial-gradient(ellipse at center, rgba(0,0,0,0.8), transparent 90%);
+    }
+    .bg-sketch{
+      position:fixed;top:0;right:0;width:60%;height:100%;z-index:-1;opacity:0.07;pointer-events:none;
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000' stroke='white' stroke-width='1.2' fill='none'><rect x='40' y='120' width='320' height='480' rx='8'/><rect x='100' y='180' width='200' height='80' rx='4'/><rect x='100' y='280' width='200' height='80' rx='4'/><rect x='100' y='380' width='200' height='80' rx='4'/><rect x='100' y='480' width='200' height='80' rx='4'/><line x1='400' y1='120' x2='400' y2='600'/><line x1='40' y1='600' x2='400' y2='600'/><rect x='420' y='80' width='340' height='520' rx='8'/><circle cx='590' cy='340' r='150' stroke-dasharray='6 4'/><circle cx='590' cy='340' r='80'/><line x1='420' y1='340' x2='760' y2='340' stroke-dasharray='4 6'/><line x1='590' y1='80' x2='590' y2='600' stroke-dasharray='4 6'/><rect x='40' y='640' width='720' height='320' rx='8'/><path d='M40 720 L760 720'/><path d='M200 640 L200 960' stroke-dasharray='3 5'/><path d='M400 640 L400 960'/><path d='M600 640 L600 960' stroke-dasharray='3 5'/></svg>");
+      background-repeat:no-repeat;background-size:contain;background-position:right top;
+    }
+    .bg-stars{position:fixed;inset:0;z-index:-1;pointer-events:none}
+    .bg-stars span{
+      position:absolute;display:block;width:8px;height:8px;
+      background:var(--cyan);border-radius:50%;
+      box-shadow:0 0 12px var(--cyan),0 0 4px #fff;
+      opacity:0.5;animation:twinkle 4s ease-in-out infinite;
+    }
+    .bg-stars span:nth-child(1){top:12%;left:8%;animation-delay:0s}
+    .bg-stars span:nth-child(2){top:28%;left:92%;animation-delay:.8s;background:var(--pink);box-shadow:0 0 12px var(--pink)}
+    .bg-stars span:nth-child(3){top:60%;left:6%;animation-delay:1.6s;background:var(--yellow);box-shadow:0 0 12px var(--yellow)}
+    .bg-stars span:nth-child(4){top:80%;left:88%;animation-delay:2.4s}
+    .bg-stars span:nth-child(5){top:45%;left:50%;animation-delay:3.2s;background:var(--pink-soft);box-shadow:0 0 12px var(--pink-soft)}
+    @keyframes twinkle{0%,100%{opacity:0.2;transform:scale(0.8)}50%{opacity:1;transform:scale(1.3)}}
 
-    /* ── Nav ── */
-    nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:72px;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,5vw,64px);background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(168,85,247,0.1)}
-    .logo{display:flex;align-items:center;gap:12px;text-decoration:none}
-    .logo-mark{width:36px;height:36px;border-radius:10px;background:var(--grad);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.9rem;color:#fff;box-shadow:0 0 20px var(--glow-purple)}
-    .logo-text{font-weight:600;font-size:.88rem;letter-spacing:.04em}
-    .nav-right{display:flex;align-items:center;gap:10px}
-    .nav-btn{padding:8px 18px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;font-size:.78rem;text-decoration:none;color:var(--text2);transition:all .35s;letter-spacing:.03em;font-weight:600;cursor:pointer;background:transparent;display:inline-flex;align-items:center;gap:6px}
-    .nav-btn:hover{border-color:#fff;color:#fff;background:rgba(255,255,255,0.08);transform:translateY(-2px)}
-    .nav-btn--accent{border-color:var(--purple);color:var(--purple)}
-    .nav-btn--accent:hover{background:var(--purple);color:#fff;border-color:var(--purple)}
+    /* Stamp logo watermark */
+    .stamp{
+      position:fixed;left:-14px;top:50%;transform:translateY(-50%) rotate(-90deg);transform-origin:center;
+      font-family:'Space Grotesk',sans-serif;font-weight:900;letter-spacing:0.4em;font-size:0.7rem;
+      color:rgba(255,255,255,0.15);white-space:nowrap;z-index:-1;pointer-events:none;
+    }
 
-    /* ── Hero ── */
-    .hero{padding:140px clamp(20px,5vw,64px) 48px;text-align:center;position:relative;z-index:1}
-    .hero-label{font-size:.7rem;font-weight:700;letter-spacing:.25em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:16px;display:inline-block;opacity:0;animation:fadeUp .8s ease .2s forwards}
-    .hero-title{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;line-height:1.1;margin-bottom:16px;opacity:0;animation:fadeUp .8s ease .4s forwards}
-    .hero-title em{font-style:normal;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .hero-desc{color:var(--text2);font-size:.95rem;max-width:480px;margin:0 auto;opacity:0;animation:fadeUp .8s ease .6s forwards}
+    /* ═════════ Top HUD ═════════ */
+    .hud{
+      position:sticky;top:0;z-index:100;
+      padding:14px clamp(14px,3vw,28px);
+      display:flex;align-items:center;justify-content:space-between;
+      gap:16px;
+    }
+    .hud-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+    .avatar-block{
+      display:flex;align-items:center;gap:12px;
+      background:rgba(255,255,255,0.1);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      padding:8px 16px 8px 8px;border-radius:var(--radius-pill);
+      border:2px solid rgba(255,255,255,0.22);
+      box-shadow:0 6px 20px rgba(0,0,0,0.2);
+      min-width:0;
+    }
+    .avatar-orb{
+      width:42px;height:42px;border-radius:50%;flex-shrink:0;
+      background:linear-gradient(135deg,var(--pink),var(--pink-soft));
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:1.1rem;color:#fff;
+      border:2.5px solid #fff;box-shadow:0 0 0 2px var(--pink-soft),0 4px 12px rgba(255,45,123,0.4);
+    }
+    .avatar-orb img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+    .user-bars{display:flex;flex-direction:column;gap:4px;min-width:130px}
+    .username-row{display:flex;align-items:center;gap:6px;font-size:.82rem;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+    .username-row .edit-ico{width:12px;height:12px;color:rgba(255,255,255,0.5)}
+    .bar-row{display:flex;align-items:center;gap:8px;font-size:.62rem}
+    .bar-label{font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--cyan);letter-spacing:.12em;min-width:52px}
+    .bar-track{flex:1;height:6px;background:rgba(255,255,255,0.15);border-radius:100px;overflow:hidden;min-width:50px}
+    .bar-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--pink-soft));border-radius:100px;transition:width .5s ease;box-shadow:0 0 6px var(--pink)}
+    .bar-fill--cyan{background:linear-gradient(90deg,var(--cyan),var(--mint));box-shadow:0 0 6px var(--cyan)}
+    .bar-val{font-family:'Space Grotesk',sans-serif;font-weight:800;color:#fff;font-size:.7rem;min-width:32px;text-align:right}
 
-    /* ── Container ── */
-    .container{max-width:1100px;margin:0 auto;padding:0 clamp(20px,5vw,64px);position:relative;z-index:1}
+    .hud-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+    .currency{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 14px 6px 6px;border-radius:var(--radius-pill);
+      background:rgba(255,255,255,0.95);color:var(--ink);
+      font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.92rem;
+      border:2px solid rgba(255,255,255,0.6);
+      box-shadow:var(--shadow-soft);
+      min-width:72px;justify-content:flex-start;
+    }
+    .currency-ico{
+      width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      flex-shrink:0;
+    }
+    .ico-coin{background:radial-gradient(circle at 30% 30%,#ffe89b,var(--yellow) 60%,#d99800);box-shadow:inset 0 -2px 4px rgba(0,0,0,0.2)}
+    .ico-coin::after{content:"$";color:#7a4e00;font-weight:900;font-size:.82rem;font-family:'Space Grotesk',sans-serif}
+    .ico-gem{background:radial-gradient(circle at 30% 30%,#a9f4ff,var(--cyan) 60%,#0b9cc9);box-shadow:inset 0 -2px 4px rgba(0,0,0,0.2);clip-path:polygon(50% 0,100% 35%,85% 100%,15% 100%,0 35%)}
+    .currency-val{line-height:1}
+    .hud-actions{display:flex;gap:6px}
+    .circle-btn{
+      width:44px;height:44px;border-radius:50%;position:relative;
+      background:rgba(255,255,255,0.94);color:var(--blue-deep);
+      border:2px solid rgba(255,255,255,0.6);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:var(--shadow-soft);
+      transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .25s;
+    }
+    .circle-btn:hover{transform:translateY(-2px) scale(1.08);box-shadow:0 12px 30px rgba(28,53,148,0.45)}
+    .circle-btn:active{transform:scale(0.94)}
+    .circle-btn svg{width:20px;height:20px;stroke-width:2.2}
+    .circle-btn .badge-dot{
+      position:absolute;top:4px;right:4px;width:10px;height:10px;border-radius:50%;
+      background:var(--pink);border:2px solid #fff;
+      box-shadow:0 0 8px var(--pink);
+    }
+    .circle-btn--accent{background:linear-gradient(135deg,var(--pink),var(--pink-soft));color:#fff;border-color:#fff}
 
-    /* ── Stats Bar ── */
-    .stats-bar{display:flex;align-items:center;justify-content:space-between;padding:16px 0 24px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:28px}
-    .stats-left{display:flex;align-items:center;gap:12px}
-    .stats-count{font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .stats-label{color:var(--text2);font-size:.82rem}
-    .btn-random{display:inline-flex;align-items:center;gap:7px;padding:8px 18px;border:1px solid rgba(168,85,247,0.3);border-radius:8px;background:rgba(168,85,247,0.08);color:var(--purple);font-size:.8rem;font-weight:600;cursor:pointer;transition:all .3s;letter-spacing:.02em}
-    .btn-random:hover{background:var(--purple);color:#fff;border-color:var(--purple);transform:translateY(-2px);box-shadow:0 4px 20px var(--glow-purple)}
-    .btn-random svg{width:16px;height:16px}
+    /* ═════════ Hero area ═════════ */
+    .hero{
+      position:relative;
+      padding:8px clamp(14px,3vw,28px) 16px;
+      display:grid;grid-template-columns:1fr 1.3fr;gap:16px;align-items:stretch;
+    }
+    .hero-left{display:flex;flex-direction:column;gap:12px}
+    .sticker-card{
+      background:#fff;color:var(--ink);border-radius:var(--radius-card);
+      padding:14px 16px;border:2.5px solid #fff;
+      box-shadow:var(--shadow-soft);position:relative;
+      transform:rotate(-1deg);transition:transform .25s ease,box-shadow .25s;
+      overflow:hidden;
+    }
+    .sticker-card:nth-child(2){transform:rotate(1.2deg)}
+    .sticker-card:hover{transform:rotate(0) translateY(-3px);box-shadow:var(--shadow-pink)}
+    .sticker-tag{
+      display:inline-block;font-family:'Space Grotesk',sans-serif;font-size:.62rem;font-weight:800;
+      letter-spacing:.14em;padding:3px 10px;border-radius:100px;color:#fff;
+      background:linear-gradient(135deg,var(--pink),var(--pink-soft));
+      margin-bottom:8px;box-shadow:0 3px 10px rgba(255,45,123,0.3);
+    }
+    .sticker-card.event-card .sticker-tag{background:linear-gradient(135deg,var(--cyan),var(--blue-sky));box-shadow:0 3px 10px rgba(77,229,255,0.3)}
+    .sticker-body{font-size:.82rem;font-weight:700;line-height:1.5}
+    .sticker-card::before{
+      content:'';position:absolute;width:18px;height:18px;border-radius:50%;
+      top:-4px;right:16px;background:var(--yellow);box-shadow:0 3px 10px rgba(255,216,81,0.4);
+    }
 
-    /* ── Category Filter ── */
-    .filter-bar{display:flex;flex-wrap:wrap;gap:8px;padding:0 0 32px;position:relative;z-index:2}
-    .filter-pill{padding:8px 20px;border:1px solid rgba(255,255,255,0.1);border-radius:100px;font-size:.78rem;color:var(--text2);font-weight:600;cursor:pointer;transition:all .3s;background:transparent;letter-spacing:.02em;white-space:nowrap}
-    .filter-pill:hover{border-color:rgba(255,255,255,0.3);color:#fff;background:rgba(255,255,255,0.05)}
-    .filter-pill.active{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 4px 16px var(--glow-purple)}
+    .hero-cta{
+      position:relative;overflow:hidden;
+      background:linear-gradient(135deg,var(--pink) 0%,var(--pink-soft) 50%,var(--cyan) 120%);
+      border:3px solid #fff;border-radius:var(--radius-card);
+      padding:22px 22px 22px;
+      display:flex;flex-direction:column;justify-content:space-between;
+      box-shadow:var(--shadow-pink);
+      min-height:180px;
+      transform:rotate(0.8deg);transition:transform .3s ease;
+    }
+    .hero-cta:hover{transform:rotate(0) translateY(-4px) scale(1.01)}
+    .hero-cta::before{
+      content:'';position:absolute;width:260px;height:260px;border-radius:50%;
+      right:-80px;top:-80px;background:radial-gradient(circle,var(--yellow) 0%,transparent 70%);
+      opacity:0.45;animation:floatBlob 6s ease-in-out infinite;
+    }
+    .hero-cta::after{
+      content:'';position:absolute;width:180px;height:180px;border-radius:50%;
+      left:-60px;bottom:-60px;background:radial-gradient(circle,var(--cyan) 0%,transparent 70%);
+      opacity:0.5;animation:floatBlob 7s ease-in-out infinite reverse;
+    }
+    @keyframes floatBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-10px,10px) scale(1.1)}}
+    .hero-tag{
+      position:relative;z-index:1;display:inline-flex;align-items:center;gap:6px;
+      font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:800;letter-spacing:.18em;
+      padding:4px 12px;border-radius:100px;background:rgba(255,255,255,0.3);
+      border:1.5px solid rgba(255,255,255,0.5);width:fit-content;
+    }
+    .hero-title{
+      position:relative;z-index:1;
+      font-family:'Zen Maru Gothic','M PLUS Rounded 1c',sans-serif;
+      font-weight:900;font-size:clamp(1.6rem,5vw,2.4rem);line-height:1;
+      color:#fff;margin:8px 0 4px;
+      text-shadow:0 3px 10px rgba(0,0,0,0.22);
+    }
+    .hero-sub{position:relative;z-index:1;font-size:.82rem;font-weight:700;color:rgba(255,255,255,0.95);margin-bottom:14px}
+    .hero-btn{
+      position:relative;z-index:1;align-self:flex-start;
+      padding:10px 26px;border-radius:100px;
+      background:#fff;color:var(--pink-deep);
+      font-weight:900;font-size:.92rem;letter-spacing:.04em;
+      box-shadow:0 6px 18px rgba(0,0,0,0.25);
+      border:2px solid rgba(255,255,255,0.8);
+      transition:all .25s cubic-bezier(.34,1.56,.64,1);
+    }
+    .hero-btn:hover{transform:translateY(-2px) scale(1.05);box-shadow:0 10px 24px rgba(0,0,0,0.35)}
+    .hero-btn:active{transform:scale(0.96)}
+    .hero-corner-label{
+      position:absolute;bottom:14px;right:18px;z-index:1;
+      font-family:'Space Grotesk',sans-serif;font-weight:800;
+      color:rgba(255,255,255,0.85);font-size:.7rem;letter-spacing:.1em;
+    }
 
-    /* ── Favorites Section ── */
-    .fav-section{margin-bottom:36px;display:none}
-    .fav-section.has-favs{display:block}
-    .fav-header{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-    .fav-header h2{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.15rem;font-weight:700}
-    .fav-header span{color:var(--pink);font-size:1.1rem}
-    .fav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    /* ═════════ Main ═════════ */
+    main{padding:0 clamp(14px,3vw,28px) 40px;max-width:1200px;margin:0 auto}
 
-    /* ── Games Grid ── */
-    .section-label{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.15rem;font-weight:700;margin-bottom:18px;display:flex;align-items:center;gap:10px}
-    .section-label span{color:var(--purple);font-size:1rem}
-    .games-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding-bottom:60px}
+    /* Filter pills */
+    .filter-row{
+      display:flex;gap:8px;padding:10px 0 18px;
+      overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+    }
+    .filter-row::-webkit-scrollbar{display:none}
+    .pill{
+      flex-shrink:0;scroll-snap-align:start;
+      padding:8px 18px;border-radius:100px;
+      background:rgba(255,255,255,0.12);color:#fff;
+      font-weight:700;font-size:.82rem;
+      border:2px solid rgba(255,255,255,0.2);
+      transition:all .25s cubic-bezier(.34,1.56,.64,1);
+      white-space:nowrap;
+    }
+    .pill:hover{background:rgba(255,255,255,0.22);transform:translateY(-2px)}
+    .pill.active{
+      background:#fff;color:var(--blue-deep);
+      border-color:#fff;
+      box-shadow:0 6px 18px rgba(255,255,255,0.3);
+      transform:translateY(-1px);
+    }
 
-    /* ── Game Card ── */
-    .game-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);overflow:hidden;text-decoration:none;color:inherit;transition:all .4s cubic-bezier(.25,.46,.45,.94);display:flex;flex-direction:column;position:relative}
-    .game-card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,0.5);border-color:rgba(168,85,247,0.25)}
+    /* Section title */
+    .section-title{
+      font-family:'Zen Maru Gothic','M PLUS Rounded 1c',sans-serif;
+      font-weight:900;font-size:1.05rem;color:#fff;
+      margin:20px 0 12px;display:flex;align-items:center;gap:10px;
+    }
+    .section-title::before{
+      content:'';width:4px;height:18px;border-radius:2px;
+      background:linear-gradient(180deg,var(--pink),var(--pink-soft));
+    }
+    .section-title .count{
+      font-family:'Space Grotesk',sans-serif;font-size:.72rem;color:var(--cyan);
+      background:rgba(77,229,255,0.12);border:1px solid rgba(77,229,255,0.3);
+      padding:2px 8px;border-radius:100px;letter-spacing:.08em;font-weight:700;
+    }
+
+    /* Games grid */
+    .games-grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;
+    }
+
+    /* Game card */
+    .game-card{
+      position:relative;background:#fff;color:var(--ink);
+      border-radius:var(--radius-card);overflow:hidden;
+      border:3px solid #fff;
+      box-shadow:var(--shadow-soft);
+      transition:all .3s cubic-bezier(.34,1.56,.64,1);
+      display:flex;flex-direction:column;
+    }
+    .game-card:hover{
+      transform:translateY(-6px) rotate(-0.5deg);
+      box-shadow:0 18px 40px rgba(28,53,148,0.45),0 0 0 3px var(--cyan);
+    }
+    .game-card:nth-child(even):hover{transform:translateY(-6px) rotate(0.5deg)}
     .game-card.hidden{display:none}
-    .game-thumb{aspect-ratio:16/10;display:flex;align-items:flex-end;justify-content:flex-start;position:relative;overflow:hidden}
-    .game-thumb::after{content:'';position:absolute;bottom:0;left:0;right:0;height:70%;background:linear-gradient(to top,rgba(0,0,0,0.7),transparent)}
-    .cover-icon{display:none}
-    .cover-deco{display:none}
-    .cover-title{position:absolute;bottom:0;left:0;right:0;z-index:2;font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:1.5rem;color:#fff;padding:18px 18px 16px;text-shadow:0 2px 12px rgba(0,0,0,0.6);letter-spacing:-.02em;line-height:1.1}
-    .cover-badge{position:absolute;top:12px;left:12px;z-index:3;padding:4px 12px;border-radius:6px;font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,0.15);color:#fff;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.1)}
-    .badge-new{position:absolute;top:12px;left:12px;z-index:4;padding:4px 10px;border-radius:6px;font-size:.6rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff;box-shadow:0 2px 12px var(--glow-pink);animation:pulse-new 2s infinite}
-    .badge-new + .cover-badge{left:auto;right:50px;top:12px}
 
-    /* ── Heart/Fav Button ── */
-    .fav-btn{position:absolute;top:10px;right:10px;z-index:5;width:34px;height:34px;border-radius:50%;border:none;background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;color:rgba(255,255,255,0.5)}
-    .fav-btn:hover{background:rgba(0,0,0,0.65);transform:scale(1.15);color:#fff}
-    .fav-btn.favorited{color:var(--pink);background:rgba(255,45,123,0.2)}
-    .fav-btn.favorited:hover{background:rgba(255,45,123,0.35)}
-    .fav-btn svg{width:17px;height:17px;pointer-events:none}
+    .game-thumb{
+      aspect-ratio:5/3;position:relative;overflow:hidden;
+      display:flex;align-items:flex-end;padding:14px;
+    }
+    .game-thumb::after{
+      content:'';position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 30%,rgba(0,0,0,0.35) 100%);
+    }
+    .cover-title{
+      position:relative;z-index:2;
+      font-family:'Zen Maru Gothic','M PLUS Rounded 1c',sans-serif;
+      font-weight:900;font-size:clamp(.95rem,2.6vw,1.15rem);color:#fff;
+      text-shadow:0 3px 10px rgba(0,0,0,0.55);line-height:1.15;
+      letter-spacing:-0.01em;
+    }
+    .cover-badge{
+      position:absolute;top:10px;left:10px;z-index:3;
+      font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.58rem;
+      padding:4px 10px;border-radius:100px;letter-spacing:.12em;
+      background:rgba(255,255,255,0.92);color:var(--ink);
+      border:1.5px solid rgba(255,255,255,0.6);
+    }
+    .badge-new{
+      position:absolute;top:10px;left:10px;z-index:4;
+      font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:.6rem;
+      padding:4px 10px;border-radius:100px;letter-spacing:.12em;
+      background:var(--pink);color:#fff;
+      box-shadow:0 3px 10px rgba(255,45,123,0.5);
+      animation:pulse 2s ease-in-out infinite;
+    }
+    .badge-new + .cover-badge{left:auto;right:46px}
+    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
 
-    .game-info{padding:16px 18px;flex:1;display:flex;flex-direction:column}
-    .game-info h3{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:.92rem;font-weight:700;margin-bottom:4px}
-    .game-info p{color:var(--text2);font-size:.76rem;line-height:1.7;flex:1}
-    .game-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
-    .game-tags{display:flex;flex-wrap:wrap;gap:5px}
-    .game-tag{padding:3px 10px;border:1px solid rgba(255,255,255,0.08);border-radius:6px;font-size:.6rem;color:var(--text3);font-weight:600;letter-spacing:.03em;transition:all .3s}
-    .game-card:hover .game-tag{border-color:rgba(255,255,255,0.2);color:var(--text2);background:rgba(255,255,255,0.04)}
-    .game-plays{font-size:.62rem;color:var(--text3);white-space:nowrap}
-    .game-play{display:flex;align-items:center;gap:6px;margin-top:12px;font-size:.76rem;color:var(--pink);font-weight:700;letter-spacing:.03em;transition:all .3s}
-    .game-card:hover .game-play{gap:10px;color:#fff}
+    /* Heart button */
+    .fav-btn{
+      position:absolute;top:10px;right:10px;z-index:5;
+      width:32px;height:32px;border-radius:50%;
+      background:rgba(255,255,255,0.92);color:#b8c0e0;
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 3px 8px rgba(0,0,0,0.15);
+      transition:all .25s cubic-bezier(.34,1.56,.64,1);
+      border:1.5px solid rgba(255,255,255,0.6);
+    }
+    .fav-btn:hover{transform:scale(1.15);background:#fff}
+    .fav-btn.favorited{color:var(--pink);background:#fff}
+    .fav-btn.favorited svg{animation:heartBeat .5s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes heartBeat{0%{transform:scale(1)}50%{transform:scale(1.35)}100%{transform:scale(1)}}
+    .fav-btn svg{width:15px;height:15px;pointer-events:none}
 
-    /* Thumb gradients */
-    .thumb-cat{background:linear-gradient(145deg,#4a2800,#8b5e34,#3d1f00)}
-    .thumb-dodge{background:linear-gradient(145deg,#06060e,#0d0a2e,#1a0040)}
-    .thumb-frost{background:linear-gradient(145deg,#0a1e38,#1a3a5c,#0c2848)}
-    .thumb-surv{background:linear-gradient(145deg,#0d1117,#1a2332,#0f1820)}
-    .thumb-poker{background:linear-gradient(145deg,#2d0a0a,#4a1515,#1a0505)}
-    .thumb-dog{background:linear-gradient(145deg,#4e3425,#7a5840,#3e2718)}
-    .thumb-mono{background:linear-gradient(145deg,#1b2838,#2a4558,#152030)}
-    .thumb-water{background:linear-gradient(145deg,#082830,#1a4858,#0a3040)}
-    .thumb-wolf{background:linear-gradient(145deg,#1a0028,#35104a,#200030)}
-    .thumb-fortune{background:linear-gradient(145deg,#2a1a00,#4a3010,#3a2508)}
-    .thumb-down{background:linear-gradient(145deg,#1a0828,#3a1850,#280a3a)}
-    .thumb-splat{background:linear-gradient(145deg,#18122B,#2a1e48,#140e22)}
-    .thumb-chess{background:linear-gradient(145deg,#1a1008,#2e1e0a,#1c1208)}
-    .thumb-arcania{background:linear-gradient(145deg,#0a1020,#1a2848,#0c1830)}
+    .game-info{padding:14px 16px 16px;flex:1;display:flex;flex-direction:column}
+    .game-info h3{
+      font-family:'Zen Maru Gothic','M PLUS Rounded 1c',sans-serif;
+      font-weight:800;font-size:.92rem;margin-bottom:3px;color:var(--ink);
+    }
+    .game-info p{color:#5f6d9a;font-size:.72rem;line-height:1.55;flex:1}
+    .game-meta{display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:6px}
+    .game-tags{display:flex;flex-wrap:wrap;gap:4px}
+    .game-tag{
+      padding:2px 8px;border:1.2px solid #e5e9f5;border-radius:100px;
+      font-size:.58rem;color:#7b85ad;font-weight:700;letter-spacing:.04em;
+    }
+    .game-plays{font-size:.58rem;color:#9ea8c8;white-space:nowrap;font-family:'Space Grotesk',sans-serif;font-weight:700}
 
-    /* ── FAQ Section ── */
-    .faq-section{padding:48px 0 60px;border-top:1px solid rgba(255,255,255,0.06)}
-    .faq-title{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:28px;display:flex;align-items:center;gap:10px}
-    .faq-title span{font-size:1.1rem}
-    .faq-item{border:1px solid rgba(255,255,255,0.06);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;background:var(--bg2);transition:border-color .3s}
-    .faq-item:hover{border-color:rgba(168,85,247,0.2)}
-    .faq-q{padding:18px 22px;font-size:.88rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:space-between;transition:background .3s;user-select:none}
-    .faq-q:hover{background:rgba(255,255,255,0.02)}
-    .faq-q::after{content:'+';font-size:1.2rem;color:var(--purple);font-weight:300;transition:transform .3s}
+    /* Thumb palettes — flat bold colors, no emoji */
+    .thumb-cat     {background:linear-gradient(135deg,#ff8a4c,#ff5e3a,#c13000)}
+    .thumb-dodge   {background:linear-gradient(135deg,#221b4e,#4b28b3,#7c3aed)}
+    .thumb-frost   {background:linear-gradient(135deg,#0e5c8c,#2183b9,#43c0e4)}
+    .thumb-surv    {background:linear-gradient(135deg,#0b1323,#213154,#3a567f)}
+    .thumb-poker   {background:linear-gradient(135deg,#6b0a0a,#ad1a1a,#e23c3c)}
+    .thumb-dog     {background:linear-gradient(135deg,#8a5b3a,#c4834c,#f0b26f)}
+    .thumb-mono    {background:linear-gradient(135deg,#17334d,#2e5a7f,#4f8fb9)}
+    .thumb-water   {background:linear-gradient(135deg,#0d4c5a,#1a859a,#3ac4db)}
+    .thumb-wolf    {background:linear-gradient(135deg,#2a0a48,#5a1490,#8a30c8)}
+    .thumb-fortune {background:linear-gradient(135deg,#5a3a0a,#a88028,#e6c048)}
+    .thumb-down    {background:linear-gradient(135deg,#2c0a4a,#5a20a0,#9d48e6)}
+    .thumb-splat   {background:linear-gradient(135deg,#1f1845,#3d2e78,#6a4ebc)}
+    .thumb-chess   {background:linear-gradient(135deg,#201611,#4a3322,#7d5a3e)}
+    .thumb-arcania {background:linear-gradient(135deg,#0a1b38,#1f3a70,#3d66b3)}
+
+    /* Thumb decoration — geometric stripes, no emoji */
+    .thumb-deco{position:absolute;inset:0;pointer-events:none;opacity:0.15}
+    .thumb-deco::before,.thumb-deco::after{
+      content:'';position:absolute;border-radius:50%;
+      background:rgba(255,255,255,0.4);
+    }
+    .thumb-deco::before{width:120px;height:120px;top:-40px;right:-30px}
+    .thumb-deco::after{width:60px;height:60px;bottom:-10px;left:20%}
+
+    /* FAQ */
+    .faq-section{margin-top:32px;padding:24px 0 20px;border-top:1px dashed rgba(255,255,255,0.18)}
+    .faq-item{
+      background:rgba(255,255,255,0.08);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+      border:1.5px solid rgba(255,255,255,0.16);
+      border-radius:var(--radius-sm);margin-bottom:10px;overflow:hidden;
+      transition:all .25s;
+    }
+    .faq-item:hover{border-color:rgba(255,255,255,0.35);background:rgba(255,255,255,0.12)}
+    .faq-q{
+      padding:14px 20px;font-size:.85rem;font-weight:700;
+      cursor:pointer;display:flex;align-items:center;justify-content:space-between;
+      user-select:none;color:#fff;
+    }
+    .faq-q::after{
+      content:'+';font-weight:400;font-size:1.3rem;color:var(--cyan);
+      transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+    }
     .faq-item.open .faq-q::after{transform:rotate(45deg)}
     .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease}
-    .faq-item.open .faq-a{max-height:200px;padding:0 22px 18px}
-    .faq-a p{color:var(--text2);font-size:.82rem;line-height:1.8}
+    .faq-item.open .faq-a{max-height:260px;padding:0 20px 16px}
+    .faq-a p{color:var(--muted);font-size:.78rem;line-height:1.75}
 
-    /* ── Footer ── */
-    footer{border-top:1px solid rgba(255,255,255,0.06);padding:24px clamp(20px,5vw,64px);display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
-    footer p{font-size:.72rem;color:var(--text3)}footer a{font-size:.72rem;color:var(--text3);text-decoration:none;transition:color .3s}footer a:hover{color:var(--purple)}
+    /* ═════════ Bottom Tab Nav ═════════ */
+    .bottom-nav{
+      position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:100;
+      display:flex;gap:4px;padding:6px;
+      background:rgba(14,26,63,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+      border-radius:100px;border:1.5px solid rgba(255,255,255,0.15);
+      box-shadow:0 12px 36px rgba(0,0,0,0.35);
+      max-width:calc(100% - 20px);
+    }
+    .tab{
+      position:relative;padding:10px 18px;border-radius:100px;
+      font-weight:800;font-size:.78rem;color:rgba(255,255,255,0.7);
+      transition:all .3s cubic-bezier(.34,1.56,.64,1);
+      display:flex;align-items:center;gap:6px;white-space:nowrap;
+    }
+    .tab:hover{color:#fff}
+    .tab.active{
+      background:linear-gradient(135deg,var(--pink),var(--pink-soft));
+      color:#fff;box-shadow:0 4px 14px rgba(255,45,123,0.45);
+    }
+    .tab svg{width:15px;height:15px}
 
-    /* ── Animations ── */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes pulse-new{0%,100%{box-shadow:0 2px 12px var(--glow-pink)}50%{box-shadow:0 2px 24px rgba(255,45,123,0.35)}}
-    .reveal{opacity:0;transform:translateY(24px);transition:opacity .6s ease,transform .6s ease}.reveal.visible{opacity:1;transform:translateY(0)}
-    .reveal-d1{transition-delay:.06s}.reveal-d2{transition-delay:.12s}.reveal-d3{transition-delay:.18s}.reveal-d4{transition-delay:.24s}.reveal-d5{transition-delay:.30s}
-
-    /* ── Nav icon buttons ── */
-    .nav-btn--icon{width:38px;height:38px;padding:0;justify-content:center;position:relative}
-    .nav-btn--icon svg{width:16px;height:16px}
-    .nav-btn--icon .badge-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink);animation:pulse-new 2s infinite}
-
-    /* ── User widget ── */
-    .user-chip{display:inline-flex;align-items:center;gap:8px;padding:4px 12px 4px 4px;border:1px solid rgba(168,85,247,0.3);border-radius:100px;background:rgba(168,85,247,0.08);cursor:pointer;transition:all .3s}
-    .user-chip:hover{background:rgba(168,85,247,0.18);border-color:var(--purple)}
-    .user-chip img{width:28px;height:28px;border-radius:50%;object-fit:cover}
-    .user-chip .coin{font-family:'Space Grotesk',sans-serif;font-size:.76rem;font-weight:700;color:var(--warn-amber,#ffc857);display:flex;align-items:center;gap:3px}
-
-    /* ── Modal ── */
-    .modal-overlay{position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px;animation:fadeIn .25s ease}
+    /* ═════════ Modals ═════════ */
+    .modal-overlay{
+      position:fixed;inset:0;z-index:200;
+      background:rgba(10,15,40,0.65);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+      display:none;align-items:center;justify-content:center;padding:20px;
+      animation:fadeIn .25s ease;
+    }
     .modal-overlay.open{display:flex}
-    .modal{background:var(--bg2);border:1px solid rgba(168,85,247,0.25);border-radius:var(--radius);max-width:480px;width:100%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,0.6);animation:slideUp .3s ease}
-    .modal-head{padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between}
-    .modal-title{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.1rem;font-weight:700;display:flex;align-items:center;gap:8px}
-    .modal-close{width:32px;height:32px;border-radius:50%;border:none;background:rgba(255,255,255,0.05);color:var(--text2);cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;transition:all .25s}
-    .modal-close:hover{background:rgba(255,255,255,0.12);color:#fff}
-    .modal-body{padding:22px 24px 24px;overflow-y:auto;flex:1}
+    .modal{
+      background:#fff;color:var(--ink);
+      border-radius:26px;max-width:480px;width:100%;max-height:85vh;
+      overflow:hidden;display:flex;flex-direction:column;
+      box-shadow:0 30px 80px rgba(0,0,0,0.5);
+      animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+      border:3px solid #fff;
+    }
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes popIn{
+      0%{opacity:0;transform:scale(0.88) translateY(20px)}
+      100%{opacity:1;transform:scale(1) translateY(0)}
+    }
+    .modal-head{
+      padding:18px 22px 14px;
+      display:flex;align-items:center;justify-content:space-between;
+      border-bottom:1.5px dashed #e5e9f5;
+    }
+    .modal-title{
+      font-family:'Zen Maru Gothic','M PLUS Rounded 1c',sans-serif;
+      font-weight:900;font-size:1.05rem;display:flex;align-items:center;gap:10px;
+    }
+    .modal-title::before{
+      content:'';width:4px;height:20px;border-radius:2px;
+      background:linear-gradient(180deg,var(--pink),var(--pink-soft));
+    }
+    .modal-close{
+      width:32px;height:32px;border-radius:50%;
+      background:#f0f3fb;color:#8593b8;font-size:1.2rem;
+      display:flex;align-items:center;justify-content:center;
+      transition:all .2s;
+    }
+    .modal-close:hover{background:var(--pink);color:#fff;transform:rotate(90deg)}
+    .modal-body{padding:20px 22px 22px;overflow-y:auto;flex:1}
     .modal-body::-webkit-scrollbar{width:6px}
-    .modal-body::-webkit-scrollbar-thumb{background:rgba(168,85,247,0.3);border-radius:3px}
+    .modal-body::-webkit-scrollbar-thumb{background:#d8dcea;border-radius:3px}
 
-    /* ── Login prompt ── */
-    .login-prompt{text-align:center;padding:12px 0 4px}
-    .login-prompt p{color:var(--text2);font-size:.86rem;margin-bottom:20px;line-height:1.7}
+    /* Login prompt */
+    .login-prompt{text-align:center;padding:6px 0}
+    .login-prompt p{color:#5f6d9a;font-size:.84rem;margin-bottom:16px;line-height:1.7}
     #gsiBtn{display:flex;justify-content:center;min-height:44px}
 
-    /* ── Check-in grid ── */
-    .checkin-status{text-align:center;padding:16px 0 22px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:20px}
-    .checkin-streak{font-family:'Space Grotesk',sans-serif;font-size:2.4rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
-    .checkin-streak-label{color:var(--text2);font-size:.78rem;margin-top:6px;letter-spacing:.05em}
-    .checkin-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:20px}
-    .checkin-day{aspect-ratio:1;border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:.66rem;color:var(--text3);gap:2px;position:relative}
-    .checkin-day b{font-family:'Space Grotesk',sans-serif;font-size:.86rem;font-weight:700;color:var(--warn-amber,#ffc857)}
-    .checkin-day.done{background:rgba(168,85,247,0.15);border-color:rgba(168,85,247,0.4)}
-    .checkin-day.done::after{content:'✓';position:absolute;top:3px;right:5px;font-size:.62rem;color:var(--purple);font-weight:700}
-    .checkin-day.today{border-color:var(--pink);box-shadow:0 0 0 1px var(--pink) inset}
-    .btn-primary{width:100%;padding:12px;border:none;border-radius:10px;background:var(--grad);color:#fff;font-family:inherit;font-weight:700;font-size:.86rem;letter-spacing:.04em;cursor:pointer;transition:all .3s;display:flex;align-items:center;justify-content:center;gap:8px}
-    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--glow-purple)}
-    .btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-    .checkin-toast{background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.3);color:#6fffaa;padding:10px 14px;border-radius:10px;font-size:.82rem;text-align:center;margin-top:14px;display:none}
-    .checkin-toast.show{display:block;animation:slideUp .4s ease}
+    /* Check-in */
+    .checkin-status{text-align:center;padding:6px 0 18px;border-bottom:1.5px dashed #e5e9f5;margin-bottom:18px}
+    .checkin-streak{
+      font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:2.6rem;line-height:1;
+      background:linear-gradient(135deg,var(--pink),var(--pink-soft));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .checkin-streak-label{color:#7b85ad;font-size:.76rem;margin-top:4px;font-weight:700;letter-spacing:.05em}
+    .checkin-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:16px}
+    .checkin-day{
+      aspect-ratio:1;border:1.5px solid #e5e9f5;border-radius:12px;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      font-size:.62rem;color:#8593b8;gap:2px;position:relative;font-weight:700;
+      background:#fafbff;
+    }
+    .checkin-day b{font-family:'Space Grotesk',sans-serif;font-size:.82rem;color:#e0a400}
+    .checkin-day.done{background:linear-gradient(135deg,#ffeaf4,#ffd8ea);border-color:var(--pink-soft)}
+    .checkin-day.done::after{content:'';position:absolute;top:4px;right:5px;width:10px;height:10px;border-radius:50%;background:var(--pink);box-shadow:0 0 6px var(--pink)}
+    .checkin-day.today{border-color:var(--pink);border-width:2.5px;box-shadow:0 0 0 3px rgba(255,45,123,0.2)}
+    .btn-primary{
+      width:100%;padding:12px;border-radius:14px;
+      background:linear-gradient(135deg,var(--pink),var(--pink-soft));color:#fff;
+      font-weight:900;font-size:.9rem;letter-spacing:.04em;
+      box-shadow:0 6px 18px rgba(255,45,123,0.4);
+      transition:all .25s cubic-bezier(.34,1.56,.64,1);
+    }
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(255,45,123,0.55)}
+    .btn-primary:active{transform:scale(0.97)}
+    .btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;box-shadow:none}
+    .checkin-toast{
+      background:linear-gradient(135deg,#e7fff4,#cffbe3);color:#0a7a3b;
+      border:1.5px solid rgba(10,122,59,0.25);
+      padding:10px 14px;border-radius:12px;font-size:.84rem;font-weight:700;text-align:center;
+      margin-top:12px;display:none;
+    }
+    .checkin-toast.show{display:block;animation:popIn .4s cubic-bezier(.34,1.56,.64,1)}
 
-    /* ── Leaderboard ── */
-    .lb-tabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;padding-bottom:4px}
-    .lb-tab{padding:6px 14px;border:1px solid rgba(255,255,255,0.1);border-radius:100px;background:transparent;color:var(--text2);font-size:.74rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .25s;font-family:inherit}
-    .lb-tab.active{background:var(--grad);color:#fff;border-color:transparent}
-    .lb-list{display:flex;flex-direction:column;gap:8px}
-    .lb-row{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);transition:all .25s}
-    .lb-row:hover{background:rgba(255,255,255,0.04)}
-    .lb-rank{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.92rem;width:28px;text-align:center;color:var(--text3)}
-    .lb-row.top1 .lb-rank{color:#ffd85c}
-    .lb-row.top2 .lb-rank{color:#e0e0e0}
-    .lb-row.top3 .lb-rank{color:#d38a3b}
-    .lb-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:rgba(168,85,247,0.2);flex-shrink:0}
-    .lb-name{flex:1;font-size:.84rem;font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .lb-title{font-size:.64rem;color:var(--text3);font-weight:500;margin-left:6px}
-    .lb-score{font-family:'Space Grotesk',sans-serif;font-size:.88rem;font-weight:700;color:var(--purple)}
-    .lb-empty{text-align:center;color:var(--text3);padding:32px 0;font-size:.84rem}
+    /* Leaderboard */
+    .lb-tabs{display:flex;gap:5px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+    .lb-tabs::-webkit-scrollbar{display:none}
+    .lb-tab{
+      padding:6px 14px;border-radius:100px;background:#f0f3fb;color:#5f6d9a;
+      font-size:.72rem;font-weight:700;white-space:nowrap;
+      transition:all .25s;
+    }
+    .lb-tab:hover{background:#e5e9f5}
+    .lb-tab.active{background:linear-gradient(135deg,var(--pink),var(--pink-soft));color:#fff;box-shadow:0 4px 12px rgba(255,45,123,0.35)}
+    .lb-list{display:flex;flex-direction:column;gap:6px}
+    .lb-row{
+      display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;
+      background:#fafbff;border:1.5px solid #eef1f9;transition:all .25s;
+    }
+    .lb-row:hover{background:#f3f5fc;transform:translateX(3px)}
+    .lb-rank{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:.95rem;width:32px;text-align:center;color:#b8c0e0}
+    .lb-row.top1 .lb-rank{color:#ffba08}
+    .lb-row.top2 .lb-rank{color:#9ea8c8}
+    .lb-row.top3 .lb-rank{color:#cd7f32}
+    .lb-row.top1,.lb-row.top2,.lb-row.top3{background:linear-gradient(135deg,#fff,#fafbff);border-color:#eef1f9}
+    .lb-row.top1{background:linear-gradient(135deg,#fffaed,#fff);border-color:#ffe5a0}
+    .lb-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;background:linear-gradient(135deg,var(--pink),var(--pink-soft));flex-shrink:0;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+    .lb-name{flex:1;font-size:.82rem;font-weight:700;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink)}
+    .lb-title{font-size:.58rem;color:#9ea8c8;font-weight:600;margin-left:6px}
+    .lb-score{font-family:'Space Grotesk',sans-serif;font-weight:800;font-size:.88rem;color:var(--pink-deep)}
+    .lb-empty{text-align:center;color:#9ea8c8;padding:30px 0;font-size:.82rem;font-weight:600}
 
-    /* ── Profile ── */
-    .profile-head{display:flex;align-items:center;gap:14px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,0.06);margin-bottom:18px}
-    .profile-head img{width:56px;height:56px;border-radius:50%;object-fit:cover}
-    .profile-name{font-family:'Space Grotesk','Noto Sans TC',sans-serif;font-size:1.08rem;font-weight:700}
-    .profile-title{font-size:.72rem;color:var(--purple);letter-spacing:.04em;margin-top:3px}
-    .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-    .stat-box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px}
-    .stat-box .v{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;font-weight:800;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    .stat-box .k{font-size:.7rem;color:var(--text3);margin-top:2px;letter-spacing:.05em}
-    .best-list{margin-bottom:18px}
-    .best-list h4{font-size:.76rem;color:var(--text2);font-weight:600;margin-bottom:10px;letter-spacing:.05em;text-transform:uppercase}
-    .best-row{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:5px;font-size:.8rem}
-    .best-row b{font-family:'Space Grotesk',sans-serif;color:var(--purple);font-weight:700}
-    .btn-signout{width:100%;padding:10px;border:1px solid rgba(255,255,255,0.1);border-radius:10px;background:transparent;color:var(--text2);font-family:inherit;font-size:.78rem;cursor:pointer;transition:all .25s}
-    .btn-signout:hover{border-color:var(--pink);color:var(--pink);background:rgba(255,45,123,0.05)}
+    /* Profile */
+    .profile-head{display:flex;align-items:center;gap:14px;padding-bottom:16px;border-bottom:1.5px dashed #e5e9f5;margin-bottom:16px}
+    .profile-head img{width:58px;height:58px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,0.12)}
+    .profile-name{font-family:'Zen Maru Gothic','M PLUS Rounded 1c',sans-serif;font-weight:900;font-size:1.05rem;color:var(--ink)}
+    .profile-title{font-size:.72rem;color:var(--pink);font-weight:700;letter-spacing:.04em;margin-top:3px}
+    .profile-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+    .stat-box{background:#fafbff;border:1.5px solid #eef1f9;border-radius:12px;padding:12px 14px;transition:all .25s}
+    .stat-box:hover{border-color:var(--pink-soft);transform:translateY(-1px)}
+    .stat-box .v{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:1.4rem;background:linear-gradient(135deg,var(--pink),var(--pink-soft));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+    .stat-box .k{font-size:.7rem;color:#7b85ad;margin-top:3px;font-weight:700}
+    .best-list{margin-bottom:16px}
+    .best-list h4{font-size:.78rem;color:#5f6d9a;font-weight:800;margin-bottom:8px;letter-spacing:.06em}
+    .best-row{
+      display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:10px;
+      background:#fafbff;border:1.5px solid #eef1f9;margin-bottom:4px;font-size:.8rem;font-weight:700;color:var(--ink);
+    }
+    .best-row b{font-family:'Space Grotesk',sans-serif;color:var(--pink);font-weight:800}
 
-    /* ── Achievements ── */
-    .ach-list{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px}
-    .ach-item{aspect-ratio:1;border:1px solid rgba(255,255,255,0.06);border-radius:10px;background:rgba(255,255,255,0.02);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px;transition:all .25s;cursor:help;position:relative;text-align:center}
-    .ach-item .ach-icon{font-size:1.35rem;filter:grayscale(1) brightness(.5);transition:filter .3s}
-    .ach-item .ach-name{font-size:.58rem;color:var(--text3);font-weight:600;margin-top:3px;line-height:1.2}
-    .ach-item.unlocked{border-color:rgba(168,85,247,0.4);background:linear-gradient(135deg,rgba(168,85,247,0.1),rgba(255,45,123,0.08))}
-    .ach-item.unlocked .ach-icon{filter:none}
-    .ach-item.unlocked .ach-name{color:var(--text)}
-    .ach-item .ach-tip{position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#0a0a0f;border:1px solid rgba(168,85,247,0.3);padding:6px 10px;border-radius:6px;font-size:.68rem;color:var(--text);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .2s;z-index:10;box-shadow:0 4px 20px rgba(0,0,0,0.5)}
-    .ach-item:hover .ach-tip{opacity:1}
+    /* Achievement list */
+    .ach-list{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+    .ach-item{
+      display:flex;flex-direction:column;padding:10px 12px;border-radius:12px;
+      background:#fafbff;border:1.5px solid #eef1f9;
+      opacity:0.45;filter:grayscale(0.6);transition:all .25s;
+      position:relative;overflow:hidden;
+    }
+    .ach-item.unlocked{opacity:1;filter:none;background:linear-gradient(135deg,#fff8f0,#fff);border-color:#ffd89a}
+    .ach-item.unlocked::before{
+      content:'';position:absolute;top:-20px;right:-20px;width:40px;height:40px;border-radius:50%;
+      background:linear-gradient(135deg,var(--yellow),#ff9800);opacity:0.22;
+    }
+    .ach-badge{
+      width:30px;height:30px;border-radius:9px;flex-shrink:0;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:.8rem;color:#fff;
+      background:linear-gradient(135deg,#b8c0e0,#9ea8c8);
+      margin-bottom:6px;
+    }
+    .ach-item.unlocked .ach-badge--bronze{background:linear-gradient(135deg,#cd7f32,#e8944d)}
+    .ach-item.unlocked .ach-badge--silver{background:linear-gradient(135deg,#a0a8b8,#d0d8e5)}
+    .ach-item.unlocked .ach-badge--gold{background:linear-gradient(135deg,#ffba08,#ffd851)}
+    .ach-item.unlocked .ach-badge--legend{background:linear-gradient(135deg,var(--pink),var(--cyan));box-shadow:0 0 12px rgba(255,45,123,0.5)}
+    .ach-name{font-size:.78rem;font-weight:800;color:var(--ink);line-height:1.2}
+    .ach-tip{font-size:.62rem;color:#7b85ad;margin-top:3px;font-weight:600;line-height:1.4}
+    .ach-done{font-family:'Space Grotesk',sans-serif;font-weight:900;font-size:.62rem;color:#0a7a3b;margin-top:4px;letter-spacing:.08em}
+
+    .btn-signout{
+      width:100%;padding:11px;border-radius:12px;
+      background:#fafbff;color:#5f6d9a;
+      border:1.5px solid #eef1f9;
+      font-weight:700;font-size:.82rem;
+      transition:all .2s;
+    }
+    .btn-signout:hover{background:#ffeaf4;color:var(--pink);border-color:var(--pink-soft)}
 
     /* Unlock toast */
-    .unlock-toast{position:fixed;top:90px;right:20px;z-index:3000;padding:14px 18px;border-radius:12px;background:linear-gradient(135deg,rgba(168,85,247,0.95),rgba(255,45,123,0.95));color:#fff;display:none;align-items:center;gap:12px;box-shadow:0 12px 40px rgba(168,85,247,0.5);border:1px solid rgba(255,255,255,0.2);max-width:320px;animation:unlockIn 0.5s cubic-bezier(.34,1.56,.64,1)}
-    .unlock-toast.show{display:flex}
-    .unlock-toast .unlock-icon{font-size:1.8rem}
-    .unlock-toast .unlock-body{flex:1;min-width:0}
-    .unlock-toast .unlock-label{font-size:.62rem;opacity:.85;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
-    .unlock-toast .unlock-name{font-family:'Space Grotesk',sans-serif;font-size:.95rem;font-weight:700;margin-top:2px}
-    .unlock-toast .unlock-desc{font-size:.7rem;opacity:.9;margin-top:2px}
-    @keyframes unlockIn{from{opacity:0;transform:translateX(40px) scale(.9)}to{opacity:1;transform:translateX(0) scale(1)}}
+    .unlock-toast{
+      position:fixed;top:90px;left:50%;transform:translateX(-50%) translateY(-20px);z-index:300;
+      opacity:0;pointer-events:none;
+      background:#fff;color:var(--ink);
+      border:3px solid #fff;border-radius:20px;
+      padding:14px 22px 14px 16px;
+      display:flex;align-items:center;gap:14px;
+      box-shadow:0 20px 50px rgba(0,0,0,0.25),0 0 0 4px var(--yellow);
+      max-width:340px;width:calc(100% - 32px);
+      transition:all .45s cubic-bezier(.34,1.56,.64,1);
+    }
+    .unlock-toast.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+    .unlock-badge{
+      width:44px;height:44px;border-radius:12px;flex-shrink:0;
+      background:linear-gradient(135deg,var(--yellow),#ff9800);
+      display:flex;align-items:center;justify-content:center;
+      color:#fff;font-weight:900;font-family:'Space Grotesk',sans-serif;
+      box-shadow:0 6px 18px rgba(255,152,0,0.4);
+    }
+    .unlock-content{flex:1;min-width:0}
+    .unlock-tag{font-family:'Space Grotesk',sans-serif;font-size:.62rem;font-weight:900;letter-spacing:.14em;color:var(--pink);margin-bottom:2px}
+    .unlock-name{font-family:'Zen Maru Gothic',sans-serif;font-weight:900;font-size:.94rem;color:var(--ink);line-height:1.2}
+    .unlock-desc{font-size:.68rem;color:#7b85ad;margin-top:2px;font-weight:600}
 
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    /* Ripple */
+    .ripple{position:relative;overflow:hidden}
+    .ripple-circle{position:absolute;border-radius:50%;background:rgba(255,255,255,0.5);pointer-events:none;transform:scale(0);animation:rippleGo .6s ease-out}
+    @keyframes rippleGo{to{transform:scale(4);opacity:0}}
 
-    /* ── Responsive ── */
+    /* Reveal */
+    .reveal{opacity:0;transform:translateY(20px);transition:opacity .5s ease,transform .5s cubic-bezier(.34,1.56,.64,1)}
+    .reveal.visible{opacity:1;transform:translateY(0)}
+    .reveal-d1{transition-delay:.05s}.reveal-d2{transition-delay:.1s}.reveal-d3{transition-delay:.15s}
+    .reveal-d4{transition-delay:.2s}.reveal-d5{transition-delay:.25s}
+
+    /* Favorites section */
+    .fav-section{display:none}
+    .fav-section.has-favs{display:block}
+
+    /* Responsive */
     @media(max-width:768px){
-      .games-grid,.fav-grid{grid-template-columns:1fr 1fr}
-      .filter-bar{gap:6px}
-      .filter-pill{padding:6px 14px;font-size:.72rem}
-      .stats-bar{flex-direction:column;gap:12px;align-items:flex-start}
-      .nav-btn{padding:6px 12px;font-size:.72rem}
-      .nav-btn--icon{width:34px;height:34px}
-      .user-chip .coin{display:none}
-      .checkin-grid{grid-template-columns:repeat(7,1fr);gap:5px}
-      .checkin-day{font-size:.58rem}
+      .hud{padding:10px 14px;gap:8px}
+      .avatar-block{padding:6px 14px 6px 6px;gap:8px}
+      .avatar-orb{width:36px;height:36px;font-size:.95rem}
+      .user-bars{min-width:100px}
+      .bar-label{min-width:42px;font-size:.56rem}
+      .username-row{max-width:120px;font-size:.75rem}
+      .currency{min-width:auto;padding:5px 12px 5px 5px;font-size:.82rem}
+      .currency-ico{width:22px;height:22px}
+      .ico-coin::after{font-size:.72rem}
+      .circle-btn{width:40px;height:40px}
+      .hero{grid-template-columns:1fr;gap:10px;padding:4px 14px 12px}
+      .hero-left{flex-direction:row}
+      .sticker-card{flex:1;padding:12px}
+      .sticker-body{font-size:.74rem}
+      .hero-cta{min-height:auto;padding:18px;transform:none}
+      .hero-cta:hover{transform:translateY(-3px)}
+      .games-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+      .cover-title{font-size:.92rem}
+      .game-info{padding:12px 12px 14px}
+      .game-info h3{font-size:.85rem}
+      .section-title{font-size:.95rem}
+      .bottom-nav{padding:5px;gap:2px;border-radius:100px}
+      .tab{padding:9px 13px;font-size:.72rem}
+      .tab svg{display:none}
     }
     @media(max-width:480px){
-      .games-grid,.fav-grid{grid-template-columns:1fr}
-      .cover-title{font-size:1.2rem;padding:14px}
-      .nav-btn-text{display:none}
+      .user-bars{display:none}
+      .avatar-block{padding:4px}
+      .username-row{display:none}
+      .games-grid{grid-template-columns:1fr 1fr;gap:8px}
+      .hud-actions{gap:4px}
+      .circle-btn{width:38px;height:38px}
     }
   </style>
 </head>
 <body>
-  <div class="grid-bg"></div>
+  <div class="bg-blueprint"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-sketch"></div>
+  <div class="bg-stars"><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="stamp">HAO0321 / LOAD / DREAM / SECTOR_01</div>
 
-  <nav>
-    <a href="https://hao0321.com/" class="logo"><div class="logo-mark">H</div><div class="logo-text">Hao0321 Studio</div></a>
-    <div class="nav-right">
-      <button class="nav-btn nav-btn--icon" id="navLeaderboard" title="全球排行榜" aria-label="排行榜">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M6 4h12v8a6 6 0 0 1-12 0V4zM6 8H2v2a4 4 0 0 0 4 4M18 8h4v2a4 4 0 0 1-4 4"/></svg>
-      </button>
-      <button class="nav-btn nav-btn--icon" id="navCheckin" title="每日簽到" aria-label="簽到">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-        <span class="badge-dot" id="checkinDot" style="display:none"></span>
-      </button>
-      <button class="nav-btn nav-btn--accent" id="navRandom" title="隨機遊戲">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="22" height="22" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="8" r="1.5" fill="currentColor"/><circle cx="8" cy="16" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>
-        <span class="nav-btn-text">隨機遊戲</span>
-      </button>
-      <button class="nav-btn" id="navLogin">登入</button>
-      <div class="user-chip" id="userChip" style="display:none">
-        <img id="userAvatar" alt="" />
-        <span class="coin">◈ <span id="userCoins">0</span></span>
+  <!-- Top HUD -->
+  <header class="hud">
+    <div class="hud-left">
+      <div class="avatar-block">
+        <div class="avatar-orb" id="avatarOrb">
+          <img id="userAvatar" alt="" style="display:none" />
+          <span id="avatarLetter">H</span>
+        </div>
+        <div class="user-bars">
+          <div class="username-row">
+            <span id="userNameDisplay">訪客</span>
+            <svg class="edit-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">STREAK</span>
+            <div class="bar-track"><div class="bar-fill" id="streakBar" style="width:0%"></div></div>
+            <span class="bar-val" id="streakVal">0</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">GAMES</span>
+            <div class="bar-track"><div class="bar-fill bar-fill--cyan" id="gamesBar" style="width:0%"></div></div>
+            <span class="bar-val" id="gamesVal">0</span>
+          </div>
+        </div>
       </div>
     </div>
-  </nav>
+    <div class="hud-right">
+      <div class="currency" id="userChip" style="cursor:pointer" title="個人資料">
+        <span class="currency-ico ico-coin"></span>
+        <span class="currency-val" id="userCoins">0</span>
+      </div>
+      <div class="hud-actions">
+        <button class="circle-btn" id="navLeaderboard" aria-label="排行榜" title="排行榜">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M6 4h12v8a6 6 0 0 1-12 0V4zM6 8H2v2a4 4 0 0 0 4 4M18 8h4v2a4 4 0 0 1-4 4"/></svg>
+        </button>
+        <button class="circle-btn" id="navCheckin" aria-label="每日簽到" title="每日簽到">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span class="badge-dot" id="checkinDot" style="display:none"></span>
+        </button>
+        <button class="circle-btn circle-btn--accent" id="navLogin" aria-label="登入" title="登入">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
 
+  <!-- Hero: stickers + big CTA -->
   <section class="hero">
-    <p class="hero-label">Arcade</p>
-    <h1 class="hero-title">Hao0321 <em>遊戲大廳</em></h1>
-    <p class="hero-desc">免費遊玩的原創小遊戲合集 — 在瀏覽器裡，隨時開玩。</p>
+    <div class="hero-left">
+      <div class="sticker-card reveal">
+        <span class="sticker-tag">MISSION</span>
+        <div class="sticker-body">連續簽到 7 天，領 +50 金幣大獎</div>
+      </div>
+      <div class="sticker-card event-card reveal reveal-d1">
+        <span class="sticker-tag">EVENT</span>
+        <div class="sticker-body">收藏 5 款遊戲解鎖「玩家」徽章</div>
+      </div>
+    </div>
+    <button class="hero-cta reveal reveal-d2 ripple" id="navRandom">
+      <span class="hero-tag">RANDOM · LESSON:01</span>
+      <div>
+        <h1 class="hero-title">隨機<br>開玩一款</h1>
+        <div class="hero-sub">14 款原創小遊戲 · 免費遊玩</div>
+      </div>
+      <span class="hero-btn">立即開始</span>
+      <span class="hero-corner-label">START</span>
+    </button>
   </section>
 
-  <div class="container">
-    <!-- Stats Bar -->
-    <div class="stats-bar">
-      <div class="stats-left">
-        <span class="stats-count">14</span>
-        <span class="stats-label">款遊戲</span>
+  <main>
+    <!-- Filters -->
+    <div class="filter-row">
+      <button class="pill active" data-filter="all">全部遊戲</button>
+      <button class="pill" data-filter="strategy">策略</button>
+      <button class="pill" data-filter="action">動作</button>
+      <button class="pill" data-filter="puzzle">益智</button>
+      <button class="pill" data-filter="card">卡牌</button>
+      <button class="pill" data-filter="board">桌遊</button>
+    </div>
+
+    <!-- Favorites -->
+    <section class="fav-section" id="favSection">
+      <div class="section-title">我的收藏 <span class="count" id="favCount">0</span></div>
+      <div class="games-grid" id="favGrid"></div>
+    </section>
+
+    <!-- All games -->
+    <section>
+      <div class="section-title">全部遊戲 <span class="count">14</span></div>
+      <div class="games-grid" id="gamesGrid">
+
+        <a href="play.html?game=cat-battle" class="game-card reveal" data-cat="strategy" data-id="cat-battle">
+          <div class="game-thumb thumb-cat"><div class="thumb-deco"></div>
+            <span class="cover-badge">STRATEGY</span>
+            <span class="cover-title">にゃんこ突撃</span>
+            <button class="fav-btn" data-fav="cat-battle" onclick="toggleFav(event,'cat-battle')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>にゃんこ突撃</h3>
+            <p>派遣貓咪軍團出征，以策略征服各關卡</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">策略</span><span class="game-tag">塔防</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=dodge-master" class="game-card reveal reveal-d1" data-cat="action" data-id="dodge-master">
+          <div class="game-thumb thumb-dodge"><div class="thumb-deco"></div>
+            <span class="cover-badge">ACTION</span>
+            <span class="cover-title">DODGE MASTER</span>
+            <button class="fav-btn" data-fav="dodge-master" onclick="toggleFav(event,'dodge-master')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>DODGE MASTER</h3>
+            <p>賽博龐克風格的閃避遊戲，收集道具、解鎖角色</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">閃避</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=frost-survival" class="game-card reveal reveal-d2" data-cat="strategy" data-id="frost-survival">
+          <div class="game-thumb thumb-frost"><div class="thumb-deco"></div>
+            <span class="cover-badge">SURVIVAL</span>
+            <span class="cover-title">霜寒求生</span>
+            <button class="fav-btn" data-fav="frost-survival" onclick="toggleFav(event,'frost-survival')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>霜寒求生</h3>
+            <p>在極寒世界中建造營地、管理資源</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">生存</span><span class="game-tag">建造</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=hao-survivor" class="game-card reveal reveal-d3" data-cat="strategy" data-id="hao-survivor">
+          <div class="game-thumb thumb-surv"><div class="thumb-deco"></div>
+            <span class="cover-badge">ROGUELIKE</span>
+            <span class="cover-title">HAO SURVIVOR</span>
+            <button class="fav-btn" data-fav="hao-survivor" onclick="toggleFav(event,'hao-survivor')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>HAO SURVIVOR</h3>
+            <p>類吸血鬼倖存者玩法，挑戰無盡怪物浪潮</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">Roguelike</span><span class="game-tag">動作</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=poker-suite" class="game-card reveal reveal-d4" data-cat="card" data-id="poker-suite">
+          <div class="game-thumb thumb-poker"><div class="thumb-deco"></div>
+            <span class="cover-badge">CARD</span>
+            <span class="cover-title">撲克合集</span>
+            <button class="fav-btn" data-fav="poker-suite" onclick="toggleFav(event,'poker-suite')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>撲克合集</h3>
+            <p>大老二、德州撲克、鬥地主 — 經典撲克一次滿足</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">多合一</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=save-the-dog" class="game-card reveal reveal-d5" data-cat="puzzle" data-id="save-the-dog">
+          <div class="game-thumb thumb-dog"><div class="thumb-deco"></div>
+            <span class="cover-badge">PUZZLE</span>
+            <span class="cover-title">救救狗狗</span>
+            <button class="fav-btn" data-fav="save-the-dog" onclick="toggleFav(event,'save-the-dog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>救救狗狗</h3>
+            <p>畫線保護狗狗不被蜜蜂螫到</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">畫線</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=taiwan-monopoly" class="game-card reveal" data-cat="board" data-id="taiwan-monopoly">
+          <div class="game-thumb thumb-mono"><div class="thumb-deco"></div>
+            <span class="cover-badge">BOARD</span>
+            <span class="cover-title">台灣大富翁</span>
+            <button class="fav-btn" data-fav="taiwan-monopoly" onclick="toggleFav(event,'taiwan-monopoly')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>台灣大富翁</h3>
+            <p>走遍台北 101、九份、阿里山</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">桌遊</span><span class="game-tag">大富翁</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=water-sort" class="game-card reveal reveal-d1" data-cat="puzzle" data-id="water-sort">
+          <div class="game-thumb thumb-water"><div class="thumb-deco"></div>
+            <span class="cover-badge">PUZZLE</span>
+            <span class="cover-title">水排序益智</span>
+            <button class="fav-btn" data-fav="water-sort" onclick="toggleFav(event,'water-sort')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>水排序益智</h3>
+            <p>將同色液體排列到同一瓶中</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">排序</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=werewolf" class="game-card reveal reveal-d2" data-cat="board" data-id="werewolf">
+          <div class="game-thumb thumb-wolf"><div class="thumb-deco"></div>
+            <span class="cover-badge">SOCIAL</span>
+            <span class="cover-title">狼人殺</span>
+            <button class="fav-btn" data-fav="werewolf" onclick="toggleFav(event,'werewolf')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>狼人殺</h3>
+            <p>與 AI 對手鬥智鬥勇，找出隱藏的狼人</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">推理</span><span class="game-tag">社交</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="poker-fortune.html" class="game-card reveal reveal-d3" data-cat="card" data-id="poker-fortune">
+          <div class="game-thumb thumb-fortune"><div class="thumb-deco"></div>
+            <span class="cover-badge">FORTUNE</span>
+            <span class="cover-title">命運之牌</span>
+            <button class="fav-btn" data-fav="poker-fortune" onclick="toggleFav(event,'poker-fortune')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>命運之牌</h3>
+            <p>撲克牌占卜 — 輸入生日，翻開屬於你的命運牌陣</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">占卜</span><span class="game-tag">撲克</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=downstairs" class="game-card reveal reveal-d4" data-cat="action" data-id="downstairs">
+          <div class="game-thumb thumb-down"><div class="thumb-deco"></div>
+            <span class="cover-badge">ACTION</span>
+            <span class="cover-title">下樓梯</span>
+            <button class="fav-btn" data-fav="downstairs" onclick="toggleFav(event,'downstairs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>下樓梯</h3>
+            <p>經典下樓梯遊戲 — 踩著平台不斷往下，小心陷阱</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">經典</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=splat-ring" class="game-card reveal reveal-d5" data-cat="action" data-id="splat-ring">
+          <div class="game-thumb thumb-splat"><div class="thumb-deco"></div>
+            <span class="cover-badge">ARCADE</span>
+            <span class="cover-title">SPLAT RING</span>
+            <button class="fav-btn" data-fav="splat-ring" onclick="toggleFav(event,'splat-ring')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>SPLAT RING</h3>
+            <p>在霓虹環形軌道上跳躍，精準著陸得高分</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">街機</span><span class="game-tag">跳躍</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="play.html?game=chess-master" class="game-card reveal reveal-d1" data-cat="board" data-id="chess-master">
+          <div class="game-thumb thumb-chess"><div class="thumb-deco"></div>
+            <span class="badge-new">NEW</span>
+            <span class="cover-badge">BOARD</span>
+            <span class="cover-title">Chess Master</span>
+            <button class="fav-btn" data-fav="chess-master" onclick="toggleFav(event,'chess-master')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>Chess Master</h3>
+            <p>象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日式/台式麻將 — 8 款經典棋類</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">棋類</span><span class="game-tag">8 合 1</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="pact-of-arcania.html" class="game-card reveal reveal-d2" data-cat="card" data-id="pact-of-arcania">
+          <div class="game-thumb thumb-arcania"><div class="thumb-deco"></div>
+            <span class="badge-new">NEW</span>
+            <span class="cover-badge">CARD RPG</span>
+            <span class="cover-title">靈契之戰</span>
+            <button class="fav-btn" data-fav="pact-of-arcania" onclick="toggleFav(event,'pact-of-arcania')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
+          </div>
+          <div class="game-info">
+            <h3>Pact of Arcania 靈契之戰</h3>
+            <p>卡牌對戰 RPG — 召喚靈獸、施展法術，挑戰強敵</p>
+            <div class="game-meta">
+              <div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">RPG</span></div>
+              <span class="game-plays">-- PLAYS</span>
+            </div>
+          </div>
+        </a>
+
       </div>
-      <button class="btn-random" id="statsRandom">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="1" width="22" height="22" rx="4"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/><circle cx="16" cy="16" r="1.5" fill="currentColor"/></svg>
-        隨機遊戲
-      </button>
-    </div>
+    </section>
 
-    <!-- Category Filter -->
-    <div class="filter-bar">
-      <button class="filter-pill active" data-filter="all">全部遊戲</button>
-      <button class="filter-pill" data-filter="strategy">策略</button>
-      <button class="filter-pill" data-filter="action">動作</button>
-      <button class="filter-pill" data-filter="puzzle">益智</button>
-      <button class="filter-pill" data-filter="card">卡牌</button>
-      <button class="filter-pill" data-filter="board">桌遊</button>
-    </div>
-
-    <!-- Favorites Section -->
-    <div class="fav-section" id="favSection">
-      <div class="fav-header">
-        <span>&#9829;</span>
-        <h2>My Favorites</h2>
-      </div>
-      <div class="fav-grid" id="favGrid"></div>
-    </div>
-
-    <!-- All Games -->
-    <div class="section-label"><span>&#9654;</span> 全部遊戲</div>
-    <div class="games-grid" id="gamesGrid">
-
-      <!-- 1. にゃんこ突撃 -->
-      <a href="play.html?game=cat-battle" class="game-card reveal" data-cat="strategy" data-id="cat-battle">
-        <div class="game-thumb thumb-cat">
-          <span class="cover-deco" style="top:12%;left:10%">&#128062;</span>
-          <span class="cover-deco" style="top:20%;right:18%;font-size:.9rem">&#9876;&#65039;</span>
-          <span class="cover-icon">&#128049;</span>
-          <span class="cover-badge">Strategy</span>
-          <span class="cover-title">にゃんこ突撃</span>
-          <button class="fav-btn" data-fav="cat-battle" onclick="toggleFav(event,'cat-battle')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>にゃんこ突撃</h3>
-          <p>派遣貓咪軍團出征，以策略征服各關卡！</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">策略</span><span class="game-tag">塔防</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 2. DODGE MASTER -->
-      <a href="play.html?game=dodge-master" class="game-card reveal reveal-d1" data-cat="action" data-id="dodge-master">
-        <div class="game-thumb thumb-dodge">
-          <span class="cover-deco" style="top:15%;left:15%;font-size:1.5rem;opacity:.05">&#9670;</span>
-          <span class="cover-icon">&#9889;</span>
-          <span class="cover-badge">Action</span>
-          <span class="cover-title">DODGE MASTER</span>
-          <button class="fav-btn" data-fav="dodge-master" onclick="toggleFav(event,'dodge-master')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>DODGE MASTER</h3>
-          <p>賽博龐克風格的閃避遊戲，收集道具、解鎖角色。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">閃避</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 3. 霜寒求生 -->
-      <a href="play.html?game=frost-survival" class="game-card reveal reveal-d2" data-cat="strategy" data-id="frost-survival">
-        <div class="game-thumb thumb-frost">
-          <span class="cover-deco" style="top:10%;left:12%">&#10052;&#65039;</span>
-          <span class="cover-icon">&#127956;&#65039;</span>
-          <span class="cover-badge">Survival</span>
-          <span class="cover-title">霜寒求生</span>
-          <button class="fav-btn" data-fav="frost-survival" onclick="toggleFav(event,'frost-survival')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>霜寒求生</h3>
-          <p>在極寒世界中建造營地、管理資源。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">生存</span><span class="game-tag">建造</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 4. HAO SURVIVOR -->
-      <a href="play.html?game=hao-survivor" class="game-card reveal reveal-d3" data-cat="strategy" data-id="hao-survivor">
-        <div class="game-thumb thumb-surv">
-          <span class="cover-deco" style="top:12%;left:14%;font-size:1rem">&#128128;</span>
-          <span class="cover-icon">&#127918;</span>
-          <span class="cover-badge">Roguelike</span>
-          <span class="cover-title">HAO SURVIVOR</span>
-          <button class="fav-btn" data-fav="hao-survivor" onclick="toggleFav(event,'hao-survivor')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>HAO SURVIVOR</h3>
-          <p>類吸血鬼倖存者玩法，挑戰無盡怪物浪潮。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">Roguelike</span><span class="game-tag">動作</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 5. 撲克合集 -->
-      <a href="play.html?game=poker-suite" class="game-card reveal reveal-d4" data-cat="card" data-id="poker-suite">
-        <div class="game-thumb thumb-poker">
-          <span class="cover-deco" style="top:10%;left:12%;font-size:1.5rem;opacity:.1;color:#ff4444">&#9829;</span>
-          <span class="cover-deco" style="top:20%;right:14%;font-size:1.3rem;opacity:.1">&#9824;</span>
-          <span class="cover-icon">&#127183;</span>
-          <span class="cover-badge">Card</span>
-          <span class="cover-title">撲克合集</span>
-          <button class="fav-btn" data-fav="poker-suite" onclick="toggleFav(event,'poker-suite')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>撲克合集</h3>
-          <p>大老二、德州撲克、鬥地主 — 經典撲克一次滿足。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">多合一</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 6. 救救狗狗 -->
-      <a href="play.html?game=save-the-dog" class="game-card reveal reveal-d5" data-cat="puzzle" data-id="save-the-dog">
-        <div class="game-thumb thumb-dog">
-          <span class="cover-deco" style="top:12%;left:14%">&#128029;</span>
-          <span class="cover-icon">&#128021;</span>
-          <span class="cover-badge">Puzzle</span>
-          <span class="cover-title">救救狗狗</span>
-          <button class="fav-btn" data-fav="save-the-dog" onclick="toggleFav(event,'save-the-dog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>救救狗狗</h3>
-          <p>畫線保護狗狗不被蜜蜂螫到！</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">畫線</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 7. 台灣大富翁 -->
-      <a href="play.html?game=taiwan-monopoly" class="game-card reveal" data-cat="board" data-id="taiwan-monopoly">
-        <div class="game-thumb thumb-mono">
-          <span class="cover-deco" style="top:10%;left:10%">&#127961;&#65039;</span>
-          <span class="cover-icon">&#127982;</span>
-          <span class="cover-badge">Board</span>
-          <span class="cover-title">台灣大富翁</span>
-          <button class="fav-btn" data-fav="taiwan-monopoly" onclick="toggleFav(event,'taiwan-monopoly')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>台灣大富翁</h3>
-          <p>走遍台北 101、九份、阿里山。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">桌遊</span><span class="game-tag">大富翁</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 8. 水排序益智 -->
-      <a href="play.html?game=water-sort" class="game-card reveal reveal-d1" data-cat="puzzle" data-id="water-sort">
-        <div class="game-thumb thumb-water">
-          <span class="cover-deco" style="top:12%;left:16%;font-size:1rem;opacity:.1;color:#66d9e8">&#9679;</span>
-          <span class="cover-icon">&#129514;</span>
-          <span class="cover-badge">Puzzle</span>
-          <span class="cover-title">水排序益智</span>
-          <button class="fav-btn" data-fav="water-sort" onclick="toggleFav(event,'water-sort')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>水排序益智</h3>
-          <p>將同色液體排列到同一瓶中。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">益智</span><span class="game-tag">排序</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 9. 狼人殺 -->
-      <a href="play.html?game=werewolf" class="game-card reveal reveal-d2" data-cat="board" data-id="werewolf">
-        <div class="game-thumb thumb-wolf">
-          <span class="cover-deco" style="top:10%;left:12%">&#127769;</span>
-          <span class="cover-icon">&#128058;</span>
-          <span class="cover-badge">Social</span>
-          <span class="cover-title">狼人殺</span>
-          <button class="fav-btn" data-fav="werewolf" onclick="toggleFav(event,'werewolf')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>狼人殺</h3>
-          <p>與 AI 對手鬥智鬥勇，找出隱藏的狼人。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">推理</span><span class="game-tag">社交</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 10. 命運之牌 -->
-      <a href="poker-fortune.html" class="game-card reveal reveal-d3" data-cat="card" data-id="poker-fortune">
-        <div class="game-thumb thumb-fortune">
-          <span class="cover-deco" style="top:10%;left:10%;font-size:1.5rem;opacity:.1;color:#c4a050">&#10022;</span>
-          <span class="cover-deco" style="top:18%;right:14%;font-size:1.3rem;opacity:.08;color:#c4956a">&#9830;</span>
-          <span class="cover-icon">&#128302;</span>
-          <span class="cover-badge">Fortune</span>
-          <span class="cover-title">命運之牌</span>
-          <button class="fav-btn" data-fav="poker-fortune" onclick="toggleFav(event,'poker-fortune')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>命運之牌</h3>
-          <p>撲克牌占卜 — 輸入生日，翻開屬於你的命運牌陣。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">占卜</span><span class="game-tag">撲克</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始占卜 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 11. 下樓梯 -->
-      <a href="play.html?game=downstairs" class="game-card reveal reveal-d4" data-cat="action" data-id="downstairs">
-        <div class="game-thumb thumb-down">
-          <span class="cover-deco" style="top:12%;left:14%;font-size:1rem;opacity:.08">&#11015;&#65039;</span>
-          <span class="cover-icon">&#127939;</span>
-          <span class="cover-badge">Action</span>
-          <span class="cover-title">下樓梯</span>
-          <button class="fav-btn" data-fav="downstairs" onclick="toggleFav(event,'downstairs')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>下樓梯</h3>
-          <p>經典下樓梯遊戲 — 踩著平台不斷往下，小心陷阱！</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">動作</span><span class="game-tag">經典</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 12. SPLAT RING -->
-      <a href="play.html?game=splat-ring" class="game-card reveal reveal-d5" data-cat="action" data-id="splat-ring">
-        <div class="game-thumb thumb-splat">
-          <span class="cover-deco" style="top:10%;left:12%;font-size:1.3rem;opacity:.1;color:#C6FF00">&#9679;</span>
-          <span class="cover-icon">&#127919;</span>
-          <span class="cover-badge">Arcade</span>
-          <span class="cover-title">SPLAT RING</span>
-          <button class="fav-btn" data-fav="splat-ring" onclick="toggleFav(event,'splat-ring')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>SPLAT RING</h3>
-          <p>在霓虹環形軌道上跳躍，精準著陸得高分！</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">街機</span><span class="game-tag">跳躍</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 13. Chess Master (NEW) -->
-      <a href="play.html?game=chess-master" class="game-card reveal reveal-d1" data-cat="board" data-id="chess-master">
-        <div class="game-thumb thumb-chess">
-          <span class="badge-new">NEW</span>
-          <span class="cover-deco" style="top:10%;left:12%;font-size:1.3rem;opacity:.1">&#9818;</span>
-          <span class="cover-deco" style="top:18%;right:14%;font-size:1rem;opacity:.08">&#9822;</span>
-          <span class="cover-icon">&#9819;</span>
-          <span class="cover-badge">Board</span>
-          <span class="cover-title">Chess Master</span>
-          <button class="fav-btn" data-fav="chess-master" onclick="toggleFav(event,'chess-master')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>Chess Master</h3>
-          <p>象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日式/台式麻將 — 8 款經典棋類。</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">棋類</span><span class="game-tag">8 合 1</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-      <!-- 14. Pact of Arcania (NEW) -->
-      <a href="pact-of-arcania.html" class="game-card reveal reveal-d2" data-cat="card" data-id="pact-of-arcania">
-        <div class="game-thumb thumb-arcania">
-          <span class="badge-new">NEW</span>
-          <span class="cover-deco" style="top:10%;left:10%;font-size:1.3rem;opacity:.1">&#10024;</span>
-          <span class="cover-deco" style="top:18%;right:12%;font-size:1rem;opacity:.08">&#128481;&#65039;</span>
-          <span class="cover-icon">&#9876;&#65039;</span>
-          <span class="cover-badge">Card RPG</span>
-          <span class="cover-title">靈契之戰</span>
-          <button class="fav-btn" data-fav="pact-of-arcania" onclick="toggleFav(event,'pact-of-arcania')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78z"/></svg></button>
-        </div>
-        <div class="game-info">
-          <h3>Pact of Arcania 靈契之戰</h3>
-          <p>卡牌對戰 RPG — 召喚靈獸、施展法術，挑戰強敵！</p>
-          <div class="game-meta">
-            <div class="game-tags"><span class="game-tag">卡牌</span><span class="game-tag">RPG</span></div>
-            <span class="game-plays">已被玩 -- 次</span>
-          </div>
-          <span class="game-play">開始遊玩 &rarr;</span>
-        </div>
-      </a>
-
-    </div>
-
-    <!-- FAQ Section -->
-    <div class="faq-section">
-      <div class="faq-title"><span>&#10067;</span> 常見問題</div>
-
+    <!-- FAQ -->
+    <section class="faq-section">
+      <div class="section-title">常見問題</div>
       <div class="faq-item">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">遊戲大廳支援手機嗎？</div>
-        <div class="faq-a"><p>支援！所有遊戲都針對手機和電腦優化。</p></div>
+        <div class="faq-a"><p>支援。所有遊戲都針對手機和電腦優化。</p></div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">需要下載安裝嗎？</div>
-        <div class="faq-a"><p>不用！直接在瀏覽器裡就能玩。</p></div>
+        <div class="faq-a"><p>不用。直接在瀏覽器裡就能玩。</p></div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">遊戲是免費的嗎？</div>
         <div class="faq-a"><p>完全免費。登入只是為了讓你上排行榜跟累積金幣，不登入也能玩所有遊戲。</p></div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">登入有什麼好處？</div>
-        <div class="faq-a"><p>登入後可以 ① 每日簽到領金幣（連續簽到越多領越多，最高 50 金/天）② 把遊戲分數上傳到排行榜 ③ 查看自己的最佳紀錄。帳號用 Google 登入，不會有額外密碼。</p></div>
+        <div class="faq-a"><p>登入後可以 — 每日簽到領金幣（連續簽到越多領越多，最高 50 金/天）、把遊戲分數上傳到排行榜、查看自己的最佳紀錄與成就徽章。帳號用 Google 登入，不會有額外密碼。</p></div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">金幣要做什麼？</div>
-        <div class="faq-a"><p>目前可以作為遊玩紀錄；未來會開放兌換稱號、主題、道具等。每次遊戲結束自動 +2 金幣，每天簽到有獎勵。</p></div>
+        <div class="faq-a"><p>目前可以作為遊玩紀錄。未來會開放兌換稱號、主題、道具等。每次遊戲結束自動 +2 金幣，每天簽到有獎勵。</p></div>
       </div>
-
       <div class="faq-item">
         <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">分數怎麼計算？</div>
-        <div class="faq-a"><p>每款遊戲的計分不同 — 動作類是分數、生存類是存活天數、卡牌類是勝場。排行榜只保留每人最高紀錄，打破自己紀錄會顯示「🏆 新紀錄」提示。</p></div>
+        <div class="faq-a"><p>每款遊戲的計分不同 — 動作類是分數、生存類是存活天數、卡牌類是勝場。排行榜只保留每人最高紀錄，打破自己紀錄會顯示新紀錄提示。</p></div>
       </div>
-    </div>
+    </section>
+  </main>
 
-    <!-- AdSense auto ads — Google decides placement after approval -->
-  </div>
-
-  <!-- Achievement Unlock Toast -->
-  <div class="unlock-toast" id="unlockToast">
-    <div class="unlock-icon" id="unlockIcon">🏆</div>
-    <div class="unlock-body">
-      <div class="unlock-label">成就解鎖</div>
-      <div class="unlock-name" id="unlockName"></div>
-      <div class="unlock-desc" id="unlockDesc"></div>
-    </div>
-  </div>
+  <!-- Bottom Tab Nav -->
+  <nav class="bottom-nav">
+    <button class="tab active" data-tab="home" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+      首頁
+    </button>
+    <button class="tab" data-tab="leaderboard" id="tabLeaderboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M6 4h12v8a6 6 0 01-12 0V4z"/></svg>
+      排行
+    </button>
+    <button class="tab" data-tab="checkin" id="tabCheckin">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      簽到
+    </button>
+    <button class="tab" data-tab="achievements" id="tabAchievements">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg>
+      成就
+    </button>
+    <button class="tab" data-tab="profile" id="tabProfile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      個人
+    </button>
+  </nav>
 
   <!-- Login Modal -->
   <div class="modal-overlay" id="loginModal" onclick="if(event.target===this)closeModal('loginModal')">
     <div class="modal">
       <div class="modal-head">
-        <div class="modal-title"><span>◆</span> 登入以解鎖</div>
+        <div class="modal-title">登入帳號</div>
         <button class="modal-close" onclick="closeModal('loginModal')" aria-label="關閉">×</button>
       </div>
       <div class="modal-body">
         <div class="login-prompt">
-          <p>登入後即可每日簽到領金幣、上傳分數到排行榜、查看個人戰績。</p>
+          <p>登入後即可每日簽到領金幣、上傳分數到排行榜、解鎖成就徽章。</p>
           <div id="gsiBtn"></div>
         </div>
       </div>
@@ -701,7 +1100,7 @@
   <div class="modal-overlay" id="checkinModal" onclick="if(event.target===this)closeModal('checkinModal')">
     <div class="modal">
       <div class="modal-head">
-        <div class="modal-title"><span>📆</span> 每日簽到</div>
+        <div class="modal-title">每日簽到</div>
         <button class="modal-close" onclick="closeModal('checkinModal')" aria-label="關閉">×</button>
       </div>
       <div class="modal-body">
@@ -720,14 +1119,14 @@
   <div class="modal-overlay" id="leaderboardModal" onclick="if(event.target===this)closeModal('leaderboardModal')">
     <div class="modal">
       <div class="modal-head">
-        <div class="modal-title"><span>🏆</span> 排行榜</div>
+        <div class="modal-title">排行榜</div>
         <button class="modal-close" onclick="closeModal('leaderboardModal')" aria-label="關閉">×</button>
       </div>
       <div class="modal-body">
         <div class="lb-tabs" id="lbTabs">
           <button class="lb-tab active" data-game="">全球總榜</button>
         </div>
-        <div class="lb-list" id="lbList"><div class="lb-empty">載入中…</div></div>
+        <div class="lb-list" id="lbList"><div class="lb-empty">載入中⋯</div></div>
       </div>
     </div>
   </div>
@@ -736,16 +1135,24 @@
   <div class="modal-overlay" id="profileModal" onclick="if(event.target===this)closeModal('profileModal')">
     <div class="modal">
       <div class="modal-head">
-        <div class="modal-title"><span>◉</span> 我的資料</div>
+        <div class="modal-title">個人資料</div>
         <button class="modal-close" onclick="closeModal('profileModal')" aria-label="關閉">×</button>
       </div>
       <div class="modal-body" id="profileBody">
-        <div class="lb-empty">載入中…</div>
+        <div class="lb-empty">載入中⋯</div>
       </div>
     </div>
   </div>
 
-  <footer><p>&copy; 2026 Hao0321 Studio. All rights reserved.</p><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;" aria-label="回到頂部">Back to top &uarr;</a></footer>
+  <!-- Unlock Toast -->
+  <div class="unlock-toast" id="unlockToast">
+    <div class="unlock-badge" id="unlockIcon">NEW</div>
+    <div class="unlock-content">
+      <div class="unlock-tag">ACHIEVEMENT UNLOCKED</div>
+      <div class="unlock-name" id="unlockName">成就名稱</div>
+      <div class="unlock-desc" id="unlockDesc">條件描述</div>
+    </div>
+  </div>
 
   <script type="application/ld+json">
   {
@@ -753,7 +1160,7 @@
     "@type": "CollectionPage",
     "name": "遊戲大廳 — Hao0321 Studio",
     "description": "免費遊玩的原創小遊戲合集",
-    "url": "https://hao0321.com/game/",
+    "url": "https://game.hao0321.com/",
     "isPartOf": { "@type": "WebSite", "name": "Hao0321 Studio", "url": "https://hao0321.com" }
   }
   </script>
@@ -794,37 +1201,40 @@
       'play.html?game=chess-master','pact-of-arcania.html'
     ];
 
-    /* ── Achievement catalog (loaded from API, fallback constants) ── */
+    /* ── Achievement catalog (no emoji; tiered badges) ── */
     var achievementCatalog = {
-      first_login:  { name: '初次見面',   desc: '首次登入 Hao0321 遊戲大廳', icon: '👋' },
-      first_win:    { name: '首戰告捷',   desc: '第一次上傳分數',             icon: '🎯' },
-      streak_3:     { name: '三日堅持',   desc: '連續簽到 3 天',               icon: '🔥' },
-      streak_7:     { name: '七日達人',   desc: '連續簽到 7 天',               icon: '⭐' },
-      streak_30:    { name: '月度玩家',   desc: '連續簽到 30 天',              icon: '🏅' },
-      coins_50:     { name: '小富翁',     desc: '累積 50 金幣',                icon: '◈' },
-      coins_200:    { name: '金庫',       desc: '累積 200 金幣',               icon: '💰' },
-      coins_1000:   { name: '大戶',       desc: '累積 1000 金幣',              icon: '👑' },
-      played_5:     { name: '玩家',       desc: '玩過 5 款不同遊戲',           icon: '🎮' },
-      played_all:   { name: '收藏家',     desc: '玩過全部 14 款遊戲',          icon: '🏆' },
+      first_login:  { name: '初次見面',   desc: '首次登入 Hao0321 遊戲大廳', tier: 'bronze' },
+      first_win:    { name: '首戰告捷',   desc: '第一次上傳分數',             tier: 'bronze' },
+      streak_3:     { name: '三日堅持',   desc: '連續簽到 3 天',               tier: 'bronze' },
+      streak_7:     { name: '七日達人',   desc: '連續簽到 7 天',               tier: 'silver' },
+      streak_30:    { name: '月度玩家',   desc: '連續簽到 30 天',              tier: 'gold'   },
+      coins_50:     { name: '小富翁',     desc: '累積 50 金幣',                tier: 'bronze' },
+      coins_200:    { name: '金庫',       desc: '累積 200 金幣',               tier: 'silver' },
+      coins_1000:   { name: '大戶',       desc: '累積 1000 金幣',              tier: 'gold'   },
+      played_5:     { name: '玩家',       desc: '玩過 5 款不同遊戲',           tier: 'silver' },
+      played_all:   { name: '收藏家',     desc: '玩過全部 14 款遊戲',          tier: 'legend' },
     };
+
+    var tierInitial = { bronze: 'B', silver: 'S', gold: 'G', legend: 'L' };
 
     function showUnlockToast(id) {
       var a = achievementCatalog[id];
       if (!a) return;
-      document.getElementById('unlockIcon').textContent = a.icon;
+      var badge = document.getElementById('unlockIcon');
+      badge.textContent = tierInitial[a.tier] || 'A';
+      badge.className = 'unlock-badge tier-' + (a.tier || 'bronze');
       document.getElementById('unlockName').textContent = a.name;
       document.getElementById('unlockDesc').textContent = a.desc;
       var toast = document.getElementById('unlockToast');
       toast.classList.add('show');
-      setTimeout(function(){ toast.classList.remove('show'); }, 5000);
+      setTimeout(function(){ toast.classList.remove('show'); }, 4800);
     }
-
     function queueUnlocks(arr) {
       if (!arr || !arr.length) return;
-      arr.forEach(function(id, i) { setTimeout(function(){ showUnlockToast(id); }, i * 5500); });
+      arr.forEach(function(id, i) { setTimeout(function(){ showUnlockToast(id); }, i * 5200); });
     }
 
-    /* ── Game meta for leaderboard tabs ── */
+    /* ── Game meta ── */
     var gameMeta = {
       'cat-battle':'にゃんこ突撃','dodge-master':'DODGE MASTER','frost-survival':'霜寒求生',
       'hao-survivor':'HAO SURVIVOR','poker-suite':'撲克合集','save-the-dog':'救救狗狗',
@@ -833,140 +1243,115 @@
       'chess-master':'Chess Master','pact-of-arcania':'靈契之戰'
     };
 
-    /* ── Random Game ── */
+    /* ── Random ── */
     function goRandom() {
       var idx = Math.floor(Math.random() * gameHrefs.length);
       window.location.href = gameHrefs[idx];
     }
     document.getElementById('navRandom').addEventListener('click', goRandom);
-    document.getElementById('statsRandom').addEventListener('click', goRandom);
 
-    /* ── Category Filter ── */
-    var pills = document.querySelectorAll('.filter-pill');
+    /* ── Ripple effect ── */
+    document.querySelectorAll('.ripple').forEach(function(el){
+      el.addEventListener('click', function(e){
+        var rect = el.getBoundingClientRect();
+        var d = Math.max(rect.width, rect.height);
+        var c = document.createElement('span');
+        c.className = 'ripple-circle';
+        c.style.width = c.style.height = d + 'px';
+        c.style.left = (e.clientX - rect.left - d/2) + 'px';
+        c.style.top = (e.clientY - rect.top - d/2) + 'px';
+        el.appendChild(c);
+        setTimeout(function(){ c.remove(); }, 620);
+      });
+    });
+
+    /* ── Category filter ── */
+    var pills = document.querySelectorAll('.pill');
     var cards = document.querySelectorAll('.game-card[data-cat]');
-
     pills.forEach(function(pill) {
       pill.addEventListener('click', function() {
-        pills.forEach(function(p) { p.classList.remove('active'); });
+        pills.forEach(function(p){ p.classList.remove('active'); });
         pill.classList.add('active');
         var filter = pill.getAttribute('data-filter');
         cards.forEach(function(card) {
-          if (filter === 'all' || card.getAttribute('data-cat') === filter) {
-            card.classList.remove('hidden');
-          } else {
-            card.classList.add('hidden');
-          }
+          var match = filter === 'all' || card.getAttribute('data-cat') === filter;
+          card.classList.toggle('hidden', !match);
         });
       });
     });
 
     /* ── Favorites ── */
-    function getFavs() {
-      try { return JSON.parse(localStorage.getItem('hao_favs') || '[]'); }
-      catch(e) { return []; }
-    }
-    function saveFavs(favs) {
-      localStorage.setItem('hao_favs', JSON.stringify(favs));
-    }
-
+    function getFavs() { try { return JSON.parse(localStorage.getItem('hao_favs')||'[]'); } catch(e){ return []; } }
+    function saveFavs(f) { localStorage.setItem('hao_favs', JSON.stringify(f)); }
     function toggleFav(e, id) {
-      e.preventDefault();
-      e.stopPropagation();
+      e.preventDefault(); e.stopPropagation();
       var favs = getFavs();
       var idx = favs.indexOf(id);
-      if (idx > -1) { favs.splice(idx, 1); }
-      else { favs.push(id); }
-      saveFavs(favs);
-      renderFavs();
+      if (idx > -1) favs.splice(idx, 1); else favs.push(id);
+      saveFavs(favs); renderFavs();
     }
-
+    window.toggleFav = toggleFav;
     function renderFavs() {
       var favs = getFavs();
-      /* Update heart buttons */
-      document.querySelectorAll('.fav-btn').forEach(function(btn) {
+      document.querySelectorAll('.fav-btn').forEach(function(btn){
         var id = btn.getAttribute('data-fav');
-        if (favs.indexOf(id) > -1) {
-          btn.classList.add('favorited');
-          btn.querySelector('svg').setAttribute('fill', 'currentColor');
-        } else {
-          btn.classList.remove('favorited');
-          btn.querySelector('svg').setAttribute('fill', 'none');
-        }
+        var on = favs.indexOf(id) > -1;
+        btn.classList.toggle('favorited', on);
+        btn.querySelector('svg').setAttribute('fill', on ? 'currentColor' : 'none');
       });
-
-      /* Render favorites section */
       var section = document.getElementById('favSection');
       var grid = document.getElementById('favGrid');
+      var count = document.getElementById('favCount');
       grid.innerHTML = '';
-
-      if (favs.length === 0) {
-        section.classList.remove('has-favs');
-        return;
-      }
+      count.textContent = favs.length;
+      if (favs.length === 0) { section.classList.remove('has-favs'); return; }
       section.classList.add('has-favs');
-
-      favs.forEach(function(id) {
-        var original = document.querySelector('.game-card[data-id="' + id + '"]');
-        if (!original) return;
-        var clone = original.cloneNode(true);
+      favs.forEach(function(id){
+        var orig = document.querySelector('.game-card[data-id="' + id + '"]');
+        if (!orig) return;
+        var clone = orig.cloneNode(true);
         clone.classList.add('visible');
         clone.classList.remove('hidden');
         clone.removeAttribute('data-cat');
-        /* Re-attach fav button handler */
-        var favBtn = clone.querySelector('.fav-btn');
-        if (favBtn) {
-          favBtn.onclick = function(e) { toggleFav(e, id); };
-        }
+        var b = clone.querySelector('.fav-btn');
+        if (b) b.onclick = function(e){ toggleFav(e, id); };
         grid.appendChild(clone);
       });
     }
-
-    /* Initial render */
     renderFavs();
 
-    /* ── Scroll Reveal (IntersectionObserver) ── */
-    var obs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
-
-    document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
-
-    /* ═══════════════════════════════════════════════════
-       ── Phase 2/3: API Integration (play/auth/etc) ──
-       ═══════════════════════════════════════════════════ */
+    /* ── Reveal on scroll ── */
+    var obs = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
 
     /* ── Modal helpers ── */
     function openModal(id) { document.getElementById(id).classList.add('open'); }
     function closeModal(id) { document.getElementById(id).classList.remove('open'); }
     window.closeModal = closeModal;
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        document.querySelectorAll('.modal-overlay.open').forEach(function(m) { m.classList.remove('open'); });
-      }
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach(function(m){ m.classList.remove('open'); });
     });
 
     /* ── Play counts ── */
     function loadPlayCounts() {
-      api('play-counts').then(function(counts) {
-        document.querySelectorAll('.game-card[data-id]').forEach(function(card) {
+      api('play-counts').then(function(counts){
+        document.querySelectorAll('.game-card[data-id]').forEach(function(card){
           var id = card.getAttribute('data-id');
           var el = card.querySelector('.game-plays');
           if (el && counts[id] != null) {
             var n = counts[id];
             var fmt = n >= 1000 ? (n/1000).toFixed(1) + 'k' : n;
-            el.textContent = '已被玩 ' + fmt + ' 次';
+            el.textContent = fmt + ' PLAYS';
           }
         });
-      }).catch(function() { /* silent — keep placeholder */ });
+      }).catch(function(){});
     }
 
-    /* ── Track clicks (POST /play) ── */
-    document.querySelectorAll('.game-card[data-id]').forEach(function(card) {
-      card.addEventListener('click', function(e) {
+    /* ── Track clicks ── */
+    document.querySelectorAll('.game-card[data-id]').forEach(function(card){
+      card.addEventListener('click', function(e){
         if (e.target.closest('.fav-btn')) return;
         var id = card.getAttribute('data-id');
         try {
@@ -975,62 +1360,78 @@
           if (navigator.sendBeacon) {
             navigator.sendBeacon(url, new Blob([body], { type: 'application/json' }));
           } else {
-            fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true }).catch(function(){});
+            fetch(url, { method:'POST', headers:{'Content-Type':'application/json'}, body: body, keepalive: true }).catch(function(){});
           }
-        } catch (err) { /* ignore */ }
+        } catch (err) {}
       });
     });
 
-    /* ── Auth / User UI ── */
+    /* ── Auth UI ── */
     function updateUserUI() {
       var loginBtn = document.getElementById('navLogin');
       var chip = document.getElementById('userChip');
+      var orb = document.getElementById('avatarOrb');
+      var av = document.getElementById('userAvatar');
+      var letter = document.getElementById('avatarLetter');
+      var nameEl = document.getElementById('userNameDisplay');
+      var coinsEl = document.getElementById('userCoins');
+
       if (currentUser) {
         loginBtn.style.display = 'none';
         chip.style.display = 'inline-flex';
-        var av = document.getElementById('userAvatar');
-        av.src = currentUser.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
-        document.getElementById('userCoins').textContent = currentUser.coins || 0;
+        if (currentUser.avatar) { av.src = currentUser.avatar; av.style.display = 'block'; letter.style.display = 'none'; }
+        else { av.style.display = 'none'; letter.style.display = 'block'; letter.textContent = (currentUser.name||'H').charAt(0).toUpperCase(); }
+        nameEl.textContent = currentUser.name || 'Player';
+        coinsEl.textContent = currentUser.coins || 0;
       } else {
-        loginBtn.style.display = 'inline-flex';
-        chip.style.display = 'none';
+        loginBtn.style.display = 'flex';
+        chip.style.display = 'inline-flex';
+        av.style.display = 'none';
+        letter.style.display = 'block';
+        letter.textContent = 'H';
+        nameEl.textContent = '訪客';
+        coinsEl.textContent = '0';
       }
     }
 
+    function updateProgressBars(streak, games) {
+      var s = Math.min(streak || 0, 30);
+      document.getElementById('streakBar').style.width = (s / 30 * 100) + '%';
+      document.getElementById('streakVal').textContent = streak || 0;
+      var g = Math.min(games || 0, 14);
+      document.getElementById('gamesBar').style.width = (g / 14 * 100) + '%';
+      document.getElementById('gamesVal').textContent = games || 0;
+    }
+
     function saveSession(jwt, user) {
-      token = jwt;
-      currentUser = user;
+      token = jwt; currentUser = user;
       localStorage.setItem(TOKEN_KEY, jwt);
       localStorage.setItem(USER_KEY, JSON.stringify(user));
       updateUserUI();
       refreshCheckinDot();
     }
-
     function signOut() {
       token = null; currentUser = null;
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
       updateUserUI();
+      updateProgressBars(0, 0);
       document.getElementById('checkinDot').style.display = 'none';
     }
     window.signOut = signOut;
 
     function handleGoogleCredential(resp) {
-      api('auth/google', { method: 'POST', body: { token: resp.credential } }).then(function(data) {
+      api('auth/google', { method: 'POST', body: { token: resp.credential } }).then(function(data){
         saveSession(data.token, data.user);
         closeModal('loginModal');
         queueUnlocks(data.unlocked);
-      }).catch(function() { alert('登入失敗，請稍後再試。'); });
+      }).catch(function(){ alert('登入失敗，請稍後再試。'); });
     }
 
     function initGoogleSignIn() {
       if (!window.google || !window.google.accounts || !window.google.accounts.id) return false;
       try {
-        window.google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleGoogleCredential,
-          auto_select: false
-        });
+        window.google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleCredential, auto_select: false });
         var host = document.getElementById('gsiBtn');
         if (host && !host.hasChildNodes()) {
           window.google.accounts.id.renderButton(host, { theme: 'filled_black', size: 'large', shape: 'pill', text: 'signin_with', width: 280 });
@@ -1039,25 +1440,26 @@
       } catch (e) { return false; }
     }
 
-    document.getElementById('navLogin').addEventListener('click', function() {
+    function openLogin() {
       openModal('loginModal');
       if (!initGoogleSignIn()) {
         var tries = 0;
-        var t = setInterval(function() {
-          if (initGoogleSignIn() || ++tries > 20) clearInterval(t);
-        }, 250);
+        var t = setInterval(function(){ if (initGoogleSignIn() || ++tries > 20) clearInterval(t); }, 250);
       }
+    }
+    document.getElementById('navLogin').addEventListener('click', openLogin);
+    document.getElementById('userChip').addEventListener('click', function(){
+      if (!currentUser) openLogin(); else openProfile();
     });
-
-    document.getElementById('userChip').addEventListener('click', openProfile);
 
     /* ── Check-in ── */
     function refreshCheckinDot() {
       var dot = document.getElementById('checkinDot');
       if (!currentUser) { dot.style.display = 'none'; return; }
-      api('checkin').then(function(data) {
+      api('checkin').then(function(data){
         dot.style.display = data.checkedIn ? 'none' : 'block';
-      }).catch(function() { dot.style.display = 'none'; });
+        updateProgressBars(data.streak || 0, currentUser.gamesPlayed || 0);
+      }).catch(function(){ dot.style.display = 'none'; });
     }
 
     function renderCheckinGrid(streak, checkedIn) {
@@ -1069,76 +1471,63 @@
         var day = document.createElement('div');
         day.className = 'checkin-day';
         var reward = Math.min(10 + i * 5, 50);
-        day.innerHTML = '<span>Day ' + (i+1) + '</span><b>+' + reward + '</b>';
+        day.innerHTML = '<span>D' + (i+1) + '</span><b>+' + reward + '</b>';
         if (i < streak) day.classList.add('done');
         if (i === todayIdx && !checkedIn) day.classList.add('today');
         grid.appendChild(day);
       }
     }
 
-    document.getElementById('navCheckin').addEventListener('click', function() {
-      if (!currentUser) { openModal('loginModal'); return; }
+    function openCheckin() {
+      if (!currentUser) { openLogin(); return; }
       openModal('checkinModal');
       var btn = document.getElementById('checkinBtn');
       var toast = document.getElementById('checkinToast');
       toast.classList.remove('show');
-      btn.disabled = true;
-      btn.textContent = '載入中…';
-      api('checkin').then(function(data) {
+      btn.disabled = true; btn.textContent = '載入中⋯';
+      api('checkin').then(function(data){
         document.getElementById('checkinStreakVal').textContent = data.streak || 0;
         renderCheckinGrid(data.streak || 0, data.checkedIn);
-        if (data.checkedIn) {
-          btn.textContent = '今日已簽到 ✓';
-          btn.disabled = true;
-        } else {
-          btn.textContent = '立即簽到';
-          btn.disabled = false;
-        }
-      }).catch(function() {
-        btn.textContent = '無法連線';
-        btn.disabled = true;
-      });
-    });
+        if (data.checkedIn) { btn.textContent = '今日已簽到'; btn.disabled = true; }
+        else { btn.textContent = '立即簽到'; btn.disabled = false; }
+      }).catch(function(){ btn.textContent = '無法連線'; btn.disabled = true; });
+    }
+    document.getElementById('navCheckin').addEventListener('click', openCheckin);
+    document.getElementById('tabCheckin').addEventListener('click', openCheckin);
 
-    document.getElementById('checkinBtn').addEventListener('click', function() {
+    document.getElementById('checkinBtn').addEventListener('click', function(){
       var btn = this;
-      btn.disabled = true;
-      btn.textContent = '簽到中…';
-      api('checkin', { method: 'POST' }).then(function(data) {
-        if (data.already) {
-          btn.textContent = '今日已簽到 ✓';
-          return;
-        }
+      btn.disabled = true; btn.textContent = '簽到中⋯';
+      api('checkin', { method: 'POST' }).then(function(data){
+        if (data.already) { btn.textContent = '今日已簽到'; return; }
         currentUser.coins = (currentUser.coins || 0) + (data.reward || 0);
         localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
         updateUserUI();
+        updateProgressBars(data.streak || 0, currentUser.gamesPlayed || 0);
         document.getElementById('checkinStreakVal').textContent = data.streak;
         renderCheckinGrid(data.streak, true);
         var toast = document.getElementById('checkinToast');
-        toast.textContent = '+' + data.reward + ' 金幣！連續 ' + data.streak + ' 天簽到';
+        toast.textContent = '+' + data.reward + ' 金幣，連續 ' + data.streak + ' 天簽到';
         toast.classList.add('show');
-        btn.textContent = '今日已簽到 ✓';
+        btn.textContent = '今日已簽到';
         document.getElementById('checkinDot').style.display = 'none';
         queueUnlocks(data.unlocked);
-      }).catch(function() {
-        btn.textContent = '簽到失敗';
-        setTimeout(function(){ btn.disabled = false; btn.textContent = '立即簽到'; }, 1500);
-      });
+      }).catch(function(){ btn.textContent = '簽到失敗'; setTimeout(function(){ btn.disabled = false; btn.textContent = '立即簽到'; }, 1500); });
     });
 
     /* ── Leaderboard ── */
     function buildLbTabs() {
       var tabs = document.getElementById('lbTabs');
       if (tabs.children.length > 1) return;
-      Object.keys(gameMeta).forEach(function(gid) {
+      Object.keys(gameMeta).forEach(function(gid){
         var t = document.createElement('button');
         t.className = 'lb-tab';
         t.setAttribute('data-game', gid);
         t.textContent = gameMeta[gid];
         tabs.appendChild(t);
       });
-      tabs.querySelectorAll('.lb-tab').forEach(function(tab) {
-        tab.addEventListener('click', function() {
+      tabs.querySelectorAll('.lb-tab').forEach(function(tab){
+        tab.addEventListener('click', function(){
           tabs.querySelectorAll('.lb-tab').forEach(function(t){ t.classList.remove('active'); });
           tab.classList.add('active');
           loadLeaderboard(tab.getAttribute('data-game'));
@@ -1146,75 +1535,79 @@
       });
     }
 
+    function medalText(rank) {
+      return rank <= 3 ? ['1st','2nd','3rd'][rank-1] : '#' + rank;
+    }
+
     function loadLeaderboard(gameId) {
       var list = document.getElementById('lbList');
-      list.innerHTML = '<div class="lb-empty">載入中…</div>';
+      list.innerHTML = '<div class="lb-empty">載入中⋯</div>';
       var path = gameId ? 'leaderboard/' + gameId : 'leaderboard';
-      api(path).then(function(rows) {
-        if (!rows || !rows.length) {
-          list.innerHTML = '<div class="lb-empty">還沒有紀錄，趕快衝榜！</div>';
-          return;
-        }
+      api(path).then(function(rows){
+        if (!rows || !rows.length) { list.innerHTML = '<div class="lb-empty">還沒有紀錄，成為第一個上榜的玩家</div>'; return; }
         list.innerHTML = '';
-        rows.forEach(function(r, i) {
+        rows.forEach(function(r, i){
           var row = document.createElement('div');
           row.className = 'lb-row' + (i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '');
           var rank = i + 1;
-          var avatarSrc = r.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
+          var avatarSrc = r.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23ff2d7b%22/></svg>';
           var score = gameId ? r.score : r.total_score;
           var title = r.title ? '<span class="lb-title">' + escapeHtml(r.title) + '</span>' : '';
-          row.innerHTML = '<div class="lb-rank">' + (rank <= 3 ? ['🥇','🥈','🥉'][rank-1] : '#' + rank) + '</div>' +
+          row.innerHTML = '<div class="lb-rank">' + medalText(rank) + '</div>' +
             '<img class="lb-avatar" src="' + avatarSrc + '" alt="" />' +
             '<div class="lb-name">' + escapeHtml(r.name || 'Player') + title + '</div>' +
             '<div class="lb-score">' + (score || 0).toLocaleString() + '</div>';
           list.appendChild(row);
         });
-      }).catch(function() {
-        list.innerHTML = '<div class="lb-empty">暫時無法連線排行榜</div>';
-      });
+      }).catch(function(){ list.innerHTML = '<div class="lb-empty">暫時無法連線排行榜</div>'; });
     }
 
     function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, function(c){
-        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-      });
+      return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
     }
 
-    document.getElementById('navLeaderboard').addEventListener('click', function() {
+    function openLeaderboard() {
       openModal('leaderboardModal');
       buildLbTabs();
       loadLeaderboard('');
-    });
+    }
+    document.getElementById('navLeaderboard').addEventListener('click', openLeaderboard);
+    document.getElementById('tabLeaderboard').addEventListener('click', openLeaderboard);
 
     /* ── Profile ── */
     function openProfile() {
-      if (!currentUser) { openModal('loginModal'); return; }
+      if (!currentUser) { openLogin(); return; }
       openModal('profileModal');
       var body = document.getElementById('profileBody');
-      body.innerHTML = '<div class="lb-empty">載入中…</div>';
-      api('profile').then(function(p) {
+      body.innerHTML = '<div class="lb-empty">載入中⋯</div>';
+      api('profile').then(function(p){
         currentUser.coins = p.coins;
         currentUser.title = p.title;
+        currentUser.gamesPlayed = (p.bestScores || []).length;
         localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
         updateUserUI();
 
         if (p.achievementCatalog) achievementCatalog = p.achievementCatalog;
         var unlockedSet = new Set((p.achievements || []).map(function(a){ return a.achievement_id; }));
         var achIds = Object.keys(achievementCatalog);
-        var achHtml = achIds.map(function(id) {
+        updateProgressBars(0, currentUser.gamesPlayed);
+
+        var achHtml = achIds.map(function(id){
           var a = achievementCatalog[id];
           var on = unlockedSet.has(id);
+          var tier = a.tier || 'bronze';
           return '<div class="ach-item' + (on ? ' unlocked' : '') + '">' +
-            '<span class="ach-icon">' + a.icon + '</span>' +
-            '<span class="ach-name">' + escapeHtml(a.name) + '</span>' +
-            '<span class="ach-tip">' + escapeHtml(a.desc) + (on ? ' ✓' : '') + '</span>' +
+            '<div class="ach-badge ach-badge--' + tier + '">' + (tierInitial[tier] || 'A') + '</div>' +
+            '<div class="ach-name">' + escapeHtml(a.name) + '</div>' +
+            '<div class="ach-tip">' + escapeHtml(a.desc) + '</div>' +
+            (on ? '<div class="ach-done">UNLOCKED</div>' : '') +
             '</div>';
         }).join('');
 
-        var avatarSrc = p.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
-        var bests = (p.bestScores || []).map(function(b) {
+        var avatarSrc = p.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23ff2d7b%22/></svg>';
+        var bests = (p.bestScores || []).map(function(b){
           return '<div class="best-row"><span>' + escapeHtml(gameMeta[b.game_id] || b.game_id) + '</span><b>' + (b.score || 0).toLocaleString() + '</b></div>';
-        }).join('') || '<div class="lb-empty" style="padding:16px 0">尚無紀錄</div>';
+        }).join('') || '<div class="lb-empty" style="padding:12px 0">尚無紀錄</div>';
 
         body.innerHTML = '<div class="profile-head">' +
             '<img src="' + avatarSrc + '" alt="" />' +
@@ -1228,24 +1621,18 @@
           '<div class="best-list"><h4>成就徽章</h4><div class="ach-list">' + achHtml + '</div></div>' +
           '<div class="best-list"><h4>最佳成績</h4>' + bests + '</div>' +
           '<button class="btn-signout" onclick="signOut();closeModal(\'profileModal\')">登出</button>';
-      }).catch(function() {
-        body.innerHTML = '<div class="lb-empty">無法連線，請稍後再試</div>';
-      });
+      }).catch(function(){ body.innerHTML = '<div class="lb-empty">無法連線，請稍後再試</div>'; });
     }
+    document.getElementById('tabProfile').addEventListener('click', openProfile);
+    document.getElementById('tabAchievements').addEventListener('click', openProfile);
 
     /* ── Init ── */
     loadPlayCounts();
     updateUserUI();
     if (currentUser) refreshCheckinDot();
 
-    /* Deep-link: #login opens login modal, #leaderboard opens board */
-    if (location.hash === '#login' && !currentUser) {
-      document.getElementById('navLogin').click();
-      history.replaceState(null, '', location.pathname);
-    } else if (location.hash === '#leaderboard') {
-      document.getElementById('navLeaderboard').click();
-      history.replaceState(null, '', location.pathname);
-    }
+    if (location.hash === '#login' && !currentUser) { openLogin(); history.replaceState(null, '', location.pathname); }
+    else if (location.hash === '#leaderboard') { openLeaderboard(); history.replaceState(null, '', location.pathname); }
   </script>
 </body>
 </html>
