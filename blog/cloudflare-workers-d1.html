@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端 — Hao0321 Studio</title>
+  <meta name="description" content="14 款遊戲共用的後端實戰紀錄 — JWT 簽章、Google OAuth 驗證、D1 schema、成就邏輯、速率限制、部署與故障排除全公開。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#00b4ff" />
+  <link rel="canonical" href="https://hao0321.com/blog/cloudflare-workers-d1.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端" />
+  <meta property="og:description" content="14 款遊戲共用的後端實戰紀錄：JWT、OAuth、D1、成就邏輯。" />
+  <meta property="og:url" content="https://hao0321.com/blog/cloudflare-workers-d1.html" />
+  <meta property="og:image" content="https://hao0321.com/og-hero.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-04-21T00:00:00+08:00" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{--void:#050508;--hull:#0a0a12;--steel:#1a1a2a;--glow-blue:#00b4ff;--glow-cyan:#00e5ff;--glow-white:#e0e8ff;--hud-green:#00ff88;--warn-amber:#ffaa00;--dim:#8888aa;--text:#d0d8ee;--font-head:'Space Grotesk','Noto Sans TC',sans-serif;--font-body:'Inter','Noto Sans TC',sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--void);color:var(--text);font-family:var(--font-body);line-height:1.85;-webkit-font-smoothing:antialiased;min-height:100vh}
+    ::selection{background:var(--glow-blue);color:var(--void)}
+    a{color:var(--glow-cyan);text-decoration:none;transition:color .2s}
+    a:hover{color:var(--glow-white)}
+    .bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(0,180,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+    nav.topnav{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,180,255,0.12);padding:18px 5vw;display:flex;justify-content:space-between;align-items:center}
+    .logo{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--glow-white);letter-spacing:0.04em}
+    .logo span{color:var(--glow-blue)}
+    .back-link{font-family:var(--font-head);font-size:0.82rem;color:var(--dim);letter-spacing:0.08em}
+    .back-link:hover{color:var(--glow-cyan)}
+    main{max-width:720px;margin:0 auto;padding:60px 5vw 100px}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--dim);margin-bottom:24px;letter-spacing:0.04em}
+    .breadcrumb a{color:var(--dim)}
+    .breadcrumb a:hover{color:var(--glow-cyan)}
+    .cat{display:inline-block;font-family:var(--font-head);font-size:0.68rem;font-weight:700;letter-spacing:0.2em;color:var(--glow-blue);text-transform:uppercase;padding:4px 12px;background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.25);border-radius:100px;margin-bottom:18px}
+    h1{font-family:var(--font-head);font-size:clamp(1.8rem,4.5vw,2.6rem);font-weight:800;color:var(--glow-white);margin-bottom:18px;line-height:1.2;letter-spacing:-0.01em}
+    .meta{display:flex;gap:18px;font-family:var(--font-mono);font-size:0.76rem;color:var(--dim);margin-bottom:36px;padding-bottom:22px;border-bottom:1px dashed rgba(136,136,170,0.22);flex-wrap:wrap}
+    h2{font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--glow-white);margin:44px 0 16px;padding-left:18px;position:relative}
+    h2::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--glow-blue),var(--glow-cyan))}
+    h3{font-family:var(--font-head);font-size:1.08rem;font-weight:700;color:var(--glow-cyan);margin:26px 0 10px}
+    p{font-size:0.98rem;color:var(--text);margin-bottom:18px}
+    strong{color:var(--glow-white);font-weight:600}
+    ul,ol{padding-left:24px;margin-bottom:18px}
+    li{margin-bottom:8px;font-size:0.96rem}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--glow-cyan);background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.16);padding:1px 7px;border-radius:4px}
+    pre{background:rgba(10,10,18,0.85);border:1px solid rgba(0,180,255,0.18);border-radius:10px;padding:18px 20px;margin:20px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:var(--text)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    blockquote{border-left:3px solid var(--glow-blue);padding:8px 20px;margin:20px 0;background:rgba(0,180,255,0.05);border-radius:0 8px 8px 0;font-style:italic;color:var(--text)}
+    .callout{background:rgba(255,170,0,0.08);border-left:3px solid var(--warn-amber);padding:14px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+    .callout strong{color:var(--warn-amber)}
+    table{width:100%;border-collapse:collapse;margin:20px 0;font-size:0.88rem;background:rgba(26,26,42,0.4);border:1px solid rgba(0,180,255,0.15);border-radius:8px;overflow:hidden}
+    th,td{padding:10px 14px;text-align:left;border-bottom:1px solid rgba(0,180,255,0.08)}
+    th{font-family:var(--font-head);font-weight:700;color:var(--glow-white);background:rgba(0,180,255,0.08);font-size:0.82rem;letter-spacing:0.02em}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:60px;padding-top:32px;border-top:1px dashed rgba(136,136,170,0.22)}
+    .article-footer h3{color:var(--glow-white);font-size:0.88rem;margin-bottom:12px;letter-spacing:0.08em}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+    .related a{display:block;background:rgba(26,26,42,0.5);border:1px solid rgba(0,180,255,0.15);border-radius:10px;padding:14px 18px;font-size:0.82rem;color:var(--text);transition:border-color .2s,transform .2s}
+    .related a:hover{border-color:var(--glow-cyan);transform:translateY(-2px);color:var(--glow-white)}
+    .related-cat{font-family:var(--font-mono);font-size:0.64rem;color:var(--glow-blue);letter-spacing:0.1em;display:block;margin-bottom:4px}
+    footer{border-top:1px solid rgba(0,180,255,0.1);padding:36px 5vw;text-align:center;font-size:0.78rem;color:var(--dim)}
+    footer .links{margin-bottom:12px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
+    footer a{color:var(--dim)}
+    footer a:hover{color:var(--glow-cyan)}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <nav class="topnav">
+    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
+    <a href="/blog/" class="back-link">← 回部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Cloudflare Workers + D1</div>
+    <span class="cat">Backend</span>
+    <h1>用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端</h1>
+    <div class="meta">
+      <span>2026 年 4 月 21 日</span>
+      <span>約 12 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <p>Hao0321 遊戲大廳 14 款遊戲都共用同一套後端 — 登入、每日簽到、排行榜、金幣、成就系統。整個後端是一個 250 行左右的 <code>worker.js</code>，跑在 Cloudflare Workers 上，資料存在 Cloudflare D1（邊緣 SQLite）。這篇把整個架構拆解，順便分享 1 人工作室在後端設計上可以偷懶（或不能偷懶）的地方。</p>
+
+    <h2>選擇 Cloudflare Workers 的理由</h2>
+    <p>一開始我評估過幾個選項：</p>
+    <table>
+      <tr><th>方案</th><th>優點</th><th>為什麼不選</th></tr>
+      <tr><td>Vercel Serverless + Postgres</td><td>Next.js 體驗流暢</td><td>冷啟動慢（200ms+）、DB 費用貴</td></tr>
+      <tr><td>Fly.io + SQLite</td><td>多區部署、便宜</td><td>要管 container，複雜度上升</td></tr>
+      <tr><td>自架 VPS</td><td>完全控制</td><td>一個人沒時間管作業系統</td></tr>
+      <tr><td>Firebase</td><td>開箱即用</td><td>vendor lock-in 嚴重、收費模型複雜</td></tr>
+      <tr><td><strong>Cloudflare Workers + D1</strong></td><td>邊緣運算、零冷啟動、免費額度大</td><td>（選了這個）</td></tr>
+    </table>
+    <p>對遊戲排行榜這種讀多寫少、對延遲敏感、流量可預測的應用，Cloudflare Workers 是甜蜜點。</p>
+
+    <h3>Workers 的核心優勢：V8 Isolates</h3>
+    <p>跟 AWS Lambda 不同，Cloudflare Workers 不是啟動 container，而是在 V8 engine 裡建立一個 isolated context。這個 context 大約 5ms 啟動，幾乎感受不到冷啟動。台灣使用者打 <code>api.hao0321.com/play-counts</code> 的端到端延遲大約 60ms，大部分時間其實花在 TLS 握手與 D1 查詢上，Worker 本身只佔 2-5ms。</p>
+    <p>Trade-off：每個 request 的 CPU 時間有上限（免費版 10ms / request，付費版 50ms）。這表示你不能在 Worker 裡跑 ML 推理或大量計算。但對 CRUD API 綽綽有餘。</p>
+
+    <h2>整體架構</h2>
+    <pre>           [ Game Client ]                [ Game Hall ]
+                │                              │
+                ├─ POST /play (beacon)         ├─ Google OAuth
+                ├─ POST /score (JWT auth)      ├─ GET /leaderboard
+                │                              └─ GET /profile
+                ▼                              ▼
+    ┌────────────────────────────────────────────────┐
+    │   Cloudflare Worker: api.hao0321.com           │
+    │   • Route dispatch (path + method)             │
+    │   • JWT verify / sign                          │
+    │   • Achievement detection                      │
+    │   • Input validation                           │
+    └────────────────────────────────────────────────┘
+                       │
+                       ▼
+    ┌────────────────────────────────────────────────┐
+    │   Cloudflare D1 (SQLite on edge)               │
+    │   • users, checkins, scores, best_scores       │
+    │   • play_counts, achievements                  │
+    └────────────────────────────────────────────────┘</pre>
+
+    <h2>路由設計</h2>
+    <p>Worker 裡不用 framework（Hono、itty-router 之類），直接手寫 if 判斷：</p>
+    <pre>export default {
+  async fetch(req, env) {
+    if (req.method === 'OPTIONS') return new Response(null, { headers: CORS });
+    if (!env.JWT_SECRET) return err('JWT_SECRET not set', 500);
+
+    const url = new URL(req.url);
+    const path = url.pathname.replace(/^\/+|\/+$/g, '');
+
+    try {
+      if (path === 'auth/google') { /* ... */ }
+      if (path === 'checkin' && req.method === 'POST') { /* ... */ }
+      if (path === 'score' && req.method === 'POST') { /* ... */ }
+      if (path.startsWith('leaderboard/')) { /* ... */ }
+      // ...
+      return err('Not found', 404);
+    } catch (e) {
+      return err('Server error: ' + e.message, 500);
+    }
+  },
+};</pre>
+    <p>看起來很土，但 9 個端點手寫 if 完全不會亂。framework 的 routing DSL 要花時間學、要維護版本、要擔心 middleware 執行順序，對這個規模不值得。</p>
+
+    <h2>JWT：為什麼不自己管密碼</h2>
+    <p>遊戲大廳 100% 靠 Google Sign-In，Worker 端的工作是：</p>
+    <ol>
+      <li>接收前端傳來的 Google ID token（由 Google Identity Services SDK 產生）</li>
+      <li>呼叫 <code>https://oauth2.googleapis.com/tokeninfo?id_token=...</code> 向 Google 驗證</li>
+      <li>拿到 Google user info 後，在 D1 <code>users</code> 表找 / 建使用者</li>
+      <li>用 Worker 自己的 <code>JWT_SECRET</code> 簽一個 30 天期限的 session JWT 回給前端</li>
+    </ol>
+    <p>JWT 簽章用 Web Crypto API 的 HMAC-SHA256：</p>
+    <pre>async function signToken(payload, secret) {
+  const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+  const body = btoa(JSON.stringify({
+    ...payload,
+    exp: Date.now() + 30 * 24 * 3600 * 1000,
+  }));
+  const key = await crypto.subtle.importKey(
+    'raw', new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
+  );
+  const sig = await crypto.subtle.sign(
+    'HMAC', key,
+    new TextEncoder().encode(header + '.' + body)
+  );
+  return header + '.' + body + '.' + btoa(String.fromCharCode(...new Uint8Array(sig)));
+}</pre>
+    <p>Verify 的邏輯是對稱的。不用 <code>jsonwebtoken</code> 套件是因為 Workers runtime 不支援 Node built-ins，而且 Web Crypto API 本身就夠用，多一個套件只是徒增部署大小。</p>
+
+    <div class="callout">
+      <strong>安全提示</strong>：<code>JWT_SECRET</code> 用 <code>wrangler secret put JWT_SECRET</code> 存在 Cloudflare 的加密環境變數，<strong>不要</strong>寫在 <code>wrangler.toml</code> 的 <code>[vars]</code> 區塊（那會被 commit 進 git）。我們踩過一次，rotate 後才逃過一劫。
+    </div>
+
+    <h2>D1 Schema 設計</h2>
+    <p>D1 是 Cloudflare 的 SQLite-on-edge 產品。Schema 6 張表：</p>
+    <pre>-- 使用者（Google OAuth）
+CREATE TABLE users (
+  id TEXT PRIMARY KEY,           -- 自產 short ID (u_xxxxxxxxxxxx)
+  google_id TEXT UNIQUE NOT NULL,
+  name TEXT NOT NULL,
+  avatar TEXT,
+  title TEXT DEFAULT 'Newbie',
+  coins INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now')),
+  last_login TEXT DEFAULT (datetime('now'))
+);
+
+-- 每日簽到
+CREATE TABLE checkins (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  date TEXT NOT NULL,            -- YYYY-MM-DD
+  streak INTEGER DEFAULT 1,
+  reward INTEGER DEFAULT 10,
+  UNIQUE(user_id, date)
+);
+
+-- 每次分數（歷史完整）
+CREATE TABLE scores (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  game_id TEXT NOT NULL,
+  score INTEGER NOT NULL,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+-- 每人每遊戲的最佳分（排行榜用）
+CREATE TABLE best_scores (
+  user_id TEXT NOT NULL,
+  game_id TEXT NOT NULL,
+  score INTEGER NOT NULL,
+  updated_at TEXT DEFAULT (datetime('now')),
+  PRIMARY KEY (user_id, game_id)
+);
+
+-- 每款遊戲的遊玩次數（公開統計）
+CREATE TABLE play_counts (
+  game_id TEXT PRIMARY KEY,
+  count INTEGER DEFAULT 0
+);
+
+-- 成就解鎖
+CREATE TABLE achievements (
+  user_id TEXT NOT NULL,
+  achievement_id TEXT NOT NULL,
+  unlocked_at TEXT DEFAULT (datetime('now')),
+  PRIMARY KEY (user_id, achievement_id)
+);</pre>
+
+    <h3>為什麼同時有 <code>scores</code> 和 <code>best_scores</code>？</h3>
+    <p>每次 <code>POST /score</code> 都會 insert 一筆到 <code>scores</code>（歷史紀錄），並檢查是否更新 <code>best_scores</code>（排行榜用）。這個雙表設計有幾個好處：</p>
+    <ul>
+      <li><strong>排行榜查詢快</strong>：直接 <code>SELECT FROM best_scores ORDER BY score DESC</code>，不用跨所有歷史紀錄 GROUP BY。</li>
+      <li><strong>歷史資料完整</strong>：未來要做「過去 7 天趨勢圖」或「平均分 vs 最高分」分析時，不用回推。</li>
+      <li><strong>寫入成本低</strong>：<code>scores</code> 的 insert 沒有 index 更新成本，<code>best_scores</code> 的 update 只在新紀錄時發生。</li>
+    </ul>
+
+    <h2>關鍵端點解析</h2>
+
+    <h3>POST /checkin — 連續簽到邏輯</h3>
+    <pre>if (path === 'checkin' && req.method === 'POST') {
+  const u = await getUser(req, env);
+  if (!u) return err('Unauthorized', 401);
+
+  const today = new Date().toISOString().split('T')[0];
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+  const existing = await env.DB.prepare(
+    'SELECT * FROM checkins WHERE user_id = ? AND date = ?'
+  ).bind(u.uid, today).first();
+  if (existing) return json({ already: true, streak: existing.streak });
+
+  const prev = await env.DB.prepare(
+    'SELECT streak FROM checkins WHERE user_id = ? AND date = ?'
+  ).bind(u.uid, yesterday).first();
+  const streak = prev ? prev.streak + 1 : 1;
+  const reward = Math.min(10 + (streak - 1) * 5, 50);
+
+  await env.DB.prepare(
+    'INSERT INTO checkins (user_id, date, streak, reward) VALUES (?, ?, ?, ?)'
+  ).bind(u.uid, today, streak, reward).run();
+  await env.DB.prepare(
+    'UPDATE users SET coins = coins + ? WHERE id = ?'
+  ).bind(reward, u.uid).run();
+
+  return json({ streak, reward, already: false });
+}</pre>
+    <p>連續簽到的 streak 計算靠 <strong>查昨天的紀錄</strong> — 如果昨天有簽、streak += 1；沒有、從 1 開始。時區邊界問題先忽略（後端是 UTC，使用者可能會發現「跨日前一刻簽到 = 兩天算一天」，但影響極微）。</p>
+
+    <h3>POST /score — 分數驗證</h3>
+    <p>為了防止作弊（前端被改），伺服器端做最小限度的驗證：</p>
+    <pre>const body = await readJson(req);
+if (!body) return err('body required');
+const { game, score } = body;
+if (!game || score === undefined) return err('game and score required');
+if (typeof score !== 'number' || !Number.isFinite(score)
+    || score &lt; 0 || score &gt; 1e9) return err('invalid score');</pre>
+    <p>這擋不住有心作弊的玩家（前端本來就會執行他們可以改的 JS），但擋住大部分意外錯誤（NaN、字串、負數）。真要完全防弊，得把遊戲邏輯搬到伺服器，那是另一個量級的工程。</p>
+
+    <h3>Achievement Detection</h3>
+    <p>成就系統跟 <code>POST /score</code>、<code>POST /checkin</code>、<code>POST /auth/google</code> 三個端點整合 — 每次這些動作後檢查對應成就是否達成：</p>
+    <pre>async function tryUnlock(env, uid, aid) {
+  const res = await env.DB.prepare(
+    'INSERT OR IGNORE INTO achievements (user_id, achievement_id) VALUES (?, ?)'
+  ).bind(uid, aid).run();
+  return res.meta &amp;&amp; res.meta.changes &gt; 0 ? aid : null;
+}
+
+async function checkCoinAchievements(env, uid, coins) {
+  const unlocked = [];
+  if (coins &gt;= 50)   { const r = await tryUnlock(env, uid, 'coins_50');   if (r) unlocked.push(r); }
+  if (coins &gt;= 200)  { const r = await tryUnlock(env, uid, 'coins_200');  if (r) unlocked.push(r); }
+  if (coins &gt;= 1000) { const r = await tryUnlock(env, uid, 'coins_1000'); if (r) unlocked.push(r); }
+  return unlocked;
+}</pre>
+    <p><code>INSERT OR IGNORE</code> 讓重複 insert 成為 no-op，不用先 <code>SELECT</code> 再判斷。<code>res.meta.changes</code> 告訴我們這次 insert 是否真的寫入（= 新解鎖）。回傳新解鎖的 achievement IDs 給前端，前端就能即時彈出「成就解鎖」toast。</p>
+
+    <h3>POST /play — 匿名遊玩次數</h3>
+    <p>這個端點不需要驗證，誰點遊戲卡片都會打。用 <code>sendBeacon</code> 送出避免影響跳轉速度：</p>
+    <pre>// 前端（遊戲大廳 index.html）
+card.addEventListener('click', () =&gt; {
+  navigator.sendBeacon(
+    API_BASE + '/play',
+    new Blob([JSON.stringify({ game: id })], { type: 'application/json' })
+  );
+});</pre>
+    <p>這個資料用來顯示「已被玩 XXX 次」，也是純公開的統計。無匿名驗證，接受被刷 — 假設有人刷某款遊戲到 10 萬次，也只是數字好看，無實質影響。</p>
+
+    <h2>部署與 DNS 踩坑</h2>
+    <p>Worker 本身用 <code>wrangler deploy</code> 部署，<code>wrangler.toml</code> 指定綁定路由：</p>
+    <pre>name = "hao-games-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+[vars]
+GOOGLE_CLIENT_ID = "1098993759422-xxxxxxxx.apps.googleusercontent.com"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hao-games-db"
+database_id = "5cf30197-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+[[routes]]
+pattern = "api.hao0321.com/*"
+zone_name = "hao0321.com"</pre>
+    <p><strong>重要踩坑</strong>：一開始我的 route 設成 <code>api.game.hao0321.com/*</code>（三層子網域）。結果 Cloudflare Universal SSL（免費方案）只涵蓋 <code>*.hao0321.com</code>（兩層通配），瀏覽器打開會回 <code>ERR_SSL_VERSION_OR_CIPHER_MISMATCH</code>。</p>
+    <p>花了半小時確認這是 cert 問題而不是 DNS 問題，最後遷到 <code>api.hao0321.com</code> 就好了。<strong>教訓：免費 Cloudflare 用戶自己用子網域要留在兩層以內</strong>。</p>
+
+    <h2>錯誤處理與可觀測性</h2>
+    <p>Workers 內建的 dashboard 顯示每個 deploy 的請求數、錯誤率、P50/P95/P99 延遲。我不另外架 Grafana 或 Sentry，因為目前流量規模完全沒必要。</p>
+    <p>Worker 內的 uncaught exception 會被包進一個 <code>try { ... } catch (e) { return err(...) }</code> 回 500，錯誤訊息會寫進 Cloudflare 的 logs（用 <code>wrangler tail</code> 可以即時 stream）。</p>
+    <p>之前踩過一個坑：<code>POST /play</code> 傳壞 JSON（非物件字串）時，<code>req.json()</code> throw SyntaxError，catch 把錯誤訊息包進回傳，結果 <strong>leak 了 stack trace 給攻擊者</strong>。後來加了 <code>readJson()</code> helper 優雅處理 parse error，回 400 而不是 500。</p>
+
+    <h2>成本</h2>
+    <p>目前每月 Workers 請求約 1500、D1 讀取 5000、D1 寫入 200。全部在 free tier 內。真正要開始付費的觸發點：</p>
+    <ul>
+      <li>Workers 請求 &gt; 10 萬 / 天 → $5 USD 起跳</li>
+      <li>D1 儲存 &gt; 5GB → 每 GB $0.75 / 月</li>
+      <li>D1 寫入 &gt; 10 萬 / 月 → $1 USD / 百萬寫入</li>
+    </ul>
+    <p>以工作室規模要用到付費，得每日 DAU 破千才會發生。</p>
+
+    <h2>可以改進的地方</h2>
+    <ul>
+      <li><strong>速率限制</strong>：目前沒有。如果未來要防止腳本刷分數，可以用 Cloudflare Rate Limiting Rules（邊緣層）或在 Worker 內用 D1 存 IP+timestamp 做 leaky bucket。</li>
+      <li><strong>離峰時段的定期清理</strong>：<code>scores</code> 表會無限成長。之後加 cron trigger（Cloudflare Workers Cron）每月刪除半年前的舊紀錄。</li>
+      <li><strong>快取 leaderboard</strong>：目前每次 <code>GET /leaderboard</code> 都打 D1。高流量時可以用 Cloudflare KV 或 Cache API 快取 60 秒。</li>
+      <li><strong>批次寫入</strong>：多個遊戲同時結算時，理論上可以合併 <code>POST /score</code> 減少 D1 寫入。但目前沒有這個規模問題。</li>
+    </ul>
+
+    <h2>結語</h2>
+    <p>Cloudflare Workers + D1 把「做一個 production 等級的後端」從「需要一個小型團隊」壓縮到「一個人一個週末」。這不是萬靈丹，但對工作室規模的應用是極佳的選擇。省下來的心力應該放在差異化的產品細節 — 遊戲好不好玩、設計有沒有記憶點、內容有沒有價值。</p>
+    <p>完整的 <code>worker.js</code>、<code>schema.sql</code>、<code>wrangler.toml</code> 都在 <a href="https://github.com/Hao0321/Hao0321-Studio-WEB/tree/main/game-api">Hao0321 Studio 的 GitHub repo</a>。歡迎看、歡迎提問、歡迎 fork。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/tech-stack.html">
+          <span class="related-cat">ENGINEERING</span>
+          Hao0321 Studio 的技術堆疊：1 人工作室的全端架構
+        </a>
+        <a href="/blog/dodge-master-devlog.html">
+          <span class="related-cat">GAME DEVLOG</span>
+          DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

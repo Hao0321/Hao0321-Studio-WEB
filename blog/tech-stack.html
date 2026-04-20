@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hao0321 Studio 的技術堆疊：1 人工作室的全端架構 — Hao0321 Studio</title>
+  <meta name="description" content="從前端、後端、認證到 CDN — 一個人可維護、月成本 200 元以下的完整網站架構。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#00b4ff" />
+  <link rel="canonical" href="https://hao0321.com/blog/tech-stack.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Hao0321 Studio 的技術堆疊：1 人工作室的全端架構" />
+  <meta property="og:description" content="從前端到後端，一人獨立工作室的全端架構與月 200 元成本分析。" />
+  <meta property="og:url" content="https://hao0321.com/blog/tech-stack.html" />
+  <meta property="og:image" content="https://hao0321.com/og-hero.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-04-21T00:00:00+08:00" />
+  <meta property="article:author" content="Hao0321 Studio" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{--void:#050508;--hull:#0a0a12;--steel:#1a1a2a;--glow-blue:#00b4ff;--glow-cyan:#00e5ff;--glow-white:#e0e8ff;--hud-green:#00ff88;--warn-amber:#ffaa00;--dim:#8888aa;--text:#d0d8ee;--font-head:'Space Grotesk','Noto Sans TC',sans-serif;--font-body:'Inter','Noto Sans TC',sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--void);color:var(--text);font-family:var(--font-body);line-height:1.85;-webkit-font-smoothing:antialiased;min-height:100vh}
+    ::selection{background:var(--glow-blue);color:var(--void)}
+    a{color:var(--glow-cyan);text-decoration:none;transition:color .2s}
+    a:hover{color:var(--glow-white)}
+    .bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(0,180,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+    nav.topnav{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,180,255,0.12);padding:18px 5vw;display:flex;justify-content:space-between;align-items:center}
+    .logo{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--glow-white);letter-spacing:0.04em}
+    .logo span{color:var(--glow-blue)}
+    .back-link{font-family:var(--font-head);font-size:0.82rem;color:var(--dim);letter-spacing:0.08em}
+    .back-link:hover{color:var(--glow-cyan)}
+    main{max-width:720px;margin:0 auto;padding:60px 5vw 100px}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--dim);margin-bottom:24px;letter-spacing:0.04em}
+    .breadcrumb a{color:var(--dim)}
+    .breadcrumb a:hover{color:var(--glow-cyan)}
+    .cat{display:inline-block;font-family:var(--font-head);font-size:0.68rem;font-weight:700;letter-spacing:0.2em;color:var(--glow-blue);text-transform:uppercase;padding:4px 12px;background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.25);border-radius:100px;margin-bottom:18px}
+    h1{font-family:var(--font-head);font-size:clamp(1.8rem,4.5vw,2.6rem);font-weight:800;color:var(--glow-white);margin-bottom:18px;line-height:1.2;letter-spacing:-0.01em}
+    .meta{display:flex;gap:18px;font-family:var(--font-mono);font-size:0.76rem;color:var(--dim);margin-bottom:36px;padding-bottom:22px;border-bottom:1px dashed rgba(136,136,170,0.22);flex-wrap:wrap}
+    h2{font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--glow-white);margin:44px 0 16px;padding-left:18px;position:relative}
+    h2::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--glow-blue),var(--glow-cyan))}
+    h3{font-family:var(--font-head);font-size:1.08rem;font-weight:700;color:var(--glow-cyan);margin:26px 0 10px}
+    p{font-size:0.98rem;color:var(--text);margin-bottom:18px}
+    strong{color:var(--glow-white);font-weight:600}
+    ul,ol{padding-left:24px;margin-bottom:18px}
+    li{margin-bottom:8px;font-size:0.96rem}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--glow-cyan);background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.16);padding:1px 7px;border-radius:4px}
+    pre{background:rgba(10,10,18,0.85);border:1px solid rgba(0,180,255,0.18);border-radius:10px;padding:18px 20px;margin:20px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:var(--text)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    blockquote{border-left:3px solid var(--glow-blue);padding:8px 20px;margin:20px 0;background:rgba(0,180,255,0.05);border-radius:0 8px 8px 0;font-style:italic;color:var(--text)}
+    .callout{background:rgba(255,170,0,0.08);border-left:3px solid var(--warn-amber);padding:14px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+    .callout strong{color:var(--warn-amber)}
+    table{width:100%;border-collapse:collapse;margin:20px 0;font-size:0.88rem;background:rgba(26,26,42,0.4);border:1px solid rgba(0,180,255,0.15);border-radius:8px;overflow:hidden}
+    th,td{padding:10px 14px;text-align:left;border-bottom:1px solid rgba(0,180,255,0.08)}
+    th{font-family:var(--font-head);font-weight:700;color:var(--glow-white);background:rgba(0,180,255,0.08);font-size:0.82rem;letter-spacing:0.02em}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:60px;padding-top:32px;border-top:1px dashed rgba(136,136,170,0.22)}
+    .article-footer h3{color:var(--glow-white);font-size:0.88rem;margin-bottom:12px;letter-spacing:0.08em}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+    .related a{display:block;background:rgba(26,26,42,0.5);border:1px solid rgba(0,180,255,0.15);border-radius:10px;padding:14px 18px;font-size:0.82rem;color:var(--text);transition:border-color .2s,transform .2s}
+    .related a:hover{border-color:var(--glow-cyan);transform:translateY(-2px);color:var(--glow-white)}
+    .related-cat{font-family:var(--font-mono);font-size:0.64rem;color:var(--glow-blue);letter-spacing:0.1em;display:block;margin-bottom:4px}
+    footer{border-top:1px solid rgba(0,180,255,0.1);padding:36px 5vw;text-align:center;font-size:0.78rem;color:var(--dim)}
+    footer .links{margin-bottom:12px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
+    footer a{color:var(--dim)}
+    footer a:hover{color:var(--glow-cyan)}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <nav class="topnav">
+    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
+    <a href="/blog/" class="back-link">← 回部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / 技術堆疊</div>
+    <span class="cat">Engineering</span>
+    <h1>Hao0321 Studio 的技術堆疊：1 人工作室的全端架構</h1>
+    <div class="meta">
+      <span>2026 年 4 月 21 日</span>
+      <span>約 8 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <p>做獨立工作室最容易踩的雷，就是在技術選擇上花太多時間討論「用什麼才對」，最後一行程式碼都沒寫。我花了一段時間實際把工作室官網、14 款瀏覽器遊戲、後端 API 全部上線，累積下來的架構非常簡單，全部加起來月固定成本不到台幣 200 元，一個人週末就能 debug 完。這篇把全站技術堆疊完整攤開，當成給未來想做類似規模專案的朋友（以及半年後忘記自己用什麼的我）的一份備忘錄。</p>
+
+    <h2>為什麼要寫這篇</h2>
+    <p>坊間的「獨立工作室技術堆疊」文章通常不是太抽象（「選你熟的就好」），就是太 enterprise（「先導入 Kubernetes、Terraform、OpenTelemetry」）。我想寫一篇夾在中間的 — 具體到 <strong>每個組件選什麼</strong>、<strong>為什麼選它</strong>、<strong>實際跑起來花多少錢</strong>、<strong>一個人怎麼維護</strong>。這份架構撐起了：</p>
+    <ul>
+      <li>主站 <code>hao0321.com</code>（工作室作品集、關於頁、部落格）</li>
+      <li>遊戲大廳 <code>game.hao0321.com</code>（14 款原創小遊戲）</li>
+      <li>後端 API <code>api.hao0321.com</code>（帳號、排行榜、簽到、成就）</li>
+      <li>幾個獨立工具（Social Analytics、動畫 Pipeline 展示頁）</li>
+    </ul>
+
+    <h2>全站架構地圖</h2>
+    <p>三個獨立但互相串接的層：</p>
+    <pre>[Browser]
+    ↓
+[ Cloudflare CDN / Pages ]  ←  靜態內容（HTML / JSX / 圖片）
+    ↓
+[ Cloudflare Workers ]       ←  API 端點（JS 邊緣運算）
+    ↓
+[ Cloudflare D1 ]            ←  SQLite on the edge</pre>
+    <p>沒有 Kubernetes、沒有 Docker、沒有自己架的 VPS、沒有 MongoDB 或 PostgreSQL。每個請求的生命週期大概是：使用者在瀏覽器開啟頁面 → Cloudflare Pages 從邊緣節點吐靜態檔 → JS 呼叫 Workers API → Worker 讀寫 D1 → 一路 SSL 終端都在 Cloudflare 做掉。在台北，API 回應時間大約 <strong>50～90ms</strong>。</p>
+
+    <h2>前端（Frontend）</h2>
+
+    <h3>主站：純 HTML + Vanilla JS</h3>
+    <p>主站 <code>hao0321.com/index.html</code> 是一個 1600 行的單檔 HTML。沒有 React、沒有 build step、沒有 bundler。理由很樸素：</p>
+    <ul>
+      <li><strong>作品集不需要狀態管理</strong>。滾動觸發動畫用 IntersectionObserver 就夠，粒子星空用 Canvas 原生 API 就能做。</li>
+      <li><strong>Zero build = zero debt</strong>。三年後打開這個檔案還是能直接跑，不會因為某個 webpack 版本或 Node.js LTS 結束而爆炸。</li>
+      <li><strong>首頁 Lighthouse 分數 95+</strong>。沒有 bundle 意味著 JS payload 極小，初次載入速度是 SPA 做不到的。</li>
+    </ul>
+    <p>缺點當然有：CSS 和 JS 都寫在同一個檔案裡、重複結構要手動複製、跨頁共用邏輯得手動同步。但站的規模是 6 頁，這些成本可以忍。</p>
+
+    <h3>遊戲大廳與遊戲本體：React via Babel（在瀏覽器裡）</h3>
+    <p>每款遊戲是一個 <code>.jsx</code> 檔案，由 <code>play.html</code> 動態 <code>fetch</code> 後用 Babel Standalone 即時轉譯再 eval。完整流程：</p>
+    <pre>fetch('cat-battle.jsx')
+  .then(r =&gt; r.text())
+  .then(raw =&gt; {
+    // 1. Strip ES module syntax (import/export)
+    const { code, defaultExport } = stripModuleSyntax(raw);
+    // 2. JSX → JS via Babel
+    const transformed = Babel.transform(code, { presets: ['react'] }).code;
+    // 3. Wrap in IIFE, inject hooks, mount to #game-root
+    eval(finalCode);
+  });</pre>
+    <p>這個做法看起來很粗暴（「Babel 在瀏覽器裡跑 = 慢」），但實際延遲可以接受：React + Babel 加起來約 200KB gzipped，第一次載入花 300ms，切換遊戲時的 Babel 轉譯大約 50～150ms。换取的好處是：</p>
+    <ul>
+      <li><strong>不需要任何 build pipeline</strong>。改 <code>.jsx</code> → 直接 git push → Cloudflare Pages 自動部署 → 完成。</li>
+      <li><strong>每款遊戲獨立</strong>。要加一款遊戲，只要新增一個 <code>.jsx</code> 檔再登記到 <code>play.html</code> 的 <code>GAMES</code> 物件即可，不用重新 build 整站。</li>
+      <li><strong>新進貢獻者零門檻</strong>。任何會 React 的朋友打開檔案就能看懂，不用先搞懂 Vite 或 esbuild 設定。</li>
+    </ul>
+    <p>權衡：production 流量大時這不是最佳解，應該 pre-compile。但當前工作室規模，這個成本可以吸收。</p>
+
+    <h3>字型與視覺一致性</h3>
+    <p>全站用三個 Google Fonts：<strong>Space Grotesk</strong>（標題、英文）、<strong>Inter</strong>（正文）、<strong>Noto Sans TC</strong>（中文）、再加一個 <strong>JetBrains Mono</strong>（等寬）。色彩系統統一由 CSS custom properties 管理，每個頁面都複製同一套 <code>:root</code> 變數表 — 醜但穩定。</p>
+
+    <h2>後端（Backend）</h2>
+
+    <h3>Cloudflare Workers</h3>
+    <p>整個後端是一個 <strong>203 行的 <code>worker.js</code> 檔案</strong>。API 涵蓋：</p>
+    <table>
+      <tr><th>Method</th><th>Path</th><th>用途</th></tr>
+      <tr><td>POST</td><td>/auth/google</td><td>Google ID token → JWT</td></tr>
+      <tr><td>GET / POST</td><td>/checkin</td><td>每日簽到</td></tr>
+      <tr><td>POST</td><td>/play</td><td>匿名 +1 遊玩次數</td></tr>
+      <tr><td>POST</td><td>/score</td><td>提交分數、更新 best_scores</td></tr>
+      <tr><td>GET</td><td>/leaderboard[/:game]</td><td>全域或單款遊戲排行榜</td></tr>
+      <tr><td>GET</td><td>/profile</td><td>個人檔案 + 最佳紀錄 + 成就</td></tr>
+      <tr><td>GET</td><td>/achievements</td><td>成就清單</td></tr>
+    </table>
+    <p>選 Workers 的理由：</p>
+    <ul>
+      <li><strong>邊緣運算</strong>：API 端點在全球 300+ 個 Cloudflare 節點執行，使用者在哪延遲都低。台灣使用者連到台北節點大約 20ms RTT。</li>
+      <li><strong>零冷啟動</strong>：V8 isolates 不是 container，沒有 Lambda 那種「第一次 request 慢」的問題。</li>
+      <li><strong>Free tier 極大方</strong>：每天 10 萬次 request 免費。我目前的流量用 0.1% 都不到。</li>
+      <li><strong>與 Pages 無縫整合</strong>：同一個 wrangler CLI 管理，同一個 dashboard，同一套 DNS。</li>
+    </ul>
+
+    <h3>資料庫：Cloudflare D1</h3>
+    <p>D1 是 Cloudflare 的 SQLite-on-edge 產品。Schema 只有 5 張表：<code>users</code>、<code>checkins</code>、<code>scores</code>、<code>best_scores</code>、<code>play_counts</code>、<code>achievements</code>。沒有 ORM，直接寫 parameterised SQL：</p>
+    <pre>await env.DB.prepare(
+  'SELECT b.score, u.name, u.avatar FROM best_scores b ' +
+  'JOIN users u ON b.user_id = u.id ' +
+  'WHERE b.game_id = ? ORDER BY b.score DESC LIMIT 20'
+).bind(game).all();</pre>
+    <p>對於遊戲後端這種讀多寫少的場景，SQLite 完全夠用。D1 自動處理備份、複製、版本化遷移。整個資料庫目前佔 57KB，距離 10GB 的 free tier 上限還有一大段。</p>
+
+    <h2>認證（Auth）</h2>
+    <p>不自己管密碼，全靠 <strong>Google Sign-In</strong>。流程：</p>
+    <ol>
+      <li>前端載入 Google Identity Services SDK，渲染「Sign in with Google」按鈕。</li>
+      <li>使用者授權後，Google 回傳一個 ID token（JWT 格式）。</li>
+      <li>前端把 ID token 打到 <code>/auth/google</code>。</li>
+      <li>Worker 呼叫 <code>https://oauth2.googleapis.com/tokeninfo?id_token=...</code> 向 Google 驗證 token 有效，取出 <code>sub</code>（Google user ID）、<code>name</code>、<code>picture</code>。</li>
+      <li>Worker 寫入 D1 <code>users</code> 表（若是新使用者），用自己的 <code>JWT_SECRET</code> 簽一個 30 天期限的 session JWT 回給前端。</li>
+      <li>前端把 session JWT 存 localStorage，之後所有 API 請求 header 帶 <code>Authorization: Bearer &lt;jwt&gt;</code>。</li>
+    </ol>
+    <p><code>JWT_SECRET</code> 用 <code>wrangler secret put</code> 存在 Cloudflare Workers 的加密環境變數，<strong>從不寫進原始碼或 wrangler.toml</strong>。先前踩過一次把 placeholder secret 寫進 wrangler.toml 推到 GitHub 的坑，立刻 rotate 換掉。</p>
+    <p>這套做法的好處是：使用者不用記第二組密碼、我們不用做密碼加密/重設流程、沒有 Credential stuffing 攻擊面。壞處是 100% 依賴 Google — 如果使用者不想用 Google 帳號就完全沒辦法登入。這是個權衡。</p>
+
+    <h2>部署（Deploy）</h2>
+    <p>三個獨立的 Cloudflare Pages / Workers 專案：</p>
+    <table>
+      <tr><th>專案</th><th>網域</th><th>部署指令</th></tr>
+      <tr><td>hao0321-studio</td><td>hao0321.com</td><td><code>wrangler pages deploy . --project-name=hao0321-studio</code></td></tr>
+      <tr><td>hao0321-games</td><td>game.hao0321.com</td><td><code>wrangler pages deploy ./game --project-name=hao0321-games</code></td></tr>
+      <tr><td>hao-games-api</td><td>api.hao0321.com</td><td><code>wrangler deploy</code>（在 game-api/ 內）</td></tr>
+    </table>
+    <p>Pages 是「直接上傳」模式（不是 Git 整合），所以 <code>git push</code> 不會自動部署，要額外手動執行 wrangler。這在實務上有個好處：push 到 <code>main</code> 可以當成「階段性備份」，真正 production 上線要經過一次額外的手動動作，減少誤推的機會。</p>
+
+    <h2>成本實算</h2>
+    <p>目前所有 Cloudflare 服務都在免費額度內：</p>
+    <table>
+      <tr><th>服務</th><th>用量</th><th>免費上限</th></tr>
+      <tr><td>Pages 請求</td><td>每月約 3000</td><td>無上限（fair use）</td></tr>
+      <tr><td>Workers 請求</td><td>每月約 1500</td><td>100 萬 / 月</td></tr>
+      <tr><td>D1 讀取</td><td>每月約 5000</td><td>500 萬 / 月</td></tr>
+      <tr><td>D1 寫入</td><td>每月約 200</td><td>10 萬 / 月</td></tr>
+    </table>
+    <p>唯一付費的是 <strong>hao0321.com 網域年費</strong>（Cloudflare Registrar，約 US$10 / 年 ≈ 台幣 310 / 年 ≈ 每月 26 元）。其他全免費。所以實際月成本 <strong>新台幣 26 元</strong>。當流量增加需要開始付費時，100 萬次 Workers 請求的下一階是 $5 USD — 到那時候再煩惱。</p>
+
+    <h2>一個人怎麼維護</h2>
+    <p>關鍵在於<strong>降低「變更」的摩擦</strong>：</p>
+    <ul>
+      <li>前端完全靜態 → 改檔案直接重新部署，不用跑 CI。</li>
+      <li>後端是單檔 200 行 → 一眼看完整個 API 邏輯，不會迷路。</li>
+      <li>資料庫 schema 簡單 → 大多數功能用 JOIN 就能組出來，不用寫複雜的 query builder。</li>
+      <li>沒有 staging 環境 → 有風險的改動直接在 Cloudflare Pages 的 preview URL（每次部署都會生一個）驗證，OK 了再把 custom domain 切過去。</li>
+      <li>監控靠 Cloudflare 內建的 Workers Analytics — 不需要自己架 Grafana。</li>
+    </ul>
+
+    <h2>不適合這套架構的情境</h2>
+    <p>誠實說這套不是銀彈：</p>
+    <ul>
+      <li><strong>需要 WebSocket / SSE 長連線</strong>：Workers 對 WebSocket 支援有限，要用 Durable Objects 才行，複雜度會立刻上升。</li>
+      <li><strong>需要大量背景任務</strong>：Workers 的 CPU 時間有上限（免費版 10ms 每請求），跑 ML 推理或大型資料處理不合適。</li>
+      <li><strong>團隊人數 &gt; 3</strong>：沒有 CI/CD、staging、代碼審查流程，團隊協作會很痛。</li>
+      <li><strong>嚴格的資料主權需求</strong>：D1 目前是 SQLite 多區複製，不是強一致 transactional DB。</li>
+    </ul>
+
+    <h2>結語</h2>
+    <p>技術選擇的第一性原則應該是「這個決定把問題變簡單了還是變複雜了」。對一個要做作品集、遊戲、內容網站的獨立工作室，Cloudflare 全家桶的答案是「變簡單很多」。省下來的時間用來做遊戲、寫文章、把視覺做細緻，比多花時間調 infra 有意義得多。</p>
+    <p>如果你也在設計小型個人專案或獨立工作室的技術架構，歡迎參考這份地圖。有問題隨時寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a> 聊。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/cloudflare-workers-d1.html">
+          <span class="related-cat">BACKEND</span>
+          用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端
+        </a>
+        <a href="/blog/dodge-master-devlog.html">
+          <span class="related-cat">GAME DEVLOG</span>
+          DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

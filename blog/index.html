@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>部落格 — Hao0321 Studio</title>
+  <meta name="description" content="Hao0321 Studio 技術日誌 — 遊戲開發、AI 工具、Cloudflare 後端、影視 VFX 製作全紀錄。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#00b4ff" />
+  <link rel="canonical" href="https://hao0321.com/blog/" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="部落格 — Hao0321 Studio" />
+  <meta property="og:description" content="技術日誌、開發日誌、工作室幕後花絮。" />
+  <meta property="og:url" content="https://hao0321.com/blog/" />
+  <meta property="og:image" content="https://hao0321.com/og-hero.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --void:#050508;--hull:#0a0a12;--steel:#1a1a2a;
+      --glow-blue:#00b4ff;--glow-cyan:#00e5ff;--glow-white:#e0e8ff;
+      --hud-green:#00ff88;--warn-amber:#ffaa00;
+      --dim:#8888aa;--text:#d0d8ee;
+      --font-head:'Space Grotesk','Noto Sans TC',sans-serif;
+      --font-body:'Inter','Noto Sans TC',sans-serif;
+      --font-mono:'JetBrains Mono',monospace;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--void);color:var(--text);font-family:var(--font-body);line-height:1.8;-webkit-font-smoothing:antialiased;min-height:100vh}
+    ::selection{background:var(--glow-blue);color:var(--void)}
+    a{color:var(--glow-cyan);text-decoration:none;transition:color .2s}
+    a:hover{color:var(--glow-white)}
+
+    .bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background-image:linear-gradient(rgba(0,180,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.025) 1px,transparent 1px);
+      background-size:60px 60px;
+      mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);
+      -webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+    .bg-glow{position:fixed;inset:0;z-index:-1;pointer-events:none;
+      background:radial-gradient(ellipse at 20% 10%,rgba(0,180,255,0.12) 0%,transparent 50%),radial-gradient(ellipse at 80% 80%,rgba(0,229,255,0.08) 0%,transparent 50%)}
+
+    nav.topnav{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,180,255,0.12);padding:18px 5vw;display:flex;justify-content:space-between;align-items:center}
+    .logo{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--glow-white);letter-spacing:0.04em}
+    .logo span{color:var(--glow-blue)}
+    .back-link{font-family:var(--font-head);font-size:0.82rem;color:var(--dim);letter-spacing:0.08em}
+    .back-link:hover{color:var(--glow-cyan)}
+
+    main{max-width:900px;margin:0 auto;padding:72px 5vw 100px}
+
+    .hero-label{font-family:var(--font-head);font-size:0.72rem;font-weight:600;letter-spacing:0.28em;color:var(--glow-blue);text-transform:uppercase;margin-bottom:18px;display:inline-flex;align-items:center;gap:12px}
+    .hero-label::before{content:'';width:36px;height:1px;background:var(--glow-blue)}
+
+    h1{font-family:var(--font-head);font-size:clamp(2rem,5vw,3rem);font-weight:900;color:var(--glow-white);margin-bottom:16px;line-height:1.1;letter-spacing:-0.01em}
+    h1 em{font-style:normal;background:linear-gradient(135deg,var(--glow-blue),var(--glow-cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .lede{font-size:1.02rem;color:var(--text);margin-bottom:48px;max-width:680px;line-height:1.75}
+
+    .posts{display:flex;flex-direction:column;gap:18px;margin-bottom:48px}
+    .post-card{
+      display:block;background:linear-gradient(180deg,rgba(26,26,42,0.55),rgba(10,10,18,0.7));
+      border:1px solid rgba(0,180,255,0.14);border-radius:14px;
+      padding:24px 28px;transition:all .25s;position:relative;overflow:hidden;
+    }
+    .post-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--glow-blue),var(--glow-cyan));opacity:0;transition:opacity .25s}
+    .post-card:hover{transform:translateX(3px);border-color:rgba(0,229,255,0.4);box-shadow:0 10px 28px rgba(0,180,255,0.12)}
+    .post-card:hover::before{opacity:1}
+    .post-meta{display:flex;gap:14px;font-family:var(--font-mono);font-size:0.72rem;color:var(--dim);margin-bottom:10px;letter-spacing:0.04em}
+    .post-category{color:var(--glow-blue);font-weight:700}
+    .post-title{font-family:var(--font-head);font-weight:700;font-size:1.15rem;color:var(--glow-white);margin-bottom:8px;line-height:1.35}
+    .post-card:hover .post-title{color:var(--glow-cyan)}
+    .post-excerpt{font-size:0.88rem;color:var(--text);line-height:1.65;margin-bottom:12px}
+    .post-tags{display:flex;gap:8px;flex-wrap:wrap}
+    .post-tag{font-family:var(--font-mono);font-size:0.66rem;color:var(--dim);background:rgba(0,180,255,0.06);border:1px solid rgba(0,180,255,0.15);padding:2px 8px;border-radius:100px;letter-spacing:0.04em}
+
+    .coming-soon{opacity:0.45;pointer-events:none}
+    .coming-soon .post-title::after{content:' · WIP';color:var(--warn-amber);font-size:0.72rem;font-weight:600;letter-spacing:0.08em}
+
+    .cta-box{background:linear-gradient(135deg,rgba(0,180,255,0.08),rgba(0,229,255,0.03));border:1px solid rgba(0,229,255,0.2);border-radius:14px;padding:28px;text-align:center}
+    .cta-box h3{font-family:var(--font-head);font-weight:700;color:var(--glow-white);font-size:1rem;margin-bottom:10px}
+    .cta-box p{font-size:0.88rem;color:var(--text);margin-bottom:16px}
+    .cta-btn{display:inline-block;padding:10px 22px;background:linear-gradient(135deg,var(--glow-blue),var(--glow-cyan));color:var(--void);font-family:var(--font-head);font-weight:700;font-size:0.82rem;border-radius:100px;letter-spacing:0.06em;transition:transform .2s}
+    .cta-btn:hover{transform:translateY(-2px);color:var(--void)}
+
+    footer{border-top:1px solid rgba(0,180,255,0.1);padding:36px 5vw;text-align:center;font-size:0.78rem;color:var(--dim)}
+    footer .links{margin-bottom:12px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
+    footer a{color:var(--dim)}
+    footer a:hover{color:var(--glow-cyan)}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
+
+  <nav class="topnav">
+    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
+    <a href="/" class="back-link">← 回首頁</a>
+  </nav>
+
+  <main>
+    <div class="hero-label">JOURNAL / BLOG</div>
+    <h1>技術<em>日誌</em></h1>
+    <p class="lede">這裡記錄工作室實際踩過的坑 — 從用 Cloudflare Workers + D1 打造 1 人可營運的後端、到 React + Canvas 寫 14 款瀏覽器遊戲，再到 AI 協作開發的實戰紀錄。所有內容都來自真實專案，不是抄來的教學文。</p>
+
+    <div class="posts">
+      <a href="/blog/tech-stack.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-category">ENGINEERING</span>
+          <span>2026·04·21</span>
+          <span>約 8 分鐘</span>
+        </div>
+        <div class="post-title">Hao0321 Studio 的技術堆疊：1 人工作室的全端架構</div>
+        <div class="post-excerpt">從前端（Vanilla JS + React via Babel）到後端（Cloudflare Workers + D1）到認證（Google OAuth + JWT）— 月成本不到台幣 200 元、全球邊緣延遲 &lt; 100ms、一個人可維護的完整架構全解析。</div>
+        <div class="post-tags">
+          <span class="post-tag">Cloudflare</span>
+          <span class="post-tag">React</span>
+          <span class="post-tag">架構設計</span>
+          <span class="post-tag">成本控制</span>
+        </div>
+      </a>
+
+      <a href="/blog/dodge-master-devlog.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-category">GAME DEVLOG</span>
+          <span>2026·04·21</span>
+          <span>約 10 分鐘</span>
+        </div>
+        <div class="post-title">DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲</div>
+        <div class="post-excerpt">從零打造一款支援觸控 + 鍵盤、有角色系統、卡稀有度、金幣商店的街機閃避遊戲。拆解物件池、碰撞偵測、AI 廣告觸點（revive / 2x coins）整合、以及為什麼我用 HTML iframe 而不是 React 元件。</div>
+        <div class="post-tags">
+          <span class="post-tag">Canvas</span>
+          <span class="post-tag">遊戲開發</span>
+          <span class="post-tag">AdSense</span>
+          <span class="post-tag">賽博龐克</span>
+        </div>
+      </a>
+
+      <a href="/blog/cloudflare-workers-d1.html" class="post-card">
+        <div class="post-meta">
+          <span class="post-category">BACKEND</span>
+          <span>2026·04·21</span>
+          <span>約 12 分鐘</span>
+        </div>
+        <div class="post-title">用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端</div>
+        <div class="post-excerpt">14 款遊戲共用的登入、簽到、排行榜、金幣、成就系統怎麼設計？JWT 簽章、D1 schema、Google OAuth 驗證、API 速率限制全公開，並附完整 worker.js 架構解析。</div>
+        <div class="post-tags">
+          <span class="post-tag">Cloudflare Workers</span>
+          <span class="post-tag">D1</span>
+          <span class="post-tag">JWT</span>
+          <span class="post-tag">OAuth</span>
+        </div>
+      </a>
+
+      <div class="post-card coming-soon">
+        <div class="post-meta">
+          <span class="post-category">GAME DEVLOG</span>
+          <span>即將推出</span>
+        </div>
+        <div class="post-title">Chess Master — 8 種棋類合一的 React 架構設計</div>
+        <div class="post-excerpt">象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日式麻將、台式麻將八合一。共用元件怎麼抽取、AI 怎麼分層、資料結構怎麼統一。</div>
+      </div>
+
+      <div class="post-card coming-soon">
+        <div class="post-meta">
+          <span class="post-category">DESIGN</span>
+          <span>即將推出</span>
+        </div>
+        <div class="post-title">為什麼我做了一個台灣版大富翁 — 設計決策全記錄</div>
+        <div class="post-excerpt">從地名選擇（台北 101、九份、阿里山）、事件卡文案（颱風天、股市大漲），到破產邏輯的 bug 追查。</div>
+      </div>
+
+      <div class="post-card coming-soon">
+        <div class="post-meta">
+          <span class="post-category">AI</span>
+          <span>即將推出</span>
+        </div>
+        <div class="post-title">AI 協作開發：Claude 怎麼幫我寫 14 款遊戲</div>
+        <div class="post-excerpt">工作室日常使用 AI pair programming 的實戰經驗 — 什麼可以交給 AI、什麼要自己把關、怎麼避免 AI 生成的隱形 bug。</div>
+      </div>
+    </div>
+
+    <div class="cta-box">
+      <h3>想親自玩看看？</h3>
+      <p>工作室所有瀏覽器小遊戲都是免費的，不需註冊就能開始。</p>
+      <a href="https://game.hao0321.com/" class="cta-btn">前往遊戲大廳 →</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

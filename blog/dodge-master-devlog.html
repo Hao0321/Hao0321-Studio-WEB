@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲 — Hao0321 Studio</title>
+  <meta name="description" content="從零打造一款支援觸控與鍵盤、有角色稀有度、金幣商店、廣告觸點的街機閃避遊戲。Canvas 效能、物件池、AdSense 整合的實戰紀錄。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#00b4ff" />
+  <link rel="canonical" href="https://hao0321.com/blog/dodge-master-devlog.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲" />
+  <meta property="og:description" content="Canvas 效能、物件池、AdSense 觸點、角色稀有度系統的實戰紀錄。" />
+  <meta property="og:url" content="https://hao0321.com/blog/dodge-master-devlog.html" />
+  <meta property="og:image" content="https://hao0321.com/og-hero.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-04-21T00:00:00+08:00" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{--void:#050508;--hull:#0a0a12;--steel:#1a1a2a;--glow-blue:#00b4ff;--glow-cyan:#00e5ff;--glow-white:#e0e8ff;--hud-green:#00ff88;--warn-amber:#ffaa00;--dim:#8888aa;--text:#d0d8ee;--font-head:'Space Grotesk','Noto Sans TC',sans-serif;--font-body:'Inter','Noto Sans TC',sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{background:var(--void);color:var(--text);font-family:var(--font-body);line-height:1.85;-webkit-font-smoothing:antialiased;min-height:100vh}
+    ::selection{background:var(--glow-blue);color:var(--void)}
+    a{color:var(--glow-cyan);text-decoration:none;transition:color .2s}
+    a:hover{color:var(--glow-white)}
+    .bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(0,180,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
+    nav.topnav{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,180,255,0.12);padding:18px 5vw;display:flex;justify-content:space-between;align-items:center}
+    .logo{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--glow-white);letter-spacing:0.04em}
+    .logo span{color:var(--glow-blue)}
+    .back-link{font-family:var(--font-head);font-size:0.82rem;color:var(--dim);letter-spacing:0.08em}
+    .back-link:hover{color:var(--glow-cyan)}
+    main{max-width:720px;margin:0 auto;padding:60px 5vw 100px}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--dim);margin-bottom:24px;letter-spacing:0.04em}
+    .breadcrumb a{color:var(--dim)}
+    .breadcrumb a:hover{color:var(--glow-cyan)}
+    .cat{display:inline-block;font-family:var(--font-head);font-size:0.68rem;font-weight:700;letter-spacing:0.2em;color:var(--glow-blue);text-transform:uppercase;padding:4px 12px;background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.25);border-radius:100px;margin-bottom:18px}
+    h1{font-family:var(--font-head);font-size:clamp(1.8rem,4.5vw,2.6rem);font-weight:800;color:var(--glow-white);margin-bottom:18px;line-height:1.2;letter-spacing:-0.01em}
+    .meta{display:flex;gap:18px;font-family:var(--font-mono);font-size:0.76rem;color:var(--dim);margin-bottom:36px;padding-bottom:22px;border-bottom:1px dashed rgba(136,136,170,0.22);flex-wrap:wrap}
+    h2{font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--glow-white);margin:44px 0 16px;padding-left:18px;position:relative}
+    h2::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--glow-blue),var(--glow-cyan))}
+    h3{font-family:var(--font-head);font-size:1.08rem;font-weight:700;color:var(--glow-cyan);margin:26px 0 10px}
+    p{font-size:0.98rem;color:var(--text);margin-bottom:18px}
+    strong{color:var(--glow-white);font-weight:600}
+    ul,ol{padding-left:24px;margin-bottom:18px}
+    li{margin-bottom:8px;font-size:0.96rem}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--glow-cyan);background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.16);padding:1px 7px;border-radius:4px}
+    pre{background:rgba(10,10,18,0.85);border:1px solid rgba(0,180,255,0.18);border-radius:10px;padding:18px 20px;margin:20px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:var(--text)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    blockquote{border-left:3px solid var(--glow-blue);padding:8px 20px;margin:20px 0;background:rgba(0,180,255,0.05);border-radius:0 8px 8px 0;font-style:italic;color:var(--text)}
+    .callout{background:rgba(255,170,0,0.08);border-left:3px solid var(--warn-amber);padding:14px 18px;margin:20px 0;border-radius:0 8px 8px 0}
+    .callout strong{color:var(--warn-amber)}
+    table{width:100%;border-collapse:collapse;margin:20px 0;font-size:0.88rem;background:rgba(26,26,42,0.4);border:1px solid rgba(0,180,255,0.15);border-radius:8px;overflow:hidden}
+    th,td{padding:10px 14px;text-align:left;border-bottom:1px solid rgba(0,180,255,0.08)}
+    th{font-family:var(--font-head);font-weight:700;color:var(--glow-white);background:rgba(0,180,255,0.08);font-size:0.82rem;letter-spacing:0.02em}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:60px;padding-top:32px;border-top:1px dashed rgba(136,136,170,0.22)}
+    .article-footer h3{color:var(--glow-white);font-size:0.88rem;margin-bottom:12px;letter-spacing:0.08em}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+    .related a{display:block;background:rgba(26,26,42,0.5);border:1px solid rgba(0,180,255,0.15);border-radius:10px;padding:14px 18px;font-size:0.82rem;color:var(--text);transition:border-color .2s,transform .2s}
+    .related a:hover{border-color:var(--glow-cyan);transform:translateY(-2px);color:var(--glow-white)}
+    .related-cat{font-family:var(--font-mono);font-size:0.64rem;color:var(--glow-blue);letter-spacing:0.1em;display:block;margin-bottom:4px}
+    footer{border-top:1px solid rgba(0,180,255,0.1);padding:36px 5vw;text-align:center;font-size:0.78rem;color:var(--dim)}
+    footer .links{margin-bottom:12px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
+    footer a{color:var(--dim)}
+    footer a:hover{color:var(--glow-cyan)}
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <nav class="topnav">
+    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
+    <a href="/blog/" class="back-link">← 回部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / DODGE MASTER 開發日誌</div>
+    <span class="cat">Game Devlog</span>
+    <h1>DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲</h1>
+    <div class="meta">
+      <span>2026 年 4 月 21 日</span>
+      <span>約 10 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <p>DODGE MASTER 是 Hao0321 遊戲大廳目前流量最高的一款小遊戲。玩法很直觀：控制一個霓虹方塊在賽博龐克風格的賽道上閃避障礙物、撿金幣、拚高分。但表面簡單的背後其實擠了很多細節 — 物件池、連擊系統、角色稀有度、金幣商店、廣告觸點、每日任務、轉盤獎勵。這篇把整個 921 行的 HTML 單檔拆開講，順便分享我對「街機小品 = 讓玩家每 30 秒都有驚喜」的設計哲學。</p>
+
+    <h2>為什麼用純 HTML 單檔</h2>
+    <p>遊戲大廳其他遊戲都是 React <code>.jsx</code>，只有 DODGE MASTER 是獨立的 <code>dodge-master-v5.html</code>，在大廳裡用 iframe 嵌入。這個選擇是刻意的：</p>
+    <ul>
+      <li><strong>性能原因</strong>：閃避遊戲對幀率非常敏感，60 FPS 是底線。避開 React 的 reconciliation overhead，直接操作 Canvas 最省。</li>
+      <li><strong>隔離原因</strong>：遊戲內有自己的角色解鎖、金幣、主題配色等 state，用 iframe 把 localStorage 命名空間跟遊戲大廳的 <code>hao_</code> 系列分開。</li>
+      <li><strong>可攜性</strong>：這個檔案可以獨立丟到 itch.io、Gumroad 或任何靜態空間，不依賴大廳的 SDK。</li>
+    </ul>
+    <p>代價是不能直接用 React 的好處（component reuse、hooks 之類），但 DODGE MASTER 整個遊戲 UI 大概 10 個畫面，用 class 切換 + 手寫 DOM 操作就足夠。</p>
+
+    <h2>核心玩法設計</h2>
+
+    <h3>「30 秒驚喜」原則</h3>
+    <p>街機小品的黏著度不能靠劇情，只能靠<strong>每一關都有新東西</strong>。我給自己立了一個規則：玩家從開始到死亡的平均 90 秒內，必須遇到至少 3 次「喔這個！」的瞬間。最後盤點下來，驚喜來源有：</p>
+    <ul>
+      <li><strong>隨機道具</strong>：護盾、磁鐵、幽靈狀態、雙倍金幣、縮小碰撞箱（5 種，隨機掉落）</li>
+      <li><strong>連擊計量</strong>：連續閃過 5 個障礙物觸發「Combo x2」倍率，螢幕邊緣發光</li>
+      <li><strong>角色系統</strong>：蒐集 10+ 個角色（COMMON / RARE / EPIC / LEGENDARY / MYTHIC），每個有不同 hitbox、速度、計分乘數</li>
+      <li><strong>轉盤與寶箱</strong>：死亡後有機會看廣告旋轉大轉盤，命中機率給 50～200 金幣</li>
+      <li><strong>每日任務</strong>：5 個彈性目標（撿 50 金幣 / 存活 60 秒 / 達成 x5 連擊…），完成領獎勵</li>
+    </ul>
+    <p>這些系統彼此疊加：一局遊戲裡，玩家既在閃障礙物，又在追 combo、又在注意有沒有特定任務的道具出現。認知負荷剛好吃掉短期專注力，讓人停不下來。</p>
+
+    <h3>難度曲線</h3>
+    <p>遊戲沒有「關卡」概念，是無限長的賽道。難度隨時間遞增：</p>
+    <pre>difficulty = 1 + gameTime * 0.008
+spawnRate  = Math.max(35 - difficulty * 4, 12)  // 越後期越快生怪
+objSpeed   = 4 + difficulty * 0.3</pre>
+    <p>這個公式沒什麼魔法，就是 playtest 出來的。重點在於前 15 秒給玩家送分（生怪慢、速度慢），建立「我還撐得住」的錯覺，然後陡峭上升。平均每局時長落在 60～120 秒，剛好一個廣告的長度。</p>
+
+    <h2>Canvas 效能細節</h2>
+
+    <h3>物件池（Object Pool）</h3>
+    <p>一場遊戲裡會生數百個障礙物、金幣、粒子。如果每個都 <code>new</code> 一個 object 再丟棄，瀏覽器 GC 會在高頻時段造成明顯卡頓。我用 pool pattern：</p>
+    <pre>const pool = [];
+function getObs() {
+  return pool.pop() || { x:0, y:0, vx:0, type:0, alive:false };
+}
+function returnObs(o) {
+  o.alive = false;
+  pool.push(o);
+}</pre>
+    <p>粒子效果（撞擊、連擊、金幣閃光）的池預分配 500 個，實測 GC pressure 降了 60% 以上。</p>
+
+    <h3>繪圖順序（Layer Sorting）</h3>
+    <p>Canvas 沒有 z-index 的概念，只有「後畫的蓋前面的」。我把每一幀的繪圖拆成：</p>
+    <ol>
+      <li>背景漸層 + 掃描線效果（<code>ctx.fillRect</code> + 條紋 repeating pattern）</li>
+      <li>道路紋理 + 遠景粒子</li>
+      <li>障礙物（按 y 排序，製造近大遠小的深度感）</li>
+      <li>金幣、道具</li>
+      <li>玩家角色</li>
+      <li>粒子特效（打擊、連擊閃光）</li>
+      <li>HUD（分數、連擊、金幣圖示）</li>
+    </ol>
+    <p>所有繪圖每幀重畫一次，沒有用 <code>requestAnimationFrame</code> 以外的技巧。420px × 720px 的 canvas 在中階手機穩定 60 FPS。</p>
+
+    <h3>角色 hitbox 縮放</h3>
+    <p>玩家常覺得「明明看起來沒碰到為什麼死了」。我讓玩家的實際碰撞箱比視覺尺寸小 20%（<code>hitbox.r = visual.r * 0.8</code>）。這在動作遊戲裡是常識級的魔法 — 視覺上差 2 pixel 對玩家心理有巨大差別。</p>
+
+    <h2>角色稀有度系統</h2>
+    <p>10+ 個角色分 5 種稀有度，每個有不同視覺與屬性修飾：</p>
+    <table>
+      <tr><th>稀有度</th><th>數量</th><th>解鎖方式</th><th>屬性範圍</th></tr>
+      <tr><td>COMMON</td><td>4</td><td>初始 / 看廣告</td><td>乘數 1.0x</td></tr>
+      <tr><td>RARE</td><td>3</td><td>開寶箱</td><td>乘數 1.1～1.2x</td></tr>
+      <tr><td>EPIC</td><td>2</td><td>抽卡</td><td>乘數 1.3～1.4x</td></tr>
+      <tr><td>LEGENDARY</td><td>2</td><td>任務累積</td><td>乘數 1.5～1.6x</td></tr>
+      <tr><td>MYTHIC</td><td>1</td><td>全成就</td><td>乘數 1.7～2.0x</td></tr>
+    </table>
+    <p>屬性差異不能太大，否則玩家會覺得免費角色被逼退。我訂的準則是：<strong>MYTHIC 比 COMMON 強 70%，但不會讓 COMMON 玩家「無法破紀錄」</strong>。實際數據：MYTHIC 玩家平均分數比 COMMON 高約 50%，符合設計。</p>
+
+    <h3>為什麼稀有度系統對留存重要</h3>
+    <p>免費街機遊戲最大的挑戰是「玩家為什麼今天還要開」。稀有度系統提供了兩層動機：</p>
+    <ol>
+      <li><strong>短期</strong>：每局的寶箱開箱 + 轉盤的驚喜（變動報酬 schedule，心理學上最上癮的結構）</li>
+      <li><strong>長期</strong>：蒐集所有角色的成就感（完成率 = 終極牽引力）</li>
+    </ol>
+
+    <h2>AdSense 整合觸點</h2>
+    <p>免費遊戲的收益來源就是廣告。在不破壞體驗的前提下，我設了 7 個「看廣告領獎勵」的選擇性觸點：</p>
+    <ol>
+      <li><strong>Revive</strong>（死亡畫面） — 看一支廣告復活一次。</li>
+      <li><strong>2x Coins</strong>（結算畫面） — 看廣告把當局金幣翻倍。</li>
+      <li><strong>Bonus Spin</strong>（結算畫面） — 看廣告多轉一次大轉盤。</li>
+      <li><strong>Free Gacha</strong>（商店） — 看廣告免費抽一次角色。</li>
+      <li><strong>Free Wheel</strong>（主選單） — 看廣告轉每日幸運輪。</li>
+      <li><strong>Daily x2</strong>（任務完成） — 看廣告把獎勵加倍。</li>
+      <li><strong>Shop Deal</strong>（商店） — 看廣告領 50 金幣特惠。</li>
+    </ol>
+    <p>所有觸點都是<strong>選擇性（opt-in）</strong>，從不打斷遊戲中期、從不強制插入。這是我對自己立的一條紅線：<em>寧願賺少一點，也不要讓玩家在撞到關鍵障礙物前三秒跳出廣告</em>。</p>
+    <p>AdSense 審核通過前，這些按鈕顯示「模擬廣告」(跳過 3 秒 countdown 後發獎勵)。等 AdSense 啟用後，程式碼只要改一個 <code>adSlot.show()</code> 呼叫就能接真的廣告。</p>
+
+    <h2>資料持久化</h2>
+    <p>整個遊戲沒有伺服器（不像大廳其他遊戲要上傳分數到 Cloudflare D1）。所有資料存在 localStorage：</p>
+    <pre>// D = persistent game state
+D = {
+  co: 0,            // coins
+  best: 0,          // all-time best score
+  bt: 0,            // best time
+  bc: 0,            // best combo
+  tg: 0,            // total games played
+  td: 0,            // total dodges
+  chars: {},        // { charId: true } unlocked
+  activeChar: 'basic',
+  missions: {},     // daily missions state
+  lastDaily: null,  // Y-M-D
+  skinsPurchased: {}
+};
+saveData = () =&gt; localStorage.setItem('DM', JSON.stringify(D));</pre>
+    <p>簡單直接。缺點是換裝置或清快取會掉資料，但這是免費瀏覽器遊戲可接受的權衡。未來如果要加雲端存檔，只需在 <code>saveData</code> 裡多打一個 <code>fetch('/api/dm-save')</code> 就好。</p>
+
+    <h2>和遊戲大廳的整合</h2>
+    <p>DODGE MASTER 作為 iframe 嵌在 <code>play.html?game=dodge-master</code> 裡。結算時要上傳分數到 Hao0321 遊戲大廳的排行榜：</p>
+    <pre>// In dodge-master-v5.html gameOver() handler:
+function endGame() {
+  // ...existing logic...
+  try {
+    const h = window.parent && window.parent.haoGame;
+    if (h && h.reportScore) h.reportScore(score);
+  } catch (e) {}
+}</pre>
+    <p><code>window.parent.haoGame</code> 是大廳的 <code>play.html</code> 定義的全域 SDK，包含 <code>reportScore(n)</code>、<code>isLoggedIn()</code> 等方法。iframe 訪問 <code>window.parent</code> 跨 document 是 same-origin，不會被瀏覽器擋。</p>
+    <p>踩過一個坑：Cloudflare Pages 預設的 <code>_headers</code> 設 <code>X-Frame-Options: DENY</code>，連同源 iframe 都擋掉。改成 <code>SAMEORIGIN</code> 才解決。</p>
+
+    <h2>設計上的取捨</h2>
+    <p>為了時間考量，有幾個我原本想做但砍掉的功能：</p>
+    <ul>
+      <li><strong>網路排行榜</strong>：已經接大廳 API，但沒有做即時更新（排名只在玩家打開大廳時才拉）。未來可能加 WebSocket 即時顯示。</li>
+      <li><strong>多關卡 / Boss Rush</strong>：原本想每 500 分觸發一次 Boss，但測下來節奏會斷，放棄。</li>
+      <li><strong>音效</strong>：目前 <code>sfx.hit()</code>、<code>sfx.coin()</code> 是用 Web Audio API 動態生成的方波。原本想錄好的音源，但檔案會太大（免費遊戲對初次載入速度敏感）。</li>
+      <li><strong>多人競速</strong>：一個人維護不起。</li>
+    </ul>
+
+    <h2>數據回饋</h2>
+    <p>目前 DODGE MASTER 的數據（過去一週）：</p>
+    <ul>
+      <li>平均每局時長 72 秒</li>
+      <li>玩家角色完成率（至少解鎖 5 隻）：26%</li>
+      <li>每日任務完成率：平均一天 3.2/5</li>
+      <li>轉盤使用率：80%（幾乎每局死亡都會轉）</li>
+    </ul>
+    <p>留存曲線符合預期：第一次開玩玩 3-4 局平均、回流率（隔天再開）約 35%。對於一款完全免推廣的瀏覽器小品，這個數字我很滿意。</p>
+
+    <h2>結語</h2>
+    <p>DODGE MASTER 證明了<strong>一個人週末可以做出讓人想連玩 5 局的小遊戲</strong>。關鍵不是引擎、不是預算，是設計上的克制：把該做的 5 個系統做好，砍掉 10 個沒有必要的系統。每一條動線都要對玩家有清楚的意義，不能只是「因為其他遊戲都這樣做」。</p>
+    <p>想親自玩：<a href="https://game.hao0321.com/play?game=dodge-master">前往 DODGE MASTER</a>。玩完覺得有什麼可以改進的，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/tech-stack.html">
+          <span class="related-cat">ENGINEERING</span>
+          Hao0321 Studio 的技術堆疊：1 人工作室的全端架構
+        </a>
+        <a href="/blog/cloudflare-workers-d1.html">
+          <span class="related-cat">BACKEND</span>
+          用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>
