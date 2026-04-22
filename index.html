@@ -2561,14 +2561,14 @@
     var seq02 = Sequence('bgCanvas02', 'bg-frames-02/frame_', 61);
     var seq01 = Sequence('bgCanvas01', 'bg-frames-01/frame_', 61);
 
-    // Progress breakpoints within the combined pin range
-    var FRAME02_END = 0.38;
-    var SWITCH_AT = 0.45;
-    var SWITCH_BACK = 0.40;
-    var FRAME01_START = 0.45;
-    var FRAME01_END = 0.78;
-    var OVERLAY_START = 0.62;
-    var OVERLAY_REMOVE_BEFORE = 0.55;
+    // Progress breakpoints within the combined pin range (tightened for +=180% pin)
+    var FRAME02_END = 0.35;
+    var SWITCH_AT = 0.42;
+    var SWITCH_BACK = 0.38;
+    var FRAME01_START = 0.42;
+    var FRAME01_END = 0.72;
+    var OVERLAY_START = 0.58;
+    var OVERLAY_REMOVE_BEFORE = 0.52;
 
     // HUD sector names (for dynamic swap based on overlay state)
     var baseSector = {
@@ -2590,9 +2590,10 @@
       ScrollTrigger.create({
         trigger: section,
         start: 'top top',
-        end: '+=280%',
+        end: '+=180%',
         pin: true,
         scrub: 0.5,
+        anticipatePin: 1,
         onUpdate: function(self) {
           var p = self.progress;
 
