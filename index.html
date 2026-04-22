@@ -583,8 +583,8 @@
       opacity: 0.55;
     }
 
-    /* ===== BACKGROUND SCROLL SEQUENCES (cinematic transitions) ===== */
-    .bg-sequence {
+    /* ===== COMBINED BACKGROUND CINEMATIC ===== */
+    .bg-combined {
       position: relative;
       width: 100%;
       height: 100vh;
@@ -592,23 +592,189 @@
       background: var(--void);
       z-index: 1;
     }
-    .bg-sequence-stage {
+    .bg-sequence-stage { position: absolute; inset: 0; }
+    .bg-canvas {
       position: absolute;
       inset: 0;
-    }
-    .bg-sequence canvas {
       display: block;
       width: 100%;
       height: 100%;
+      transition: opacity 0.35s ease;
     }
-    .bg-sequence::after {
+    .bg-canvas--02 { opacity: 1; z-index: 1; }
+    .bg-canvas--01 { opacity: 0; z-index: 1; }
+    .bg-combined.phase-bg01 .bg-canvas--02 { opacity: 0; }
+    .bg-combined.phase-bg01 .bg-canvas--01 { opacity: 1; }
+    /* Subtle top fade from hero, bottom fade into next section */
+    .bg-combined::before {
+      content: '';
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 12%;
+      background: linear-gradient(180deg, rgba(5,5,8,0.45) 0%, transparent 100%);
+      pointer-events: none;
+      z-index: 3;
+    }
+    .bg-combined::after {
+      content: '';
+      position: absolute;
+      inset: auto 0 0 0;
+      height: 12%;
+      background: linear-gradient(180deg, transparent 0%, rgba(5,5,8,0.55) 100%);
+      pointer-events: none;
+      z-index: 3;
+    }
+    .works-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 3;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .works-overlay.revealed { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .works-container {
+      width: 100%;
+      max-width: 1240px;
+      padding: 0 clamp(20px, 5vw, 64px);
+    }
+    .works-header { margin-bottom: clamp(26px, 5vh, 48px); }
+    .works-header .section-label {
+      margin-bottom: 12px;
+    }
+    .works-header .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 900;
+      color: var(--glow-white);
+      letter-spacing: -0.01em;
+      line-height: 1.05;
+      margin-bottom: 12px;
+      text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+    }
+    .works-header .section-desc {
+      color: var(--dim);
+      font-size: 0.98rem;
+      max-width: 560px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    }
+    .works-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+    .work-tile {
+      position: relative;
+      display: block;
+      padding: 24px 26px 28px;
+      background: linear-gradient(145deg, rgba(10,10,18,0.65), rgba(26,26,42,0.45));
+      border: 1px solid rgba(0,180,255,0.22);
+      border-radius: 14px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--glow-white);
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(.34,1.56,.64,1);
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(24px) scale(0.98);
+    }
+    .works-overlay.revealed .work-tile { opacity: 1; transform: translateY(0) scale(1); }
+    .works-overlay.revealed .work-tile:nth-child(1) { transition-delay: 0.05s; }
+    .works-overlay.revealed .work-tile:nth-child(2) { transition-delay: 0.15s; }
+    .works-overlay.revealed .work-tile:nth-child(3) { transition-delay: 0.25s; }
+    .work-tile::before {
       content: '';
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(180deg, rgba(5,5,8,0.25) 0%, transparent 20%, transparent 80%, rgba(5,5,8,0.5) 100%);
+      background: linear-gradient(135deg, rgba(0,180,255,0.08) 0%, transparent 50%);
       pointer-events: none;
-      z-index: 2;
+      opacity: 0.7;
+    }
+    .work-tile:hover {
+      transform: translateY(-4px) scale(1.01);
+      border-color: var(--glow-cyan);
+      box-shadow: 0 12px 36px rgba(0,180,255,0.25), 0 0 0 1px rgba(0,229,255,0.3) inset;
+    }
+    .work-tile-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .work-tile-idx {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      color: var(--glow-blue);
+      opacity: 0.8;
+    }
+    .work-tile-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      padding: 3px 10px;
+      border-radius: 100px;
+    }
+    .work-tile-status.active {
+      color: var(--hud-green);
+      background: rgba(0,255,136,0.1);
+      border: 1px solid rgba(0,255,136,0.3);
+    }
+    .work-tile-status.soon {
+      color: var(--warn-amber);
+      background: rgba(255,170,0,0.08);
+      border: 1px solid rgba(255,170,0,0.28);
+    }
+    .pulse-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--hud-green);
+      box-shadow: 0 0 8px var(--hud-green);
+      animation: pulse-dot 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 0.5; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+    .work-tile h3 {
+      font-family: var(--font-head);
+      font-size: 1.12rem;
+      font-weight: 700;
+      color: var(--glow-white);
+      margin-bottom: 8px;
+      line-height: 1.3;
+      position: relative;
+    }
+    .work-tile-cat {
+      font-size: 0.82rem;
+      color: var(--dim);
+      position: relative;
+    }
+    .work-tile-arrow {
+      position: absolute;
+      right: 22px;
+      bottom: 22px;
+      color: var(--glow-cyan);
+      font-size: 1.2rem;
+      transition: transform 0.3s;
+    }
+    .work-tile:hover .work-tile-arrow { transform: translateX(4px); }
+    .work-tile--soon { cursor: default; }
+    .work-tile--soon:hover { transform: translateY(-2px) scale(1.005); }
+
+    @media (max-width: 768px) {
+      .works-grid { grid-template-columns: 1fr; gap: 14px; }
+      .work-tile { padding: 20px 22px 24px; }
+      .works-header .section-title { font-size: clamp(1.6rem, 6vw, 2.2rem); }
     }
     .hero-video {
       position: absolute;
@@ -1444,94 +1610,50 @@
     <div class="hero-scroll" data-i18n="hero_scroll">SCROLL TO EXPLORE</div>
   </section>
 
-  <!-- ===== CINEMATIC A — FOUR DOMAINS (Background_02 sequence, 61 frames) ===== -->
-  <section class="bg-sequence" id="bgSeq02">
+  <!-- ===== COMBINED CINEMATIC SECTOR — Bg02 (core domains) + Bg01 (mission log) stitched into one long pin ===== -->
+  <section class="bg-combined" id="bgCombined" data-sector="02" data-sector-name-zh="核心領域" data-sector-name-en="Core" data-sector-name-ja="核心">
     <div class="bg-sequence-stage">
-      <canvas id="bgCanvas02" aria-label="Four core domains cinematic"></canvas>
+      <canvas id="bgCanvas02" class="bg-canvas bg-canvas--02" aria-label="Four core domains cinematic"></canvas>
+      <canvas id="bgCanvas01" class="bg-canvas bg-canvas--01" aria-label="Mission log cinematic"></canvas>
     </div>
-  </section>
-
-  <!-- ===== CINEMATIC B — STAR CROSSING (Background_01 sequence, 60 frames) ===== -->
-  <section class="bg-sequence" id="bgSeq01">
-    <div class="bg-sequence-stage">
-      <canvas id="bgCanvas01" aria-label="Star crossing cinematic"></canvas>
-    </div>
-  </section>
-
-  <!-- ===== SECTOR 02 — BRIDGE (Services) ===== -->
-  <section id="services" data-sector="02" data-sector-name-zh="艦橋總覽" data-sector-name-en="Bridge" data-sector-name-ja="艦橋">
-    <div class="container">
-      <div class="reveal">
-        <p class="section-label">SECTOR 02 — <span data-i18n="sec_services_label">艦橋總覽</span></p>
-        <h2 class="section-title" data-i18n="sec_services_title">四大核心領域</h2>
-        <p class="section-desc" data-i18n="sec_services_desc">跨足 AI、遊戲、影視與音樂，以多元視角創造獨特的數位作品。</p>
-      </div>
-      <div class="services-grid">
-        <div class="svc-panel glass-card scanlines reveal">
-          <p class="svc-num">PANEL 01</p>
-          <h3 data-i18n="svc_ai_title">AI 教學</h3>
-          <p data-i18n="svc_ai_desc">從基礎到實戰，以清晰的方式解構 AI 技術，幫助學習者快速上手。</p>
-          <div class="svc-tags"><span class="svc-tag">Vibe Coding</span><span class="svc-tag" data-i18n="svc_ai_tag2">創意應用</span><span class="svc-tag" data-i18n="svc_ai_tag3">AI 工作流</span></div>
+    <div class="works-overlay" id="worksOverlay">
+      <div class="works-container">
+        <div class="works-header">
+          <p class="section-label">SECTOR 03 — <span data-i18n="sec_works_label">任務紀錄</span></p>
+          <h2 class="section-title" data-i18n="sec_works_title">精選作品</h2>
+          <p class="section-desc" data-i18n="sec_works_desc">每個專案都傾注了熱情與專業。</p>
         </div>
-        <div class="svc-panel glass-card scanlines reveal reveal-d1">
-          <p class="svc-num">PANEL 02</p>
-          <h3 data-i18n="svc_game_title">遊戲開發</h3>
-          <p data-i18n="svc_game_desc">從獨立遊戲到商業專案，涵蓋設計、開發到發布的完整流程。</p>
-          <div class="svc-tags"><span class="svc-tag">Unity</span><span class="svc-tag">Unreal</span><span class="svc-tag">Game Design</span></div>
-        </div>
-        <div class="svc-panel glass-card scanlines reveal reveal-d2">
-          <p class="svc-num">PANEL 03</p>
-          <h3 data-i18n="svc_film_title">影視動畫</h3>
-          <p data-i18n="svc_film_desc">結合影視製作與動畫技術，打造具有敘事張力的影像作品。</p>
-          <div class="svc-tags"><span class="svc-tag">Motion Graphics</span><span class="svc-tag" data-i18n="svc_film_tag2">3D 動畫</span><span class="svc-tag">VFX</span></div>
-        </div>
-        <div class="svc-panel glass-card scanlines reveal reveal-d3">
-          <p class="svc-num">PANEL 04</p>
-          <h3 data-i18n="svc_music_title">原創音樂</h3>
-          <p data-i18n="svc_music_desc">以真摯的情感，創作融合多元風格的華語原創音樂作品。</p>
-          <div class="svc-tags"><span class="svc-tag" data-i18n="svc_music_tag1">作詞作曲</span><span class="svc-tag" data-i18n="svc_music_tag2">華語原創</span><span class="svc-tag" data-i18n="svc_music_tag3">編曲製作</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ===== SECTOR 03 — MISSION LOG (Works) ===== -->
-  <section id="works" data-sector="03" data-sector-name-zh="任務紀錄" data-sector-name-en="Mission Log" data-sector-name-ja="任務記録">
-    <div class="container">
-      <div class="reveal">
-        <p class="section-label">SECTOR 03 — <span data-i18n="sec_works_label">任務紀錄</span></p>
-        <h2 class="section-title" data-i18n="sec_works_title">精選作品</h2>
-        <p class="section-desc" data-i18n="sec_works_desc">每個專案都傾注了熱情與專業。</p>
-      </div>
-      <div class="works-timeline">
-        <a href="https://youtu.be/YDjexc4Dy8s" target="_blank" rel="noopener noreferrer" class="work-entry reveal-left">
-          <div class="work-dot active"></div>
-          <div class="work-card glass-card">
-            <p class="work-status active-status">ACTIVE</p>
+        <div class="works-grid">
+          <a href="https://youtu.be/YDjexc4Dy8s" target="_blank" rel="noopener noreferrer" class="work-tile work-tile--active">
+            <div class="work-tile-head">
+              <span class="work-tile-idx">01</span>
+              <span class="work-tile-status active"><span class="pulse-dot"></span>ACTIVE</span>
+            </div>
             <h3 data-i18n="work_ai_title">AI 創作系列教學</h3>
-            <p class="work-cat" data-i18n="work_ai_cat">AI 教學 · YouTube</p>
+            <p class="work-tile-cat" data-i18n="work_ai_cat">AI 教學 · YouTube</p>
+            <span class="work-tile-arrow">→</span>
+          </a>
+          <div class="work-tile work-tile--soon">
+            <div class="work-tile-head">
+              <span class="work-tile-idx">02</span>
+              <span class="work-tile-status soon">COMING SOON</span>
+            </div>
+            <h3 data-i18n="work_game_title">Pact of Arcania — 靈契之戰</h3>
+            <p class="work-tile-cat" data-i18n="work_game_cat">遊戲開發 · Unreal · Steam</p>
           </div>
-        </a>
-        <div class="work-entry reveal-left">
-          <div class="work-dot"></div>
-          <div class="work-card work-card-soon glass-card holo-jitter">
-            <p class="work-status soon-status">COMING SOON</p>
-            <h3 data-i18n="work_game_title">Pact Of Arcania — 靈契之戰</h3>
-            <p class="work-cat" data-i18n="work_game_cat">遊戲開發 · Unreal · Steam</p>
-          </div>
-        </div>
-        <div class="work-entry reveal-left">
-          <div class="work-dot"></div>
-          <div class="work-card work-card-soon glass-card holo-jitter">
-            <p class="work-status soon-status">COMING SOON</p>
+          <div class="work-tile work-tile--soon">
+            <div class="work-tile-head">
+              <span class="work-tile-idx">03</span>
+              <span class="work-tile-status soon">COMING SOON</span>
+            </div>
             <h3 data-i18n="work_film_title">品牌形象動畫</h3>
-            <p class="work-cat" data-i18n="work_film_cat">3D · VFX</p>
+            <p class="work-tile-cat" data-i18n="work_film_cat">3D · VFX</p>
           </div>
         </div>
       </div>
     </div>
   </section>
+  <div id="works" style="position:relative;top:-80px"></div>
 
 
   <!-- ===== SECTOR 04 — SUPPLY (Shop + Pipeline) ===== -->
@@ -2325,13 +2447,161 @@
     loadFrames();
   })();
 
-  /* ===== BACKGROUND SCROLL SEQUENCES (cinematic Bg02 + Bg01) ===== */
+  /* ===== COMBINED CINEMATIC SEQUENCE (Bg02 → Bg01 → Works overlay) ===== */
+  (function() {
+    var section = document.getElementById('bgCombined');
+    if (!section) return;
+    var overlay = document.getElementById('worksOverlay');
+
+    // Helper: a frame-sequence tied to one canvas element.
+    function Sequence(canvasId, framePath, frameCount) {
+      var canvas = document.getElementById(canvasId);
+      var ctx = canvas.getContext('2d');
+      var frames = [];
+      var loaded = 0;
+      var currentFrame = -1;
+      var self = {
+        ready: false,
+        canvas: canvas,
+        frameCount: frameCount
+      };
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        if (self.ready && frames[currentFrame]) self.draw(currentFrame);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      self.draw = function(i) {
+        var img = frames[i];
+        if (!img || !img.complete) return;
+        var cw = canvas.width, ch = canvas.height;
+        var iw = img.naturalWidth, ih = img.naturalHeight;
+        var scale = Math.max(cw / iw, ch / ih);
+        var dw = iw * scale, dh = ih * scale;
+        var dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.drawImage(img, dx, dy, dw, dh);
+        currentFrame = i;
+      };
+
+      function pad(n) { return n < 10 ? '000' + n : n < 100 ? '00' + n : '0' + n; }
+
+      self.load = function(onFirstReady) {
+        var batchSize = 8;
+        function loadBatch(start) {
+          var end = Math.min(start + batchSize, frameCount);
+          for (var i = start; i < end; i++) {
+            (function(idx) {
+              var img = new Image();
+              img.onload = img.onerror = function() {
+                if (img.naturalWidth) frames[idx] = img;
+                loaded++;
+                if (loaded === Math.min(3, frameCount) && !self.ready) {
+                  self.ready = true;
+                  if (frames[0]) self.draw(0);
+                  if (onFirstReady) onFirstReady();
+                }
+              };
+              img.src = framePath + pad(idx + 1) + '.webp';
+            })(i);
+          }
+          if (end < frameCount) setTimeout(function() { loadBatch(end); }, 60);
+        }
+        loadBatch(0);
+      };
+      return self;
+    }
+
+    var seq02 = Sequence('bgCanvas02', 'bg-frames-02/frame_', 61);
+    var seq01 = Sequence('bgCanvas01', 'bg-frames-01/frame_', 61);
+
+    // Progress breakpoints (within the combined pin range):
+    //   0.00 - 0.35  → bg02 frames play
+    //   0.35 - 0.45  → hold bg02 last frame (transition)
+    //   0.45         → switch to bg01 canvas (via .phase-bg01 class crossfades)
+    //   0.45 - 0.75  → bg01 frames play
+    //   0.70 - 1.00  → works overlay fades in on top of bg01
+    var FRAME02_END = 0.40;
+    var SWITCH_AT = 0.45;
+    var FRAME01_START = 0.45;
+    var FRAME01_END = 0.78;
+    var OVERLAY_START = 0.62;
+    var OVERLAY_REMOVE_BEFORE = 0.55;
+    var SWITCH_BACK = 0.40;
+
+    function setupScroll() {
+      ScrollTrigger.create({
+        trigger: section,
+        start: 'top top',
+        end: '+=280%',           // ~3 × viewport worth of scroll for the full cinematic
+        pin: true,
+        scrub: 0.5,
+        onUpdate: function(self) {
+          var p = self.progress;
+
+          // Bg02 frame playback: 0 → FRAME02_END
+          if (seq02.ready) {
+            var p02 = Math.min(1, p / FRAME02_END);
+            var idx02 = Math.min(seq02.frameCount - 1, Math.floor(p02 * seq02.frameCount));
+            seq02.draw(idx02);
+          }
+
+          // Bg01 frame playback: FRAME01_START → FRAME01_END
+          if (seq01.ready) {
+            var p01 = Math.max(0, Math.min(1, (p - FRAME01_START) / (FRAME01_END - FRAME01_START)));
+            var idx01 = Math.min(seq01.frameCount - 1, Math.floor(p01 * seq01.frameCount));
+            seq01.draw(idx01);
+          }
+
+          // Canvas phase switch (crossfade via CSS class)
+          if (p >= SWITCH_AT && !section.classList.contains('phase-bg01')) {
+            section.classList.add('phase-bg01');
+          } else if (p < SWITCH_BACK && section.classList.contains('phase-bg01')) {
+            section.classList.remove('phase-bg01');
+          }
+
+          // Works overlay reveal
+          if (p >= OVERLAY_START && !overlay.classList.contains('revealed')) {
+            overlay.classList.add('revealed');
+          } else if (p < OVERLAY_REMOVE_BEFORE && overlay.classList.contains('revealed')) {
+            overlay.classList.remove('revealed');
+          }
+        }
+      });
+    }
+
+    // Lazy load both sequences when the combined section approaches.
+    var kicked = false;
+    function kick() {
+      if (kicked) return;
+      kicked = true;
+      var started = 0;
+      function ready() {
+        started++;
+        if (started === 2) setupScroll();
+      }
+      seq02.load(ready);
+      seq01.load(ready);
+    }
+    var io = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) { kick(); io.disconnect(); }
+      });
+    }, { rootMargin: '200% 0px 100% 0px' });
+    io.observe(section);
+  })();
+
+  /* === (kept for reference) old createBgSequence factory ===
+     Not used — replaced by the combined cinematic above. */
   (function() {
     function createBgSequence(opts) {
       var canvas = document.getElementById(opts.canvasId);
       if (!canvas) return;
       var section = document.querySelector(opts.sectionSelector);
       if (!section) return;
+      var overlay = opts.overlaySelector ? section.querySelector(opts.overlaySelector) : null;
       var ctx = canvas.getContext('2d');
       var frames = [];
       var loaded = 0;
@@ -2361,17 +2631,33 @@
       function pad(n) { return n < 10 ? '000' + n : n < 100 ? '00' + n : '0' + n; }
 
       function setupScroll() {
+        // Longer pin duration when there's an overlay, so frames + overlay both have room.
+        var pinDuration = opts.pinDuration || '+=100%';
+        // Frames play in the first `frameFraction` of progress; overlay fades
+        // in from `overlayStart` onward.
+        var frameFraction = opts.frameFraction != null ? opts.frameFraction : 1;
+        var overlayStart = opts.overlayStart != null ? opts.overlayStart : 0.45;
         ScrollTrigger.create({
           trigger: section,
           start: 'top top',
-          end: '+=100%',
+          end: pinDuration,
           pin: true,
           scrub: 0.5,
           onUpdate: function(self) {
-            var idx = Math.min(opts.frameCount - 1, Math.floor(self.progress * opts.frameCount));
+            // Map progress to frame index — clamp so last frame stays painted.
+            var frameP = Math.min(1, self.progress / frameFraction);
+            var idx = Math.min(opts.frameCount - 1, Math.floor(frameP * opts.frameCount));
             if (idx !== currentFrame && frames[idx]) {
               currentFrame = idx;
               drawFrame(idx);
+            }
+            // Overlay reveal toggle (avoids rapid class thrashing during scrub)
+            if (overlay) {
+              if (self.progress >= overlayStart && !overlay.classList.contains('revealed')) {
+                overlay.classList.add('revealed');
+              } else if (self.progress < overlayStart - 0.05 && overlay.classList.contains('revealed')) {
+                overlay.classList.remove('revealed');
+              }
             }
           }
         });
@@ -2383,7 +2669,7 @@
         setupScroll();
       }
 
-      // Lazy load — only start when section enters viewport
+      // Lazy load — start when section gets close.
       var started = false;
       function startLoading() {
         if (started) return;
@@ -2397,10 +2683,7 @@
               img.onload = img.onerror = function() {
                 if (img.naturalWidth) frames[idx] = img;
                 loaded++;
-                // Mark ready once first few frames are in so we can paint
-                if (loaded === Math.min(3, opts.frameCount) && !ready) {
-                  onReady();
-                }
+                if (loaded === Math.min(3, opts.frameCount) && !ready) onReady();
               };
               img.src = opts.framePath + pad(idx + 1) + '.webp';
             })(i);
@@ -2410,7 +2693,6 @@
         loadBatch(0);
       }
 
-      // Start loading when section is ~1 viewport away
       var io = new IntersectionObserver(function(entries) {
         entries.forEach(function(e) {
           if (e.isIntersecting) { startLoading(); io.disconnect(); }
@@ -2419,18 +2701,7 @@
       io.observe(section);
     }
 
-    createBgSequence({
-      canvasId: 'bgCanvas02',
-      sectionSelector: '#bgSeq02',
-      framePath: 'bg-frames-02/frame_',
-      frameCount: 61
-    });
-    createBgSequence({
-      canvasId: 'bgCanvas01',
-      sectionSelector: '#bgSeq01',
-      framePath: 'bg-frames-01/frame_',
-      frameCount: 60
-    });
+    // Intentionally not invoked — see combined controller above.
   })();
 
   /* ===== SCROLL REVEAL (IntersectionObserver) ===== */
