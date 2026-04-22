@@ -583,16 +583,28 @@
       opacity: 0.55;
     }
 
-    /* ===== COMBINED BACKGROUND CINEMATIC ===== */
+    /* ===== COMBINED BACKGROUND CINEMATIC =====
+       Uses native position:sticky instead of GSAP pin to avoid pin-spacer
+       layout-measurement bugs that left dead space behind the Works overlay. */
     .bg-combined {
       position: relative;
       width: 100%;
-      height: 100vh;
-      overflow: hidden;
+      /* 280vh = 100vh visible + 180vh of scroll-driven animation.
+         The sticky inner stage stays fixed while user scrolls this span. */
+      height: 280vh;
+      /* Override the global section{padding:...} rule so the sticky stage
+         can traverse the full height without a phantom top/bottom gap. */
+      padding: 0 !important;
       background: var(--void);
       z-index: 1;
     }
-    .bg-sequence-stage { position: absolute; inset: 0; }
+    .bg-sticky-stage {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
     .bg-canvas {
       position: absolute;
       inset: 0;
@@ -606,7 +618,7 @@
     .bg-combined.phase-bg01 .bg-canvas--02 { opacity: 0; }
     .bg-combined.phase-bg01 .bg-canvas--01 { opacity: 1; }
     /* Subtle top fade from hero, bottom fade into next section */
-    .bg-combined::before {
+    .bg-sticky-stage::before {
       content: '';
       position: absolute;
       inset: 0 0 auto 0;
@@ -615,7 +627,7 @@
       pointer-events: none;
       z-index: 3;
     }
-    .bg-combined::after {
+    .bg-sticky-stage::after {
       content: '';
       position: absolute;
       inset: auto 0 0 0;
@@ -1655,11 +1667,10 @@
 
   <!-- ===== COMBINED CINEMATIC SECTOR — Bg02 (core domains) + Bg01 (mission log) stitched into one long pin ===== -->
   <section class="bg-combined" id="bgCombined" data-sector="02" data-sector-name-zh="核心領域" data-sector-name-en="Core" data-sector-name-ja="核心">
-    <div class="bg-sequence-stage">
+    <div class="bg-sticky-stage">
       <canvas id="bgCanvas02" class="bg-canvas bg-canvas--02" aria-label="Four core domains cinematic"></canvas>
       <canvas id="bgCanvas01" class="bg-canvas bg-canvas--01" aria-label="Mission log cinematic"></canvas>
-    </div>
-    <div class="works-overlay" id="worksOverlay">
+      <div class="works-overlay" id="worksOverlay">
       <div class="works-container">
         <div class="works-header">
           <p class="section-label">SECTOR 03 — <span data-i18n="sec_works_label">任務紀錄</span></p>
@@ -1694,7 +1705,8 @@
           </div>
         </div>
       </div>
-    </div>
+      </div><!-- /.works-overlay -->
+    </div><!-- /.bg-sticky-stage -->
   </section>
   <div id="works" style="position:relative;top:-80px"></div>
 
@@ -2587,40 +2599,53 @@
     }
 
     function setupScroll() {
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: '+=180%',
-        pin: true,
-        scrub: 0.5,
-        anticipatePin: 1,
-        onUpdate: function(self) {
-          var p = self.progress;
+      // Plain scroll listener — computes progress 0..1 based on how far
+      // the user has scrolled through the section. Uses position:sticky on
+      // the inner stage (see CSS) so no GSAP pin is required.
+      var ticking = false;
+      function updateFromScroll() {
+        ticking = false;
+        var rect = section.getBoundingClientRect();
+        var vh = window.innerHeight;
+        // Section height - viewport = total scroll distance to traverse.
+        var total = section.offsetHeight - vh;
+        if (total <= 0) return;
+        // When rect.top = 0 (top of section hits viewport top) => progress 0.
+        // When rect.top = -total => user has scrolled the entire section => progress 1.
+        var p = Math.max(0, Math.min(1, -rect.top / total));
 
-          if (seq02.ready) {
-            var p02 = Math.min(1, p / FRAME02_END);
-            var idx02 = Math.min(seq02.frameCount - 1, Math.floor(p02 * seq02.frameCount));
-            seq02.draw(idx02);
-          }
-          if (seq01.ready) {
-            var p01 = Math.max(0, Math.min(1, (p - FRAME01_START) / (FRAME01_END - FRAME01_START)));
-            var idx01 = Math.min(seq01.frameCount - 1, Math.floor(p01 * seq01.frameCount));
-            seq01.draw(idx01);
-          }
-          if (p >= SWITCH_AT && !section.classList.contains('phase-bg01')) {
-            section.classList.add('phase-bg01');
-            setSectorAttrs(worksSector);
-          } else if (p < SWITCH_BACK && section.classList.contains('phase-bg01')) {
-            section.classList.remove('phase-bg01');
-            setSectorAttrs(baseSector);
-          }
-          if (p >= OVERLAY_START && !overlay.classList.contains('revealed')) {
-            overlay.classList.add('revealed');
-          } else if (p < OVERLAY_REMOVE_BEFORE && overlay.classList.contains('revealed')) {
-            overlay.classList.remove('revealed');
-          }
+        if (seq02.ready) {
+          var p02 = Math.min(1, p / FRAME02_END);
+          var idx02 = Math.min(seq02.frameCount - 1, Math.floor(p02 * seq02.frameCount));
+          seq02.draw(idx02);
         }
-      });
+        if (seq01.ready) {
+          var p01 = Math.max(0, Math.min(1, (p - FRAME01_START) / (FRAME01_END - FRAME01_START)));
+          var idx01 = Math.min(seq01.frameCount - 1, Math.floor(p01 * seq01.frameCount));
+          seq01.draw(idx01);
+        }
+        if (p >= SWITCH_AT && !section.classList.contains('phase-bg01')) {
+          section.classList.add('phase-bg01');
+          setSectorAttrs(worksSector);
+        } else if (p < SWITCH_BACK && section.classList.contains('phase-bg01')) {
+          section.classList.remove('phase-bg01');
+          setSectorAttrs(baseSector);
+        }
+        if (p >= OVERLAY_START && !overlay.classList.contains('revealed')) {
+          overlay.classList.add('revealed');
+        } else if (p < OVERLAY_REMOVE_BEFORE && overlay.classList.contains('revealed')) {
+          overlay.classList.remove('revealed');
+        }
+      }
+      function onScroll() {
+        if (!ticking) {
+          requestAnimationFrame(updateFromScroll);
+          ticking = true;
+        }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      updateFromScroll();
     }
 
     // START LOADING IMMEDIATELY on script execute — no IntersectionObserver.
