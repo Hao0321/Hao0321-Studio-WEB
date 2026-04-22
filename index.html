@@ -634,33 +634,76 @@
       pointer-events: none;
       opacity: 0;
       transform: translateY(30px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition: opacity 0.45s ease, transform 0.45s ease;
     }
     .works-overlay.revealed { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    /* Dim the starfield behind the content so text has contrast to stand on. */
+    .works-overlay::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 50%, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 40%, rgba(0,0,0,0.1) 75%, transparent 100%);
+      pointer-events: none;
+    }
     .works-container {
+      position: relative;
       width: 100%;
       max-width: 1240px;
       padding: 0 clamp(20px, 5vw, 64px);
     }
-    .works-header { margin-bottom: clamp(26px, 5vh, 48px); }
+    .works-header {
+      position: relative;
+      margin-bottom: clamp(28px, 5vh, 52px);
+      padding: 22px 26px;
+      background: linear-gradient(135deg, rgba(10,10,18,0.72) 0%, rgba(5,5,8,0.55) 100%);
+      border-left: 3px solid var(--glow-cyan);
+      border-radius: 4px 14px 14px 4px;
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+      max-width: 640px;
+    }
     .works-header .section-label {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 12px;
+      background: rgba(0,229,255,0.1);
+      border: 1px solid rgba(0,229,255,0.28);
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      color: var(--glow-cyan);
+      font-weight: 700;
+      text-transform: uppercase;
     }
     .works-header .section-title {
       font-family: var(--font-head);
-      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-size: clamp(2.2rem, 5.2vw, 3.4rem);
       font-weight: 900;
       color: var(--glow-white);
-      letter-spacing: -0.01em;
-      line-height: 1.05;
-      margin-bottom: 12px;
-      text-shadow: 0 4px 30px rgba(0,0,0,0.6);
+      letter-spacing: -0.02em;
+      line-height: 1.02;
+      margin-bottom: 14px;
+      text-shadow:
+        0 1px 0 rgba(255,255,255,0.1),
+        0 2px 12px rgba(0,180,255,0.35),
+        0 6px 30px rgba(0,0,0,0.6);
+      background: linear-gradient(135deg, #ffffff 0%, #d0e8ff 60%, #8bc9ff 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     .works-header .section-desc {
-      color: var(--dim);
-      font-size: 0.98rem;
-      max-width: 560px;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      color: #cfd8f0;
+      font-size: 1rem;
+      line-height: 1.7;
+      max-width: 520px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.75);
+      font-weight: 500;
     }
     .works-grid {
       display: grid;
@@ -2096,19 +2139,27 @@
   /* ===== SECTOR TRACKING ===== */
   var sections = document.querySelectorAll('section[data-sector]');
   var currentSectorNum = '01';
+  var activeSectionEl = null;
 
   function updateSectorDisplay() {
     var langKey = currentLang === 'zh' ? 'zh' : currentLang === 'ja' ? 'ja' : 'en';
-    var activeSec = document.querySelector('section[data-sector="' + currentSectorNum + '"]');
+    // Prefer the currently-observed section element; fall back to query by number.
+    var activeSec = activeSectionEl || document.querySelector('section[data-sector="' + currentSectorNum + '"]');
     if (activeSec) {
+      // Always re-read attributes — they may have changed (e.g., combined cinematic swaps label dynamically).
+      currentSectorNum = activeSec.getAttribute('data-sector') || currentSectorNum;
       var name = activeSec.getAttribute('data-sector-name-' + langKey) || activeSec.getAttribute('data-sector-name-en');
       navSectorEl.innerHTML = 'SECTOR ' + currentSectorNum + ' — ' + name;
     }
   }
+  // Expose for the combined cinematic controller to trigger refreshes after
+  // it rewrites data-sector / data-sector-name attributes on the fly.
+  window.__updateSectorDisplay = updateSectorDisplay;
 
   var sectorObs = new IntersectionObserver(function(entries) {
     entries.forEach(function(e) {
       if (e.isIntersecting) {
+        activeSectionEl = e.target;
         currentSectorNum = e.target.getAttribute('data-sector');
         updateSectorDisplay();
       }
@@ -2460,11 +2511,7 @@
       var frames = [];
       var loaded = 0;
       var currentFrame = -1;
-      var self = {
-        ready: false,
-        canvas: canvas,
-        frameCount: frameCount
-      };
+      var self = { ready: false, canvas: canvas, frameCount: frameCount };
       function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
@@ -2472,7 +2519,6 @@
       }
       resize();
       window.addEventListener('resize', resize);
-
       self.draw = function(i) {
         var img = frames[i];
         if (!img || !img.complete) return;
@@ -2485,11 +2531,9 @@
         ctx.drawImage(img, dx, dy, dw, dh);
         currentFrame = i;
       };
-
       function pad(n) { return n < 10 ? '000' + n : n < 100 ? '00' + n : '0' + n; }
-
       self.load = function(onFirstReady) {
-        var batchSize = 8;
+        var batchSize = 6;
         function loadBatch(start) {
           var end = Math.min(start + batchSize, frameCount);
           for (var i = start; i < end; i++) {
@@ -2498,7 +2542,7 @@
               img.onload = img.onerror = function() {
                 if (img.naturalWidth) frames[idx] = img;
                 loaded++;
-                if (loaded === Math.min(3, frameCount) && !self.ready) {
+                if (loaded === Math.min(2, frameCount) && !self.ready) {
                   self.ready = true;
                   if (frames[0]) self.draw(0);
                   if (onFirstReady) onFirstReady();
@@ -2507,7 +2551,7 @@
               img.src = framePath + pad(idx + 1) + '.webp';
             })(i);
           }
-          if (end < frameCount) setTimeout(function() { loadBatch(end); }, 60);
+          if (end < frameCount) setTimeout(function() { loadBatch(end); }, 80);
         }
         loadBatch(0);
       };
@@ -2517,52 +2561,58 @@
     var seq02 = Sequence('bgCanvas02', 'bg-frames-02/frame_', 61);
     var seq01 = Sequence('bgCanvas01', 'bg-frames-01/frame_', 61);
 
-    // Progress breakpoints (within the combined pin range):
-    //   0.00 - 0.35  → bg02 frames play
-    //   0.35 - 0.45  → hold bg02 last frame (transition)
-    //   0.45         → switch to bg01 canvas (via .phase-bg01 class crossfades)
-    //   0.45 - 0.75  → bg01 frames play
-    //   0.70 - 1.00  → works overlay fades in on top of bg01
-    var FRAME02_END = 0.40;
+    // Progress breakpoints within the combined pin range
+    var FRAME02_END = 0.38;
     var SWITCH_AT = 0.45;
+    var SWITCH_BACK = 0.40;
     var FRAME01_START = 0.45;
     var FRAME01_END = 0.78;
     var OVERLAY_START = 0.62;
     var OVERLAY_REMOVE_BEFORE = 0.55;
-    var SWITCH_BACK = 0.40;
+
+    // HUD sector names (for dynamic swap based on overlay state)
+    var baseSector = {
+      num: section.getAttribute('data-sector'),
+      zh: section.getAttribute('data-sector-name-zh'),
+      en: section.getAttribute('data-sector-name-en'),
+      ja: section.getAttribute('data-sector-name-ja')
+    };
+    var worksSector = { num: '03', zh: '任務紀錄', en: 'Mission Log', ja: '任務記録' };
+    function setSectorAttrs(s) {
+      section.setAttribute('data-sector', s.num);
+      section.setAttribute('data-sector-name-zh', s.zh);
+      section.setAttribute('data-sector-name-en', s.en);
+      section.setAttribute('data-sector-name-ja', s.ja);
+      if (window.__updateSectorDisplay) window.__updateSectorDisplay();
+    }
 
     function setupScroll() {
       ScrollTrigger.create({
         trigger: section,
         start: 'top top',
-        end: '+=280%',           // ~3 × viewport worth of scroll for the full cinematic
+        end: '+=280%',
         pin: true,
         scrub: 0.5,
         onUpdate: function(self) {
           var p = self.progress;
 
-          // Bg02 frame playback: 0 → FRAME02_END
           if (seq02.ready) {
             var p02 = Math.min(1, p / FRAME02_END);
             var idx02 = Math.min(seq02.frameCount - 1, Math.floor(p02 * seq02.frameCount));
             seq02.draw(idx02);
           }
-
-          // Bg01 frame playback: FRAME01_START → FRAME01_END
           if (seq01.ready) {
             var p01 = Math.max(0, Math.min(1, (p - FRAME01_START) / (FRAME01_END - FRAME01_START)));
             var idx01 = Math.min(seq01.frameCount - 1, Math.floor(p01 * seq01.frameCount));
             seq01.draw(idx01);
           }
-
-          // Canvas phase switch (crossfade via CSS class)
           if (p >= SWITCH_AT && !section.classList.contains('phase-bg01')) {
             section.classList.add('phase-bg01');
+            setSectorAttrs(worksSector);
           } else if (p < SWITCH_BACK && section.classList.contains('phase-bg01')) {
             section.classList.remove('phase-bg01');
+            setSectorAttrs(baseSector);
           }
-
-          // Works overlay reveal
           if (p >= OVERLAY_START && !overlay.classList.contains('revealed')) {
             overlay.classList.add('revealed');
           } else if (p < OVERLAY_REMOVE_BEFORE && overlay.classList.contains('revealed')) {
@@ -2572,25 +2622,16 @@
       });
     }
 
-    // Lazy load both sequences when the combined section approaches.
-    var kicked = false;
-    function kick() {
-      if (kicked) return;
-      kicked = true;
-      var started = 0;
-      function ready() {
-        started++;
-        if (started === 2) setupScroll();
-      }
-      seq02.load(ready);
-      seq01.load(ready);
+    // START LOADING IMMEDIATELY on script execute — no IntersectionObserver.
+    // Hero is still loading its 120 frames; bg sequences load in parallel
+    // so by the time the user scrolls past hero, first frames are painted.
+    var started = 0;
+    function ready() {
+      started++;
+      if (started === 2) setupScroll();
     }
-    var io = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) { kick(); io.disconnect(); }
-      });
-    }, { rootMargin: '200% 0px 100% 0px' });
-    io.observe(section);
+    seq02.load(ready);
+    seq01.load(ready);
   })();
 
   /* === (kept for reference) old createBgSequence factory ===
