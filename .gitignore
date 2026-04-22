@@ -1,2 +1,13 @@
-# Hero sequence source PNGs (too large, only keep WebP)
+# Frame sequence source PNGs (too large, only keep compressed WebP)
 hero-frames/*.png
+Background_01/
+Background_02/
+
+# Dev-only Chess Master Vite project (the deployed version is game/chess-master.jsx)
+game/Chess Master/
+
+# Common dev artifacts
+node_modules/
+dist/
+.wrangler/
+.DS_Store

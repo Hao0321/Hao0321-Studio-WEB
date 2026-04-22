@@ -582,6 +582,34 @@
       z-index: 0;
       opacity: 0.55;
     }
+
+    /* ===== BACKGROUND SCROLL SEQUENCES (cinematic transitions) ===== */
+    .bg-sequence {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--void);
+      z-index: 1;
+    }
+    .bg-sequence-stage {
+      position: absolute;
+      inset: 0;
+    }
+    .bg-sequence canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .bg-sequence::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(5,5,8,0.25) 0%, transparent 20%, transparent 80%, rgba(5,5,8,0.5) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
     .hero-video {
       position: absolute;
       top: 50%;
@@ -1416,6 +1444,19 @@
     <div class="hero-scroll" data-i18n="hero_scroll">SCROLL TO EXPLORE</div>
   </section>
 
+  <!-- ===== CINEMATIC A — FOUR DOMAINS (Background_02 sequence, 61 frames) ===== -->
+  <section class="bg-sequence" id="bgSeq02">
+    <div class="bg-sequence-stage">
+      <canvas id="bgCanvas02" aria-label="Four core domains cinematic"></canvas>
+    </div>
+  </section>
+
+  <!-- ===== CINEMATIC B — STAR CROSSING (Background_01 sequence, 60 frames) ===== -->
+  <section class="bg-sequence" id="bgSeq01">
+    <div class="bg-sequence-stage">
+      <canvas id="bgCanvas01" aria-label="Star crossing cinematic"></canvas>
+    </div>
+  </section>
 
   <!-- ===== SECTOR 02 — BRIDGE (Services) ===== -->
   <section id="services" data-sector="02" data-sector-name-zh="艦橋總覽" data-sector-name-en="Bridge" data-sector-name-ja="艦橋">
@@ -2282,6 +2323,114 @@
 
     // Start loading
     loadFrames();
+  })();
+
+  /* ===== BACKGROUND SCROLL SEQUENCES (cinematic Bg02 + Bg01) ===== */
+  (function() {
+    function createBgSequence(opts) {
+      var canvas = document.getElementById(opts.canvasId);
+      if (!canvas) return;
+      var section = document.querySelector(opts.sectionSelector);
+      if (!section) return;
+      var ctx = canvas.getContext('2d');
+      var frames = [];
+      var loaded = 0;
+      var currentFrame = 0;
+      var ready = false;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        if (ready && frames[currentFrame]) drawFrame(currentFrame);
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function drawFrame(i) {
+        var img = frames[i];
+        if (!img || !img.complete) return;
+        var cw = canvas.width, ch = canvas.height;
+        var iw = img.naturalWidth, ih = img.naturalHeight;
+        var scale = Math.max(cw / iw, ch / ih);
+        var dw = iw * scale, dh = ih * scale;
+        var dx = (cw - dw) / 2, dy = (ch - dh) / 2;
+        ctx.clearRect(0, 0, cw, ch);
+        ctx.drawImage(img, dx, dy, dw, dh);
+      }
+
+      function pad(n) { return n < 10 ? '000' + n : n < 100 ? '00' + n : '0' + n; }
+
+      function setupScroll() {
+        ScrollTrigger.create({
+          trigger: section,
+          start: 'top top',
+          end: '+=100%',
+          pin: true,
+          scrub: 0.5,
+          onUpdate: function(self) {
+            var idx = Math.min(opts.frameCount - 1, Math.floor(self.progress * opts.frameCount));
+            if (idx !== currentFrame && frames[idx]) {
+              currentFrame = idx;
+              drawFrame(idx);
+            }
+          }
+        });
+      }
+
+      function onReady() {
+        ready = true;
+        if (frames[0]) drawFrame(0);
+        setupScroll();
+      }
+
+      // Lazy load — only start when section enters viewport
+      var started = false;
+      function startLoading() {
+        if (started) return;
+        started = true;
+        var batchSize = 8;
+        function loadBatch(start) {
+          var end = Math.min(start + batchSize, opts.frameCount);
+          for (var i = start; i < end; i++) {
+            (function(idx) {
+              var img = new Image();
+              img.onload = img.onerror = function() {
+                if (img.naturalWidth) frames[idx] = img;
+                loaded++;
+                // Mark ready once first few frames are in so we can paint
+                if (loaded === Math.min(3, opts.frameCount) && !ready) {
+                  onReady();
+                }
+              };
+              img.src = opts.framePath + pad(idx + 1) + '.webp';
+            })(i);
+          }
+          if (end < opts.frameCount) setTimeout(function() { loadBatch(end); }, 60);
+        }
+        loadBatch(0);
+      }
+
+      // Start loading when section is ~1 viewport away
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) { startLoading(); io.disconnect(); }
+        });
+      }, { rootMargin: '200% 0px 100% 0px' });
+      io.observe(section);
+    }
+
+    createBgSequence({
+      canvasId: 'bgCanvas02',
+      sectionSelector: '#bgSeq02',
+      framePath: 'bg-frames-02/frame_',
+      frameCount: 61
+    });
+    createBgSequence({
+      canvasId: 'bgCanvas01',
+      sectionSelector: '#bgSeq01',
+      framePath: 'bg-frames-01/frame_',
+      frameCount: 60
+    });
   })();
 
   /* ===== SCROLL REVEAL (IntersectionObserver) ===== */
