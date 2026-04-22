@@ -2376,8 +2376,15 @@
     var framesReady = false;
 
     function resizeHeroCanvas() {
-      heroCanvas.width = window.innerWidth;
-      heroCanvas.height = window.innerHeight;
+      // HiDPI/Retina: render to device pixels so 2K frames display sharp on
+      // 2x+ screens (otherwise the browser upscales a logical-size bitmap).
+      var dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+      var w = window.innerWidth;
+      var h = window.innerHeight;
+      heroCanvas.width = Math.round(w * dpr);
+      heroCanvas.height = Math.round(h * dpr);
+      heroCanvas.style.width = w + 'px';
+      heroCanvas.style.height = h + 'px';
       if (framesReady && frames[currentFrame]) {
         drawFrame(currentFrame);
       }
@@ -2537,14 +2544,27 @@
     function Sequence(canvasId, framePath, frameCount) {
       var canvas = document.getElementById(canvasId);
       var ctx = canvas.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       var frames = [];
       var loaded = 0;
       var currentFrame = -1;
       var self = { ready: false, canvas: canvas, frameCount: frameCount };
       function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        if (self.ready && frames[currentFrame]) self.draw(currentFrame);
+        // Render at actual device pixels (HiDPI/Retina support) — otherwise
+        // the browser upscales a logical-size bitmap on 2x screens, causing
+        // blur. CSS keeps the display size identical.
+        var dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
+        var w = window.innerWidth;
+        var h = window.innerHeight;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        // imageSmoothing resets when canvas is resized — re-enable it.
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        if (self.ready && frames[currentFrame] !== undefined) self.draw(currentFrame);
       }
       resize();
       window.addEventListener('resize', resize);
