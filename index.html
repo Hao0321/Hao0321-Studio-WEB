@@ -2615,9 +2615,16 @@
     var SWITCH_AT = 0.42;
     var SWITCH_BACK = 0.38;
     var FRAME01_START = 0.42;
-    var FRAME01_END = 0.72;
+    // Animation finishes at overlay reveal — tree holds at peak from here on.
+    var FRAME01_END = 0.58;
     var OVERLAY_START = 0.58;
     var OVERLAY_REMOVE_BEFORE = 0.52;
+    // bg01 fades in (frames 1-10), builds (11-25), peaks at 26-30, and then
+    // fades OUT (31-61 — tree dims/dissolves). We cap playback at the peak
+    // so the tree stays at full brightness while the Works overlay is visible
+    // — otherwise the user reads Works cards against a near-black ghost tree.
+    // Measured mean luminance: frames 26-30 ≈ 47 (peak), frame 61 ≈ 38 (fade).
+    var BG01_PLAY_END = 28; // 0-indexed → stop at frame_0029 (peak zone)
 
     // HUD sector names (for dynamic swap based on overlay state)
     var baseSector = {
@@ -2658,7 +2665,10 @@
         }
         if (seq01.ready) {
           var p01 = Math.max(0, Math.min(1, (p - FRAME01_START) / (FRAME01_END - FRAME01_START)));
-          var idx01 = Math.min(seq01.frameCount - 1, Math.floor(p01 * seq01.frameCount));
+          // Play only frames 0..BG01_PLAY_END so the tree holds at peak
+          // brightness once the Works overlay is revealed (never into fade-out).
+          var playCount = Math.min(BG01_PLAY_END + 1, seq01.frameCount);
+          var idx01 = Math.min(playCount - 1, Math.floor(p01 * playCount));
           seq01.draw(idx01);
         }
         if (p >= SWITCH_AT && !section.classList.contains('phase-bg01')) {
