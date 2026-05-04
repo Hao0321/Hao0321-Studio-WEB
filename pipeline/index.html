@@ -231,10 +231,19 @@
       })
       .catch(function(err) {
         console.error('Pipeline load error:', err);
-        document.getElementById('loadingScreen').innerHTML =
-          '<span style="color:#ff6b6b;font-size:0.9rem;">載入失敗</span>' +
-          '<span style="color:#666;font-size:0.8rem;">' + err.message + '</span>' +
-          '<a href="../" style="color:#ff1493;font-size:0.82rem;margin-top:12px;text-decoration:none;">回到首頁</a>';
+        var box = document.getElementById('loadingScreen');
+        while (box.firstChild) box.removeChild(box.firstChild);
+        var s1 = document.createElement('span');
+        s1.style.cssText = 'color:#ff6b6b;font-size:0.9rem';
+        s1.textContent = '載入失敗';
+        var s2 = document.createElement('span');
+        s2.style.cssText = 'color:#666;font-size:0.8rem';
+        s2.textContent = err && err.message ? err.message : '';
+        var a = document.createElement('a');
+        a.href = '../';
+        a.style.cssText = 'color:#ff1493;font-size:0.82rem;margin-top:12px;text-decoration:none';
+        a.textContent = '回到首頁';
+        box.appendChild(s1); box.appendChild(s2); box.appendChild(a);
       });
   </script>
 </body>

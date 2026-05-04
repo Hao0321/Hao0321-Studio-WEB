@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>為什麼我做了一個台灣版大富翁 — 設計決策全記錄 — Hao0321 Studio</title>
+  <meta name="description" content="從地名選擇、事件卡文案、到破產邏輯 bug 追查 — 一款本土化大富翁遊戲的完整設計拆解。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/taiwan-monopoly-design.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="為什麼我做了一個台灣版大富翁 — 設計決策全記錄" />
+  <meta property="og:description" content="從地名選擇、事件卡文案、到破產邏輯 bug 追查 — 一款本土化大富翁遊戲的完整設計拆解。" />
+  <meta property="og:url" content="https://hao0321.com/blog/taiwan-monopoly-design.html" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-04-25T00:00:00+08:00" />
+  <meta property="article:author" content="Hao0321 Studio" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-serif:'Playfair Display',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    blockquote{border-left:3px solid var(--accent-blue);padding:10px 22px;margin:22px 0;background:rgba(74,123,245,0.04);border-radius:0 var(--radius-sm) var(--radius-sm) 0;color:var(--text-2);font-family:var(--font-serif);font-style:italic}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / 台灣版大富翁設計</div>
+    <span class="cat">Design</span>
+    <h1>為什麼我做了一個<em>台灣版大富翁</em> — 設計決策全記錄</h1>
+    <div class="meta">
+      <span>2026 年 4 月 25 日</span>
+      <span>約 9 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <article>
+    <p>遊戲大廳裡有一款叫「<strong>台灣富翁</strong>」的小遊戲。表面上是 Monopoly 的台灣本土化版，但真正做下去之後發現，本土化遠遠不只是「把 Boardwalk 換成 101」這麼簡單。這篇把整個專案從靈感到上線的設計決策全部攤開講，包括幾個踩到後不會再踩的坑。</p>
+
+    <h2>為什麼是大富翁、為什麼是台灣</h2>
+    <p>當初想做新遊戲時列了三個條件：</p>
+    <ol>
+      <li>玩法已經被全世界驗證過 — 不要花時間發明新規則。</li>
+      <li>有「文化在地化」的空間 — 才能在熱門類別裡找到差異點。</li>
+      <li>規則複雜度中等 — 太簡單沒留住玩家的鈎子，太難又讓人開遊戲 30 秒就退出。</li>
+    </ol>
+    <p>大富翁完美符合三個條件。Monopoly 的核心循環（擲骰子 → 移動 → 買地 / 收租 / 觸發事件 → 回合結束）已經教會幾代人怎麼玩，本土化空間是「整張地圖」，規則複雜度大約是 90 分鐘可以教會新玩家的等級。</p>
+
+    <h2>地圖選擇：地名怎麼挑</h2>
+    <p>傳統 Monopoly 的紐約地名（Park Place、Boardwalk、Marvin Gardens）對台灣玩家太陌生，沒有情感連結就沒辦法產生「我要拼這塊地」的衝動。我列了一份 80 個候選台灣地點，最後篩到 28 格（Monopoly 的標準格數），分類規則：</p>
+
+    <table>
+      <tr><th>分類</th><th>對應地點（價格區間）</th></tr>
+      <tr><td>頂級地段（紫色）</td><td>台北 101、信義區</td></tr>
+      <tr><td>都會精華（綠色）</td><td>板橋、新店、桃園</td></tr>
+      <tr><td>觀光景點（黃色）</td><td>九份、阿里山、日月潭</td></tr>
+      <tr><td>中型城市（紅色）</td><td>台中、彰化、嘉義</td></tr>
+      <tr><td>南部三地（橘色）</td><td>高雄、屏東、墾丁</td></tr>
+      <tr><td>東部與離島（粉紅）</td><td>花蓮、台東、澎湖、馬祖</td></tr>
+      <tr><td>北部初階（淡藍）</td><td>新莊、三重、士林</td></tr>
+      <tr><td>起步區（棕色）</td><td>萬華、艋舺</td></tr>
+    </table>
+
+    <p>選地名的三個原則：</p>
+    <ul>
+      <li><strong>價值要符合直覺</strong>：信義區買價必須比萬華高，這是「玩家對台灣地價的預設認知」。違反這個直覺就會破壞沉浸感。</li>
+      <li><strong>避免敏感議題</strong>：政治色彩強的地名（如某些政治運動發生地）一律排除，免得遊戲變成意識形態戰場。</li>
+      <li><strong>北中南東離島都要有</strong>：避免變成「台北富翁」，讓南部與東部玩家也有自己的位置。</li>
+    </ul>
+
+    <h2>事件卡：把台灣的日常包進來</h2>
+    <p>這是最花時間的部分。Monopoly 原版有兩種事件卡：Chance（機會）、Community Chest（命運）。我設計了 30 張本土化版本，目標是讓玩家看到卡牌時會「啊哈，這就是台灣」。範例：</p>
+
+    <pre>【颱風天放假】
+公司宣布今天不上班！
+你獲得 NT$3,000，但下一回合不能擲骰子（在家吃泡麵）。
+
+【股市大漲】
+你的 0050 賺翻了！
+從每位玩家手上收 NT$2,000。
+
+【捷運漲價】
+通勤族的痛。
+扣 NT$500，並向銀行繳「卡片儲值費」NT$1,500。
+
+【夜市踩雷】
+誤入觀光夜市，價格翻三倍。
+扣 NT$2,500，但獲得「臭豆腐挑戰成功」徽章（純裝飾）。
+
+【統一發票中獎】
+你中了千萬大獎。
+獲得 NT$10,000，但要繳 20% 所得稅。</pre>
+
+    <p>這些卡牌的設計原則：</p>
+    <ul>
+      <li><strong>有金額流動</strong>：每張卡都要實際影響資金，不能只是「裝飾性」純文字。</li>
+      <li><strong>有期待值平衡</strong>：30 張卡的整體期望值接近零，避免某幾張卡把節奏打亂。</li>
+      <li><strong>有共感笑點</strong>：颱風天、夜市、捷運都是台灣人共同記憶。沒有共感的點子（如「外送員平台股票分紅」）我會砍掉。</li>
+    </ul>
+
+    <h2>規則調整：縮短到一場 20 分鐘</h2>
+    <p>原版 Monopoly 一局可以拖到 3 小時。瀏覽器上沒人有耐心，必須讓一場結束在 15～25 分鐘內。做了三個關鍵調整：</p>
+
+    <h3>1. 起始資金降低</h3>
+    <p>原版 $1,500，這個版本給 NT$15,000（約是地圖最便宜地價的 5 倍）。資金少 → 玩家更早進入「現金流壓力」階段，不會出現「大家都很有錢誰也不破產」的僵局。</p>
+
+    <h3>2. 房屋上限改 3 棟</h3>
+    <p>原版可以蓋 4 房 + 1 飯店共 5 階。改成最多 3 棟，讓滿格收益封頂更快出現，差距快速擴大。</p>
+
+    <h3>3. 強制租金規則</h3>
+    <p>原版玩家可以「忘記收租」（如果停在別人地上對方沒喊就免費），這個版本由系統強制扣費，避免玩家因為忘記規則白白損失。</p>
+
+    <h2>破產邏輯的隱形 bug</h2>
+    <p>上線兩天後收到 Bug 回報：「我的錢明明變成 -3000，但遊戲還沒結束」。追下去發現這段：</p>
+    <pre>function checkBankruptcy(player) {
+  if (player.cash &lt; 0) {
+    const totalAssets = player.cash + player.estates.reduce((s, e) =&gt; s + e.value, 0);
+    if (totalAssets &lt; 0) {
+      player.bankrupt = true;
+    }
+  }
+}</pre>
+    <p>問題：玩家的房子（不只是地）也應該計入資產。當地產上有蓋房子時，<code>e.value</code> 沒有把房子的回收價值加進去，導致實際資產被低估，<strong>應該破產的玩家被判沒破產</strong>。修法：</p>
+    <pre>const estateValue = e.value + (e.houses || 0) * Math.floor(e.housePrice / 2);
+// 房屋拆除回收半價，符合常見桌遊規則</pre>
+    <p>這個 bug 讓我學到一件事：<strong>遊戲狀態的計算只要有兩個地方看似都對，就一定會有不一致的版本</strong>。後來把「資產評估」抽成單一 utility function，<code>cashOut()</code>、<code>checkBankruptcy()</code>、<code>showAssetTooltip()</code> 都呼叫這個函式，避免再次發散。</p>
+
+    <h2>視覺：怎麼避免做成廉價 UI</h2>
+    <p>大富翁類遊戲很容易做成「色塊 + 文字」的試算表感。為了避免這個，我做了三件事：</p>
+    <ul>
+      <li><strong>每塊地有專屬插畫</strong>：用 AI 生圖工具畫了 28 張像素風小插圖（101 是大樓剪影、九份是階梯、阿里山是火車）。每張不到 500 bytes，但給玩家很強的記憶點。</li>
+      <li><strong>擲骰子用 3D Canvas</strong>：不是簡單顯示「3」，而是真的用 CSS transform 模擬骰子翻滾 1.5 秒。心理學上這個「等待」反而讓玩家更投入。</li>
+      <li><strong>事件卡用翻牌動畫</strong>：卡片從畫面下方飛入並翻面，配音效。事件變得有儀式感而不是純文字訊息。</li>
+    </ul>
+
+    <h2>數據：實際表現</h2>
+    <table>
+      <tr><th>指標</th><th>數值（上線後 30 天）</th></tr>
+      <tr><td>單局平均時長</td><td>22 分鐘</td></tr>
+      <tr><td>單次 session 平均局數</td><td>1.7 局</td></tr>
+      <tr><td>留存率（D1）</td><td>34%</td></tr>
+      <tr><td>玩家最常停留格</td><td>機會卡（命運第二）</td></tr>
+      <tr><td>玩家提早離場（中途棄局）</td><td>11%</td></tr>
+    </table>
+    <p>11% 的中途棄局率比預期低（原本擔心會 30%+）。猜測原因是「事件卡的笑點」讓玩家想看下一張，反而提升了完局意願。</p>
+
+    <h2>結語：本土化的本質是「共同記憶」</h2>
+    <p>做台灣富翁最大的收穫不是學了什麼技術，而是發現「本土化」不是把英文翻成中文、把紐約換成台北。<strong>本土化的本質是把玩家的共同記憶寫進遊戲</strong> — 颱風天的泡麵、發票中獎的興奮、夜市踩雷的無奈。這些是任何海外遊戲做不到的競爭優勢。</p>
+    <p>下一個版本想做的是「縣市專屬地圖」（純台北地圖、純高雄地圖），讓地方共感更精準。如果你有想看的地方，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/dodge-master-devlog.html">
+          <span class="related-cat">Game Devlog</span>
+          DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲
+        </a>
+        <a href="/blog/chess-master-architecture.html">
+          <span class="related-cat">Game Devlog</span>
+          Chess Master — 8 種棋類合一的 React 架構設計
+        </a>
+      </div>
+    </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

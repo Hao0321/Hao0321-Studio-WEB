@@ -1567,11 +1567,12 @@
           var row = document.createElement('div');
           row.className = 'lb-row' + (i === 0 ? ' top1' : i === 1 ? ' top2' : i === 2 ? ' top3' : '');
           var rank = i + 1;
-          var avatarSrc = r.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23ff2d7b%22/></svg>';
+          var avatarFallback = 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23ff2d7b%22/></svg>';
+          var avatarSrc = safeAvatarUrl(r.avatar, avatarFallback);
           var score = gameId ? r.score : r.total_score;
           var title = r.title ? '<span class="lb-title">' + escapeHtml(r.title) + '</span>' : '';
           row.innerHTML = '<div class="lb-rank">' + medalText(rank) + '</div>' +
-            '<img class="lb-avatar" src="' + avatarSrc + '" alt="" />' +
+            '<img class="lb-avatar" src="' + escapeHtml(avatarSrc) + '" alt="" />' +
             '<div class="lb-name">' + escapeHtml(r.name || 'Player') + title + '</div>' +
             '<div class="lb-score">' + (score || 0).toLocaleString() + '</div>';
           list.appendChild(row);
@@ -1581,6 +1582,11 @@
 
     function escapeHtml(s) {
       return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+    }
+    function safeAvatarUrl(u, fallback) {
+      if (typeof u !== 'string') return fallback;
+      if (/^https:\/\//i.test(u) || /^data:image\//i.test(u)) return u;
+      return fallback;
     }
 
     function openLeaderboard() {
@@ -1621,13 +1627,14 @@
             '</div>';
         }).join('');
 
-        var avatarSrc = p.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23ff2d7b%22/></svg>';
+        var avatarFallback2 = 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23ff2d7b%22/></svg>';
+        var avatarSrc = safeAvatarUrl(p.avatar, avatarFallback2);
         var bests = (p.bestScores || []).map(function(b){
           return '<div class="best-row"><span>' + escapeHtml(gameMeta[b.game_id] || b.game_id) + '</span><b>' + (b.score || 0).toLocaleString() + '</b></div>';
         }).join('') || '<div class="lb-empty" style="padding:12px 0">尚無紀錄</div>';
 
         body.innerHTML = '<div class="profile-head">' +
-            '<img src="' + avatarSrc + '" alt="" />' +
+            '<img src="' + escapeHtml(avatarSrc) + '" alt="" />' +
             '<div><div class="profile-name">' + escapeHtml(p.name || 'Player') + '</div>' +
             '<div class="profile-title">' + escapeHtml(p.title || 'Newbie') + '</div></div>' +
           '</div>' +

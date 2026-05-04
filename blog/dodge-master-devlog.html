@@ -6,7 +6,7 @@
   <title>DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲 — Hao0321 Studio</title>
   <meta name="description" content="從零打造一款支援觸控與鍵盤、有角色稀有度、金幣商店、廣告觸點的街機閃避遊戲。Canvas 效能、物件池、AdSense 整合的實戰紀錄。" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#00b4ff" />
+  <meta name="theme-color" content="#F4F4F7" />
   <link rel="canonical" href="https://hao0321.com/blog/dodge-master-devlog.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -14,81 +14,83 @@
   <meta property="og:title" content="DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲" />
   <meta property="og:description" content="Canvas 效能、物件池、AdSense 觸點、角色稀有度系統的實戰紀錄。" />
   <meta property="og:url" content="https://hao0321.com/blog/dodge-master-devlog.html" />
-  <meta property="og:image" content="https://hao0321.com/og-hero.jpg" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
   <meta property="og:locale" content="zh_TW" />
   <meta property="article:published_time" content="2026-04-21T00:00:00+08:00" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
-    :root{--void:#050508;--hull:#0a0a12;--steel:#1a1a2a;--glow-blue:#00b4ff;--glow-cyan:#00e5ff;--glow-white:#e0e8ff;--hud-green:#00ff88;--warn-amber:#ffaa00;--dim:#8888aa;--text:#d0d8ee;--font-head:'Space Grotesk','Noto Sans TC',sans-serif;--font-body:'Inter','Noto Sans TC',sans-serif;--font-mono:'JetBrains Mono',monospace}
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-serif:'Playfair Display',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{background:var(--void);color:var(--text);font-family:var(--font-body);line-height:1.85;-webkit-font-smoothing:antialiased;min-height:100vh}
-    ::selection{background:var(--glow-blue);color:var(--void)}
-    a{color:var(--glow-cyan);text-decoration:none;transition:color .2s}
-    a:hover{color:var(--glow-white)}
-    .bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(0,180,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
-    nav.topnav{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,180,255,0.12);padding:18px 5vw;display:flex;justify-content:space-between;align-items:center}
-    .logo{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--glow-white);letter-spacing:0.04em}
-    .logo span{color:var(--glow-blue)}
-    .back-link{font-family:var(--font-head);font-size:0.82rem;color:var(--dim);letter-spacing:0.08em}
-    .back-link:hover{color:var(--glow-cyan)}
-    main{max-width:720px;margin:0 auto;padding:60px 5vw 100px}
-    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--dim);margin-bottom:24px;letter-spacing:0.04em}
-    .breadcrumb a{color:var(--dim)}
-    .breadcrumb a:hover{color:var(--glow-cyan)}
-    .cat{display:inline-block;font-family:var(--font-head);font-size:0.68rem;font-weight:700;letter-spacing:0.2em;color:var(--glow-blue);text-transform:uppercase;padding:4px 12px;background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.25);border-radius:100px;margin-bottom:18px}
-    h1{font-family:var(--font-head);font-size:clamp(1.8rem,4.5vw,2.6rem);font-weight:800;color:var(--glow-white);margin-bottom:18px;line-height:1.2;letter-spacing:-0.01em}
-    .meta{display:flex;gap:18px;font-family:var(--font-mono);font-size:0.76rem;color:var(--dim);margin-bottom:36px;padding-bottom:22px;border-bottom:1px dashed rgba(136,136,170,0.22);flex-wrap:wrap}
-    h2{font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--glow-white);margin:44px 0 16px;padding-left:18px;position:relative}
-    h2::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--glow-blue),var(--glow-cyan))}
-    h3{font-family:var(--font-head);font-size:1.08rem;font-weight:700;color:var(--glow-cyan);margin:26px 0 10px}
-    p{font-size:0.98rem;color:var(--text);margin-bottom:18px}
-    strong{color:var(--glow-white);font-weight:600}
-    ul,ol{padding-left:24px;margin-bottom:18px}
-    li{margin-bottom:8px;font-size:0.96rem}
-    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--glow-cyan);background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.16);padding:1px 7px;border-radius:4px}
-    pre{background:rgba(10,10,18,0.85);border:1px solid rgba(0,180,255,0.18);border-radius:10px;padding:18px 20px;margin:20px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:var(--text)}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
     pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
-    blockquote{border-left:3px solid var(--glow-blue);padding:8px 20px;margin:20px 0;background:rgba(0,180,255,0.05);border-radius:0 8px 8px 0;font-style:italic;color:var(--text)}
-    .callout{background:rgba(255,170,0,0.08);border-left:3px solid var(--warn-amber);padding:14px 18px;margin:20px 0;border-radius:0 8px 8px 0}
-    .callout strong{color:var(--warn-amber)}
-    table{width:100%;border-collapse:collapse;margin:20px 0;font-size:0.88rem;background:rgba(26,26,42,0.4);border:1px solid rgba(0,180,255,0.15);border-radius:8px;overflow:hidden}
-    th,td{padding:10px 14px;text-align:left;border-bottom:1px solid rgba(0,180,255,0.08)}
-    th{font-family:var(--font-head);font-weight:700;color:var(--glow-white);background:rgba(0,180,255,0.08);font-size:0.82rem;letter-spacing:0.02em}
+    blockquote{border-left:3px solid var(--accent-blue);padding:10px 22px;margin:22px 0;background:rgba(74,123,245,0.04);border-radius:0 var(--radius-sm) var(--radius-sm) 0;color:var(--text-2);font-family:var(--font-serif);font-style:italic}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
     tr:last-child td{border-bottom:none}
-    .article-footer{margin-top:60px;padding-top:32px;border-top:1px dashed rgba(136,136,170,0.22)}
-    .article-footer h3{color:var(--glow-white);font-size:0.88rem;margin-bottom:12px;letter-spacing:0.08em}
-    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-    .related a{display:block;background:rgba(26,26,42,0.5);border:1px solid rgba(0,180,255,0.15);border-radius:10px;padding:14px 18px;font-size:0.82rem;color:var(--text);transition:border-color .2s,transform .2s}
-    .related a:hover{border-color:var(--glow-cyan);transform:translateY(-2px);color:var(--glow-white)}
-    .related-cat{font-family:var(--font-mono);font-size:0.64rem;color:var(--glow-blue);letter-spacing:0.1em;display:block;margin-bottom:4px}
-    footer{border-top:1px solid rgba(0,180,255,0.1);padding:36px 5vw;text-align:center;font-size:0.78rem;color:var(--dim)}
-    footer .links{margin-bottom:12px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
-    footer a{color:var(--dim)}
-    footer a:hover{color:var(--glow-cyan)}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
   </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <nav class="topnav">
-    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
-    <a href="/blog/" class="back-link">← 回部落格</a>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
   </nav>
 
   <main>
     <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / DODGE MASTER 開發日誌</div>
     <span class="cat">Game Devlog</span>
-    <h1>DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲</h1>
+    <h1>DODGE MASTER 開發日誌：用 Canvas 寫一款<em>賽博龐克</em>閃避遊戲</h1>
     <div class="meta">
       <span>2026 年 4 月 21 日</span>
       <span>約 10 分鐘閱讀</span>
       <span>作者：Hao0321 Studio</span>
     </div>
 
+    <article>
     <p>DODGE MASTER 是 Hao0321 遊戲大廳目前流量最高的一款小遊戲。玩法很直觀：控制一個霓虹方塊在賽博龐克風格的賽道上閃避障礙物、撿金幣、拚高分。但表面簡單的背後其實擠了很多細節 — 物件池、連擊系統、角色稀有度、金幣商店、廣告觸點、每日任務、轉盤獎勵。這篇把整個 921 行的 HTML 單檔拆開講，順便分享我對「街機小品 = 讓玩家每 30 秒都有驚喜」的設計哲學。</p>
 
     <h2>為什麼用純 HTML 單檔</h2>
@@ -181,48 +183,34 @@ function returnObs(o) {
       <li><strong>Shop Deal</strong>（商店） — 看廣告領 50 金幣特惠。</li>
     </ol>
     <p>所有觸點都是<strong>選擇性（opt-in）</strong>，從不打斷遊戲中期、從不強制插入。這是我對自己立的一條紅線：<em>寧願賺少一點，也不要讓玩家在撞到關鍵障礙物前三秒跳出廣告</em>。</p>
-    <p>AdSense 審核通過前，這些按鈕顯示「模擬廣告」(跳過 3 秒 countdown 後發獎勵)。等 AdSense 啟用後，程式碼只要改一個 <code>adSlot.show()</code> 呼叫就能接真的廣告。</p>
 
     <h2>資料持久化</h2>
     <p>整個遊戲沒有伺服器（不像大廳其他遊戲要上傳分數到 Cloudflare D1）。所有資料存在 localStorage：</p>
-    <pre>// D = persistent game state
-D = {
+    <pre>D = {
   co: 0,            // coins
   best: 0,          // all-time best score
   bt: 0,            // best time
   bc: 0,            // best combo
   tg: 0,            // total games played
   td: 0,            // total dodges
-  chars: {},        // { charId: true } unlocked
+  chars: {},        // unlocked characters
   activeChar: 'basic',
-  missions: {},     // daily missions state
-  lastDaily: null,  // Y-M-D
+  missions: {},
+  lastDaily: null,
   skinsPurchased: {}
 };
 saveData = () =&gt; localStorage.setItem('DM', JSON.stringify(D));</pre>
-    <p>簡單直接。缺點是換裝置或清快取會掉資料，但這是免費瀏覽器遊戲可接受的權衡。未來如果要加雲端存檔，只需在 <code>saveData</code> 裡多打一個 <code>fetch('/api/dm-save')</code> 就好。</p>
+    <p>簡單直接。缺點是換裝置或清快取會掉資料，但這是免費瀏覽器遊戲可接受的權衡。</p>
 
     <h2>和遊戲大廳的整合</h2>
     <p>DODGE MASTER 作為 iframe 嵌在 <code>play.html?game=dodge-master</code> 裡。結算時要上傳分數到 Hao0321 遊戲大廳的排行榜：</p>
-    <pre>// In dodge-master-v5.html gameOver() handler:
-function endGame() {
-  // ...existing logic...
+    <pre>function endGame() {
   try {
     const h = window.parent && window.parent.haoGame;
     if (h && h.reportScore) h.reportScore(score);
   } catch (e) {}
 }</pre>
-    <p><code>window.parent.haoGame</code> 是大廳的 <code>play.html</code> 定義的全域 SDK，包含 <code>reportScore(n)</code>、<code>isLoggedIn()</code> 等方法。iframe 訪問 <code>window.parent</code> 跨 document 是 same-origin，不會被瀏覽器擋。</p>
     <p>踩過一個坑：Cloudflare Pages 預設的 <code>_headers</code> 設 <code>X-Frame-Options: DENY</code>，連同源 iframe 都擋掉。改成 <code>SAMEORIGIN</code> 才解決。</p>
-
-    <h2>設計上的取捨</h2>
-    <p>為了時間考量，有幾個我原本想做但砍掉的功能：</p>
-    <ul>
-      <li><strong>網路排行榜</strong>：已經接大廳 API，但沒有做即時更新（排名只在玩家打開大廳時才拉）。未來可能加 WebSocket 即時顯示。</li>
-      <li><strong>多關卡 / Boss Rush</strong>：原本想每 500 分觸發一次 Boss，但測下來節奏會斷，放棄。</li>
-      <li><strong>音效</strong>：目前 <code>sfx.hit()</code>、<code>sfx.coin()</code> 是用 Web Audio API 動態生成的方波。原本想錄好的音源，但檔案會太大（免費遊戲對初次載入速度敏感）。</li>
-      <li><strong>多人競速</strong>：一個人維護不起。</li>
-    </ul>
 
     <h2>數據回饋</h2>
     <p>目前 DODGE MASTER 的數據（過去一週）：</p>
@@ -242,15 +230,16 @@ function endGame() {
       <h3>延伸閱讀</h3>
       <div class="related">
         <a href="/blog/tech-stack.html">
-          <span class="related-cat">ENGINEERING</span>
+          <span class="related-cat">Engineering</span>
           Hao0321 Studio 的技術堆疊：1 人工作室的全端架構
         </a>
         <a href="/blog/cloudflare-workers-d1.html">
-          <span class="related-cat">BACKEND</span>
+          <span class="related-cat">Backend</span>
           用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端
         </a>
       </div>
     </div>
+    </article>
   </main>
 
   <footer>

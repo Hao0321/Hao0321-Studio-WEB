@@ -285,6 +285,13 @@
         try { return JSON.parse(localStorage.getItem('hao_user') || 'null'); } catch(e) { return null; }
       }
 
+      function safeAvatarUrl(u, fallback) {
+        if (typeof u !== 'string') return fallback;
+        // Allow only https URLs (Google profile pictures) or data:image/* SVG fallbacks
+        if (/^https:\/\//i.test(u) || /^data:image\//i.test(u)) return u;
+        return fallback;
+      }
+
       function renderAuth() {
         var chip = document.getElementById('authChip');
         if (!chip) return;
@@ -292,8 +299,15 @@
         if (u) {
           chip.classList.remove('logged-out');
           chip.setAttribute('href', 'index.html');
-          var av = u.avatar || 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
-          chip.innerHTML = '<img src="' + av + '" alt="" /><span class="coin">◈ ' + (u.coins || 0) + '</span>';
+          var fallback = 'data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22><rect width=%2240%22 height=%2240%22 fill=%22%23a855f7%22/></svg>';
+          var av = safeAvatarUrl(u.avatar, fallback);
+          while (chip.firstChild) chip.removeChild(chip.firstChild);
+          var img = document.createElement('img');
+          img.src = av; img.alt = '';
+          var span = document.createElement('span');
+          span.className = 'coin';
+          span.textContent = '◈ ' + (u.coins || 0);
+          chip.appendChild(img); chip.appendChild(span);
         } else {
           chip.classList.add('logged-out');
           chip.textContent = '登入';
@@ -455,10 +469,19 @@
           })
           .catch(function(err) {
             console.error('Game load error:', err);
-            document.getElementById('gameLoading').innerHTML =
-              '<span style="color:#ff6b6b;font-size:0.82rem;">載入失敗</span>' +
-              '<span style="color:#666;font-size:0.75rem;">' + err.message + '</span>' +
-              '<a href="index.html" style="color:#c4a882;font-size:0.78rem;margin-top:8px;">回到大廳</a>';
+            var box = document.getElementById('gameLoading');
+            while (box.firstChild) box.removeChild(box.firstChild);
+            var s1 = document.createElement('span');
+            s1.style.cssText = 'color:#ff6b6b;font-size:0.82rem';
+            s1.textContent = '載入失敗';
+            var s2 = document.createElement('span');
+            s2.style.cssText = 'color:#666;font-size:0.75rem';
+            s2.textContent = err && err.message ? err.message : '';
+            var a = document.createElement('a');
+            a.href = 'index.html';
+            a.style.cssText = 'color:#c4a882;font-size:0.78rem;margin-top:8px';
+            a.textContent = '回到大廳';
+            box.appendChild(s1); box.appendChild(s2); box.appendChild(a);
           });
       }
     }

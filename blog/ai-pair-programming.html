@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 協作開發：Claude 怎麼幫我寫 14 款遊戲 — Hao0321 Studio</title>
+  <meta name="description" content="一年下來把 Claude 當成 pair programmer 的真實心得 — 哪些任務能放心丟給 AI、哪些必須自己把關、怎麼避免 AI 生成的隱形 bug。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/ai-pair-programming.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="AI 協作開發：Claude 怎麼幫我寫 14 款遊戲" />
+  <meta property="og:description" content="一年下來的真實心得 — 哪些任務能放心丟給 AI、哪些必須自己把關、怎麼避免 AI 生成的隱形 bug。" />
+  <meta property="og:url" content="https://hao0321.com/blog/ai-pair-programming.html" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-01T00:00:00+08:00" />
+  <meta property="article:author" content="Hao0321 Studio" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;
+      --text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;
+      --border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);
+      --accent-blue:#4A7BF5;--accent-violet:#8E7CF0;
+      --grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);
+      --radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;
+      --shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);
+      --shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);
+      --shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);
+      --ease:cubic-bezier(0.22,1,0.36,1);
+      --font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;
+      --font-serif:'Playfair Display',Georgia,serif;
+      --font-mono:'JetBrains Mono',monospace;
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{
+      background:var(--bg);color:var(--text);
+      font-family:var(--font-sans);font-weight:400;line-height:1.7;
+      -webkit-font-smoothing:antialiased;min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),
+        radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),
+        radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);
+      background-attachment:fixed;
+    }
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+
+    .nav{
+      position:fixed;top:20px;left:50%;transform:translateX(-50%);
+      width:min(calc(100% - 32px),720px);z-index:100;
+      padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);
+      backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);
+      border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+    }
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    blockquote{border-left:3px solid var(--accent-blue);padding:10px 22px;margin:22px 0;background:rgba(74,123,245,0.04);border-radius:0 var(--radius-sm) var(--radius-sm) 0;color:var(--text-2);font-family:var(--font-serif);font-style:italic}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-3)}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+
+    @media (max-width:640px){
+      main{padding:120px 16px 80px}
+      article{padding:32px 24px;border-radius:var(--radius-md)}
+      h1{font-size:1.7rem}
+      h2{font-size:1.25rem}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / AI 協作開發</div>
+    <span class="cat">AI</span>
+    <h1>AI 協作開發：Claude 怎麼幫我寫 <em>14 款遊戲</em></h1>
+    <div class="meta">
+      <span>2026 年 5 月 1 日</span>
+      <span>約 11 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <article>
+    <p>過去一年，我把 Claude 當成正職 pair programmer。期間從 0 寫到 14 款瀏覽器遊戲、一個 Cloudflare Workers 後端、一份完整的工作室官網，外加幾個內部工具。這篇不是 AI 吹捧文，也不是「AI 會取代工程師嗎」的辯論文，而是把實際合作過程攤開講：哪些任務丟給 AI 是純賺、哪些是隱形地雷、人在這個流程中該扮演什麼角色。</p>
+
+    <h2>先講結論：AI 是「實習生 × 高速搜尋」</h2>
+    <p>把 Claude 想成一個讀過所有公開技術文件、寫程式速度比你快 5 倍、但<strong>對你的專案脈絡完全陌生</strong>的實習生，比較貼近真相。它能在 30 秒寫出一個能跑的物件池實作，但無法知道你 codebase 裡已經有一個更通用的版本在 <code>utils/pool.js</code>。它能背出 Canvas API 所有方法，但不知道你三天前因為 iOS Safari 的 bug 故意避開 <code>roundRect</code>。</p>
+    <p>所以「AI 協作得好不好」很大程度取決於<strong>你給的脈絡夠不夠</strong>，以及<strong>你對輸出的把關有多嚴</strong>。下面把實際工作流拆成幾個階段。</p>
+
+    <h2>哪些任務我會放心丟給 Claude</h2>
+
+    <h3>1. 樣板程式碼（boilerplate）</h3>
+    <p>這是 AI 表現最穩定的領域。例子：</p>
+    <ul>
+      <li>「幫我寫一個 React component，props 是 <code>title, items, onSelect</code>，UI 是垂直清單，被點擊時呼叫 <code>onSelect(item)</code>」</li>
+      <li>「把這個 D1 schema 的 5 張表都生對應的 TypeScript interface」</li>
+      <li>「為這個 utility function 寫 5 個 Vitest 測試案例」</li>
+    </ul>
+    <p>這些任務有明確輸入、明確輸出、沒有業務邏輯爭議。AI 寫一次比我手 typing 快 5～10 倍，而且很少出錯。</p>
+
+    <h3>2. 翻譯、轉換、格式化</h3>
+    <p>「把這個 jQuery 寫法改成 vanilla JS」、「把這份 SQL 翻譯成 Cloudflare D1 prepared statement」、「這份 README 用 Markdown 改寫成 HTML」。AI 在「A 形式 → B 形式」的轉換上幾乎不會錯，因為兩邊都有明確規則。</p>
+
+    <h3>3. 解釋陌生程式碼</h3>
+    <p>接手別人的專案、或讀開源庫的時候，貼一段函式給 Claude 問「這在做什麼、可能的副作用是什麼」往往比自己一行行追快很多。注意它有時會「幻覺」說某個函式有不存在的副作用 — 把它當成一份「需要驗證的 hypothesis」就好。</p>
+
+    <h3>4. 寫第一版 prototype</h3>
+    <p>當我有一個模糊的想法（「想做一款連連看，要支援多種主題」），讓 Claude 寫出一個 200 行的最小可玩版本，比自己從零開始快多了。第一版的程式架構通常會被我重寫，但<strong>有東西可以批評，比盯著空白檔案快</strong>。</p>
+
+    <h2>哪些任務我絕對自己寫</h2>
+
+    <h3>1. 牽涉「為什麼這樣設計」的決策</h3>
+    <p>架構決定、技術選型、資料庫 schema、API contract。這些決定會持續影響半年以上的專案，必須由真正了解業務脈絡的人下。我會跟 Claude 討論 — 把它當白板 — 但最終的拍板由我來。</p>
+
+    <h3>2. 關鍵安全邏輯</h3>
+    <p>JWT 簽章驗證、SQL 參數化、權限檢查、CORS 設定。這些寫錯就是真實的安全漏洞，AI 偶爾會生出看起來對但實際有缺陷的版本（例如把 <code>verify()</code> 寫成 <code>decode()</code>，前者驗簽後者只解碼）。我都自己寫，再請 Claude review。</p>
+
+    <h3>3. 業務邏輯的核心算法</h3>
+    <p>遊戲的得分計算、難度曲線、AI 對手策略。這些是遊戲好不好玩的關鍵，需要設計師直覺，AI 給的版本通常太「平均」、缺乏記憶點。</p>
+
+    <h2>實戰流程：寫一款新遊戲</h2>
+    <p>用前陣子做的 <strong>Color Match</strong> 為例：</p>
+
+    <ol>
+      <li><strong>需求拆解（人）</strong>：我寫一份 200 字的 spec — 玩法、控制方式、計分規則、視覺風格。</li>
+      <li><strong>骨架（AI）</strong>：丟給 Claude，請它生 React component 結構（state、effects、handlers 列表）。</li>
+      <li><strong>核心算法（人）</strong>：我自己寫關卡生成邏輯與計分公式。這是遊戲魂的部分。</li>
+      <li><strong>UI 樣式（AI）</strong>：把核心 component 給 Claude，請它寫 CSS 與動畫，給定色票與字型。</li>
+      <li><strong>邊角案例（協作）</strong>：我列出所有可能的 edge case（連點、視窗縮放、tab 切換暫停），Claude 補相對應的處理。</li>
+      <li><strong>測試與 QA（人）</strong>：自己玩、找朋友玩、看 console、看效能。AI 不會替你按手機螢幕。</li>
+    </ol>
+
+    <p>這個分工大約讓我寫遊戲的速度提升到 <strong>3～4 倍</strong>。一款規模類似 DODGE MASTER 的小遊戲，過去要 5～7 天，現在 2 天可以上線。</p>
+
+    <h2>Claude 最常犯的隱形錯誤</h2>
+
+    <h3>1. 過度抽象</h3>
+    <p>給它一段重複出現 3 次的 if-else，它常會直接抽出 strategy pattern。但<strong>抽象層越多，未來改動越貴</strong>。我會明確要求：「先複製貼上，等真的有第 4 處再抽」。</p>
+
+    <h3>2. 加防禦性程式碼到不需要的地方</h3>
+    <p>內部 helper function 被加上 <code>if (typeof input !== 'string') throw</code> 之類。如果 caller 已經是受信任的內部程式碼，這層防禦只是雜訊。我會直接刪掉。</p>
+
+    <h3>3. 寫過於詳細的註解</h3>
+    <p>每個 if 上面都寫一行「<em>// Check if user is logged in</em>」。我會掃過全檔刪光，只留下解釋「<strong>為什麼</strong>」而不是「做什麼」的註解。</p>
+
+    <h3>4. 用過時的 API</h3>
+    <p>偶爾會看到 <code>componentDidMount</code> 或 <code>React.createClass</code>。新的對話要明確告訴它「用 React 18 + hooks」。</p>
+
+    <h3>5. 假裝知道你的檔案結構</h3>
+    <p>「<em>你可以把這個放到 src/utils/index.ts</em>」 — 但我的專案根本沒有 <code>src/</code>。這是 LLM 的「自信幻覺」。修法：在系統提示裡先列出實際的目錄樹。</p>
+
+    <h2>Code review 的五個必檢點</h2>
+    <p>每次 AI 產出新程式碼，我會固定跑這份 checklist：</p>
+    <table>
+      <tr><th>檢查項</th><th>工具 / 動作</th></tr>
+      <tr><td>編譯 / 解析錯誤</td><td>跑一次 <code>node --check</code> 或在瀏覽器開來看</td></tr>
+      <tr><td>變數有沒有用到不存在的</td><td>看一次完整 diff，腦補 import 列表</td></tr>
+      <tr><td>有沒有把 secret 寫死</td><td>grep <code>SECRET|TOKEN|sk_</code></td></tr>
+      <tr><td>有沒有改到我沒指定的檔案</td><td>看 git status，<code>git diff</code> 兩眼</td></tr>
+      <tr><td>UI 在實機上有沒有壞</td><td>必親手在手機 + 桌面跑一次</td></tr>
+    </table>
+
+    <h2>給協作 AI 的有效提示模板</h2>
+    <p>我手邊有一份「對 AI 開口」的模板，每次重複使用：</p>
+    <pre>【脈絡】
+- 專案：Hao0321 遊戲大廳
+- 檔案：game/dodge-master-v5.html（單檔 HTML，純 Canvas）
+- 已有功能：物件池、分數、金幣、商店、簽到
+- 現在要：新增「角色稀有度」系統，影響商店價格與抽獎機率
+
+【限制】
+- 不要引入新的 npm package
+- 不要改動現有的 game state shape，只在 player 物件新增 rarity 欄位
+- 必須跑在 iOS Safari 14+ 上
+
+【期望輸出】
+- 列出所有需要修改的函式名稱（不要寫程式碼）
+- 等我點頭再動手</pre>
+    <p>明確的脈絡 + 限制 + 階段性確認，可以省掉 70% 的「先生一坨我不要的程式碼」時間。</p>
+
+    <h2>結語：AI 不是替你寫，是替你打字</h2>
+    <p>用了一年下來最深的體會是：<strong>AI 沒有取代「思考」，它取代的是「打字」與「查文件」</strong>。判斷「這個 feature 該不該做」「這個架構正不正確」「這個 bug 影響有多嚴重」依然是你的工作。但那些把腦中已經想好的東西寫成 200 行可運作程式碼的勞動，AI 的確大幅縮短。</p>
+    <p>對獨立開發者而言，這個改變是巨大的 — 一個人能撐起的專案規模，從「一份小工具」直接放大到「一個小工作室的全部產出」。我自己這一年從原本兼職寫 1 款遊戲，變成同時推進 14 款 + 後端 + 官網，而且還沒燒掉。</p>
+    <p>如果你也在用 AI 寫程式碼、想交流心得，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/tech-stack.html">
+          <span class="related-cat">Engineering</span>
+          Hao0321 Studio 的技術堆疊：1 人工作室的全端架構
+        </a>
+        <a href="/blog/dodge-master-devlog.html">
+          <span class="related-cat">Game Devlog</span>
+          DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲
+        </a>
+      </div>
+    </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

@@ -92,6 +92,14 @@ async function checkCoinAchievements(env, uid, coins) {
   return unlocked;
 }
 
+// Whitelist of known game IDs (used by /play and /score to prevent abuse)
+const ALLOWED_GAMES = new Set([
+  'cat-battle', 'dodge-master', 'pact-of-arcania', 'poker-fortune',
+  'taiwan-monopoly', 'chess-master', 'color-match', 'snake-classic',
+  'tetris-clone', 'memory-flip', '2048', 'minesweeper',
+  'reaction-time', 'breakout',
+]);
+
 async function checkStreakAchievements(env, uid, streak) {
   const unlocked = [];
   if (streak >= 3)  { const r = await tryUnlock(env, uid, 'streak_3');  if (r) unlocked.push(r); }
@@ -120,9 +128,18 @@ export default {
         if (!body || !body.token) return err('token required');
         const { token } = body;
         // Verify Google ID token
-        const gRes = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + token);
+        const gRes = await fetch('https://oauth2.googleapis.com/tokeninfo?id_token=' + encodeURIComponent(token));
         if (!gRes.ok) return err('Invalid Google token', 401);
         const gData = await gRes.json();
+
+        // Critical: validate audience, expiry, subject — without these,
+        // any Google ID token issued for ANY OAuth client could log in here.
+        if (!env.GOOGLE_CLIENT_ID) return err('Server misconfigured: GOOGLE_CLIENT_ID not set', 500);
+        if (gData.aud !== env.GOOGLE_CLIENT_ID) return err('Invalid token audience', 401);
+        if (!gData.sub) return err('Invalid token subject', 401);
+        if (!gData.exp || Number(gData.exp) * 1000 < Date.now()) return err('Token expired', 401);
+        if (gData.email_verified === 'false' || gData.email_verified === false) return err('Email not verified', 401);
+
         const googleId = gData.sub;
         const name = gData.name || 'Player';
         const avatar = gData.picture || null;
@@ -190,6 +207,10 @@ export default {
         const body = await readJson(req);
         const game = body && body.game;
         if (!game) return err('game required');
+        // Whitelist known game IDs to prevent counter spam against arbitrary rows
+        if (typeof game !== 'string' || game.length > 64 || !ALLOWED_GAMES.has(game)) {
+          return err('unknown game');
+        }
         await env.DB.prepare('UPDATE play_counts SET count = count + 1 WHERE game_id = ?').bind(game).run();
         return json({ ok: true });
       }

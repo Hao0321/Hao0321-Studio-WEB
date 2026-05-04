@@ -6,7 +6,7 @@
   <title>Hao0321 Studio 的技術堆疊：1 人工作室的全端架構 — Hao0321 Studio</title>
   <meta name="description" content="從前端、後端、認證到 CDN — 一個人可維護、月成本 200 元以下的完整網站架構。" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#00b4ff" />
+  <meta name="theme-color" content="#F4F4F7" />
   <link rel="canonical" href="https://hao0321.com/blog/tech-stack.html" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
@@ -14,82 +14,86 @@
   <meta property="og:title" content="Hao0321 Studio 的技術堆疊：1 人工作室的全端架構" />
   <meta property="og:description" content="從前端到後端，一人獨立工作室的全端架構與月 200 元成本分析。" />
   <meta property="og:url" content="https://hao0321.com/blog/tech-stack.html" />
-  <meta property="og:image" content="https://hao0321.com/og-hero.jpg" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
   <meta property="og:locale" content="zh_TW" />
   <meta property="article:published_time" content="2026-04-21T00:00:00+08:00" />
   <meta property="article:author" content="Hao0321 Studio" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
-    :root{--void:#050508;--hull:#0a0a12;--steel:#1a1a2a;--glow-blue:#00b4ff;--glow-cyan:#00e5ff;--glow-white:#e0e8ff;--hud-green:#00ff88;--warn-amber:#ffaa00;--dim:#8888aa;--text:#d0d8ee;--font-head:'Space Grotesk','Noto Sans TC',sans-serif;--font-body:'Inter','Noto Sans TC',sans-serif;--font-mono:'JetBrains Mono',monospace}
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-serif:'Playfair Display',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
     *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{background:var(--void);color:var(--text);font-family:var(--font-body);line-height:1.85;-webkit-font-smoothing:antialiased;min-height:100vh}
-    ::selection{background:var(--glow-blue);color:var(--void)}
-    a{color:var(--glow-cyan);text-decoration:none;transition:color .2s}
-    a:hover{color:var(--glow-white)}
-    .bg-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;background-image:linear-gradient(rgba(0,180,255,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,180,255,0.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%);-webkit-mask-image:radial-gradient(ellipse at center,black 30%,transparent 80%)}
-    nav.topnav{position:sticky;top:0;z-index:100;background:rgba(5,5,8,0.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(0,180,255,0.12);padding:18px 5vw;display:flex;justify-content:space-between;align-items:center}
-    .logo{font-family:var(--font-head);font-weight:700;font-size:1rem;color:var(--glow-white);letter-spacing:0.04em}
-    .logo span{color:var(--glow-blue)}
-    .back-link{font-family:var(--font-head);font-size:0.82rem;color:var(--dim);letter-spacing:0.08em}
-    .back-link:hover{color:var(--glow-cyan)}
-    main{max-width:720px;margin:0 auto;padding:60px 5vw 100px}
-    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--dim);margin-bottom:24px;letter-spacing:0.04em}
-    .breadcrumb a{color:var(--dim)}
-    .breadcrumb a:hover{color:var(--glow-cyan)}
-    .cat{display:inline-block;font-family:var(--font-head);font-size:0.68rem;font-weight:700;letter-spacing:0.2em;color:var(--glow-blue);text-transform:uppercase;padding:4px 12px;background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.25);border-radius:100px;margin-bottom:18px}
-    h1{font-family:var(--font-head);font-size:clamp(1.8rem,4.5vw,2.6rem);font-weight:800;color:var(--glow-white);margin-bottom:18px;line-height:1.2;letter-spacing:-0.01em}
-    .meta{display:flex;gap:18px;font-family:var(--font-mono);font-size:0.76rem;color:var(--dim);margin-bottom:36px;padding-bottom:22px;border-bottom:1px dashed rgba(136,136,170,0.22);flex-wrap:wrap}
-    h2{font-family:var(--font-head);font-size:1.4rem;font-weight:700;color:var(--glow-white);margin:44px 0 16px;padding-left:18px;position:relative}
-    h2::before{content:'';position:absolute;left:0;top:6px;bottom:6px;width:3px;border-radius:2px;background:linear-gradient(180deg,var(--glow-blue),var(--glow-cyan))}
-    h3{font-family:var(--font-head);font-size:1.08rem;font-weight:700;color:var(--glow-cyan);margin:26px 0 10px}
-    p{font-size:0.98rem;color:var(--text);margin-bottom:18px}
-    strong{color:var(--glow-white);font-weight:600}
-    ul,ol{padding-left:24px;margin-bottom:18px}
-    li{margin-bottom:8px;font-size:0.96rem}
-    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--glow-cyan);background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.16);padding:1px 7px;border-radius:4px}
-    pre{background:rgba(10,10,18,0.85);border:1px solid rgba(0,180,255,0.18);border-radius:10px;padding:18px 20px;margin:20px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.82rem;line-height:1.6;color:var(--text)}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
     pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
-    blockquote{border-left:3px solid var(--glow-blue);padding:8px 20px;margin:20px 0;background:rgba(0,180,255,0.05);border-radius:0 8px 8px 0;font-style:italic;color:var(--text)}
-    .callout{background:rgba(255,170,0,0.08);border-left:3px solid var(--warn-amber);padding:14px 18px;margin:20px 0;border-radius:0 8px 8px 0}
-    .callout strong{color:var(--warn-amber)}
-    table{width:100%;border-collapse:collapse;margin:20px 0;font-size:0.88rem;background:rgba(26,26,42,0.4);border:1px solid rgba(0,180,255,0.15);border-radius:8px;overflow:hidden}
-    th,td{padding:10px 14px;text-align:left;border-bottom:1px solid rgba(0,180,255,0.08)}
-    th{font-family:var(--font-head);font-weight:700;color:var(--glow-white);background:rgba(0,180,255,0.08);font-size:0.82rem;letter-spacing:0.02em}
+    blockquote{border-left:3px solid var(--accent-blue);padding:10px 22px;margin:22px 0;background:rgba(74,123,245,0.04);border-radius:0 var(--radius-sm) var(--radius-sm) 0;color:var(--text-2);font-family:var(--font-serif);font-style:italic}
+    .callout{background:rgba(74,123,245,0.06);border-left:3px solid var(--accent-blue);padding:14px 20px;margin:22px 0;border-radius:0 var(--radius-sm) var(--radius-sm) 0;color:var(--text-2)}
+    .callout strong{color:var(--accent-blue)}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
     tr:last-child td{border-bottom:none}
-    .article-footer{margin-top:60px;padding-top:32px;border-top:1px dashed rgba(136,136,170,0.22)}
-    .article-footer h3{color:var(--glow-white);font-size:0.88rem;margin-bottom:12px;letter-spacing:0.08em}
-    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-    .related a{display:block;background:rgba(26,26,42,0.5);border:1px solid rgba(0,180,255,0.15);border-radius:10px;padding:14px 18px;font-size:0.82rem;color:var(--text);transition:border-color .2s,transform .2s}
-    .related a:hover{border-color:var(--glow-cyan);transform:translateY(-2px);color:var(--glow-white)}
-    .related-cat{font-family:var(--font-mono);font-size:0.64rem;color:var(--glow-blue);letter-spacing:0.1em;display:block;margin-bottom:4px}
-    footer{border-top:1px solid rgba(0,180,255,0.1);padding:36px 5vw;text-align:center;font-size:0.78rem;color:var(--dim)}
-    footer .links{margin-bottom:12px;display:flex;justify-content:center;gap:22px;flex-wrap:wrap}
-    footer a{color:var(--dim)}
-    footer a:hover{color:var(--glow-cyan)}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
   </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <nav class="topnav">
-    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
-    <a href="/blog/" class="back-link">← 回部落格</a>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
   </nav>
 
   <main>
     <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / 技術堆疊</div>
     <span class="cat">Engineering</span>
-    <h1>Hao0321 Studio 的技術堆疊：1 人工作室的全端架構</h1>
+    <h1>Hao0321 Studio 的技術堆疊：<em>1 人工作室</em>的全端架構</h1>
     <div class="meta">
       <span>2026 年 4 月 21 日</span>
       <span>約 8 分鐘閱讀</span>
       <span>作者：Hao0321 Studio</span>
     </div>
 
+    <article>
     <p>做獨立工作室最容易踩的雷，就是在技術選擇上花太多時間討論「用什麼才對」，最後一行程式碼都沒寫。我花了一段時間實際把工作室官網、14 款瀏覽器遊戲、後端 API 全部上線，累積下來的架構非常簡單，全部加起來月固定成本不到台幣 200 元，一個人週末就能 debug 完。這篇把全站技術堆疊完整攤開，當成給未來想做類似規模專案的朋友（以及半年後忘記自己用什麼的我）的一份備忘錄。</p>
 
     <h2>為什麼要寫這篇</h2>
@@ -128,14 +132,11 @@
     <pre>fetch('cat-battle.jsx')
   .then(r =&gt; r.text())
   .then(raw =&gt; {
-    // 1. Strip ES module syntax (import/export)
     const { code, defaultExport } = stripModuleSyntax(raw);
-    // 2. JSX → JS via Babel
     const transformed = Babel.transform(code, { presets: ['react'] }).code;
-    // 3. Wrap in IIFE, inject hooks, mount to #game-root
     eval(finalCode);
   });</pre>
-    <p>這個做法看起來很粗暴（「Babel 在瀏覽器裡跑 = 慢」），但實際延遲可以接受：React + Babel 加起來約 200KB gzipped，第一次載入花 300ms，切換遊戲時的 Babel 轉譯大約 50～150ms。换取的好處是：</p>
+    <p>這個做法看起來很粗暴（「Babel 在瀏覽器裡跑 = 慢」），但實際延遲可以接受：React + Babel 加起來約 200KB gzipped，第一次載入花 300ms，切換遊戲時的 Babel 轉譯大約 50～150ms。換取的好處是：</p>
     <ul>
       <li><strong>不需要任何 build pipeline</strong>。改 <code>.jsx</code> → 直接 git push → Cloudflare Pages 自動部署 → 完成。</li>
       <li><strong>每款遊戲獨立</strong>。要加一款遊戲，只要新增一個 <code>.jsx</code> 檔再登記到 <code>play.html</code> 的 <code>GAMES</code> 物件即可，不用重新 build 整站。</li>
@@ -144,7 +145,7 @@
     <p>權衡：production 流量大時這不是最佳解，應該 pre-compile。但當前工作室規模，這個成本可以吸收。</p>
 
     <h3>字型與視覺一致性</h3>
-    <p>全站用三個 Google Fonts：<strong>Space Grotesk</strong>（標題、英文）、<strong>Inter</strong>（正文）、<strong>Noto Sans TC</strong>（中文）、再加一個 <strong>JetBrains Mono</strong>（等寬）。色彩系統統一由 CSS custom properties 管理，每個頁面都複製同一套 <code>:root</code> 變數表 — 醜但穩定。</p>
+    <p>全站用 Plus Jakarta Sans（標題、英文）、Noto Sans TC（中文）、Playfair Display（特殊強調）、JetBrains Mono（等寬）。色彩系統統一由 CSS custom properties 管理，每個頁面都複製同一套 <code>:root</code> 變數表 — 醜但穩定。</p>
 
     <h2>後端（Backend）</h2>
 
@@ -183,12 +184,11 @@
       <li>前端載入 Google Identity Services SDK，渲染「Sign in with Google」按鈕。</li>
       <li>使用者授權後，Google 回傳一個 ID token（JWT 格式）。</li>
       <li>前端把 ID token 打到 <code>/auth/google</code>。</li>
-      <li>Worker 呼叫 <code>https://oauth2.googleapis.com/tokeninfo?id_token=...</code> 向 Google 驗證 token 有效，取出 <code>sub</code>（Google user ID）、<code>name</code>、<code>picture</code>。</li>
+      <li>Worker 呼叫 Google tokeninfo 端點驗證 token 有效，並檢查 <code>aud</code>（必須等於我們的 GOOGLE_CLIENT_ID）、<code>exp</code>（未過期）、<code>email_verified</code>。</li>
       <li>Worker 寫入 D1 <code>users</code> 表（若是新使用者），用自己的 <code>JWT_SECRET</code> 簽一個 30 天期限的 session JWT 回給前端。</li>
       <li>前端把 session JWT 存 localStorage，之後所有 API 請求 header 帶 <code>Authorization: Bearer &lt;jwt&gt;</code>。</li>
     </ol>
     <p><code>JWT_SECRET</code> 用 <code>wrangler secret put</code> 存在 Cloudflare Workers 的加密環境變數，<strong>從不寫進原始碼或 wrangler.toml</strong>。先前踩過一次把 placeholder secret 寫進 wrangler.toml 推到 GitHub 的坑，立刻 rotate 換掉。</p>
-    <p>這套做法的好處是：使用者不用記第二組密碼、我們不用做密碼加密/重設流程、沒有 Credential stuffing 攻擊面。壞處是 100% 依賴 Google — 如果使用者不想用 Google 帳號就完全沒辦法登入。這是個權衡。</p>
 
     <h2>部署（Deploy）</h2>
     <p>三個獨立的 Cloudflare Pages / Workers 專案：</p>
@@ -238,15 +238,16 @@
       <h3>延伸閱讀</h3>
       <div class="related">
         <a href="/blog/cloudflare-workers-d1.html">
-          <span class="related-cat">BACKEND</span>
+          <span class="related-cat">Backend</span>
           用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端
         </a>
         <a href="/blog/dodge-master-devlog.html">
-          <span class="related-cat">GAME DEVLOG</span>
+          <span class="related-cat">Game Devlog</span>
           DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲
         </a>
       </div>
     </div>
+    </article>
   </main>
 
   <footer>

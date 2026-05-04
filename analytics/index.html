@@ -44,7 +44,12 @@
         document.body.appendChild(script);
       })
       .catch(function(err) {
-        document.getElementById('app-root').innerHTML = '<div style="color:#f66;padding:40px;font-family:monospace">Error: ' + err.message + '</div>';
+        var root = document.getElementById('app-root');
+        while (root.firstChild) root.removeChild(root.firstChild);
+        var d = document.createElement('div');
+        d.style.cssText = 'color:#f66;padding:40px;font-family:monospace';
+        d.textContent = 'Error: ' + (err && err.message ? err.message : err);
+        root.appendChild(d);
       });
   </script>
 </body>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chess Master — 8 種棋類合一的 React 架構設計 — Hao0321 Studio</title>
+  <meta name="description" content="象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日麻、台麻八合一。共用元件如何抽取、AI 如何分層、資料結構如何統一。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/chess-master-architecture.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Chess Master — 8 種棋類合一的 React 架構設計" />
+  <meta property="og:description" content="象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日麻、台麻八合一。共用元件如何抽取、AI 如何分層、資料結構如何統一。" />
+  <meta property="og:url" content="https://hao0321.com/blog/chess-master-architecture.html" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-04-27T00:00:00+08:00" />
+  <meta property="article:author" content="Hao0321 Studio" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-serif:'Playfair Display',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Chess Master 架構</div>
+    <span class="cat">Game Devlog</span>
+    <h1>Chess Master — <em>8 種棋類合一</em>的 React 架構設計</h1>
+    <div class="meta">
+      <span>2026 年 4 月 27 日</span>
+      <span>約 12 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <article>
+    <p>Chess Master 是遊戲大廳裡的「八合一棋類大全」：象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日式麻將、台式麻將。看似八款獨立遊戲，實際是一個共用了 70% 程式碼的單一 React 架構。這篇講當初怎麼把這個架構切出來，包括幾個踩過的雷與最後的設計取捨。</p>
+
+    <h2>為什麼合在一起做</h2>
+    <p>原本想各做一個獨立 <code>.jsx</code> 檔（八個檔案），但寫到第三款（圍棋）時開始重複的東西很多：棋盤渲染、回合切換、悔棋按鈕、計時器、AI 對手骨架、勝負判定流程⋯⋯ 每款獨立寫只是把同樣的 bug 重新踩一遍。最後決定停下來重構，把「棋類遊戲」抽成一個共用的 framework。</p>
+
+    <h2>架構分層</h2>
+    <p>整個 Chess Master 切成 <strong>四層</strong>：</p>
+    <pre>┌──────────────────────────────────┐
+│  Layer 4: GameSelector (UI)      │  選哪款棋
+├──────────────────────────────────┤
+│  Layer 3: Game Definitions        │  象棋規則 / 圍棋規則 / ...
+├──────────────────────────────────┤
+│  Layer 2: BoardEngine (共用)      │  棋盤渲染、互動、計時器、悔棋
+├──────────────────────────────────┤
+│  Layer 1: AIRunner (共用)         │  Web Worker 跑 minimax
+└──────────────────────────────────┘</pre>
+
+    <p>每款棋只需要實作 <strong>Game Definition</strong>（Layer 3）— 一個約 200～400 行的 JS 物件，描述：</p>
+
+    <pre>const Xiangqi = {
+  name: '象棋',
+  boardSize: { rows: 10, cols: 9 },
+  initialPieces: [/* 32 顆棋子的初始位置 */],
+
+  legalMoves(board, piece) { /* ... */ },
+  evaluateState(board, currentTurn) { /* ... */ },
+  scoreForAI(board, side) { /* ... */ },
+  renderPiece(piece, ctx) { /* ... */ },
+};</pre>
+
+    <p>Layer 2 的 <code>BoardEngine</code> 接到 Game Definition 後，就能把「使用者點擊棋盤」翻譯成「呼叫 <code>legalMoves</code> → 顯示 highlight → 等待第二次點擊 → 呼叫 <code>evaluateState</code>」的標準流程。每款棋的差異收斂到 Layer 3 的純資料 + 純函式。</p>
+
+    <h2>共用 hooks</h2>
+    <p>BoardEngine 把通用行為包成 hooks，每款棋遊戲都拿同一份：</p>
+
+    <pre>const turn = useTurnState({ players: ['red', 'black'] });
+const history = useGameHistory(initialBoard);
+
+useAIOpponent({
+  enabled: opponent === 'ai',
+  side: 'black',
+  thinkingTimeMs: 1500,
+  onMove: (move) =&gt; history.applyMove(move),
+});
+
+const timer = useGameTimer({ totalMs: 600000, side: turn.current });</pre>
+
+    <p>這套 hooks 寫了大約 600 行，但讓每款新棋從「800 行起跳」降到「200～400 行」。投資報酬率非常高。</p>
+
+    <h2>處理「棋類規則差異」的策略</h2>
+    <p>八款棋的差異比表面複雜得多。舉幾個例子：</p>
+
+    <table>
+      <tr><th>差異點</th><th>例子</th></tr>
+      <tr><td>棋盤形狀</td><td>象棋有「楚河漢界」、跳棋是六角格、麻將沒棋盤只有手牌</td></tr>
+      <tr><td>勝負規則</td><td>圍棋數目、五子棋連珠、暗棋吃光、麻將胡牌</td></tr>
+      <tr><td>移動方式</td><td>象棋逐格、跳棋可連跳、飛行棋擲骰</td></tr>
+      <tr><td>每方棋子數</td><td>象棋固定 16、圍棋無限、暗棋未定（隨翻隨多）</td></tr>
+    </table>
+
+    <p>策略是 <strong>把差異收斂到「函式」</strong>，而不是「flag」。一旦看到 <code>if (gameType === 'go') { ... } else if (gameType === 'mahjong') { ... }</code> 就拒絕，全部改成「Game Definition 上的方法」。BoardEngine 只呼叫 <code>game.legalMoves()</code>，不需要知道是哪款棋。</p>
+
+    <h2>麻將是異類，獨立處理</h2>
+    <p>原本想把麻將也塞進同一個 BoardEngine，但麻將跟其他七款棋的差距太大：</p>
+    <ul>
+      <li>沒有「棋盤」，只有手牌 + 牌堆 + 棄牌池</li>
+      <li>四人同時、不是嚴格回合制（吃碰槓胡可中斷他人回合）</li>
+      <li>勝負判定要算番數，不是單純連線</li>
+    </ul>
+    <p>強塞進共用框架反而會讓兩邊都醜。最後決定：<strong>麻將分支獨立</strong>。共用 Layer 1 的 AIRunner 與 Layer 4 的 GameSelector，但有自己的 <code>MahjongEngine</code>。日麻與台麻則共用 MahjongEngine，差別只在「番數計算」與「役種定義」。</p>
+
+    <p>這次經驗讓我學到：<strong>抽象的價值在於減少重複勞動，不在於追求形式上的整齊</strong>。當強制統一會讓兩邊都更難寫，就該停手。</p>
+
+    <h2>AI 對手分三種強度</h2>
+    <p>AIRunner 的核心是 minimax + alpha-beta pruning，跑在 Web Worker 裡避免阻塞主執行緒。三個強度的差異不是換演算法，而是調幾個參數：</p>
+
+    <pre>const AI_LEVELS = {
+  easy:   { depth: 2, randomness: 0.4, thinkingMs: 800 },
+  medium: { depth: 4, randomness: 0.15, thinkingMs: 1500 },
+  hard:   { depth: 6, randomness: 0,    thinkingMs: 2500 },
+};</pre>
+
+    <ul>
+      <li><strong>depth</strong>：搜尋幾步深。每深一步，計算量約 ×10。</li>
+      <li><strong>randomness</strong>：在「分數差距 &lt; X」的候選裡隨機選一個。讓初級 AI 偶爾犯錯，玩家有勝算才有趣。</li>
+      <li><strong>thinkingMs</strong>：強制至少思考 X ms 才出招。即使一秒內算完也要等到時間到，避免「AI 一瞬間就出招」破壞節奏。</li>
+    </ul>
+
+    <p>圍棋例外，因為 minimax 在 19×19 的盤面上完全爆炸（每一步約 200 個合法位置）。圍棋的 AI 改用「pattern matching + 啟發式 move ordering」的簡化版，強度遠不如真正的 AlphaGo，但對休閒玩家夠了。</p>
+
+    <h2>三個踩過的坑</h2>
+
+    <h3>1. 過早抽象 Board 元件</h3>
+    <p>第一版的 Board 試圖用一個泛型物件描述「任意棋盤」（行、列、格子形狀、座標系統），結果 props 多到 14 個，每款棋都得傳完整對應。重構後改成「Board 接受 children」，每款棋自己渲染棋格，靠 <code>useBoardCoords()</code> hook 共用座標換算邏輯。</p>
+
+    <h3>2. AIRunner 的記憶體洩漏</h3>
+    <p>切換棋類時 Web Worker 沒有正確 terminate，每換一次就多一個 worker 在背景跑。3 個小時後 Chrome 開始卡。修法：在 BoardEngine 的 <code>useEffect</code> cleanup 裡 <code>worker.terminate()</code>，並且把 worker 的建立放進 ref 而非 state，避免 re-render 時被 stale closure 捕捉。</p>
+
+    <h3>3. 悔棋造成 AI 思考被取消</h3>
+    <p>玩家悔棋時，AI 還在 worker 裡跑 minimax。悔棋完盤面 state 改變了，AI 算出來的招會作用在舊盤面，導致非法移動。修法：每次玩家動作前先發 <code>{ type: 'cancel' }</code> 訊息給 worker，worker 收到後丟棄當前任務並回 ack。</p>
+
+    <h2>未來規劃</h2>
+    <p>下一階段想加的：</p>
+    <ul>
+      <li><strong>線上對弈</strong>：靠 Cloudflare Durable Objects 做 room 管理，不用自己架 WebSocket server。</li>
+      <li><strong>棋譜匯出</strong>：象棋 / 圍棋 / 五子棋輸出標準棋譜檔案（PGN / SGF），讓玩家可以分享或復盤。</li>
+      <li><strong>AI 強度可調</strong>：把 depth 與 randomness 開放給玩家，自由微調對手強弱。</li>
+    </ul>
+
+    <h2>結語</h2>
+    <p>「八合一」聽起來像是工程量乘以八，實際做完是「核心一份 + 八份規則資料」。前期重構的痛苦是真的，但中期之後加新棋類的速度大概是「兩天上一款」。對小工作室而言，<strong>共用架構 = 產品線擴張的槓桿</strong>。</p>
+    <p>有想交流棋類遊戲架構的朋友，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/tech-stack.html">
+          <span class="related-cat">Engineering</span>
+          Hao0321 Studio 的技術堆疊：1 人工作室的全端架構
+        </a>
+        <a href="/blog/dodge-master-devlog.html">
+          <span class="related-cat">Game Devlog</span>
+          DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲
+        </a>
+      </div>
+    </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>
