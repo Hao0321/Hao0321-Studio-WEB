@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 生圖在遊戲美術的工作流：28 張像素插圖怎麼產 — Hao0321 Studio</title>
+  <meta name="description" content="從 Midjourney 到 Stable Diffusion，獨立工作室用 AI 工具產遊戲美術的完整流程 — prompt 工程、後處理、批次優化的實戰紀錄。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/ai-art-pipeline.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="AI 生圖在遊戲美術的工作流" />
+  <meta property="og:description" content="從 Midjourney 到 Stable Diffusion，獨立工作室用 AI 工具產遊戲美術的完整流程。" />
+  <meta property="og:url" content="https://hao0321.com/blog/ai-art-pipeline.html" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-04T00:00:00+08:00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-serif:'Playfair Display',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    blockquote{border-left:3px solid var(--accent-blue);padding:10px 22px;margin:22px 0;background:rgba(74,123,245,0.04);border-radius:0 var(--radius-sm) var(--radius-sm) 0;color:var(--text-2);font-family:var(--font-serif);font-style:italic}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / AI 生圖工作流</div>
+    <span class="cat">Workflow</span>
+    <h1>AI 生圖在遊戲美術的工作流：<em>28 張像素插圖</em>怎麼產</h1>
+    <div class="meta">
+      <span>2026 年 5 月 4 日</span>
+      <span>約 10 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <article>
+    <p>之前在「為什麼我做了一個台灣版大富翁」一文裡提過，台灣富翁的 28 塊地產各有專屬的像素風小插圖（101 是大樓剪影、九份是階梯、阿里山是火車）。每張不到 500 bytes，但給玩家很強的記憶點。這篇把當時用 AI 生圖工具完成這 28 張小圖的完整流程拆開講 — prompt 怎麼寫、後處理怎麼做、為什麼最後選擇像素風而不是寫實風。</p>
+
+    <h2>為什麼用 AI 生圖而不是手繪</h2>
+    <p>獨立工作室最稀缺的是「美術時間」。28 張地產插圖，如果發包給插畫師，依台灣行情大約每張 800–2000 元，總價 2–6 萬，外加 1–2 週的溝通與修改週期。我用 AI 生圖工具把這個成本壓到：</p>
+    <ul>
+      <li><strong>時間</strong>：3 小時（含 prompt 試錯、批次生成、後處理）</li>
+      <li><strong>金錢</strong>：約 NT$0（用免費 quota 內的 Stable Diffusion 本地版本）</li>
+      <li><strong>修改成本</strong>：改個 prompt 重新生即可，不用發 Slack 等回覆</li>
+    </ul>
+    <p>代價是「藝術指導」全壓在自己身上 — AI 不會自己思考視覺風格的一致性，需要人去把關。但對「批量產低密度的素材」場景，這個 trade-off 完全值得。</p>
+
+    <h2>選擇像素風的原因</h2>
+    <p>一開始試過寫實風（「a photo of Taipei 101 at sunset」），結果發現幾個致命問題：</p>
+    <ol>
+      <li><strong>細節太多</strong>：1080p 寫實圖塞進 64×64 棋盤格根本看不清楚。</li>
+      <li><strong>風格漂移</strong>：28 張寫實圖很難維持「同一個世界觀」，光線、顏色、構圖各自為政。</li>
+      <li><strong>檔案太大</strong>：每張 200–500KB，28 張就 10MB+，瀏覽器遊戲不能容忍。</li>
+    </ol>
+    <p>切換到像素風（pixel art）之後一次解決三個問題：</p>
+    <ul>
+      <li>低解析度（32×32 或 64×64）天然適合棋盤格</li>
+      <li>像素風的「美學限制」反而讓 28 張更容易維持一致性 — 都被縮在同一個調色盤與網格裡</li>
+      <li>每張壓成 PNG-8 大約 200–500 bytes，全部 28 張不到 15KB</li>
+    </ul>
+
+    <h2>Prompt 工程實戰</h2>
+    <p>初版 prompt（失敗範例）：</p>
+    <pre>"pixel art of Taipei 101 building"</pre>
+    <p>產出來的是寫實感很重的「pixel art 風格但本質還是寫實」的圖。需要更明確的限制：</p>
+    <pre>"16-bit pixel art, Taipei 101 skyscraper silhouette,
+night sky, neon city lights, 32x32 sprite,
+limited 8-color palette, NES-style, clean outlines,
+no anti-aliasing, no gradients,
+solid color blocks, retro game asset --ar 1:1"</pre>
+
+    <p>關鍵詞解析：</p>
+    <table>
+      <tr><th>關鍵詞</th><th>作用</th></tr>
+      <tr><td>16-bit / NES-style</td><td>把 AI 鎖到 SNES / NES 時代的美學</td></tr>
+      <tr><td>limited 8-color palette</td><td>強制有限調色盤，避免漸層</td></tr>
+      <tr><td>32x32 sprite</td><td>明確的解析度暗示</td></tr>
+      <tr><td>no anti-aliasing</td><td>銳利邊緣，避免模糊</td></tr>
+      <tr><td>solid color blocks</td><td>避免複雜紋理</td></tr>
+      <tr><td>silhouette</td><td>強調剪影，符合縮圖辨識度</td></tr>
+    </table>
+
+    <h2>批次生成的 prompt 模板</h2>
+    <p>28 張地產要保持風格一致，最重要的是「prompt 模板」固定，只變動「主體描述」。我用的模板：</p>
+
+    <pre>STYLE_PREFIX = "16-bit pixel art, [SUBJECT], [SETTING],
+limited 8-color palette, retro NES-style,
+no anti-aliasing, solid color blocks, 32x32 sprite,
+clean outlines, blue-purple-pink color scheme"
+
+# 28 個地點各自填 [SUBJECT] 與 [SETTING]：
+台北101: SUBJECT="Taipei 101 skyscraper silhouette",
+         SETTING="night sky with neon city lights below"
+九份:    SUBJECT="winding stone steps with red lanterns",
+         SETTING="mountainside village at dusk"
+阿里山:  SUBJECT="vintage steam train on a single track",
+         SETTING="forested mountain pass with mist"
+...</pre>
+
+    <p>共用的 STYLE_PREFIX 確保 28 張看起來像「同一個畫家畫的」。實務上每個 SUBJECT 我會生 4 張變體（同 prompt 不同 seed），挑最好的一張，平均 1 個地點花 4 分鐘。</p>
+
+    <h2>後處理（Post-processing）</h2>
+    <p>AI 生出來的圖通常有幾個問題要修：</p>
+
+    <h3>1. 解析度不準</h3>
+    <p>就算寫了「32×32 sprite」，AI 生圖工具吐出來通常還是 1024×1024 或 512×512。需要用 nearest neighbor 演算法縮到 64×64 或 32×32。我用 Python + Pillow 批次處理：</p>
+    <pre>from PIL import Image
+import os
+
+for fname in os.listdir('raw/'):
+    img = Image.open(f'raw/{fname}')
+    # 先用 box filter 壓到 128，保留結構
+    img = img.resize((128, 128), Image.BOX)
+    # 再用 nearest neighbor 壓到 32，保銳利
+    img = img.resize((32, 32), Image.NEAREST)
+    img.save(f'processed/{fname}', optimize=True)</pre>
+
+    <h3>2. 調色盤漂移</h3>
+    <p>「8-color palette」常常被 AI 解讀成「以 8 色為主」但實際上有 200+ 色。需要強制 quantize：</p>
+    <pre>img = img.quantize(colors=8, method=Image.MEDIANCUT, dither=Image.NONE)</pre>
+    <p>quantize 後再轉回 RGB，最後輸出 PNG-8 indexed color。檔案從 50KB 壓到 500 bytes。</p>
+
+    <h3>3. 透明背景</h3>
+    <p>AI 預設生白色或深色背景。要把單一色背景改成透明：</p>
+    <pre>img = img.convert("RGBA")
+data = img.getdata()
+new_data = [
+    (255,255,255,0) if px[:3] == (255,255,255) else px
+    for px in data
+]
+img.putdata(new_data)</pre>
+    <p>這個簡化版只處理純白背景。實際上 AI 生的「白」常有 anti-alias 邊緣，需要 tolerance（abs(r-255) &lt; 10 之類的判斷）。</p>
+
+    <h3>4. 風格不一致的修補</h3>
+    <p>28 張裡總會有 2–3 張完全跑調 — 顏色太亮、構圖偏離。這時候我手動用 Aseprite 微調：把違和的像素點掉、調幾個顏色、補一些線條。每張 5–10 分鐘搞定。</p>
+
+    <h2>實際數據</h2>
+    <table>
+      <tr><th>項目</th><th>數量 / 時間</th></tr>
+      <tr><td>初版 prompt 試錯</td><td>1 小時</td></tr>
+      <tr><td>定稿 prompt 模板</td><td>30 分鐘</td></tr>
+      <tr><td>28 張批次生成（每張 4 變體）</td><td>1 小時</td></tr>
+      <tr><td>挑選 + 後處理</td><td>30 分鐘</td></tr>
+      <tr><td>不滿意的手動修補（3 張）</td><td>30 分鐘</td></tr>
+      <tr><td><strong>總計</strong></td><td><strong>3.5 小時</strong></td></tr>
+      <tr><td>最終檔案總大小</td><td>14.2 KB（28 張 PNG-8）</td></tr>
+    </table>
+
+    <h2>哪些任務 AI 生圖適合 / 不適合</h2>
+    <p>用了一年下來盤點：</p>
+    <table>
+      <tr><th>任務類型</th><th>AI 生圖表現</th></tr>
+      <tr><td>大量低密度素材（icon、tile）</td><td>★★★★★</td></tr>
+      <tr><td>背景圖、氣氛圖</td><td>★★★★</td></tr>
+      <tr><td>角色立繪（單張）</td><td>★★★（一致性差）</td></tr>
+      <tr><td>角色動畫（多 frame）</td><td>★（極難維持一致性）</td></tr>
+      <tr><td>UI 元素（按鈕、邊框）</td><td>★★（不如 CSS 寫死）</td></tr>
+      <tr><td>logo、品牌識別</td><td>★（必須人工）</td></tr>
+    </table>
+
+    <h2>版權與商業使用考量</h2>
+    <p>這是大家最關心的問題。我的政策是：</p>
+    <ul>
+      <li><strong>用本地版 Stable Diffusion + 開源模型</strong>：商業使用條款明確，沒有歸屬問題。</li>
+      <li><strong>避免用其他畫家名字當 prompt</strong>：「in the style of XXX」這種寫法在道德跟法律上都有爭議。</li>
+      <li><strong>明顯的二創作品手動重畫</strong>：如果 AI 生出來的東西明顯模仿到某個特定 IP，就不用，重生。</li>
+      <li><strong>保留 prompt 與 seed 紀錄</strong>：方便未來 audit。</li>
+    </ul>
+
+    <h2>結語</h2>
+    <p>AI 生圖在獨立遊戲開發的角色是「美術放大器」 — 不是取代美術，是讓一個有美學品味、有 prompt 工程能力的人，產出原本只有團隊才能產出的素材量。對 1 人工作室，這個工具讓「一款遊戲一張原創美術都用得起」變成可能。</p>
+    <p>下一篇我想寫「用 AI 寫 NPC 對話文本」的工作流。如果你有特定想看的 AI 工作流主題，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/taiwan-monopoly-design.html">
+          <span class="related-cat">Design</span>
+          為什麼我做了一個台灣版大富翁 — 設計決策全記錄
+        </a>
+        <a href="/blog/ai-pair-programming.html">
+          <span class="related-cat">AI</span>
+          AI 協作開發：Claude 怎麼幫我寫 14 款遊戲
+        </a>
+      </div>
+    </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

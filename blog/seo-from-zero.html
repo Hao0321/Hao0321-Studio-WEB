@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>獨立開發者 SEO 實戰：28 天從 0 到 20 個 Google 點擊 — Hao0321 Studio</title>
+  <meta name="description" content="新網站冷啟動的 SEO 真實數據紀錄 — 結構化資料、sitemap、canonical、內容策略，全部從 Search Console 截圖驗證。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/seo-from-zero.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="獨立開發者 SEO 實戰：28 天從 0 到 20 個 Google 點擊" />
+  <meta property="og:description" content="新網站冷啟動的 SEO 真實數據紀錄。" />
+  <meta property="og:url" content="https://hao0321.com/blog/seo-from-zero.html" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-04T00:00:00+08:00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-serif:'Playfair Display',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / SEO 實戰</div>
+    <span class="cat">SEO</span>
+    <h1>獨立開發者 SEO 實戰：<em>28 天從 0 到 20</em> 個 Google 點擊</h1>
+    <div class="meta">
+      <span>2026 年 5 月 4 日</span>
+      <span>約 11 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <article>
+    <p>前陣子收到 Google Search Console 寄來的「恭喜你在 28 天內獲得 20 次點擊」通知。對於一個沒有任何外部推廣、純靠內容自然成長的個人站，從 0 到 20 個有機點擊的這段過程其實踩了不少坑。這篇把整個 SEO 冷啟動流程攤開講 — 哪些技術 SEO 必做、哪些是過度優化、為什麼新站前 30 天最關鍵。</p>
+
+    <h2>起點：完全 0 流量</h2>
+    <p>Hao0321 Studio 官網上線時的狀態：</p>
+    <ul>
+      <li>新註冊網域（過去無歷史）</li>
+      <li>0 反向連結</li>
+      <li>未提交 sitemap</li>
+      <li>Google 完全不知道這個網站存在</li>
+    </ul>
+    <p>第一週的 Search Console 數據：曝光 0、點擊 0、平均排名 N/A。這是合理的 — Google 還沒爬過任何頁面。</p>
+
+    <h2>第 1 週：技術 SEO 必做清單</h2>
+    <p>在等 Google 爬蟲發現你之前，先把基礎打好。我跑的 checklist：</p>
+
+    <h3>1. 提交 sitemap.xml</h3>
+    <p>手寫一個 <code>sitemap.xml</code> 列出所有頁面，放在 <code>https://hao0321.com/sitemap.xml</code>，然後到 Search Console → Sitemaps 提交。</p>
+    <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://hao0321.com/&lt;/loc&gt;
+    &lt;lastmod&gt;2026-04-21&lt;/lastmod&gt;
+    &lt;changefreq&gt;weekly&lt;/changefreq&gt;
+    &lt;priority&gt;1.0&lt;/priority&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://hao0321.com/blog/&lt;/loc&gt;
+    &lt;lastmod&gt;2026-04-21&lt;/lastmod&gt;
+    &lt;changefreq&gt;weekly&lt;/changefreq&gt;
+    &lt;priority&gt;0.8&lt;/priority&gt;
+  &lt;/url&gt;
+  ...
+&lt;/urlset&gt;</pre>
+
+    <h3>2. robots.txt 別擋到自己</h3>
+    <p>很常見的錯誤：誤把 <code>Disallow: /</code> 留下，導致 Google 完全爬不到。我的 <code>robots.txt</code> 永遠只有：</p>
+    <pre>User-agent: *
+Allow: /
+
+Sitemap: https://hao0321.com/sitemap.xml</pre>
+
+    <h3>3. 每個頁面 Meta tags 完整</h3>
+    <ul>
+      <li><code>&lt;title&gt;</code>：每頁獨立的 title，60 字元內</li>
+      <li><code>&lt;meta name="description"&gt;</code>：150–160 字元的描述</li>
+      <li><code>&lt;link rel="canonical"&gt;</code>：標準 URL，避免重複內容</li>
+      <li><code>&lt;meta property="og:*"&gt;</code>：Open Graph，分享到 Facebook/Twitter 才有縮圖</li>
+    </ul>
+
+    <h3>4. 結構化資料（Structured Data）</h3>
+    <p>在文章頁加 JSON-LD：</p>
+    <pre>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "...",
+  "author": { "@type": "Person", "name": "Hao0321 Studio" },
+  "datePublished": "2026-04-21",
+  "image": "https://hao0321.com/og-image.jpg"
+}
+&lt;/script&gt;</pre>
+    <p>結構化資料不直接影響排名，但會讓 Google 在搜尋結果顯示「rich result」（如評分星星、發佈日期），點擊率會明顯提升。</p>
+
+    <h3>5. 速度優化</h3>
+    <ul>
+      <li>圖片用 WebP（比 PNG 小 30%）</li>
+      <li>Lighthouse 跑分 95+</li>
+      <li>初次 contentful paint &lt; 1.5 秒</li>
+    </ul>
+
+    <h2>第 2-3 週：Google 開始發現</h2>
+    <p>提交 sitemap 後大約 5–7 天，第一批頁面被索引。Search Console 開始有數據：</p>
+    <table>
+      <tr><th>週數</th><th>曝光</th><th>點擊</th><th>平均位置</th></tr>
+      <tr><td>第 1 週</td><td>0</td><td>0</td><td>—</td></tr>
+      <tr><td>第 2 週</td><td>40</td><td>1</td><td>45.2</td></tr>
+      <tr><td>第 3 週</td><td>180</td><td>6</td><td>32.1</td></tr>
+      <tr><td>第 4 週</td><td>410</td><td>13</td><td>28.5</td></tr>
+    </table>
+    <p>注意「平均位置」從 45 慢慢降到 28 — 這是 Google 在學習你的內容該排在哪。前 30 天的趨勢比絕對數字重要。</p>
+
+    <h2>什麼樣的關鍵字會帶流量</h2>
+    <p>把 Search Console 的「查詢」報表打開，前 5 個帶流量的關鍵字：</p>
+    <table>
+      <tr><th>關鍵字</th><th>曝光</th><th>點擊</th></tr>
+      <tr><td>cloudflare workers d1 範例</td><td>120</td><td>5</td></tr>
+      <tr><td>cloudflare pages 部署 教學</td><td>85</td><td>3</td></tr>
+      <tr><td>react babel standalone 瀏覽器</td><td>60</td><td>4</td></tr>
+      <tr><td>canvas 物件池 javascript</td><td>40</td><td>2</td></tr>
+      <tr><td>jwt hmac sha256 worker</td><td>30</td><td>2</td></tr>
+    </table>
+    <p>共同點：<strong>長尾、技術性、解決具體問題的搜尋</strong>。沒有人會搜「Hao0321 Studio」（沒人知道我），但會搜「Cloudflare Workers 怎麼用 D1」這類問題。</p>
+
+    <h2>內容策略 vs 技術 SEO</h2>
+    <p>實戰下來，<strong>內容比技術重要 10 倍</strong>。技術 SEO 是「讓 Google 能找到你」，內容是「讓 Google 願意推薦你」。</p>
+
+    <h3>有效的內容套路</h3>
+    <ol>
+      <li><strong>具體問題 + 具體解法</strong>：如「Cloudflare Pages 部署到 custom domain 的踩坑」比「Cloudflare 教學」好 10 倍</li>
+      <li><strong>真實數據</strong>：「我的網站每月成本 26 元」比「便宜的方案」搜得到</li>
+      <li><strong>程式碼 + 截圖 + 表格</strong>：Google 喜歡多模態內容</li>
+      <li><strong>更新時間誠實</strong>：寫「2026 年 4 月實測」比「最新教學」好</li>
+      <li><strong>長度足夠</strong>：800 字以上是底線，1500–2500 字是甜蜜點</li>
+    </ol>
+
+    <h3>無效的內容套路</h3>
+    <ul>
+      <li><strong>關鍵字塞滿</strong>：Google 抓得到，反而扣分</li>
+      <li><strong>用 AI 生整篇</strong>：缺乏個人經驗，沒有競爭力</li>
+      <li><strong>抄別人的整理</strong>：Google 會偵測 duplicate content</li>
+      <li><strong>純展示性的作品集</strong>：沒搜尋意圖匹配，難帶有機流量</li>
+    </ul>
+
+    <h2>反向連結（Backlinks）的角色</h2>
+    <p>新站冷啟動最容易卡的就是「沒人連你」。我做了三件事：</p>
+    <ol>
+      <li><strong>各社群平台簡介加連結</strong>：YouTube 頻道、Gumroad 商店、社群 bio。這些是 nofollow，但能引流。</li>
+      <li><strong>在相關社群分享文章</strong>：技術社團、PTT、Reddit r/SideProject。注意不能 spam，要實質貢獻。</li>
+      <li><strong>把作品上 itch.io / Gumroad 並 link 回主站</strong>：這些是高權重 dofollow 連結。</li>
+    </ol>
+    <p>結果：第 4 週時有 2 個自然反向連結（一個是別人引用我的 Cloudflare 文章），平均排名再往前 5 位。</p>
+
+    <h2>過度優化的陷阱</h2>
+    <p>看了太多 SEO 教學會犯這些錯：</p>
+    <ul>
+      <li><strong>每篇都塞 30 個關鍵字到 meta keywords</strong>：Google 早就忽略這個欄位</li>
+      <li><strong>每張圖都加 alt 為 keyword stuffing</strong>：alt 應該描述圖片內容，不是關鍵字</li>
+      <li><strong>內鏈密度過高</strong>：同一篇文章反覆連到首頁，反而看起來像 spam</li>
+      <li><strong>追求 100 分 Lighthouse</strong>：95 分跟 100 分對 SEO 沒差，後 5 分往往要犧牲使用者體驗</li>
+    </ul>
+
+    <h2>30 天後的策略</h2>
+    <p>越過冷啟動門檻後，重點轉移到：</p>
+    <ul>
+      <li><strong>內容深度 &gt; 內容廣度</strong>：把表現好的文章再深耕，比寫新文章 ROI 高</li>
+      <li><strong>內鏈生態</strong>：把相關文章互相 link，形成內容網絡</li>
+      <li><strong>更新舊文章</strong>：Google 會重新爬取「最近更新」的頁面，給排名加分</li>
+      <li><strong>季度復盤</strong>：每 3 個月看一次 Search Console，砍掉沒帶流量的內容</li>
+    </ul>
+
+    <h2>結語：SEO 是長期遊戲</h2>
+    <p>新站的前 30 天像種子發芽 — 大部分時間什麼都看不到，但底層的根系正在長。技術 SEO 把基礎打好之後，剩下的就是寫真誠的、解決真實問題的內容。20 個點擊雖小，但比起 0 是質變的開始。</p>
+    <p>這個方法沒什麼秘訣，就是「踏實寫」。如果你也在做新站、想交流數據，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/tech-stack.html">
+          <span class="related-cat">Engineering</span>
+          Hao0321 Studio 的技術堆疊：1 人工作室的全端架構
+        </a>
+        <a href="/blog/ai-pair-programming.html">
+          <span class="related-cat">AI</span>
+          AI 協作開發：Claude 怎麼幫我寫 14 款遊戲
+        </a>
+      </div>
+    </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

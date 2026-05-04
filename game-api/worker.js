@@ -202,6 +202,41 @@ export default {
         return json({ checkedIn: !!rec, streak: rec ? rec.streak : 0, coins: user ? user.coins : 0 });
       }
 
+      // ===== YOUTUBE PROXY =====
+      // Forwards GET /yt/{channels|search|videos}?... to YouTube Data API v3,
+      // injecting the secret key server-side. Restricted to hao0321.com origins
+      // so quota cannot be burned from arbitrary callers.
+      if (path.startsWith('yt/') && req.method === 'GET') {
+        const refSrc = req.headers.get('Origin') || req.headers.get('Referer') || '';
+        if (!/^https?:\/\/(?:[a-z0-9-]+\.)?hao0321\.com(?:[/:]|$)/i.test(refSrc)) {
+          return err('Forbidden origin', 403);
+        }
+        if (!env.YT_API_KEY) return err('Server misconfigured: YT_API_KEY not set', 500);
+        const ytPath = path.slice(3); // strip 'yt/'
+        const allowed = new Set(['channels', 'search', 'videos', 'playlists', 'playlistItems']);
+        if (!allowed.has(ytPath)) return err('Unsupported endpoint', 400);
+
+        const target = new URL('https://www.googleapis.com/youtube/v3/' + ytPath);
+        const reqUrl = new URL(req.url);
+        reqUrl.searchParams.forEach((v, k) => {
+          if (k.toLowerCase() !== 'key') target.searchParams.set(k, v);
+        });
+        target.searchParams.set('key', env.YT_API_KEY);
+
+        const ytRes = await fetch(target.toString(), {
+          headers: { 'Referer': 'https://hao0321.com/' },
+        });
+        const body = await ytRes.text();
+        return new Response(body, {
+          status: ytRes.status,
+          headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'public, max-age=300',
+            ...CORS,
+          },
+        });
+      }
+
       // ===== PLAY COUNT =====
       if (path === 'play' && req.method === 'POST') {
         const body = await readJson(req);

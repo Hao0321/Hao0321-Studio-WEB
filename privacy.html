@@ -6,7 +6,7 @@
   <title>隱私權政策 — Hao0321 Studio</title>
   <meta name="description" content="Hao0321 Studio 網站隱私權政策 — 說明我們如何收集、使用、保護您的個人資料。" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#00b4ff" />
+  <meta name="theme-color" content="#F4F4F7" />
   <link rel="canonical" href="https://hao0321.com/privacy.html" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
@@ -18,191 +18,226 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --void: #050508;
-      --hull: #0a0a12;
-      --steel: #1a1a2a;
-      --glow-blue: #00b4ff;
-      --glow-cyan: #00e5ff;
-      --glow-white: #e0e8ff;
-      --dim: #8888aa;
-      --text: #d0d8ee;
-      --radius: 12px;
-      --font-head: 'Space Grotesk', 'Noto Sans TC', sans-serif;
-      --font-body: 'Inter', 'Noto Sans TC', sans-serif;
+      --bg: #F4F4F7;
+      --bg-soft: #FBFBFD;
+      --surface: #FFFFFF;
+      --text: #0F0F1E;
+      --text-2: #4A4A5E;
+      --text-3: #8C8CA0;
+      --border: rgba(15,15,30,0.06);
+      --accent-blue: #4A7BF5;
+      --accent-violet: #8E7CF0;
+      --grad-accent: linear-gradient(135deg, #4A7BF5 0%, #8E7CF0 100%);
+      --radius-md: 20px;
+      --radius-pill: 9999px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-swift: cubic-bezier(0.4, 0, 0.2, 1);
+      --font-sans: 'Plus Jakarta Sans', 'Noto Sans TC', system-ui, sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --nav-h: 68px;
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; font-size: 16px; }
     body {
-      background: var(--void);
+      background: var(--bg);
       color: var(--text);
-      font-family: var(--font-body);
-      line-height: 1.85;
+      font-family: var(--font-sans);
+      font-weight: 400;
+      line-height: 1.8;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "liga" 1;
+      background-image:
+        radial-gradient(ellipse 900px 650px at 12% 3%, rgba(195,215,255,0.40), transparent 60%),
+        radial-gradient(ellipse 700px 560px at 88% 28%, rgba(180,190,240,0.22), transparent 60%);
+      background-attachment: fixed;
       min-height: 100vh;
     }
-    ::selection { background: var(--glow-blue); color: var(--void); }
-    a { color: var(--glow-cyan); text-decoration: none; transition: color .2s; }
-    a:hover { color: var(--glow-white); }
+    ::selection { background: var(--accent-blue); color: #fff; }
+    a { color: var(--accent-blue); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--accent-violet); }
 
-    .bg-grid {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(0,180,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,180,255,0.025) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    .bg-waves {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.3;
+      background-image: repeating-linear-gradient(110deg, transparent 0 50px, rgba(255,255,255,0.4) 50px 51px, transparent 51px 200px);
+      mask-image: radial-gradient(ellipse at 50% 50%, #000 0%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 0%, transparent 70%);
     }
 
     nav.topnav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(5,5,8,0.85);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(0,180,255,0.12);
-      padding: 18px 5vw;
+      position: fixed;
+      top: 20px; left: 50%;
+      transform: translateX(-50%);
+      width: min(calc(100% - 32px), 960px);
+      z-index: 100;
+      padding: 10px 10px 10px 24px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 2px 8px rgba(15,15,30,0.04), 0 8px 24px rgba(15,15,30,0.06);
       display: flex; justify-content: space-between; align-items: center;
+      gap: 16px;
     }
     .logo {
-      font-family: var(--font-head);
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--glow-white);
-      letter-spacing: 0.04em;
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 15px; color: var(--text);
+      letter-spacing: -0.01em;
     }
-    .logo span { color: var(--glow-blue); }
+    .logo-mark {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--grad-accent);
+      color: #fff; font-weight: 800; font-size: 14px;
+      display: grid; place-items: center;
+      box-shadow: 0 2px 6px rgba(74,123,245,0.3);
+    }
     .back-link {
-      font-family: var(--font-head);
-      font-size: 0.82rem;
-      color: var(--dim);
-      letter-spacing: 0.08em;
+      padding: 8px 18px;
+      background: var(--text);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      transition: all 0.2s var(--ease-swift);
     }
-    .back-link:hover { color: var(--glow-cyan); }
+    .back-link:hover {
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15,15,30,0.2);
+    }
 
     main {
+      position: relative; z-index: 1;
       max-width: 780px;
       margin: 0 auto;
-      padding: 60px 5vw 100px;
+      padding: calc(var(--nav-h) + 72px) 24px 96px;
     }
     .doc-label {
-      font-family: var(--font-head);
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.22em;
-      color: var(--glow-blue);
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      display: inline-flex; align-items: center; gap: 10px;
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-bottom: 16px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 14px;
+      color: var(--text-2);
+      letter-spacing: 0.04em;
     }
     .doc-label::before {
-      content: ''; width: 28px; height: 1px;
-      background: var(--glow-blue);
+      content: ''; width: 36px; height: 1px;
+      background: currentColor; opacity: 0.4;
     }
     h1 {
-      font-family: var(--font-head);
-      font-size: clamp(1.8rem, 4vw, 2.6rem);
-      font-weight: 700;
-      color: var(--glow-white);
-      margin-bottom: 12px;
+      font-size: clamp(30px, 4.2vw, 44px);
+      font-weight: 800;
+      letter-spacing: -0.03em;
       line-height: 1.15;
+      margin-bottom: 12px;
+      color: var(--text);
     }
     .updated {
-      font-family: var(--font-head);
-      font-size: 0.78rem;
-      color: var(--dim);
-      letter-spacing: 0.06em;
-      margin-bottom: 48px;
-      padding-bottom: 22px;
-      border-bottom: 1px dashed rgba(136,136,170,0.2);
+      font-size: 13px;
+      color: var(--text-3);
+      letter-spacing: 0.04em;
+      margin-bottom: 44px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
     }
     h2 {
-      font-family: var(--font-head);
-      font-size: 1.25rem;
+      font-size: 22px;
       font-weight: 700;
-      color: var(--glow-white);
-      margin: 40px 0 14px;
+      color: var(--text);
+      margin: 48px 0 14px;
       padding-left: 16px;
       position: relative;
+      letter-spacing: -0.01em;
     }
     h2::before {
       content: '';
-      position: absolute;
-      left: 0; top: 8px; bottom: 8px;
-      width: 3px; border-radius: 2px;
-      background: linear-gradient(180deg, var(--glow-blue), var(--glow-cyan));
+      position: absolute; left: 0; top: 7px; bottom: 7px;
+      width: 3px; border-radius: 3px;
+      background: var(--grad-accent);
     }
     h3 {
-      font-family: var(--font-head);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--glow-cyan);
-      margin: 24px 0 10px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 26px 0 10px;
+      letter-spacing: -0.005em;
     }
     p, li {
-      font-size: 0.94rem;
-      color: var(--text);
-      margin-bottom: 14px;
+      font-size: 15px;
+      color: var(--text-2);
+      margin-bottom: 12px;
+      line-height: 1.8;
     }
-    ul, ol { padding-left: 24px; margin-bottom: 14px; }
-    li { margin-bottom: 8px; }
-    strong { color: var(--glow-white); font-weight: 600; }
+    ul, ol { padding-left: 22px; margin-bottom: 14px; }
+    li { margin-bottom: 6px; }
+    li::marker { color: var(--accent-violet); }
+    strong { color: var(--text); font-weight: 600; }
     code {
-      font-family: 'JetBrains Mono', monospace;
-      background: rgba(0,180,255,0.08);
-      border: 1px solid rgba(0,180,255,0.18);
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      background: rgba(74,123,245,0.08);
+      border: 1px solid rgba(74,123,245,0.16);
       padding: 1px 6px; border-radius: 4px;
-      font-size: 0.84rem;
-      color: var(--glow-cyan);
+      font-size: 0.88em;
+      color: var(--accent-blue);
     }
     .toc {
-      background: rgba(26,26,42,0.5);
-      border: 1px solid rgba(0,180,255,0.14);
-      border-radius: var(--radius);
-      padding: 20px 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px 28px;
       margin-bottom: 44px;
+      box-shadow: 0 1px 2px rgba(15,15,30,0.03), 0 4px 12px rgba(15,15,30,0.04);
     }
     .toc strong {
-      font-family: var(--font-head);
-      font-size: 0.78rem;
-      letter-spacing: 0.14em;
-      color: var(--glow-blue);
-      text-transform: uppercase;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: 0.05em;
+      color: var(--text-3);
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .toc ol {
       padding-left: 20px; margin: 0;
       columns: 2; column-gap: 24px;
     }
-    .toc li { margin-bottom: 5px; font-size: 0.88rem; }
-    .toc a { color: var(--text); }
-    .toc a:hover { color: var(--glow-cyan); }
+    .toc li { margin-bottom: 6px; font-size: 14px; }
+    .toc a { color: var(--text-2); font-weight: 500; }
+    .toc a:hover { color: var(--accent-blue); }
 
     footer {
-      border-top: 1px solid rgba(0,180,255,0.1);
-      padding: 36px 5vw;
-      text-align: center;
-      font-size: 0.78rem;
-      color: var(--dim);
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 36px 24px; text-align: center;
+      font-size: 13px; color: var(--text-3);
+      background: var(--bg-soft);
     }
-    footer .links { margin-bottom: 12px; display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; }
-    footer a { color: var(--dim); }
-    footer a:hover { color: var(--glow-cyan); }
+    footer .links { margin-bottom: 14px; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    footer a { color: var(--text-3); font-weight: 500; }
+    footer a:hover { color: var(--accent-blue); }
 
     @media (max-width: 600px) {
       .toc ol { columns: 1; }
+      main { padding: calc(var(--nav-h) + 40px) 20px 64px; }
     }
   </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
+  <div class="bg-waves"></div>
 
   <nav class="topnav">
-    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
+    <a href="/" class="logo">
+      <span class="logo-mark">H</span>
+      <span>Hao0321 Studio</span>
+    </a>
     <a href="/" class="back-link">← 回首頁</a>
   </nav>
 

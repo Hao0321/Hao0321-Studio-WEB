@@ -4,203 +4,394 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>關於 — Hao0321 Studio</title>
-  <meta name="description" content="Hao0321 Studio 是一間專注 AI 教學、遊戲開發、影視動畫、原創音樂的個人獨立工作室，用技術探索未知，做有溫度的數位體驗。" />
+  <meta name="description" content="Hao0321 Studio 是一間專注 AI 教學、遊戲開發、影視動畫、原創音樂的個人獨立工作室。" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#00b4ff" />
+  <meta name="theme-color" content="#F4F4F7" />
   <link rel="canonical" href="https://hao0321.com/about.html" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 
   <meta property="og:type" content="article" />
   <meta property="og:title" content="關於 — Hao0321 Studio" />
-  <meta property="og:description" content="工作室理念、團隊、技術堆疊、聯絡方式。" />
+  <meta property="og:description" content="工作室理念、核心領域、技術堆疊、聯絡方式。" />
   <meta property="og:url" content="https://hao0321.com/about.html" />
-  <meta property="og:image" content="https://hao0321.com/og-hero.jpg" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
   <meta property="og:locale" content="zh_TW" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --void: #050508; --hull: #0a0a12; --steel: #1a1a2a;
-      --glow-blue: #00b4ff; --glow-cyan: #00e5ff; --glow-white: #e0e8ff;
-      --hud-green: #00ff88; --warn-amber: #ffaa00;
-      --dim: #8888aa; --text: #d0d8ee;
-      --font-head: 'Space Grotesk', 'Noto Sans TC', sans-serif;
-      --font-body: 'Inter', 'Noto Sans TC', sans-serif;
-      --font-mono: 'JetBrains Mono', monospace;
+      --bg: #F4F4F7;
+      --bg-soft: #FBFBFD;
+      --surface: #FFFFFF;
+      --text: #0F0F1E;
+      --text-2: #4A4A5E;
+      --text-3: #8C8CA0;
+      --border: rgba(15,15,30,0.06);
+      --border-2: rgba(15,15,30,0.12);
+      --accent-blue: #4A7BF5;
+      --accent-violet: #8E7CF0;
+      --accent-sky: #7EB0FF;
+      --grad-accent: linear-gradient(135deg, #4A7BF5 0%, #8E7CF0 100%);
+      --grad-visual: linear-gradient(140deg, #DCE4F5 0%, #CFD7EE 45%, #C8CFF0 100%);
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --radius-lg: 28px;
+      --radius-pill: 9999px;
+      --shadow-sm: 0 1px 2px rgba(15,15,30,0.03), 0 4px 12px rgba(15,15,30,0.04);
+      --shadow-md: 0 4px 12px rgba(15,15,30,0.05), 0 12px 32px rgba(15,15,30,0.06);
+      --shadow-lg: 0 8px 24px rgba(15,15,30,0.06), 0 24px 64px rgba(15,15,30,0.08);
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease-swift: cubic-bezier(0.4, 0, 0.2, 1);
+      --font-sans: 'Plus Jakarta Sans', 'Noto Sans TC', system-ui, sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --nav-h: 68px;
+      --container: 920px;
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { background: var(--void); color: var(--text); font-family: var(--font-body); line-height: 1.85; -webkit-font-smoothing: antialiased; min-height: 100vh; }
-    ::selection { background: var(--glow-blue); color: var(--void); }
-    a { color: var(--glow-cyan); text-decoration: none; transition: color .2s; }
-    a:hover { color: var(--glow-white); }
+    html { scroll-behavior: smooth; font-size: 16px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-weight: 400;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern" 1, "liga" 1;
+      background-image:
+        radial-gradient(ellipse 900px 650px at 12% 3%, rgba(195,215,255,0.40), transparent 60%),
+        radial-gradient(ellipse 700px 560px at 88% 28%, rgba(180,190,240,0.22), transparent 60%);
+      background-attachment: fixed;
+      min-height: 100vh;
+    }
+    ::selection { background: var(--accent-blue); color: #fff; }
+    a { color: var(--accent-blue); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--accent-violet); }
 
-    .bg-grid { position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background-image: linear-gradient(rgba(0,180,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,180,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
-      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%); }
-    .bg-glow {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background: radial-gradient(ellipse at 20% 20%, rgba(0,180,255,0.14) 0%, transparent 50%),
-                  radial-gradient(ellipse at 80% 80%, rgba(0,229,255,0.1) 0%, transparent 50%);
+    /* Subtle decorative grain */
+    .bg-waves {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.3;
+      background-image: repeating-linear-gradient(110deg, transparent 0 50px, rgba(255,255,255,0.4) 50px 51px, transparent 51px 200px);
+      mask-image: radial-gradient(ellipse at 50% 50%, #000 0%, transparent 70%);
+      -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 0%, transparent 70%);
     }
 
-    nav.topnav { position: sticky; top: 0; z-index: 100;
-      background: rgba(5,5,8,0.85); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(0,180,255,0.12); padding: 18px 5vw;
-      display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-family: var(--font-head); font-weight: 700; font-size: 1rem; color: var(--glow-white); letter-spacing: 0.04em; }
-    .logo span { color: var(--glow-blue); }
-    .back-link { font-family: var(--font-head); font-size: 0.82rem; color: var(--dim); letter-spacing: 0.08em; }
-    .back-link:hover { color: var(--glow-cyan); }
-
-    main { max-width: 880px; margin: 0 auto; padding: 80px 5vw 100px; }
-
-    .hero-label {
-      font-family: var(--font-head);
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.28em;
-      color: var(--glow-blue);
-      text-transform: uppercase;
-      margin-bottom: 18px;
-      display: inline-flex; align-items: center; gap: 12px;
+    /* Nav pill */
+    nav.topnav {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(calc(100% - 32px), 960px);
+      z-index: 100;
+      padding: 10px 10px 10px 24px;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 2px 8px rgba(15,15,30,0.04), 0 8px 24px rgba(15,15,30,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
     }
-    .hero-label::before { content: ''; width: 36px; height: 1px; background: var(--glow-blue); }
-
-    h1 {
-      font-family: var(--font-head);
-      font-size: clamp(2rem, 5.5vw, 3.4rem);
-      font-weight: 900;
-      color: var(--glow-white);
-      margin-bottom: 20px;
-      line-height: 1.1;
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 700; font-size: 15px; color: var(--text);
       letter-spacing: -0.01em;
     }
-    h1 em { font-style: normal; background: linear-gradient(135deg, var(--glow-blue), var(--glow-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .lede {
-      font-size: 1.08rem;
+    .logo-mark {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      background: var(--grad-accent);
+      color: #fff;
+      font-weight: 800; font-size: 14px;
+      display: grid; place-items: center;
+      box-shadow: 0 2px 6px rgba(74,123,245,0.3);
+    }
+    .back-link {
+      padding: 8px 18px;
+      background: var(--text);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      transition: all 0.2s var(--ease-swift);
+    }
+    .back-link:hover {
+      color: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15,15,30,0.2);
+    }
+
+    /* Page content */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: calc(var(--nav-h) + 72px) 24px 96px;
+    }
+
+    .page-eyebrow {
+      display: inline-flex; align-items: center; gap: 12px;
+      margin-bottom: 18px;
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 15px;
+      color: var(--text-2);
+      letter-spacing: 0.04em;
+    }
+    .page-eyebrow::before {
+      content: ''; width: 40px; height: 1px;
+      background: currentColor; opacity: 0.4;
+    }
+
+    h1 {
+      font-size: clamp(34px, 5vw, 56px);
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      line-height: 1.1;
+      margin-bottom: 22px;
       color: var(--text);
-      margin-bottom: 44px;
-      line-height: 1.8;
+    }
+    h1 em {
+      font-style: normal;
+      background: var(--grad-accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lede {
+      font-size: 17px;
+      color: var(--text-2);
+      line-height: 1.75;
       max-width: 680px;
+      margin-bottom: 56px;
     }
 
     h2 {
-      font-family: var(--font-head);
-      font-size: 1.4rem;
+      font-size: 26px;
       font-weight: 700;
-      color: var(--glow-white);
-      margin: 56px 0 18px;
-      padding-left: 18px;
+      letter-spacing: -0.02em;
+      margin: 72px 0 18px;
+      color: var(--text);
       position: relative;
+      padding-left: 18px;
     }
-    h2::before { content: ''; position: absolute; left: 0; top: 6px; bottom: 6px; width: 3px; border-radius: 2px; background: linear-gradient(180deg, var(--glow-blue), var(--glow-cyan)); }
+    h2::before {
+      content: '';
+      position: absolute; left: 0; top: 8px; bottom: 8px;
+      width: 3px; border-radius: 3px;
+      background: var(--grad-accent);
+    }
 
-    p { font-size: 0.96rem; margin-bottom: 16px; }
-    strong { color: var(--glow-white); font-weight: 600; }
-    code { font-family: var(--font-mono); font-size: 0.84rem; color: var(--glow-cyan); background: rgba(0,180,255,0.08); border: 1px solid rgba(0,180,255,0.16); padding: 1px 6px; border-radius: 4px; }
+    p { font-size: 15.5px; color: var(--text-2); margin-bottom: 14px; line-height: 1.8; }
+    strong { color: var(--text); font-weight: 600; }
+    code {
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      font-size: 0.88em;
+      color: var(--accent-blue);
+      background: rgba(74,123,245,0.08);
+      border: 1px solid rgba(74,123,245,0.16);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    ul { padding-left: 22px; margin: 14px 0 20px; }
+    ul li { font-size: 15.5px; color: var(--text-2); margin-bottom: 8px; line-height: 1.75; }
+    ul li::marker { color: var(--accent-violet); }
 
-    .pillars {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px; margin: 28px 0;
-    }
-    .pillar {
-      background: linear-gradient(180deg, rgba(26,26,42,0.45), rgba(10,10,18,0.6));
-      border: 1px solid rgba(0,180,255,0.15);
-      border-radius: 12px;
-      padding: 20px 22px;
-      position: relative; overflow: hidden;
-      transition: transform .3s, border-color .3s, box-shadow .3s;
-    }
-    .pillar:hover { transform: translateY(-4px); border-color: rgba(0,229,255,0.45); box-shadow: 0 10px 28px rgba(0,180,255,0.15); }
-    .pillar-idx {
-      font-family: var(--font-mono); font-size: 0.68rem; color: var(--glow-blue);
-      letter-spacing: 0.12em; margin-bottom: 8px; opacity: 0.8;
-    }
-    .pillar-title { font-family: var(--font-head); font-size: 0.95rem; font-weight: 700; color: var(--glow-white); margin-bottom: 6px; }
-    .pillar-desc { font-size: 0.82rem; color: var(--dim); line-height: 1.6; }
-
-    .tech {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 8px; margin: 20px 0;
-    }
-    .tech-chip {
-      background: rgba(26,26,42,0.55);
-      border: 1px solid rgba(0,180,255,0.15);
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-family: var(--font-mono); font-size: 0.78rem;
-      color: var(--glow-cyan);
-      display: flex; flex-direction: column; gap: 3px;
-    }
-    .tech-chip b { color: var(--glow-white); font-weight: 600; font-family: var(--font-head); font-size: 0.82rem; }
-
+    /* Stats */
     .stats {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 14px; margin: 30px 0;
+      gap: 14px; margin: 36px 0;
     }
     .stat {
-      background: linear-gradient(135deg, rgba(0,180,255,0.08), rgba(0,229,255,0.03));
-      border: 1px solid rgba(0,229,255,0.2);
-      border-radius: 12px;
-      padding: 22px 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 24px 20px;
       text-align: center;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
     }
-    .stat .n { font-family: var(--font-head); font-size: 2rem; font-weight: 900; background: linear-gradient(135deg, var(--glow-blue), var(--glow-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
-    .stat .k { font-size: 0.74rem; color: var(--dim); letter-spacing: 0.08em; margin-top: 6px; text-transform: uppercase; font-family: var(--font-head); }
+    .stat:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .stat .n {
+      font-size: 34px; font-weight: 800;
+      background: var(--grad-accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .stat .k {
+      font-size: 12px; color: var(--text-3);
+      letter-spacing: 0.12em; margin-top: 10px;
+      text-transform: uppercase; font-weight: 500;
+    }
 
-    .timeline {
-      border-left: 1.5px dashed rgba(0,180,255,0.25);
-      padding: 8px 0 8px 26px;
-      margin: 24px 0 30px 10px;
+    /* Pillars */
+    .pillars {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px; margin: 28px 0 20px;
     }
-    .tl-item { margin-bottom: 22px; position: relative; }
+    .pillar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 26px 24px;
+      position: relative; overflow: hidden;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+      box-shadow: var(--shadow-sm);
+    }
+    .pillar::before {
+      content: '';
+      position: absolute; inset: auto 0 0 0;
+      height: 2px;
+      background: var(--grad-accent);
+      transform: scaleX(0);
+      transform-origin: left center;
+      transition: transform 0.5s var(--ease);
+    }
+    .pillar:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+    .pillar:hover::before { transform: scaleX(1); }
+    .pillar-idx {
+      font-family: var(--font-serif); font-style: italic;
+      font-size: 13px; color: var(--text-3);
+      letter-spacing: 0.06em; margin-bottom: 10px;
+    }
+    .pillar-title {
+      font-size: 17px; font-weight: 700;
+      color: var(--text); margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+    .pillar-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; }
+
+    /* Tech chips */
+    .tech {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px; margin: 22px 0;
+    }
+    .tech-chip {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex; flex-direction: column; gap: 3px;
+      transition: all 0.25s var(--ease-swift);
+    }
+    .tech-chip:hover { border-color: rgba(74,123,245,0.3); transform: translateY(-2px); }
+    .tech-chip b { color: var(--text); font-weight: 600; font-size: 13px; }
+    .tech-chip span { color: var(--text-3); font-size: 12px; letter-spacing: 0.01em; }
+
+    /* Timeline */
+    .timeline {
+      border-left: 2px solid var(--border-2);
+      padding: 8px 0 8px 28px;
+      margin: 28px 0 30px 8px;
+    }
+    .tl-item { margin-bottom: 26px; position: relative; }
     .tl-item::before {
       content: ''; position: absolute;
-      left: -33px; top: 6px;
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--glow-cyan);
-      box-shadow: 0 0 0 3px rgba(0,229,255,0.2), 0 0 12px rgba(0,229,255,0.4);
+      left: -37px; top: 6px;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: var(--surface);
+      border: 2px solid var(--accent-violet);
+      box-shadow: 0 0 0 3px rgba(142,124,240,0.15);
     }
-    .tl-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--glow-blue); letter-spacing: 0.08em; margin-bottom: 2px; }
-    .tl-title { font-family: var(--font-head); font-weight: 700; color: var(--glow-white); font-size: 0.94rem; margin-bottom: 4px; }
-    .tl-desc { font-size: 0.84rem; color: var(--text); }
+    .tl-date {
+      font-family: var(--font-serif); font-style: italic;
+      font-size: 13px; color: var(--accent-blue);
+      letter-spacing: 0.04em; margin-bottom: 4px;
+    }
+    .tl-title {
+      font-weight: 700; color: var(--text);
+      font-size: 16px; margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .tl-desc { font-size: 14.5px; color: var(--text-2); line-height: 1.7; }
 
+    /* Contact box */
     .contact-box {
-      background: linear-gradient(135deg, rgba(0,180,255,0.08), rgba(0,180,255,0.02));
-      border: 1px solid rgba(0,180,255,0.25);
-      border-radius: 14px;
-      padding: 28px;
-      margin: 40px 0 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px 32px;
+      margin: 52px 0 12px;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
     }
-    .contact-box h3 { font-family: var(--font-head); font-weight: 700; color: var(--glow-white); font-size: 1rem; margin-bottom: 12px; }
-    .contact-list { list-style: none; padding: 0; }
-    .contact-list li { margin-bottom: 10px; font-size: 0.9rem; display: flex; gap: 10px; align-items: baseline; }
-    .contact-list li::before { content: '→'; color: var(--glow-blue); font-family: var(--font-head); font-weight: 700; }
+    .contact-box::before {
+      content: '';
+      position: absolute;
+      top: -60%; right: -10%;
+      width: 60%; height: 100%;
+      background: radial-gradient(ellipse 60% 50% at 50% 50%, rgba(142,124,240,0.12), transparent 65%);
+      pointer-events: none;
+    }
+    .contact-box h3 {
+      font-weight: 700; color: var(--text);
+      font-size: 18px; margin-bottom: 8px;
+      letter-spacing: -0.01em;
+      position: relative;
+    }
+    .contact-box p { font-size: 14px; color: var(--text-2); margin-bottom: 18px; position: relative; }
+    .contact-list { list-style: none; padding: 0; position: relative; }
+    .contact-list li {
+      margin-bottom: 10px; font-size: 14.5px;
+      display: flex; gap: 10px; align-items: baseline;
+      color: var(--text-2);
+    }
+    .contact-list li::before {
+      content: '→'; color: var(--accent-blue);
+      font-weight: 700; flex-shrink: 0;
+    }
+    .contact-list strong { min-width: 90px; display: inline-block; }
 
-    footer { border-top: 1px solid rgba(0,180,255,0.1); padding: 36px 5vw; text-align: center; font-size: 0.78rem; color: var(--dim); }
-    footer .links { margin-bottom: 12px; display: flex; justify-content: center; gap: 22px; flex-wrap: wrap; }
-    footer a { color: var(--dim); }
-    footer a:hover { color: var(--glow-cyan); }
+    /* Footer */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 36px 24px; text-align: center;
+      font-size: 13px; color: var(--text-3);
+      background: var(--bg-soft);
+    }
+    footer .links {
+      margin-bottom: 14px;
+      display: flex; justify-content: center;
+      gap: 24px; flex-wrap: wrap;
+    }
+    footer a { color: var(--text-3); font-weight: 500; }
+    footer a:hover { color: var(--accent-blue); }
+
+    @media (max-width: 640px) {
+      main { padding: calc(var(--nav-h) + 40px) 20px 64px; }
+      h2 { font-size: 22px; margin: 56px 0 14px; }
+      .contact-box { padding: 24px; }
+    }
   </style>
 </head>
 <body>
-  <div class="bg-grid"></div>
-  <div class="bg-glow"></div>
+  <div class="bg-waves"></div>
 
   <nav class="topnav">
-    <a href="/" class="logo">HAO<span>0321</span> STUDIO</a>
+    <a href="/" class="logo">
+      <span class="logo-mark">H</span>
+      <span>Hao0321 Studio</span>
+    </a>
     <a href="/" class="back-link">← 回首頁</a>
   </nav>
 
   <main>
-    <div class="hero-label">ABOUT / SECTOR_06</div>
-    <h1>我們用技術<em>探索未知</em>，<br />做有溫度的數位體驗。</h1>
+    <div class="page-eyebrow">About / Sector 06</div>
+    <h1>用技術<em>探索未知</em>，<br/>做有溫度的數位體驗。</h1>
     <p class="lede">Hao0321 Studio 是一間位於台灣的個人獨立工作室，專注在 <strong>AI 教學、遊戲開發、影視動畫與原創音樂</strong>四個核心領域。我們相信好的工具應該讓更多人有能力創造，好的作品應該誠實、有個性、有人味。這裡沒有一堆設計師、工程師和行銷，只有一個持續在踩坑學習的創作者，以及不斷進化的作品集。</p>
 
     <div class="stats">
@@ -214,22 +405,22 @@
     <p>工作室的產出橫跨四個彼此支援的領域。每個領域獨立運作，但共用同一套美學判斷與技術堆疊：</p>
     <div class="pillars">
       <div class="pillar">
-        <div class="pillar-idx">01 / AI</div>
+        <div class="pillar-idx">— 01 / AI</div>
         <div class="pillar-title">AI 教學與應用</div>
         <div class="pillar-desc">把 LLM、Stable Diffusion、Claude API 等前沿工具拆解成一般人能上手的流程，分享實戰用法而不是魔法示範。</div>
       </div>
       <div class="pillar">
-        <div class="pillar-idx">02 / GAMES</div>
+        <div class="pillar-idx">— 02 / Games</div>
         <div class="pillar-title">遊戲開發</div>
         <div class="pillar-desc">從 React 瀏覽器小品（遊戲大廳 14 款）到 Unreal / Unity 長期專案（Pact of Arcania 靈契之戰），兼顧即時成就感與深度開發。</div>
       </div>
       <div class="pillar">
-        <div class="pillar-idx">03 / VFX</div>
+        <div class="pillar-idx">— 03 / VFX</div>
         <div class="pillar-title">影視動畫</div>
         <div class="pillar-desc">3D / VFX 品牌動畫、實拍合成、特效模擬。使用 Houdini、Blender、After Effects、Nuke 的完整流水線。</div>
       </div>
       <div class="pillar">
-        <div class="pillar-idx">04 / MUSIC</div>
+        <div class="pillar-idx">— 04 / Music</div>
         <div class="pillar-title">原創音樂</div>
         <div class="pillar-desc">為遊戲、影片、品牌製作量身訂做的配樂。熟悉 DAW、合成器、AI 協作音樂工具。</div>
       </div>
@@ -257,7 +448,7 @@
       <div class="tech-chip"><b>3D / VFX</b><span>Houdini, Blender, Nuke</span></div>
       <div class="tech-chip"><b>Game Engines</b><span>Unreal, Unity</span></div>
     </div>
-    <p>選擇 Cloudflare 堆疊的理由很簡單：全球邊緣運算的延遲極低（API 回應 &lt; 100ms），免費額度對個人工作室充裕，Workers + D1 在台灣也有良好的覆蓋。我們更深入的技術分享會在 <a href="/#about">技術日誌</a> 陸續更新。</p>
+    <p>選擇 Cloudflare 堆疊的理由很簡單：全球邊緣運算的延遲極低（API 回應 &lt; 100ms），免費額度對個人工作室充裕，Workers + D1 在台灣也有良好的覆蓋。我們更深入的技術分享會在 <a href="/blog/">Blog</a> 陸續更新。</p>
 
     <h2>時間軸</h2>
     <div class="timeline">
@@ -282,7 +473,7 @@
         <div class="tl-desc">Google 登入、每日簽到、金幣系統、全球排行榜、成就徽章全套整合。同時啟動 Pact of Arcania 靈契之戰（Unreal 專案）。</div>
       </div>
       <div class="tl-item">
-        <div class="tl-date">持續進行中</div>
+        <div class="tl-date">— 持續進行中</div>
         <div class="tl-title">下一步</div>
         <div class="tl-desc">擴充遊戲數量到 20 款、上線開發日誌與 AI 教學專欄、推出付費主題與道具、計劃多人對戰支援。</div>
       </div>
@@ -294,19 +485,19 @@
       <li><strong>原創優先於模板</strong> — 寧可做慢做小，也要是自己的作品，不抄。</li>
       <li><strong>玩家優先於數據</strong> — 不做會降低遊戲體驗的黑暗模式（強迫登入、逼簽到）。</li>
       <li><strong>開源精神</strong> — 非商業核心的工具盡可能開放原始碼或教學筆記。</li>
-      <li><strong>隱私至上</strong> — 只收集提供服務必要的最少資料，細節見<a href="/privacy.html">隱私權政策</a>。</li>
+      <li><strong>隱私至上</strong> — 只收集提供服務必要的最少資料，細節見 <a href="/privacy.html">隱私權政策</a>。</li>
     </ul>
 
     <div class="contact-box">
       <h3>聯絡 / 合作</h3>
-      <p style="color:var(--dim);font-size:.88rem;margin-bottom:14px">工作室目前接受合作提案：品牌動畫、AI 工作坊、遊戲委製、原創配樂。歡迎透過下列管道聯絡。</p>
+      <p>工作室目前接受合作提案：品牌動畫、AI 工作坊、遊戲委製、原創配樂。歡迎透過下列管道聯絡。</p>
       <ul class="contact-list">
-        <li><strong>Email</strong>：<a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a></li>
-        <li><strong>YouTube</strong>：<a href="https://youtube.com/@hao0321_studio" target="_blank" rel="noopener">@hao0321_studio</a></li>
-        <li><strong>Instagram</strong>：<a href="https://www.instagram.com/hao0321_studio" target="_blank" rel="noopener">@hao0321_studio</a></li>
-        <li><strong>Discord 社群</strong>：<a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener">加入伺服器</a></li>
-        <li><strong>Gumroad 商店</strong>：<a href="https://hao0321.gumroad.com/" target="_blank" rel="noopener">hao0321.gumroad.com</a></li>
-        <li><strong>遊戲大廳</strong>：<a href="https://game.hao0321.com/">game.hao0321.com</a></li>
+        <li><strong>Email</strong><a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a></li>
+        <li><strong>YouTube</strong><a href="https://youtube.com/@hao0321_studio" target="_blank" rel="noopener">@hao0321_studio</a></li>
+        <li><strong>Instagram</strong><a href="https://www.instagram.com/hao0321_studio" target="_blank" rel="noopener">@hao0321_studio</a></li>
+        <li><strong>Discord 社群</strong><a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener">加入伺服器</a></li>
+        <li><strong>Gumroad 商店</strong><a href="https://hao0321.gumroad.com/" target="_blank" rel="noopener">hao0321.gumroad.com</a></li>
+        <li><strong>遊戲大廳</strong><a href="https://game.hao0321.com/">game.hao0321.com</a></li>
       </ul>
     </div>
   </main>
@@ -315,11 +506,12 @@
     <div class="links">
       <a href="/">首頁</a>
       <a href="/about.html">關於</a>
+      <a href="/blog/">Blog</a>
       <a href="/privacy.html">隱私權</a>
       <a href="/terms.html">使用條款</a>
       <a href="https://game.hao0321.com/">遊戲大廳</a>
     </div>
-    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+    <div>© 2026 Hao0321 Studio · Based in Taiwan</div>
   </footer>
 </body>
 </html>

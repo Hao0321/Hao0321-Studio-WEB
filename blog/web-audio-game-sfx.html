@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>用 Web Audio API 做遊戲音效：不用任何音檔，純 code 生成 — Hao0321 Studio</title>
+  <meta name="description" content="DODGE MASTER 整套音效（撞擊、金幣、雷射、引擎）都是純 JavaScript 生成的，沒有任何音檔。完整實作與相容性踩坑紀錄。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/web-audio-game-sfx.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="用 Web Audio API 做遊戲音效" />
+  <meta property="og:description" content="不用任何音檔，純 code 生成的遊戲音效系統。" />
+  <meta property="og:url" content="https://hao0321.com/blog/web-audio-game-sfx.html" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-04T00:00:00+08:00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-serif:'Playfair Display',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Web Audio</div>
+    <span class="cat">Engineering</span>
+    <h1>用 Web Audio API 做遊戲音效：<em>不用任何音檔</em></h1>
+    <div class="meta">
+      <span>2026 年 5 月 4 日</span>
+      <span>約 9 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <article>
+    <p>DODGE MASTER 整款遊戲只有 921 行 HTML，包含撞擊、金幣、連擊、雷射、引擎、UI click 等十幾種音效。神奇的是它<strong>沒有引用任何 .mp3 或 .wav 檔案</strong>。所有聲音都是用 Web Audio API 即時用程式碼合成出來的。這篇拆解整套合成式音效系統 — 為什麼這樣做、怎麼寫每一個音效、瀏覽器相容性怎麼處理。</p>
+
+    <h2>為什麼不用音檔</h2>
+    <p>看起來「不用音檔」是反直覺的選擇。實際的決策理由：</p>
+    <ul>
+      <li><strong>檔案大小</strong>：一般遊戲 10 種音效，每個 10–50KB，總共 100–500KB。對單檔遊戲（dodge-master-v5.html 只有 ~50KB）這個比例難以接受。</li>
+      <li><strong>授權</strong>：免費音效庫的「商業使用」條款各家不同，有的要 attribution、有的禁轉售。寫程式合成完全沒這個問題。</li>
+      <li><strong>動態變化</strong>：合成音效可以根據遊戲狀態調整 — 連擊越高音調越高、敵人類型不同音色不同。音檔做不到這個。</li>
+      <li><strong>啟動延遲</strong>：音檔要等 download + decode，在弱網路下首次播放會卡。合成音效零延遲。</li>
+    </ul>
+    <p>缺點：合成音效聽起來「電子感」、「8-bit」風格，做不出寫實樂器音色。但對賽博龐克風的閃避遊戲，這個風格反而加分。</p>
+
+    <h2>Web Audio API 基礎</h2>
+    <p>Web Audio API 的核心概念是「節點圖（node graph）」。每個聲音由：</p>
+    <ol>
+      <li><code>OscillatorNode</code>（振盪器）— 產生原始波形</li>
+      <li><code>GainNode</code>（音量）— 控制音量與包絡（envelope）</li>
+      <li><code>AudioContext.destination</code> — 喇叭輸出</li>
+    </ol>
+    <p>連起來就是：<code>oscillator.connect(gain).connect(ctx.destination)</code>。</p>
+
+    <h2>第一個音效：金幣聲</h2>
+    <p>最簡單的音效是「pickup coin」— 一個快速上升的方波音調。</p>
+    <pre>const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+function coinSfx() {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = 'square';
+  osc.frequency.setValueAtTime(800, ctx.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 0.05);
+
+  gain.gain.setValueAtTime(0.15, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.1);
+}</pre>
+
+    <p>這 12 行程式碼產生的聲音聽起來像 SNES 時代的金幣音效。重點：</p>
+    <ul>
+      <li><code>type: 'square'</code> — 方波，8-bit 質感</li>
+      <li>頻率從 800Hz 滑到 1600Hz — 上升的「叮」感</li>
+      <li>音量從 0.15 急速降到 0.001 — 包絡（attack-release）</li>
+      <li>持續時間 0.1 秒 — 短促，不打擾遊戲節奏</li>
+    </ul>
+
+    <h2>第二個音效：撞擊聲</h2>
+    <p>撞擊音（hit）需要「噪音 + 急速衰減」的特性。用噪音 buffer 替代 oscillator：</p>
+
+    <pre>function hitSfx() {
+  // 1. 產生 0.1 秒的白噪音
+  const bufferSize = ctx.sampleRate * 0.1;
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i &lt; bufferSize; i++) {
+    data[i] = Math.random() * 2 - 1;
+  }
+
+  // 2. 連接 source → filter → gain → output
+  const source = ctx.createBufferSource();
+  source.buffer = buffer;
+
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(1500, ctx.currentTime);
+  filter.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.08);
+
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.4, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+
+  source.connect(filter).connect(gain).connect(ctx.destination);
+  source.start();
+}</pre>
+
+    <p>差異：</p>
+    <ul>
+      <li>音源從 oscillator 換成 noise buffer</li>
+      <li>多了 lowpass filter 把高頻砍掉，讓聲音變「悶」（像撞擊）</li>
+      <li>filter 頻率從 1500Hz 滑到 100Hz — 製造「砰」的衰減感</li>
+    </ul>
+
+    <h2>第三個音效：連擊上升音</h2>
+    <p>每連擊一次都播一個「越來越高」的音 — 給玩家持續的正向回饋。</p>
+    <pre>let comboCount = 0;
+
+function comboSfx() {
+  comboCount++;
+  const baseFreq = 400;
+  const pitch = baseFreq * Math.pow(1.05, Math.min(comboCount, 20));
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(pitch, ctx.currentTime);
+
+  gain.gain.setValueAtTime(0.12, ctx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+
+  osc.connect(gain).connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.15);
+}</pre>
+
+    <p>關鍵：每次 combo +1，頻率上升 5%。連擊到 20 之後封頂，不然會超出可聽範圍。</p>
+
+    <h2>音效調色盤（10 種音）</h2>
+    <p>整套 DODGE MASTER 用的音效設計：</p>
+    <table>
+      <tr><th>音效</th><th>用途</th><th>波形</th><th>頻率特徵</th></tr>
+      <tr><td>coin</td><td>撿金幣</td><td>square</td><td>800→1600 Hz 上升</td></tr>
+      <tr><td>hit</td><td>玩家撞擊</td><td>noise</td><td>1500→100 Hz lowpass</td></tr>
+      <tr><td>combo</td><td>連擊</td><td>triangle</td><td>動態頻率（依連擊數）</td></tr>
+      <tr><td>powerup</td><td>道具獲得</td><td>square + sine 疊加</td><td>和弦</td></tr>
+      <tr><td>laser</td><td>射擊</td><td>sawtooth</td><td>2000→200 Hz 急降</td></tr>
+      <tr><td>death</td><td>死亡</td><td>noise + sine</td><td>下降爆炸</td></tr>
+      <tr><td>levelup</td><td>等級提升</td><td>triangle 三連音</td><td>琶音上行</td></tr>
+      <tr><td>click</td><td>UI 按鍵</td><td>square</td><td>1200 Hz 短點</td></tr>
+      <tr><td>warning</td><td>警告</td><td>sawtooth</td><td>低音持續</td></tr>
+      <tr><td>spin</td><td>轉盤</td><td>square + LFO</td><td>顫音效果</td></tr>
+    </table>
+
+    <h2>瀏覽器相容性踩坑</h2>
+
+    <h3>1. iOS Safari 必須使用者互動才能播</h3>
+    <p>iPhone Safari 在使用者第一次 click/tap 之前不准任何 AudioContext 播放。解法：</p>
+    <pre>document.addEventListener('click', () =&gt; {
+  if (ctx.state === 'suspended') {
+    ctx.resume();
+  }
+}, { once: true });</pre>
+    <p>第一次 click 喚醒 AudioContext，之後就可以正常播放。</p>
+
+    <h3>2. 舊版 Safari 沒有 AudioContext</h3>
+    <p>舊版 iOS 用 webkitAudioContext。前面建構式裡的 fallback 處理：</p>
+    <pre>const ctx = new (window.AudioContext || window.webkitAudioContext)();</pre>
+
+    <h3>3. Chrome 自動播放政策</h3>
+    <p>背景音樂（不是音效）必須等 user gesture 才能 start。對於遊戲音效，因為都是 click 觸發的，沒問題。但如果想做 BGM，要等到使用者「按開始」之後再 ctx.resume()。</p>
+
+    <h3>4. Android 上的 AudioWorklet 延遲</h3>
+    <p>低階 Android 在播放 oscillator 時會有 30–80ms 延遲。這個無解，只能接受。但 Web Audio API 的延遲已經比 HTML5 audio 元素低很多（後者在 Android 上可達 200ms）。</p>
+
+    <h2>音量管控</h2>
+    <p>遊戲中同一秒可能觸發 5–10 個音效。如果每個都 0.4 音量，會爆音（clipping）。我用一個 master gain 統一管控：</p>
+    <pre>const masterGain = ctx.createGain();
+masterGain.gain.value = 0.6;
+masterGain.connect(ctx.destination);
+
+// 所有音效都連到 masterGain 而不是 ctx.destination
+osc.connect(individualGain).connect(masterGain);</pre>
+    <p>玩家還可以從設定改 masterGain.gain.value（0–1）做整體音量控制。</p>
+
+    <h2>實際省下多少</h2>
+    <table>
+      <tr><th>項目</th><th>音檔方案</th><th>合成方案</th></tr>
+      <tr><td>10 種音效大小</td><td>~ 250 KB</td><td>~ 4 KB（程式碼）</td></tr>
+      <tr><td>初次載入延遲</td><td>~ 300 ms</td><td>0 ms</td></tr>
+      <tr><td>授權成本 / 風險</td><td>需追蹤</td><td>無</td></tr>
+      <tr><td>動態變化能力</td><td>困難</td><td>容易</td></tr>
+      <tr><td>音色多樣性</td><td>高</td><td>低（限 8-bit 風格）</td></tr>
+    </table>
+
+    <h2>結語</h2>
+    <p>合成式音效不是萬靈丹 — 寫實風遊戲還是要用真實音源。但對<strong>瀏覽器小遊戲、街機風、復古風、低延遲需求</strong>的場景，Web Audio API 是被低估的工具。整套寫熟了之後，新遊戲的音效從「找音源、買授權、調 mix」變成「20 行 code 搞定」。</p>
+    <p>完整的 sfx 模組（約 200 行）我有計畫整理成 npm package。如果你做相關專案有興趣，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/dodge-master-devlog.html">
+          <span class="related-cat">Game Devlog</span>
+          DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲
+        </a>
+        <a href="/blog/tech-stack.html">
+          <span class="related-cat">Engineering</span>
+          Hao0321 Studio 的技術堆疊：1 人工作室的全端架構
+        </a>
+      </div>
+    </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>為什麼我選 Cloudflare Pages 而不是 Vercel：兩個都用過的對比 — Hao0321 Studio</title>
+  <meta name="description" content="從邊緣節點分布、免費額度、DX、限制、適用場景五個面向深入比較，附我的實際選擇邏輯。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/cloudflare-vs-vercel.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="為什麼我選 Cloudflare Pages 而不是 Vercel" />
+  <meta property="og:description" content="兩個都用過的個人選擇，從五個面向深入對比。" />
+  <meta property="og:url" content="https://hao0321.com/blog/cloudflare-vs-vercel.html" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-04T00:00:00+08:00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-serif:'Playfair Display',Georgia,serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    ::selection{background:var(--accent-blue);color:#fff}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s var(--ease)}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px;letter-spacing:0.02em}
+    .breadcrumb a{color:var(--text-3)}
+    .breadcrumb a:hover{color:var(--accent-blue)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-family:var(--font-sans);font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-family:var(--font-sans);font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em;line-height:1.3}
+    h2:first-child{margin-top:0}
+    h3{font-family:var(--font-sans);font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px;letter-spacing:-0.005em}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0;border:1px solid var(--border-2)}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem;letter-spacing:0.01em}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);transition:all .25s var(--ease);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);transform:translateY(-2px);box-shadow:var(--shadow-md);color:var(--text)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
+  </nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Cloudflare vs Vercel</div>
+    <span class="cat">Engineering</span>
+    <h1>為什麼我選 <em>Cloudflare Pages</em> 而不是 Vercel</h1>
+    <div class="meta">
+      <span>2026 年 5 月 4 日</span>
+      <span>約 9 分鐘閱讀</span>
+      <span>作者：Hao0321 Studio</span>
+    </div>
+
+    <article>
+    <p>2024 年到 2026 年間我兩個平台都用過 production 環境 — Vercel 跑過一個 Next.js SaaS 原型，Cloudflare Pages 撐起現在的 Hao0321 Studio 全站。這篇是兩邊都踩過坑、都有過好體驗之後的個人選擇邏輯，不是廣告文。如果你也在為「下一個專案要用哪個」糾結，這裡有實際的對比資料。</p>
+
+    <h2>先講結論</h2>
+    <p>對<strong>內容站、靜態為主、流量小到中等、預算敏感</strong>的個人 / 小團隊專案 — 選 Cloudflare Pages。對<strong>需要 Next.js ISR、需要 serverless DB、團隊大、CI/CD 嚴格</strong>的中型專案 — 選 Vercel。我自己現在所有新專案都從 Cloudflare 開始，需要時再考慮升級。</p>
+
+    <h2>面向 1：邊緣節點分布</h2>
+    <p>兩家都號稱「邊緣運算」，實際差異是節點數量：</p>
+    <table>
+      <tr><th>平台</th><th>節點數</th><th>覆蓋國家</th></tr>
+      <tr><td>Cloudflare</td><td>300+</td><td>120+</td></tr>
+      <tr><td>Vercel</td><td>30+</td><td>20+</td></tr>
+    </table>
+    <p>對台灣使用者，兩邊都有台北節點，延遲都很低。但對東南亞、南美、非洲，Cloudflare 的覆蓋明顯密很多。實測：菲律賓使用者連我的站，Cloudflare 延遲 25ms，Vercel 95ms（可能繞道日本）。</p>
+
+    <h3>什麼時候這個差異會重要？</h3>
+    <ul>
+      <li>網站內容是大量小檔案、頻繁請求（如遊戲 asset）</li>
+      <li>使用者地理分布廣（含發展中國家）</li>
+      <li>對首頁 LCP（Largest Contentful Paint）敏感</li>
+    </ul>
+
+    <h2>面向 2：免費額度</h2>
+    <table>
+      <tr><th>項目</th><th>Cloudflare Pages</th><th>Vercel Hobby</th></tr>
+      <tr><td>請求數 / 月</td><td>無上限（fair use）</td><td>100 GB-hr serverless</td></tr>
+      <tr><td>頻寬</td><td>無上限</td><td>100 GB</td></tr>
+      <tr><td>建構次數</td><td>500 / 月</td><td>無上限</td></tr>
+      <tr><td>並行建構</td><td>1</td><td>1</td></tr>
+      <tr><td>商業使用</td><td>允許</td><td>禁止</td></tr>
+    </table>
+
+    <p>關鍵差異：<strong>Vercel Hobby 禁商業使用</strong>。如果你的網站有任何「賺錢」性質（廣告、賣課、賣商品），技術上你必須升級到 Pro（每月 $20 USD）。Cloudflare Pages 免費版完全允許商業使用。</p>
+
+    <h2>面向 3：Developer Experience（DX）</h2>
+
+    <h3>Vercel 勝出的地方</h3>
+    <ul>
+      <li><strong>git 自動部署</strong>：push 到 main 就自動發 production，PR 自動發 preview。完全自動化。</li>
+      <li><strong>Next.js 整合</strong>：ISR、ImageOptimization、middleware 等 Next 特性無縫。</li>
+      <li><strong>preview deployment 體驗</strong>：每個 PR 自動帶 password protection、自動 share 給 reviewer。</li>
+      <li><strong>analytics 內建</strong>：免費版就有基本 analytics，看 page views、Web Vitals。</li>
+      <li><strong>整合性</strong>：Database、KV、Blob storage 都是同一個 dashboard。</li>
+    </ul>
+
+    <h3>Cloudflare 勝出的地方</h3>
+    <ul>
+      <li><strong>direct upload mode</strong>：可以選擇不綁 git，用 wrangler CLI 手動部署。對「不想每次 push 都觸發 build」的場景很實用。</li>
+      <li><strong>D1（SQLite on edge）</strong>：免費版就有 5GB SQLite，Vercel 同等需付費 Postgres。</li>
+      <li><strong>R2（S3 相容物件儲存）</strong>：免費 10GB + 零 egress fees。Vercel Blob 出 egress 要錢。</li>
+      <li><strong>Workers + 整合</strong>：Pages 跟 Workers 是同一個生態，serverless function 寫起來像一個專案。</li>
+      <li><strong>不被 vendor lock-in</strong>：Workers 寫的是標準 fetch handler，移到自架 server 改一行就行。Vercel 的 Edge Function 用 vercel-specific 套件，遷移比較複雜。</li>
+    </ul>
+
+    <h2>面向 4：Next.js 支援</h2>
+    <p>這是兩家最大的「定位差異」。</p>
+
+    <h3>Vercel = Next.js 原生家</h3>
+    <p>Vercel 是 Next.js 的開發公司。所有最新 Next 特性（App Router、Server Actions、PPR）第一時間支援、最完整。如果你的專案 100% Next.js，Vercel 是直覺選擇。</p>
+
+    <h3>Cloudflare = 「能跑大部分 Next」</h3>
+    <p>Cloudflare Pages 透過 <code>@cloudflare/next-on-pages</code> 支援 Next.js，但有限制：</p>
+    <ul>
+      <li>ISR 支援不完整</li>
+      <li>middleware 必須 edge runtime</li>
+      <li>image optimization 要自己處理</li>
+    </ul>
+    <p>對「半 Next.js」（pages router、靜態為主）的專案，Cloudflare 完全夠用。對「重度依賴 Next 動態特性」的專案，Vercel 比較不踩雷。</p>
+
+    <h2>面向 5：費用爬升曲線</h2>
+
+    <h3>Vercel 費用結構</h3>
+    <ul>
+      <li>Hobby（免費）→ Pro（$20 / 月）→ Enterprise</li>
+      <li>跨越免費 → Pro 的觸發點：商業使用、超過 100GB-hr serverless、團隊協作</li>
+      <li>Pro 之後：每多 1GB serverless function 計算 = $0.40 USD</li>
+    </ul>
+
+    <h3>Cloudflare 費用結構</h3>
+    <ul>
+      <li>Pages 免費，沒有 Pro tier（沒有對應「個人付費版」）</li>
+      <li>Workers 免費 → Workers Paid（$5 / 月，包含 1000 萬請求）</li>
+      <li>D1 免費 → D1 Paid（$0.75 / GB / 月）</li>
+    </ul>
+
+    <p>實際對比：如果你的站每月 10 萬訪問，Vercel 大概 $20–40 / 月，Cloudflare 大概 $0–5 / 月。差 5–10 倍。</p>
+
+    <h2>什麼樣的專案適合 Vercel</h2>
+    <ul>
+      <li>Next.js App Router 重度使用</li>
+      <li>需要 ISR / SSG / Server Actions 全特性</li>
+      <li>團隊有 4+ 人、需要嚴謹的 PR review 流程</li>
+      <li>商業專案有預算（每月 $20+ 不痛）</li>
+      <li>使用者主要在歐美</li>
+    </ul>
+
+    <h2>什麼樣的專案適合 Cloudflare</h2>
+    <ul>
+      <li>個人 / 小團隊（1–3 人）</li>
+      <li>內容站、blog、作品集、簡單的 SaaS</li>
+      <li>需要 SQLite 等資料儲存但預算敏感</li>
+      <li>使用者地理分布廣</li>
+      <li>遊戲、靜態素材、媒體類網站（頻寬密集）</li>
+      <li>想避免 vendor lock-in</li>
+    </ul>
+
+    <h2>遷移成本</h2>
+    <p>如果你已經在 Vercel 上、想搬到 Cloudflare：</p>
+    <table>
+      <tr><th>項目</th><th>遷移難度</th></tr>
+      <tr><td>純 React + 靜態</td><td>★（一行命令）</td></tr>
+      <tr><td>Next.js Pages Router</td><td>★★（裝 next-on-pages）</td></tr>
+      <tr><td>Next.js App Router + ISR</td><td>★★★★（很多陷阱）</td></tr>
+      <tr><td>Edge Functions</td><td>★★★（API 改寫）</td></tr>
+      <tr><td>Vercel Postgres</td><td>★★★★（需換成 D1 或外部 DB）</td></tr>
+    </table>
+
+    <h2>結語：選你不會後悔的那個</h2>
+    <p>兩個平台都很好，沒有絕對的優劣。我選 Cloudflare 的原因濃縮成一句：<strong>對個人專案，月成本接近 0、覆蓋全球節點密、不會 vendor lock-in</strong>。如果你的優先順序不同，Vercel 會是更好選擇。</p>
+    <p>實際使用過程的更多技術細節，可以看我寫的「Hao0321 Studio 的技術堆疊」與「用 Cloudflare Workers + D1 打造遊戲後端」兩篇深度文章。</p>
+
+    <div class="article-footer">
+      <h3>延伸閱讀</h3>
+      <div class="related">
+        <a href="/blog/tech-stack.html">
+          <span class="related-cat">Engineering</span>
+          Hao0321 Studio 的技術堆疊：1 人工作室的全端架構
+        </a>
+        <a href="/blog/cloudflare-workers-d1.html">
+          <span class="related-cat">Backend</span>
+          用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端
+        </a>
+      </div>
+    </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+      <a href="https://game.hao0321.com/">遊戲大廳</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

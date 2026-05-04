@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resources — 工作室實際使用的工具與資源 | Hao0321 Studio</title>
+  <meta name="description" content="Hao0321 Studio 日常使用的開發工具、AI 工具、設計資源、付費 vs 免費替代方案的完整列表，每項都附使用心得。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/resources/" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Resources — Hao0321 Studio 使用的工具" />
+  <meta property="og:description" content="工作室日常使用的開發工具、AI 工具、設計資源完整列表。" />
+  <meta property="og:url" content="https://hao0321.com/resources/" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:880px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .hero{margin-bottom:48px}
+    .hero-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:20px}
+    h1{font-family:var(--font-sans);font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.1;letter-spacing:-0.025em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .lede{font-size:1.06rem;color:var(--text-2);max-width:640px;line-height:1.75}
+    section{margin-bottom:48px}
+    h2{font-family:var(--font-sans);font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:-0.01em}
+    .section-desc{color:var(--text-2);font-size:0.96rem;margin-bottom:20px}
+    .res-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+    .res-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:22px 24px;transition:all .25s var(--ease);box-shadow:var(--shadow-sm)}
+    .res-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:rgba(74,123,245,0.2)}
+    .res-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:12px}
+    .res-name{font-weight:700;color:var(--text);font-size:1.05rem}
+    .res-tier{font-family:var(--font-mono);font-size:0.66rem;font-weight:600;letter-spacing:0.1em;padding:3px 10px;border-radius:var(--radius-pill);text-transform:uppercase;white-space:nowrap}
+    .tier-free{background:rgba(34,197,94,0.1);color:#15803d;border:1px solid rgba(34,197,94,0.2)}
+    .tier-paid{background:rgba(245,158,11,0.1);color:#b45309;border:1px solid rgba(245,158,11,0.2)}
+    .tier-mix{background:rgba(74,123,245,0.1);color:#1e40af;border:1px solid rgba(74,123,245,0.2)}
+    .res-meta{font-family:var(--font-mono);font-size:0.72rem;color:var(--text-3);margin-bottom:10px}
+    .res-desc{color:var(--text-2);font-size:0.92rem;line-height:1.6}
+    .res-card a.res-link{display:inline-block;margin-top:10px;font-size:0.88rem;font-weight:500}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/" class="nav-back">← 回首頁</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <div class="hero-tag">Resources · Toolbox</div>
+      <h1>工作室日常的<em>工具箱</em></h1>
+      <p class="lede">這是一份「我自己每天用」的工具列表 — 從寫程式、做美術、剪片到接案管理。每一項都標明免費 / 付費，並附短評。沒列上來的就是「試過但已經換掉」的工具。</p>
+    </div>
+
+    <section>
+      <h2>1. 開發環境</h2>
+      <p class="section-desc">寫程式、版控、終端機、AI pair programmer。</p>
+      <div class="res-grid">
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Cursor / VS Code</div><span class="res-tier tier-mix">Mix</span></div>
+          <div class="res-meta">編輯器 · GitHub Copilot 替代</div>
+          <div class="res-desc">Cursor 在 AI 補全速度與整合度上明顯優於 VS Code + Copilot。免費額度夠日常用，重度需求 $20/月。VS Code 還是備用。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Claude Code (CLI)</div><span class="res-tier tier-paid">Paid</span></div>
+          <div class="res-meta">AI · 全代理協作</div>
+          <div class="res-desc">不只是補全，而是能自主跑指令、改檔、debug 的 agent。比 Cursor 適合重構與大型改動。Anthropic 訂閱制。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">GitHub</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">Git host · CI</div>
+          <div class="res-desc">免費版的 private repo + Actions 對個人專案 100% 夠用。Issues 充當任務管理。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Wrangler CLI</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">Cloudflare 部署工具</div>
+          <div class="res-desc">部署 Pages / Workers / D1 一個 CLI 搞定。比手動上 dashboard 快 10 倍。</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 後端與服務</h2>
+      <p class="section-desc">CDN、伺服器、資料庫、認證。月成本控制在 NT$200 內的祕訣。</p>
+      <div class="res-grid">
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Cloudflare Pages</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">CDN · 靜態站</div>
+          <div class="res-desc">免費版無流量上限、商業可用、邊緣節點 300+。本站就是用這個跑。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Cloudflare Workers</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">Serverless API</div>
+          <div class="res-desc">每天 10 萬請求免費，零冷啟動。整套遊戲後端 250 行搞定。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Cloudflare D1</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">SQLite on edge</div>
+          <div class="res-desc">免費 5 GB、自動備份、邊緣複製。資料量不大時的甜蜜點。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Google OAuth</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">登入服務</div>
+          <div class="res-desc">完全不用自己管密碼。記得在 worker 端驗 <code>aud</code> 跟 <code>exp</code>，不然帳號接管風險。</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. AI 工具</h2>
+      <p class="section-desc">寫文、生圖、配樂、生程式碼。AI 真的把獨立工作室的產能拉高一個數量級。</p>
+      <div class="res-grid">
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Claude (Anthropic)</div><span class="res-tier tier-paid">Paid</span></div>
+          <div class="res-meta">寫作 · 程式碼</div>
+          <div class="res-desc">本工作室的主力 AI。長上下文與複雜推理優於同價位產品。Pro 訂閱 $20/月。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Stable Diffusion (本地)</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">生圖 · 商業可用</div>
+          <div class="res-desc">用 Automatic1111 或 ComfyUI 跑在自己 GPU 上。商業條款明確，沒授權問題。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Suno / Udio</div><span class="res-tier tier-mix">Mix</span></div>
+          <div class="res-meta">AI 配樂</div>
+          <div class="res-desc">遊戲 BGM 用，免費版每天 10 首。商業需要付費 plan，但比委託作曲師便宜 20+ 倍。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">ElevenLabs</div><span class="res-tier tier-mix">Mix</span></div>
+          <div class="res-meta">語音合成</div>
+          <div class="res-desc">教學影片配音用。中文聲音自然度比 Google TTS 高一個檔次。</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 設計與美術</h2>
+      <p class="section-desc">UI 設計、向量繪圖、像素編輯、版型。</p>
+      <div class="res-grid">
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Figma</div><span class="res-tier tier-mix">Mix</span></div>
+          <div class="res-meta">UI / UX 設計</div>
+          <div class="res-desc">免費版的 3 個 file 限制夠個人用。需要團隊協作或更多檔案才考慮付費。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Aseprite</div><span class="res-tier tier-paid">Paid</span></div>
+          <div class="res-meta">像素圖編輯</div>
+          <div class="res-desc">$20 一次買斷終生用。AI 生圖後的微調修補必備。Steam 也有賣。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Inkscape</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">向量繪圖</div>
+          <div class="res-desc">Illustrator 免費替代品。SVG icon、logo 製作首選。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Coolors</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">調色盤</div>
+          <div class="res-desc">產生配色方案。本站的藍紫漸變就是用這個試出來的。</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>5. 影片與動畫</h2>
+      <p class="section-desc">3D 建模、特效、剪片、動畫。</p>
+      <div class="res-grid">
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Blender</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">3D · 動畫</div>
+          <div class="res-desc">完全免費的 3D 全套。本站 hero 的 3D liquid chrome 就是 Blender 出的。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">DaVinci Resolve</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">剪片 · 調色</div>
+          <div class="res-desc">免費版功能比付費 Adobe 還多。教學影片剪輯首選。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Houdini Apprentice</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">VFX · 程序化</div>
+          <div class="res-desc">免費版有功能限制與浮水印，但學習用 OK。商業需 Indie ($269/年) 或 FX ($1,995/年)。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Maya</div><span class="res-tier tier-paid">Paid</span></div>
+          <div class="res-meta">3D 動畫主力</div>
+          <div class="res-desc">業界標準。Indie 版 $300/年。Blender 用熟後其實可以省掉這個。</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>6. 商務與生產力</h2>
+      <p class="section-desc">接案、發票、版權、SEO 工具。</p>
+      <div class="res-grid">
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Google Search Console</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">SEO 監控</div>
+          <div class="res-desc">每個網站都該裝。實時看 Google 怎麼看你的網站。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Cloudflare Web Analytics</div><span class="res-tier tier-free">Free</span></div>
+          <div class="res-meta">隱私友善 analytics</div>
+          <div class="res-desc">不用 cookie、不存個資、零追蹤。GDPR 不用怕。比 Google Analytics 簡潔。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Gumroad</div><span class="res-tier tier-mix">Mix</span></div>
+          <div class="res-meta">數位商品銷售</div>
+          <div class="res-desc">10% 抽成（含金流）。模板、教學、原始碼販售首選。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">藍新金流</div><span class="res-tier tier-paid">Paid</span></div>
+          <div class="res-meta">台灣金流</div>
+          <div class="res-desc">本土客戶用。手續費 2.x%。對於台幣計價、開發票場景比 Stripe 簡單。</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>7. 我刻意不用的工具</h2>
+      <p class="section-desc">列出來給有需要避雷的朋友。理由都很主觀，僅供參考。</p>
+      <div class="res-grid">
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Notion</div><span class="res-tier tier-mix">Mix</span></div>
+          <div class="res-meta">為什麼不用：太重</div>
+          <div class="res-desc">用了 2 年發現 90% 場景純文字編輯器就夠。改用 Obsidian + Markdown，啟動快、檔案歸我管。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Vercel (個人)</div><span class="res-tier tier-mix">Mix</span></div>
+          <div class="res-meta">為什麼不用：費用爬升快</div>
+          <div class="res-desc">Hobby 禁商業使用。一旦有營收就要 $20/月起。同樣需求 Cloudflare 免費可解決。</div>
+        </div>
+        <div class="res-card">
+          <div class="res-head"><div class="res-name">Adobe 全家桶</div><span class="res-tier tier-paid">Paid</span></div>
+          <div class="res-meta">為什麼不用：CC 月費高</div>
+          <div class="res-desc">$60+/月。對只偶爾用 PS / AI 的場景不划算。用 Photopea + Inkscape + DaVinci 免費組合。</div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>持續更新</h2>
+      <p class="section-desc">這份清單每季更新一次。最後修訂：2026 年 5 月。如果你有想推薦或想知道的工具，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+    </section>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/resources/">資源</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

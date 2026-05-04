@@ -1,8 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 
-/* ── YouTube API (optimized — ~103 units/search vs 303) ── */
-const YT_API_KEY = "AIzaSyD8r_h3C6vsPf7ByzV6T4cDi2sK5TCMLMA";
-const YT_BASE = "https://www.googleapis.com/youtube/v3";
+/* ── YouTube API (proxied via api.hao0321.com/yt; key is server-side only) ── */
+const YT_BASE = "https://api.hao0321.com/yt";
 var _profileCache = {};
 
 async function resolveChannel(query) {
@@ -15,7 +14,7 @@ async function resolveChannel(query) {
   // @handle — use channels?forHandle (1 unit instead of 100)
   const hMatch = q.match(/@([\w.-]+)/) || q.match(/youtube\.com\/@([\w.-]+)/);
   if (hMatch) {
-    var hRes = await fetch(YT_BASE + '/channels?part=snippet,statistics&forHandle=@' + hMatch[1] + '&key=' + YT_API_KEY);
+    var hRes = await fetch(YT_BASE + '/channels?part=snippet,statistics&forHandle=@' + hMatch[1] + '');
     var hData = await hRes.json();
     if (hData.items && hData.items.length > 0) return hData.items[0].id;
   }
@@ -27,7 +26,7 @@ async function resolveChannel(query) {
 }
 
 async function fetchChannelData(channelId) {
-  var res = await fetch(YT_BASE + '/channels?part=snippet,statistics&id=' + channelId + '&key=' + YT_API_KEY);
+  var res = await fetch(YT_BASE + '/channels?part=snippet,statistics&id=' + channelId + '');
   var data = await res.json();
   if (data.error) throw new Error(data.error.message || 'API error');
   if (!data.items || !data.items.length) return null;
@@ -41,12 +40,12 @@ function buildVideoObj(v) { var dur=v.contentDetails.duration, secs=parseDuratio
 
 // Single video fetch — only 1 search call (100 units) + 1 videos call (1 unit)
 async function fetchVideos(channelId, max) {
-  var res = await fetch(YT_BASE + '/search?part=snippet&channelId=' + channelId + '&order=date&type=video&maxResults=' + max + '&key=' + YT_API_KEY);
+  var res = await fetch(YT_BASE + '/search?part=snippet&channelId=' + channelId + '&order=date&type=video&maxResults=' + max + '');
   var data = await res.json();
   if (data.error) throw new Error(data.error.message || 'API error');
   if (!data.items || !data.items.length) return [];
   var ids = data.items.map(function(v){return v.id.videoId}).join(",");
-  var sr = await fetch(YT_BASE + '/videos?part=statistics,contentDetails,snippet&id=' + ids + '&key=' + YT_API_KEY);
+  var sr = await fetch(YT_BASE + '/videos?part=statistics,contentDetails,snippet&id=' + ids + '');
   var sd = await sr.json();
   return (sd.items||[]).map(buildVideoObj);
 }
