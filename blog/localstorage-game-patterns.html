@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>localStorage 在遊戲開發的 5 個應用模式 — Hao0321 Studio</title>
+<meta name="description" content="瀏覽器遊戲怎麼存玩家資料？localStorage 的 schema 設計、遷移策略、防止損毀的實戰技巧。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/localstorage-game-patterns.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="localStorage 在遊戲開發的 5 個應用模式" /><meta property="og:url" content="https://hao0321.com/blog/localstorage-game-patterns.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-06T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / localStorage 模式</div>
+<span class="cat">Engineering</span>
+<h1>localStorage 在遊戲開發的 <em>5 個應用模式</em></h1>
+<div class="meta"><span>2026 年 5 月 6 日</span><span>約 9 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>本工作室 14 款瀏覽器遊戲都有「玩家資料持久化」需求 — 金幣、進度、最佳分數、設定。沒有後端時 localStorage 是首選。但 5–10MB 限制、字串-only、被清快取就消失等限制讓使用上有些技巧。這篇分享 5 個實戰模式。</p>
+
+<h2>1. Single-key namespace pattern</h2>
+<p>不要把每個欄位存一個 key，整款遊戲所有狀態用一個 key：</p>
+<pre>// 不好：太多 key
+localStorage.setItem('coins', '100');
+localStorage.setItem('best', '8240');
+localStorage.setItem('chars', JSON.stringify({...}));
+
+// 好：單一 key
+const D = {
+  co: 100,
+  best: 8240,
+  chars: {...},
+  v: 1,  // 版本號
+};
+localStorage.setItem('DM', JSON.stringify(D));</pre>
+<p>好處：</p>
+<ul>
+  <li>原子讀寫（不會讀到一半新一半舊）</li>
+  <li>跟其他遊戲的 key 不衝突</li>
+  <li>清空 = removeItem 一次</li>
+</ul>
+
+<h2>2. Schema versioning</h2>
+<p>遊戲改版時資料結構會變。<code>v</code> 欄位讓你能 migrate：</p>
+<pre>function loadData() {
+  const raw = localStorage.getItem('DM');
+  if (!raw) return defaultData();
+  let data = JSON.parse(raw);
+
+  // Migration chain
+  if (data.v === 1) {
+    data.skinsPurchased = {};
+    data.v = 2;
+  }
+  if (data.v === 2) {
+    data.activeChar = data.activeChar || 'basic';
+    data.v = 3;
+  }
+  // ... continue chain
+
+  return data;
+}</pre>
+<p>遷移是<strong>累積式</strong>：每升一版只處理 v→v+1 的差異。永遠跑全部遷移確保最新格式。</p>
+
+<h2>3. Save 節流（debounce）</h2>
+<p>玩家每撿一個金幣就 setItem 是不必要的。每 1 秒最多一次：</p>
+<pre>let saveTimer = null;
+function save() {
+  if (saveTimer) return;
+  saveTimer = setTimeout(() =&gt; {
+    try {
+      localStorage.setItem('DM', JSON.stringify(D));
+    } catch (e) {
+      // QuotaExceededError 處理（見下文）
+    }
+    saveTimer = null;
+  }, 1000);
+}
+
+// 重要：頁面關閉前強制 flush
+window.addEventListener('beforeunload', () =&gt; {
+  if (saveTimer) {
+    clearTimeout(saveTimer);
+    localStorage.setItem('DM', JSON.stringify(D));
+  }
+});</pre>
+
+<h2>4. 損毀防護</h2>
+<p>localStorage 的字串可能因為瀏覽器 bug、儲存空間滿、人工編輯而損毀。穩固的 load 函式：</p>
+<pre>function loadData() {
+  try {
+    const raw = localStorage.getItem('DM');
+    if (!raw) return defaultData();
+    const data = JSON.parse(raw);
+    // 基本驗證
+    if (typeof data !== 'object' || data === null) {
+      throw new Error('not object');
+    }
+    if (typeof data.co !== 'number') data.co = 0;
+    if (typeof data.best !== 'number') data.best = 0;
+    return data;
+  } catch (e) {
+    console.warn('Corrupt save, resetting:', e);
+    // 備份損毀的資料以供 debug
+    localStorage.setItem('DM_corrupt_' + Date.now(),
+      localStorage.getItem('DM') || '');
+    return defaultData();
+  }
+}</pre>
+
+<h2>5. QuotaExceededError 處理</h2>
+<p>localStorage 限制 5–10MB，達到上限會 throw：</p>
+<pre>function safeSave(key, value) {
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch (e) {
+    if (e.name === 'QuotaExceededError'
+        || e.code === 22) {
+      // 清掉舊資料
+      cleanupOldKeys();
+      try {
+        localStorage.setItem(key, value);
+        return true;
+      } catch {
+        return false;  // 還是失敗
+      }
+    }
+    throw e;
+  }
+}
+
+function cleanupOldKeys() {
+  // 範例：刪掉 1 個月前的損毀備份
+  const cutoff = Date.now() - 30 * 24 * 3600_000;
+  for (let i = localStorage.length - 1; i &gt;= 0; i--) {
+    const k = localStorage.key(i);
+    if (k.startsWith('DM_corrupt_')) {
+      const ts = parseInt(k.replace('DM_corrupt_', ''));
+      if (ts &lt; cutoff) localStorage.removeItem(k);
+    }
+  }
+}</pre>
+
+<h2>跨 iframe 同步</h2>
+<p>iframe 跟父頁面共用同一個 localStorage（同源情況下）。一邊改另一邊不會自動知道。用 <code>storage</code> 事件：</p>
+<pre>window.addEventListener('storage', (e) =&gt; {
+  if (e.key === 'DM') {
+    // 重新載入遊戲資料
+    D = loadData();
+    updateUI();
+  }
+});</pre>
+<p>注意：<code>storage</code> 事件只在<strong>其他</strong> tab/iframe 改動時觸發，不在自己改動時。</p>
+
+<h2>不該存 localStorage 的東西</h2>
+<ul>
+  <li><strong>敏感資料</strong>：JWT 可以但 OAuth refresh token 不行（XSS 取得）</li>
+  <li><strong>大量資料</strong>：&gt; 1MB 應該用 IndexedDB</li>
+  <li><strong>結構化資料 + 查詢</strong>：用 IndexedDB 才能 index、search</li>
+  <li><strong>跨 origin 資料</strong>：localStorage 限同源，需要 server</li>
+</ul>
+
+<h2>備份 / 還原</h2>
+<p>提供「匯出存檔」按鈕讓玩家保護自己資料：</p>
+<pre>function exportSave() {
+  const blob = new Blob([localStorage.getItem('DM')],
+    { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `dodge-master-save-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importSave(file) {
+  const reader = new FileReader();
+  reader.onload = (e) =&gt; {
+    try {
+      JSON.parse(e.target.result);  // 驗證格式
+      localStorage.setItem('DM', e.target.result);
+      location.reload();
+    } catch {
+      alert('檔案格式錯誤');
+    }
+  };
+  reader.readAsText(file);
+}</pre>
+
+<h2>結語</h2>
+<p>localStorage 雖然簡單，但寫得正確需要這 5 個模式配合 — namespace、versioning、debounce save、損毀防護、quota 處理。本工作室所有遊戲共用一套 <code>storage.js</code> 模組，新遊戲直接 <code>import</code> 即可。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/dodge-master-devlog.html"><span class="related-cat">Game Devlog</span>DODGE MASTER 開發日誌</a>
+<a href="/blog/d1-leaderboard.html"><span class="related-cat">Backend</span>用 D1 做遊戲排行榜</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>
