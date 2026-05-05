@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>前端無障礙實戰：5 個容易忽略的 a11y 細節 — Hao0321 Studio</title>
+<meta name="description" content="網站做 a11y 不只 alt 跟 aria-label — 5 個常被忽略的關鍵：focus 順序、prefers-reduced-motion、跳過導航、表單錯誤、顏色 + 圖示。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/a11y-5-overlooked.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="前端無障礙實戰：5 個容易忽略的 a11y 細節" /><meta property="og:url" content="https://hao0321.com/blog/a11y-5-overlooked.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-06T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / a11y 細節</div>
+<span class="cat">Design</span>
+<h1>前端無障礙實戰：<em>5 個容易忽略</em>的細節</h1>
+<div class="meta"><span>2026 年 5 月 6 日</span><span>約 9 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>網站 a11y 不只 alt 跟 aria-label。這 5 個細節是大多數人會忽略的，但對使用螢幕閱讀器或鍵盤的使用者影響極大。每個都附本站實際做法。</p>
+
+<h2>1. Focus 順序與視覺一致</h2>
+<p>用 Tab 在頁面導航時，<code>:focus</code> 的順序應該跟視覺順序一致。常見錯誤：</p>
+<ul>
+  <li>用 <code>position: absolute</code> 把元素移到視覺左上，但 DOM 還在最後 → Tab 跳到奇怪位置</li>
+  <li>用 <code>tabindex="2"</code> 強制順序 → 破壞自然 flow</li>
+</ul>
+<p>正確：保持 DOM 順序 = 視覺順序。要改順序時用 CSS Grid <code>order</code> 但慎用。</p>
+<p>且 <code>:focus</code> 要永遠可見：</p>
+<pre>:focus { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+:focus:not(:focus-visible) { outline: none; }  /* 滑鼠 click 時不顯示 outline */
+:focus-visible { outline: 2px solid var(--accent-blue); }</pre>
+
+<h2>2. prefers-reduced-motion</h2>
+<p>有前庭功能障礙的使用者看到複雜動畫會頭暈。系統偏好「reduced motion」要尊重：</p>
+<pre>@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}</pre>
+<p>本站的 hero scroll-scrub 動畫在 reduced motion 模式下停在第一幀，不再 scrub。</p>
+
+<h2>3. Skip Navigation</h2>
+<p>用螢幕閱讀器的使用者每打開一頁要先聽 navigation 才能進主內容。提供「跳過導航」連結：</p>
+<pre>&lt;a href="#main-content" class="skip-nav"&gt;跳到主要內容&lt;/a&gt;
+&lt;nav&gt;...&lt;/nav&gt;
+&lt;main id="main-content"&gt;...&lt;/main&gt;
+
+&lt;style&gt;
+.skip-nav {
+  position: absolute;
+  top: -40px;  /* 平常隱藏 */
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  z-index: 10000;
+}
+.skip-nav:focus {
+  top: 0;  /* 鍵盤 Tab 到時顯示 */
+}
+&lt;/style&gt;</pre>
+
+<h2>4. 表單錯誤的 5 重提示</h2>
+<p>輸入錯誤的 email 不該只有紅色邊框。完整的 a11y 表單錯誤：</p>
+<ol>
+  <li><strong>顏色</strong>：紅色邊框</li>
+  <li><strong>圖示</strong>：⚠️ 或 ❌</li>
+  <li><strong>文字</strong>：「Email 格式錯誤」</li>
+  <li><strong>aria-invalid</strong>：<code>aria-invalid="true"</code></li>
+  <li><strong>aria-describedby</strong>：連到錯誤訊息</li>
+</ol>
+<pre>&lt;label for="email"&gt;Email&lt;/label&gt;
+&lt;input id="email" type="email"
+       aria-invalid="true"
+       aria-describedby="email-error"&gt;
+&lt;span id="email-error" class="error"&gt;
+  ⚠️ 請輸入有效的 email
+&lt;/span&gt;</pre>
+
+<h2>5. 顏色 + 圖示（不只顏色）</h2>
+<p>色盲使用者無法區分純靠顏色傳達的資訊。例：</p>
+<ul>
+  <li>❌ 「成功」綠色 vs 「失敗」紅色 — 色盲看起來一樣</li>
+  <li>✅ 「成功 ✓」+ 綠色 vs 「失敗 ✗」+ 紅色 — 圖示輔助</li>
+</ul>
+<p>表格內的數字趨勢同理：</p>
+<pre>&lt;span class="up"&gt;↑ +12%&lt;/span&gt;     &lt;!-- 不只紅綠 --&gt;
+&lt;span class="down"&gt;↓ -3%&lt;/span&gt;</pre>
+
+<h2>免費 a11y 檢查工具</h2>
+<table>
+  <tr><th>工具</th><th>用途</th></tr>
+  <tr><td>Lighthouse Accessibility</td><td>整體分數，DevTools 內建</td></tr>
+  <tr><td>axe DevTools 擴充功能</td><td>找具體問題</td></tr>
+  <tr><td>WAVE</td><td>視覺化標出 a11y issues</td></tr>
+  <tr><td>NVDA（Windows）/ VoiceOver（Mac）</td><td>實際聽螢幕閱讀器念</td></tr>
+  <tr><td>Color Contrast Checker</td><td>對比度</td></tr>
+</table>
+
+<h2>實際聽一次螢幕閱讀器</h2>
+<p>所有 a11y 教學的最強建議：自己用一次螢幕閱讀器。Mac VoiceOver（Cmd+F5）、Windows NVDA（免費）。聽一次自己的網站，馬上知道哪裡爛：</p>
+<ul>
+  <li>圖片只念「圖片」（沒 alt）</li>
+  <li>按鈕念「按鈕」（沒文字）</li>
+  <li>連結念「點這裡」（不知道連去哪）</li>
+</ul>
+
+<h2>不過度（不破壞體驗）</h2>
+<ul>
+  <li>不要每個 div 都加 role / aria — 多餘的 ARIA 比沒有更糟</li>
+  <li>不要塞太多 alt 文字 — 純裝飾圖片用 <code>alt=""</code></li>
+  <li>不要為了 a11y 犧牲視覺 — 兩者可兼得</li>
+</ul>
+
+<h2>結語</h2>
+<p>a11y 不是「特殊使用者」的需求 — 是<strong>所有使用者在某個場景下會遇到</strong>（暫時手不方便、強光下看不清、噪音吵雜）。把 a11y 當成 base quality 而不是 add-on，才能做出真正好用的網站。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/mobile-first-7-rules.html"><span class="related-cat">Design</span>響應式設計的 7 個 mobile-first 原則</a>
+<a href="/blog/micro-interactions-12.html"><span class="related-cat">Design</span>微互動的 12 個經典場景</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

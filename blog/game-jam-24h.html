@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>24 小時 Game Jam 經驗：從題目到上線的時間分配 — Hao0321 Studio</title>
+<meta name="description" content="獨立開發者怎麼在 24 小時內做出可玩遊戲？時間分配、題材選擇、必砍與必留的功能、發布策略。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/game-jam-24h.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="24 小時 Game Jam 經驗" /><meta property="og:url" content="https://hao0321.com/blog/game-jam-24h.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-06T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Game Jam 24h</div>
+<span class="cat">Game Devlog</span>
+<h1>24 小時 Game Jam：<em>從題目到上線</em>的時間分配</h1>
+<div class="meta"><span>2026 年 5 月 6 日</span><span>約 9 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>Game Jam 是「在限定時間內從零做出一款遊戲」的活動。經典 24 小時、48 小時、72 小時都有。本工作室參加過 5 場 24h jam，這篇是時間分配的實戰指南。</p>
+
+<h2>標準 24 小時 schedule</h2>
+<table>
+  <tr><th>時段</th><th>長度</th><th>內容</th></tr>
+  <tr><td>0:00–1:00</td><td>1h</td><td>題目腦力激盪、選題</td></tr>
+  <tr><td>1:00–2:00</td><td>1h</td><td>核心循環設計（紙上）</td></tr>
+  <tr><td>2:00–6:00</td><td>4h</td><td>核心玩法 prototype（不管美術）</td></tr>
+  <tr><td>6:00–7:00</td><td>1h</td><td>休息 / 第一次 playtest</td></tr>
+  <tr><td>7:00–11:00</td><td>4h</td><td>核心玩法調整 + 第二個機制</td></tr>
+  <tr><td>11:00–13:00</td><td>2h</td><td>美術替換（從佔位圖換成成品）</td></tr>
+  <tr><td>13:00–14:00</td><td>1h</td><td>睡覺（強制）</td></tr>
+  <tr><td>14:00–18:00</td><td>4h</td><td>UI、選單、結算畫面</td></tr>
+  <tr><td>18:00–20:00</td><td>2h</td><td>音效、BGM</td></tr>
+  <tr><td>20:00–22:00</td><td>2h</td><td>polish、bug fix、難度平衡</td></tr>
+  <tr><td>22:00–23:00</td><td>1h</td><td>截圖、宣傳影片、提交頁面</td></tr>
+  <tr><td>23:00–24:00</td><td>1h</td><td>緩衝（一定會超時）</td></tr>
+</table>
+
+<h2>選題的三個原則</h2>
+
+<h3>1. 已知玩法 + 1 個變化</h3>
+<p>不要從零發明玩法。挑「俄羅斯方塊但...」「Snake 但...」這種改編。降低設計風險。</p>
+
+<h3>2. 視覺極簡</h3>
+<p>挑「2D 像素」「黑白 + 1 個強調色」這種美術預算極低的方向。動畫剩下的時間做不到 3D。</p>
+
+<h3>3. 機制比劇情重要</h3>
+<p>玩家會記住「這個遊戲很好玩」而不是「劇情很棒」。劇情留到後續開發。</p>
+
+<h2>必砍的功能</h2>
+<table>
+  <tr><th>功能</th><th>砍掉理由</th></tr>
+  <tr><td>多語言</td><td>1 種語言夠用</td></tr>
+  <tr><td>難度設定</td><td>固定難度即可</td></tr>
+  <tr><td>存檔系統</td><td>每次 reload 從頭開始 OK</td></tr>
+  <tr><td>排行榜</td><td>後端要時間架</td></tr>
+  <tr><td>成就 / 收集</td><td>核心玩法都還沒穩</td></tr>
+  <tr><td>tutorial</td><td>用第一關當 tutorial</td></tr>
+</table>
+
+<h2>必留的功能</h2>
+<ul>
+  <li><strong>核心循環</strong>：玩家做什麼、得到什麼、再做什麼</li>
+  <li><strong>失敗 / 結束狀態</strong>：要明確</li>
+  <li><strong>重試按鈕</strong>：reload 太煩，UI 上要有「再玩一次」</li>
+  <li><strong>音效</strong>：哪怕只有 3 種音 — 動作、成功、失敗</li>
+  <li><strong>title screen</strong>：判官打開遊戲第一眼很重要</li>
+</ul>
+
+<h2>技術選型</h2>
+<table>
+  <tr><th>場景</th><th>建議</th></tr>
+  <tr><td>瀏覽器遊戲</td><td>HTML + Canvas + 純 JS（zero build）</td></tr>
+  <tr><td>2D 像素遊戲</td><td>Godot</td></tr>
+  <tr><td>3D 場景</td><td>Unity（Asset Store 有大量現成 asset）</td></tr>
+  <tr><td>視覺實驗向</td><td>p5.js（快、簡單）</td></tr>
+</table>
+<p>選你最熟的，<strong>不是最炫的</strong>。jam 期間不適合學新工具。</p>
+
+<h2>美術速成</h2>
+<ul>
+  <li>用 <a href="https://kenney.nl">Kenney.nl</a>（CC0 免費資產）</li>
+  <li>2D：Aseprite 30 分鐘畫 5 個 sprite</li>
+  <li>3D：用 cube + cylinder 拼湊，配色解救</li>
+  <li>UI：用 system font，不要花時間挑字體</li>
+  <li>icon：feather icons / heroicons</li>
+</ul>
+
+<h2>音效速成</h2>
+<ul>
+  <li><a href="https://sfxr.me">sfxr</a>：30 秒生成復古音效</li>
+  <li><a href="https://freesound.org">freesound.org</a>：CC 授權的真實音效</li>
+  <li>BGM：直接 import 一首 royalty-free 的 ambient 音樂</li>
+</ul>
+
+<h2>提交頁面要寫的</h2>
+<ol>
+  <li><strong>截圖 3–5 張</strong>：第一張要最有衝擊力</li>
+  <li><strong>30 秒 trailer</strong>：用 OBS 錄遊戲畫面，配上 BGM</li>
+  <li><strong>遊戲說明</strong>：1 句核心玩法 + 控制方式</li>
+  <li><strong>「我做了什麼」</strong>：判官想知道你的貢獻</li>
+  <li><strong>「我用了什麼資源」</strong>：免費資產的歸屬</li>
+</ol>
+
+<h2>判官最看重的</h2>
+<p>實際參加 5 場下來觀察：</p>
+<ul>
+  <li><strong>第一次玩到 fun moment 的時間</strong>：&lt; 30 秒最佳</li>
+  <li><strong>原創性</strong>：跟其他作品的差異</li>
+  <li><strong>完成度</strong>：玩起來無 bug、UI 完整</li>
+  <li><strong>創意</strong>：詮釋題目的方式</li>
+</ul>
+
+<h2>jam 結束後</h2>
+<p>10 個 jam 作品有 1 個會繼續開發成商業遊戲。挑選標準：</p>
+<ul>
+  <li>核心玩法本來就 fun（不是靠音樂、靠美術掩飾）</li>
+  <li>有 scope 可擴充（不是純機制 demo）</li>
+  <li>玩家持續回 feedback「想要更多」</li>
+</ul>
+
+<h2>結語</h2>
+<p>24 小時 Game Jam 不是「短時間做大事」，是「<strong>強迫自己定義 scope</strong>」。每場 jam 都是學「砍功能」的訓練。長期下來砍功能的能力遠比技術重要。本工作室的 14 款瀏覽器小遊戲很多 idea 都是 jam 演化來的。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/dodge-master-devlog.html"><span class="related-cat">Game Devlog</span>DODGE MASTER 開發日誌</a>
+<a href="/blog/why-small-games.html"><span class="related-cat">Indie Life</span>為什麼我選擇做小遊戲</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

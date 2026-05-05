@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>為什麼我關掉所有 Notification — Hao0321 Studio</title>
+<meta name="description" content="一年來不再收 Slack、Line、Email push 的真實體驗 — 生產力提升、焦慮降低、客戶反應、補償機制。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/notification-off-deep-work.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="為什麼我關掉所有 Notification" /><meta property="og:url" content="https://hao0321.com/blog/notification-off-deep-work.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-06T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / 關掉通知</div>
+<span class="cat">Indie Life</span>
+<h1>為什麼我關掉<em>所有 Notification</em></h1>
+<div class="meta"><span>2026 年 5 月 6 日</span><span>約 8 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>2024 年中我關掉了所有 push notification — Slack、Line、Email、Twitter、所有 app。一年下來，是工作模式的最大改變。這篇是真實效果跟代價的紀錄。</p>
+
+<h2>關掉之前的狀況</h2>
+<p>典型一天：</p>
+<ul>
+  <li>4 個 Slack workspace、2 個 Discord、Line 個人 + 工作群、6 個 email 帳戶</li>
+  <li>每 7 分鐘看一次手機（自動統計）</li>
+  <li>覺得「我隨時 on-call 才是 responsible」</li>
+  <li>真正的深度工作每天 1.5 小時</li>
+</ul>
+
+<h2>關掉的具體做法</h2>
+<table>
+  <tr><th>App</th><th>動作</th></tr>
+  <tr><td>所有 messaging（Slack/Line/Discord）</td><td>關 push、靜音 badge、刪手機 app</td></tr>
+  <tr><td>Email</td><td>關 push，桌面 app 也關 badge</td></tr>
+  <tr><td>社群（Twitter/IG/FB）</td><td>關 push，刪手機 app</td></tr>
+  <tr><td>新聞 / app updates</td><td>全關</td></tr>
+  <tr><td>緊急通訊（電話、簡訊）</td><td>保留</td></tr>
+</table>
+
+<h2>檢查訊息的固定時段</h2>
+<p>主動取代被動：</p>
+<ul>
+  <li>09:00（剛開工）</li>
+  <li>13:00（午餐後）</li>
+  <li>17:00（下班前）</li>
+  <li>21:00（晚上一次）</li>
+</ul>
+<p>4 個固定 check-in，每次 15 分鐘把累積訊息一次處理。其餘時間不看。</p>
+
+<h2>真實效果（一年後）</h2>
+
+<h3>1. 深度工作從 1.5 小時/天 → 5 小時/天</h3>
+<p>3 倍的有效時間。直接體現在產出 — 一年寫 14 款遊戲 + 6 萬字 blog + 3 個案件。</p>
+
+<h3>2. 焦慮明顯降低</h3>
+<p>沒有 badge 數字、沒有 banner 跳出。專注的當下不知道有沒有訊息 = 不會分神想「會不會是急的」。</p>
+
+<h3>3. 訊息品質提升</h3>
+<p>反直覺的事：當別人發現你「不會立刻回」，他們會先想清楚再傳。亂打字的「你還在嗎」「線上嗎」訊息變少。每則訊息都更有重點。</p>
+
+<h3>4. 睡眠變好</h3>
+<p>晚上不會被通知吵醒。手機放離床鋪 2 公尺，睡前不滑。早上不是被通知拉出睡眠，是被自然光叫醒。</p>
+
+<h2>付出的代價</h2>
+
+<h3>1. 客戶覺得「找不到你」</h3>
+<p>解法：明確溝通。在 Slack / Line bio 寫：</p>
+<pre>每天 09/13/17/21 點檢查訊息。
+緊急請打電話 0912-xxx-xxx。</pre>
+<p>大部分客戶能接受。要 24/7 立刻回的客戶，可能不是好客戶。</p>
+
+<h3>2. 錯過熱門即時話題</h3>
+<p>Twitter 上的爆紅梗、社群即時討論 — 我都晚 6–12 小時知道。但實際生活影響 = 0。</p>
+
+<h3>3. 朋友覺得疏離</h3>
+<p>真朋友打電話，不重要的會 fade away。這個篩選機制其實是好的。</p>
+
+<h2>哪些通知該保留</h2>
+<ul>
+  <li><strong>真正緊急的</strong>：電話、簡訊（陌生來電才 push）</li>
+  <li><strong>行事曆</strong>：會議前 15 分鐘提醒</li>
+  <li><strong>銀行交易</strong>：金錢變動安全考量</li>
+  <li><strong>家人訊息</strong>：白名單聯絡人單獨設 push</li>
+</ul>
+
+<h2>對方對你「沒立刻回」的反應</h2>
+<p>實測各種人的反應：</p>
+<table>
+  <tr><th>對象</th><th>反應</th></tr>
+  <tr><td>專業客戶</td><td>習慣，照常工作</td></tr>
+  <tr><td>朋友</td><td>適應後變得正常</td></tr>
+  <tr><td>家人</td><td>有時抱怨，但理解</td></tr>
+  <tr><td>陌生詢問</td><td>大部分自己解決或放棄</td></tr>
+</table>
+
+<h2>反例：什麼時候該開</h2>
+<ul>
+  <li>正在處理 production incident（待命中）</li>
+  <li>家人有醫療狀況</li>
+  <li>正在跑長時間流程，需要 alert（如 build 完成）</li>
+</ul>
+<p>這些都是「臨時開、解決後關」，不是長期狀態。</p>
+
+<h2>結語</h2>
+<p>關通知不是反社群，是<strong>把注意力主導權拿回來</strong>。一年下來最大的學習：你以為「隨時 on-call」是 responsible，實際是被動。主動規劃 check-in 時段反而更能對訊息發送者負責 — 每次都認真處理，而不是 7 秒看完隨便回。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/time-management-solo.html"><span class="related-cat">Indie Life</span>1 人工作室的時間管理</a>
+<a href="/blog/writing-3-blog-posts-weekly.html"><span class="related-cat">Indie Life</span>為什麼我每週寫 3 篇技術部落格</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

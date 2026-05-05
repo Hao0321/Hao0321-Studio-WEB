@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IndexedDB 取代 localStorage：什麼時候該升級 — Hao0321 Studio</title>
+<meta name="description" content="localStorage 的 5MB 限制怎麼處理？IndexedDB 進階：版本遷移、index 查詢、跨頁同步、性能對比。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/indexeddb-vs-localstorage.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="IndexedDB 取代 localStorage：什麼時候該升級" /><meta property="og:url" content="https://hao0321.com/blog/indexeddb-vs-localstorage.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-06T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / IndexedDB</div>
+<span class="cat">Engineering</span>
+<h1>IndexedDB 取代 localStorage：<em>什麼時候</em>該升級</h1>
+<div class="meta"><span>2026 年 5 月 6 日</span><span>約 10 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>localStorage 5MB 限制夠用嗎？對小遊戲存個進度夠，但要存對戰回放、棋譜、大量圖片就不夠。IndexedDB 是瀏覽器提供的「真資料庫」 — 容量到 GB 級、有 index 查詢、支援 Promise（透過 idb 套件）。這篇講從 localStorage 升級的時機與實作。</p>
+
+<h2>對比表</h2>
+<table>
+  <tr><th>項目</th><th>localStorage</th><th>IndexedDB</th></tr>
+  <tr><td>容量</td><td>5–10 MB</td><td>50% 可用磁碟（GB 級）</td></tr>
+  <tr><td>API</td><td>同步</td><td>非同步</td></tr>
+  <tr><td>資料型別</td><td>只能字串</td><td>JS 物件、Blob、ArrayBuffer</td></tr>
+  <tr><td>查詢</td><td>只能 by key</td><td>可建 index + range query</td></tr>
+  <tr><td>Schema</td><td>無</td><td>object stores + version</td></tr>
+  <tr><td>學習曲線</td><td>5 分鐘</td><td>1–2 小時</td></tr>
+</table>
+
+<h2>什麼時候該升級</h2>
+<ul>
+  <li>單一資料 &gt; 1MB（大量圖片、影片）</li>
+  <li>需要查詢「所有大於 X 分數的紀錄」</li>
+  <li>需要存 Blob（如玩家繪製的圖、錄音）</li>
+  <li>跨多個物件的關聯</li>
+  <li>離線優先（PWA 大量資料快取）</li>
+</ul>
+
+<h2>用 idb 套件簡化</h2>
+<p>原生 IndexedDB API 用 callback 寫起來很痛。<a href="https://github.com/jakearchibald/idb">idb</a>（5KB）把它包成 Promise：</p>
+<pre>import { openDB } from 'idb';
+
+const db = await openDB('hao-games', 1, {
+  upgrade(db) {
+    const store = db.createObjectStore('replays', { keyPath: 'id' });
+    store.createIndex('by-score', 'score');
+    store.createIndex('by-date', 'createdAt');
+  },
+});
+
+// 寫
+await db.put('replays', {
+  id: 'r-' + Date.now(),
+  score: 8240,
+  createdAt: Date.now(),
+  frames: replayFrames,  // Array of objects
+});
+
+// 讀
+const r = await db.get('replays', 'r-...');
+
+// 查詢
+const top = await db.getAllFromIndex('replays', 'by-score', null, 10);</pre>
+
+<h2>Schema 版本管理</h2>
+<p>每次改 schema 升 version。idb 自動跑 upgrade callback：</p>
+<pre>const db = await openDB('hao-games', 2, {
+  upgrade(db, oldVersion) {
+    if (oldVersion &lt; 1) {
+      db.createObjectStore('replays', { keyPath: 'id' });
+    }
+    if (oldVersion &lt; 2) {
+      const store = db.transaction.objectStore('replays');
+      store.createIndex('by-score', 'score');
+    }
+  },
+});</pre>
+
+<h2>從 localStorage 遷移</h2>
+<pre>async function migrateFromLocalStorage() {
+  const raw = localStorage.getItem('DM');
+  if (!raw) return;
+  try {
+    const data = JSON.parse(raw);
+    await db.put('saves', { id: 'main', ...data });
+    localStorage.removeItem('DM');
+  } catch (e) {
+    console.warn('Migration failed:', e);
+  }
+}</pre>
+
+<h2>Range Query 範例</h2>
+<p>「查 7 天內 score &gt; 5000 的所有 replay」：</p>
+<pre>const cutoff = Date.now() - 7 * 24 * 3600_000;
+const tx = db.transaction('replays', 'readonly');
+const idx = tx.store.index('by-date');
+const range = IDBKeyRange.lowerBound(cutoff);
+
+const results = [];
+for await (const cursor of idx.iterate(range)) {
+  if (cursor.value.score &gt; 5000) results.push(cursor.value);
+}</pre>
+
+<h2>Blob 儲存</h2>
+<p>使用者畫的圖片、錄的音直接存 Blob：</p>
+<pre>// 從 Canvas 取 Blob
+const blob = await new Promise(r =&gt; canvas.toBlob(r, 'image/webp', 0.8));
+await db.put('drawings', { id: 'd-' + Date.now(), blob, createdAt: Date.now() });
+
+// 讀回顯示
+const d = await db.get('drawings', 'd-xxx');
+const url = URL.createObjectURL(d.blob);
+img.src = url;</pre>
+
+<h2>跨頁 / 跨 tab 同步</h2>
+<p>localStorage 有 <code>storage</code> event。IndexedDB 沒有，但可以用 BroadcastChannel：</p>
+<pre>const channel = new BroadcastChannel('hao-games');
+channel.onmessage = (e) =&gt; {
+  if (e.data.type === 'replay-added') reloadReplays();
+};
+
+// 寫入後 broadcast
+await db.put('replays', replay);
+channel.postMessage({ type: 'replay-added', id: replay.id });</pre>
+
+<h2>儲存配額（Storage Estimate）</h2>
+<pre>const { usage, quota } = await navigator.storage.estimate();
+console.log(`Used ${(usage/1024/1024).toFixed(1)}MB / ${(quota/1024/1024).toFixed(0)}MB`);</pre>
+<p>滿了之前就要 cleanup。</p>
+
+<h2>持久化（Persistent Storage）</h2>
+<p>瀏覽器在儲存空間吃緊時會自動清掉「臨時」資料。重要資料申請 persistent：</p>
+<pre>if (await navigator.storage.persisted()) {
+  console.log('已持久化');
+} else {
+  const granted = await navigator.storage.persist();
+  console.log('申請結果:', granted);
+}</pre>
+
+<h2>性能對比</h2>
+<table>
+  <tr><th>操作</th><th>localStorage</th><th>IndexedDB</th></tr>
+  <tr><td>讀小資料 (1KB)</td><td>0.1ms</td><td>2ms</td></tr>
+  <tr><td>讀中資料 (1MB)</td><td>5ms</td><td>10ms</td></tr>
+  <tr><td>讀大資料 (10MB)</td><td>無法</td><td>30ms</td></tr>
+  <tr><td>查詢 (10000 筆)</td><td>無法（要遍歷）</td><td>5ms（有 index）</td></tr>
+</table>
+
+<h2>什麼時候別升級</h2>
+<ul>
+  <li>資料 &lt; 1MB 且結構單純：localStorage 簡單夠用</li>
+  <li>程式碼長期維護人力少：IndexedDB 出 bug 時的 debug 成本高</li>
+  <li>跨瀏覽器一致性要求高：Safari 對 IndexedDB 的實作偶爾有怪癖</li>
+</ul>
+
+<h2>結語</h2>
+<p>IndexedDB 不是 localStorage 的替代品 — 是<strong>另一個工具</strong>。多數小遊戲 localStorage 夠用，但當資料規模或查詢需求超過時，IndexedDB 是優雅的升級路徑。idb 套件讓使用體驗大幅提升，建議直接用而不是寫原生 API。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/localstorage-game-patterns.html"><span class="related-cat">Engineering</span>localStorage 在遊戲開發的 5 個應用</a>
+<a href="/blog/d1-leaderboard.html"><span class="related-cat">Backend</span>用 D1 做遊戲排行榜</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>
