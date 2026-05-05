@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>五子棋 AI 設計：Minimax + Alpha-Beta 剪枝實戰 — Hao0321 Studio</title>
+<meta name="description" content="從零實作五子棋 AI 對手 — 評估函式設計、minimax 搜尋深度、Alpha-Beta 剪枝、move ordering 優化。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/gomoku-ai-minimax.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="五子棋 AI 設計：Minimax + Alpha-Beta 剪枝實戰" /><meta property="og:url" content="https://hao0321.com/blog/gomoku-ai-minimax.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / 五子棋 AI</div>
+<span class="cat">Game Devlog</span>
+<h1>五子棋 AI 設計：<em>Minimax + Alpha-Beta</em> 實戰</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 12 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>Chess Master 八合一棋類裡，五子棋的 AI 是寫起來最有趣的之一。15×15 棋盤、棋子無移動、沒有走法限制 — 看似簡單，但要做出讓玩家覺得「跟它下會輸」的程度，需要 minimax 搜尋 + 評估函式 + 剪枝 + ordering 四個元素配合。這篇拆給你看。</p>
+
+<h2>核心演算法：Minimax</h2>
+<p>Minimax 是回合制零和遊戲的經典演算法。基本概念：</p>
+<ul>
+  <li>輪到 AI（max 玩家）：選對自己最有利的招</li>
+  <li>輪到對手（min 玩家）：假設對手會選對 AI 最不利的招</li>
+  <li>遞迴向下搜尋 N 步深</li>
+</ul>
+
+<pre>function minimax(board, depth, isMax) {
+  if (depth === 0 || isWin(board)) return evaluate(board);
+
+  if (isMax) {
+    let best = -Infinity;
+    for (const move of legalMoves(board)) {
+      board[move] = AI;
+      const score = minimax(board, depth - 1, false);
+      board[move] = EMPTY;
+      best = Math.max(best, score);
+    }
+    return best;
+  } else {
+    let best = Infinity;
+    for (const move of legalMoves(board)) {
+      board[move] = HUMAN;
+      const score = minimax(board, depth - 1, true);
+      board[move] = EMPTY;
+      best = Math.min(best, score);
+    }
+    return best;
+  }
+}</pre>
+
+<p>問題：15×15 = 225 個位置。深度 3 的搜尋空間 = 225³ ≈ 1100 萬節點。瀏覽器跑不動。</p>
+
+<h2>Alpha-Beta 剪枝</h2>
+<p>觀察：minimax 樹有很多分支可以「不搜也知道結果」。如果某個對手的選擇已經讓 AI 失敗，AI 就不會走那條路 → 整個子樹可以剪掉。</p>
+
+<pre>function minimax(board, depth, alpha, beta, isMax) {
+  if (depth === 0 || isWin(board)) return evaluate(board);
+
+  if (isMax) {
+    let best = -Infinity;
+    for (const move of legalMoves(board)) {
+      board[move] = AI;
+      best = Math.max(best, minimax(board, depth - 1, alpha, beta, false));
+      board[move] = EMPTY;
+      alpha = Math.max(alpha, best);
+      if (beta &lt;= alpha) break;  // 剪枝
+    }
+    return best;
+  } else {
+    let best = Infinity;
+    for (const move of legalMoves(board)) {
+      board[move] = HUMAN;
+      best = Math.min(best, minimax(board, depth - 1, alpha, beta, true));
+      board[move] = EMPTY;
+      beta = Math.min(beta, best);
+      if (beta &lt;= alpha) break;  // 剪枝
+    }
+    return best;
+  }
+}</pre>
+
+<p>剪枝後實測搜尋節點少 80%。深度 4 的五子棋 AI 在現代瀏覽器跑 1–2 秒能算完。</p>
+
+<h2>評估函式（Evaluate）</h2>
+<p>這是 AI 強度的核心。我用「pattern matching」 — 掃所有方向找特定棋型：</p>
+
+<table>
+  <tr><th>棋型</th><th>分數</th><th>例子</th></tr>
+  <tr><td>連 5</td><td>+∞</td><td>OOOOO</td></tr>
+  <tr><td>活 4</td><td>+10000</td><td>_OOOO_</td></tr>
+  <tr><td>死 4</td><td>+1000</td><td>XOOOO_</td></tr>
+  <tr><td>活 3</td><td>+1000</td><td>_OOO_</td></tr>
+  <tr><td>死 3</td><td>+100</td><td>XOOO_</td></tr>
+  <tr><td>活 2</td><td>+100</td><td>_OO_</td></tr>
+</table>
+
+<p>對手的棋型分數取反：</p>
+<pre>const score = aiPatternScore - humanPatternScore * 1.1;
+// 防守稍微比進攻重要 (×1.1)</pre>
+
+<h2>Move Ordering</h2>
+<p>剪枝效率高度依賴「先搜好的招」。如果先搜爛招，剪不到很多。Move ordering 的策略：</p>
+
+<ol>
+  <li><strong>只考慮已有棋子周圍 2 格內的位置</strong>：15×15 = 225 個位置，但合理的選擇通常 &lt; 30 個</li>
+  <li><strong>用淺層評估排序</strong>：對每個候選位置算單步 evaluate，分數高的先搜</li>
+  <li><strong>勝負招最優先</strong>：如果某位置直接勝利或防止失敗，永遠第一個搜</li>
+</ol>
+
+<pre>function orderedMoves(board, isMax) {
+  const candidates = nearestEmpty(board, 2);
+  return candidates.map(m =&gt; ({
+    move: m,
+    score: quickEval(board, m, isMax)
+  })).sort((a, b) =&gt; b.score - a.score)
+    .map(x =&gt; x.move);
+}</pre>
+
+<p>有 ordering 後，深度 6 的 minimax 在瀏覽器跑 1.5 秒能搞定。沒有 ordering 是 30 秒以上。</p>
+
+<h2>Iterative Deepening</h2>
+<p>進階技巧：先搜深度 2 找最佳招，再搜深度 3，再深度 4...... 每層的最佳招做為下一層的 ordering 參考。</p>
+<pre>let best = null;
+for (let d = 2; d &lt;= MAX_DEPTH; d++) {
+  if (Date.now() - start &gt; THINK_LIMIT) break;
+  best = searchAtDepth(board, d, best);  // 用上次結果做 ordering
+}
+return best;</pre>
+<p>好處：時間用完還有「best 到目前為止」的招可用，不會卡住。</p>
+
+<h2>難度分級</h2>
+<table>
+  <tr><th>難度</th><th>搜尋深度</th><th>隨機度</th></tr>
+  <tr><td>新手</td><td>2</td><td>20%（偶爾走非最佳招）</td></tr>
+  <tr><td>普通</td><td>4</td><td>5%</td></tr>
+  <tr><td>困難</td><td>6</td><td>0%</td></tr>
+</table>
+
+<h2>讓 AI 看起來「在思考」</h2>
+<p>困難 AI 在現代瀏覽器只要 0.3 秒。但 0.3 秒結束玩家會覺得「電腦作弊」。強制 thinkingTimeMs 讓對局有節奏：</p>
+<pre>const start = Date.now();
+const move = searchBestMove();
+const elapsed = Date.now() - start;
+const minThink = 1500;
+if (elapsed &lt; minThink) {
+  await sleep(minThink - elapsed);
+}
+applyMove(move);</pre>
+
+<h2>Web Worker 化</h2>
+<p>minimax 重度計算會卡 UI。把 AI 搬到 Web Worker：</p>
+<pre>// 主執行緒
+const worker = new Worker('ai-worker.js');
+worker.postMessage({ board, depth: 6 });
+worker.onmessage = (e) =&gt; applyMove(e.data.move);
+
+// ai-worker.js
+self.onmessage = (e) =&gt; {
+  const { board, depth } = e.data;
+  const move = minimax(board, depth, -Infinity, Infinity, true);
+  self.postMessage({ move });
+};</pre>
+
+<h2>結語</h2>
+<p>五子棋 AI 是「演算法 × 領域知識 × 工程優化」的小型完整案例。這四元素任何一個不到位，AI 都會弱。完整實作（約 400 行）整合在 Chess Master 八合一架構裡，玩家在普通難度跟它下大概 30% 勝率，符合「能贏但不容易」的設計目標。</p>
+<p>有想交流棋類 AI 的，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/chess-master-architecture.html"><span class="related-cat">Game Devlog</span>Chess Master — 8 種棋類合一的 React 架構</a>
+<a href="/blog/ai-pair-programming.html"><span class="related-cat">AI</span>AI 協作開發</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

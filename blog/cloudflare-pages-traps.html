@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cloudflare Pages 部署陷阱：5 個踩過的坑 — Hao0321 Studio</title>
+<meta name="description" content="從 SSL 子網域、_headers 解析、direct upload 與 git 同步、preview 過期、wrangler.toml 衝突 — 真實踩過的雷紀錄。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/cloudflare-pages-traps.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="Cloudflare Pages 部署陷阱：5 個踩過的坑" /><meta property="og:url" content="https://hao0321.com/blog/cloudflare-pages-traps.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Pages 陷阱</div>
+<span class="cat">Engineering</span>
+<h1>Cloudflare Pages 部署陷阱：<em>5 個踩過的坑</em></h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 9 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>本站及遊戲大廳一年來累積 100+ 次部署，踩過幾個 Cloudflare Pages 文件沒寫清楚的坑。這篇給後來的人省時間。</p>
+
+<h2>陷阱 1：Universal SSL 只覆蓋兩層子網域</h2>
+<p>免費版 Cloudflare 的 Universal SSL 只簽 <code>example.com</code> + <code>*.example.com</code>。如果你用三層子網域（如 <code>api.game.example.com</code>），瀏覽器會回 ERR_SSL_VERSION_OR_CIPHER_MISMATCH。</p>
+<p><strong>修法</strong>：把子網域留在兩層內。本站把 <code>api.game.hao0321.com</code> 改成 <code>api.hao0321.com</code> 才解決。</p>
+
+<h2>陷阱 2：_headers 必須在輸出根目錄</h2>
+<p>很多人把 <code>_headers</code> 放在 <code>src/</code> 或 <code>public/</code>，部署後發現 header 沒生效。</p>
+<p><strong>修法</strong>：<code>_headers</code> 要在 <code>wrangler pages deploy &lt;dir&gt;</code> 那個 <code>&lt;dir&gt;</code> 的根。對 zero-build 專案是專案根、對 Vite 專案是 <code>dist/</code>。建構流程要把 <code>_headers</code> 也複製過去。</p>
+
+<h2>陷阱 3：Direct Upload Mode 跟 Git 不會自動同步</h2>
+<p>Pages 有兩種模式：</p>
+<ul>
+  <li><strong>Git Integration</strong>：push 自動部署</li>
+  <li><strong>Direct Upload</strong>：用 <code>wrangler pages deploy</code> 手動部署</li>
+</ul>
+<p>選 Direct Upload 後，<code>git push</code> 不會觸發任何 deploy。我曾經以為 push 完就上線，結果發現 production 還是舊版。</p>
+<p><strong>修法</strong>：寫一條 alias：</p>
+<pre>alias deploy='git push origin main && \
+  wrangler pages deploy . --project-name=YOUR_PROJECT \
+  --branch=main --commit-dirty=true'</pre>
+
+<h2>陷阱 4：Preview Deployment 不會自動清除</h2>
+<p>每次 <code>wrangler pages deploy</code> 都產生一個 preview URL（如 <code>https://abc123.your-project.pages.dev</code>）。免費版這些 preview 永久保留，累積上百個之後 dashboard 載入超慢。</p>
+<p><strong>修法</strong>：</p>
+<pre>npx wrangler pages deployment list --project-name=YOUR_PROJECT
+# 找到舊的 deployment ID
+npx wrangler pages deployment delete &lt;id&gt; --project-name=YOUR_PROJECT</pre>
+<p>或寫個 script 批次刪除超過 30 天的 preview。</p>
+
+<h2>陷阱 5：wrangler.toml 在子目錄會被誤抓</h2>
+<p>本站結構：</p>
+<pre>/                  ← 主站 (Pages)
+/game/             ← 遊戲大廳 (另一個 Pages 專案)
+/game-api/
+  wrangler.toml    ← Worker 設定</pre>
+<p>當 <code>wrangler pages deploy</code> 在主站根目錄執行時，wrangler 會「向下找」找到 <code>game-api/wrangler.toml</code>，把它的設定當成 Pages 設定，跳出警告：</p>
+<pre>WARNING: We detected a configuration file at game-api/wrangler.toml
+but it is missing the "pages_build_output_dir" field</pre>
+<p>實際上沒影響，但每次部署都看到這個警告很煩。</p>
+<p><strong>修法</strong>：在 Pages 部署目錄根放一個空 <code>wrangler.toml</code>，明確指定 <code>pages_build_output_dir = "."</code>。</p>
+
+<h2>額外：CWD 陷阱（自己踩的）</h2>
+<p>用腳本自動部署時，最常見的錯誤是「CWD 不在預期位置」。例如：</p>
+<pre># 危險寫法
+cd game-api && wrangler deploy
+# 然後接著
+wrangler pages deploy . --project-name=hao0321-studio
+# 此時 CWD 是 game-api/，部署的是 game-api/ 而不是專案根！</pre>
+<p><strong>修法</strong>：每次 deploy 都用<strong>絕對路徑</strong>：</p>
+<pre>wrangler pages deploy "/full/path/to/project" \
+  --project-name=hao0321-studio --branch=main</pre>
+
+<h2>額外：commit message UTF-8 問題</h2>
+<p>如果 git 最近一次 commit message 是中文且編碼異常，<code>wrangler pages deploy</code> 會回：</p>
+<pre>Invalid commit message, it must be a valid UTF-8 string. [code: 8000111]</pre>
+<p><strong>修法</strong>：手動指定 commit message：</p>
+<pre>wrangler pages deploy . --commit-message="Manual deploy"</pre>
+
+<h2>結語</h2>
+<p>Cloudflare Pages 90% 體驗很順，剩下 10% 是這些細節文件沒寫清楚。希望這份清單能幫到後來的人。</p>
+<p>還有其他踩過的坑想分享，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/cloudflare-vs-vercel.html"><span class="related-cat">Engineering</span>為什麼我選 Cloudflare Pages 而不是 Vercel</a>
+<a href="/blog/tech-stack.html"><span class="related-cat">Engineering</span>Hao0321 Studio 的技術堆疊</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

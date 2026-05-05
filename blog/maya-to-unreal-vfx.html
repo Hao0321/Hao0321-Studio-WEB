@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>從 Maya 到 Unreal 的 VFX Pipeline 實戰 — Hao0321 Studio</title>
+<meta name="description" content="獨立工作室的 VFX 工作流 — 在 Maya 建模、Houdini 模擬、Unreal Engine 5 渲染整合，每個交接點的格式與優化技巧。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/maya-to-unreal-vfx.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="從 Maya 到 Unreal 的 VFX Pipeline 實戰" /><meta property="og:url" content="https://hao0321.com/blog/maya-to-unreal-vfx.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / VFX Pipeline</div>
+<span class="cat">VFX</span>
+<h1>從 Maya 到 Unreal 的 <em>VFX Pipeline</em> 實戰</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 11 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>影視 VFX 工作室規模可以從 2 人到 200 人，但工作流的核心架構大致相同：<strong>建模 → 模擬 → 著色 → 渲染 → 合成</strong>。獨立工作室的差異是用工具的選擇與簡化。這篇分享 Hao0321 Studio 從 Maya 建模、Houdini 模擬、Unreal Engine 5 渲染的完整流程。</p>
+
+<h2>整體 Pipeline</h2>
+<pre>[ Maya ]  →  [ Houdini ]  →  [ Substance ]  →  [ Unreal 5 ]  →  [ DaVinci ]
+建模／RIG    模擬／程序化     材質／貼圖       渲染／燈光    合成／調色</pre>
+
+<h2>Maya：建模與動畫</h2>
+<p>為什麼還用 Maya 而不是 Blender？</p>
+<ul>
+  <li><strong>RIG 工具成熟</strong>：Advanced Skeleton、HumanIK 等業界標準</li>
+  <li><strong>客戶接案要求</strong>：影視業界常規 deliverable 是 .ma/.mb 檔</li>
+  <li><strong>UV 與拓撲工具</strong>：retopo、uv unfold 比 Blender 流暢</li>
+</ul>
+<p>但小案件直接用 Blender 完成，省 Maya 訂閱費。</p>
+
+<h3>輸出 Alembic</h3>
+<p>Maya 動畫輸出到 Houdini 的標準格式是 Alembic（.abc）：</p>
+<pre>file -force -options "..." \
+  -typ "Alembic" \
+  -pr "/path/to/output.abc";</pre>
+<p>Alembic 把幾何體 + 動畫烘進單一檔案，跨 DCC 通用。</p>
+
+<h2>Houdini：模擬與程序化</h2>
+<p>Houdini 是工作室的「特效之神」。常用任務：</p>
+<table>
+  <tr><th>任務</th><th>解法</th></tr>
+  <tr><td>火焰／煙霧</td><td>Pyro solver</td></tr>
+  <tr><td>液體／流體</td><td>FLIP solver</td></tr>
+  <tr><td>剛體破壞</td><td>RBD + Voronoi fracture</td></tr>
+  <tr><td>布料</td><td>Vellum cloth</td></tr>
+  <tr><td>毛髮</td><td>Vellum hair</td></tr>
+  <tr><td>程序化建模</td><td>SOP networks</td></tr>
+</table>
+
+<h3>緩存策略</h3>
+<p>Houdini 模擬常常一次跑 30 分鐘以上。緩存是必要的：</p>
+<pre># 把模擬結果寫成 .bgeo.sc 序列
+ROP Geometry node → File: $HIP/cache/sim_$F4.bgeo.sc</pre>
+<p>之後可以隨時 reload，不用重跑模擬。</p>
+
+<h2>Substance：材質與貼圖</h2>
+<p>Substance Painter 跟 Substance Designer 的分工：</p>
+<ul>
+  <li><strong>Designer</strong>：程序化材質（無縫紋理、可參數調整）</li>
+  <li><strong>Painter</strong>：在模型上「畫」磨損、髒污、傷痕</li>
+</ul>
+
+<h3>輸出 PBR 貼圖組</h3>
+<p>Unreal 5 標準 PBR 需要 4–6 張貼圖：</p>
+<table>
+  <tr><th>貼圖</th><th>用途</th></tr>
+  <tr><td>BaseColor</td><td>底色</td></tr>
+  <tr><td>Normal</td><td>表面凹凸</td></tr>
+  <tr><td>Metallic</td><td>金屬度（0 或 1）</td></tr>
+  <tr><td>Roughness</td><td>粗糙度</td></tr>
+  <tr><td>AO</td><td>環境光遮蔽</td></tr>
+  <tr><td>Emissive</td><td>自發光（可選）</td></tr>
+</table>
+<p>Substance 提供「Unreal Engine 4 (Packed)」export preset，自動把 ORM (AO+Roughness+Metallic) 包成單張省記憶體。</p>
+
+<h2>Unreal Engine 5：燈光與渲染</h2>
+<p>UE5 取代離線渲染的關鍵特性：</p>
+<ul>
+  <li><strong>Lumen</strong>：實時 GI</li>
+  <li><strong>Nanite</strong>：百萬多邊形即時渲染</li>
+  <li><strong>Path Tracer</strong>：cinematics-quality 離線渲染</li>
+</ul>
+
+<h3>燈光分層</h3>
+<p>影視級燈光的標準三層：</p>
+<ol>
+  <li><strong>Key Light</strong>：主光，定義主要明暗</li>
+  <li><strong>Fill Light</strong>：填光，柔化陰影</li>
+  <li><strong>Rim Light</strong>：邊光，從背後勾勒輪廓</li>
+</ol>
+
+<h3>Movie Render Queue</h3>
+<p>UE5 的高品質渲染流程：</p>
+<pre>1. 開 Movie Render Queue
+2. 設定 Anti-Aliasing：spatial=temporal，64 samples
+3. Lumen → Hardware Ray Tracing
+4. 輸出 EXR 16-bit linear（保留動態範圍）
+5. 輸出 multi-pass（diffuse / specular / volumetric / ID）</pre>
+
+<h2>DaVinci Resolve：合成與調色</h2>
+<p>UE5 出的 EXR 序列在 DaVinci 裡：</p>
+<ul>
+  <li><strong>Color Page</strong>：依 ACES 工作流調色</li>
+  <li><strong>Fusion Page</strong>：合成多 pass、加 lens flare、glow</li>
+  <li><strong>Edit Page</strong>：剪輯、配音</li>
+  <li><strong>Deliver Page</strong>：輸出最終 .mp4 (H.265)</li>
+</ul>
+
+<h2>檔案命名規範</h2>
+<p>跨工具最重要的「軟基礎建設」就是命名：</p>
+<pre>shot010_v003_charA_animation.abc
+shot010_v003_charA_render.exr
+shot010_v003_charA_finalcomp.mp4</pre>
+<p>規則：<code>{shot}_{version}_{asset}_{stage}.{ext}</code>。任何人接手都看得懂。</p>
+
+<h2>版本管理</h2>
+<p>3D 檔案太大不適合放 git。我用：</p>
+<ul>
+  <li><strong>Perforce 個人版</strong>：免費 5 user 額度</li>
+  <li><strong>外接硬碟備份</strong>：每週一次完整備份</li>
+  <li><strong>雲端備份</strong>：關鍵 deliverable 上 Dropbox / Google Drive</li>
+</ul>
+
+<h2>結語</h2>
+<p>VFX pipeline 的核心不是某個工具多強，是「<strong>工具之間的交接</strong>」 — Alembic、FBX、EXR、PBR 貼圖規格。把這些搞熟了之後，工具其實可換 — Maya 可以換 Blender、Substance 可以換 Quixel Mixer、UE5 可以換 Unity HDRP。但 pipeline 的形狀不變。</p>
+<p>影視 VFX 接案有需求可以寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/ai-art-pipeline.html"><span class="related-cat">Workflow</span>AI 生圖在遊戲美術的工作流</a>
+<a href="/blog/tech-stack.html"><span class="related-cat">Engineering</span>Hao0321 Studio 的技術堆疊</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

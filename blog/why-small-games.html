@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>為什麼我選擇做小遊戲而不是 SaaS — Hao0321 Studio</title>
+<meta name="description" content="獨立開發者的策略選擇 — 小遊戲 vs SaaS 的時間成本、收益曲線、心理負擔對比，一個過來人的完整思考。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/why-small-games.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="為什麼我選擇做小遊戲而不是 SaaS" /><meta property="og:url" content="https://hao0321.com/blog/why-small-games.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / 為什麼小遊戲</div>
+<span class="cat">Indie Life</span>
+<h1>為什麼我選擇做<em>小遊戲</em>而不是 SaaS</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 10 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>2024 年我同時有兩個選擇：（A）做一個 SaaS 工具向中小企業收 $29 / 月，（B）做一系列瀏覽器小遊戲。我選了 B。這篇講背後的思考。</p>
+
+<h2>SaaS 的迷人之處</h2>
+<p>不可否認 SaaS 有其優勢：</p>
+<ul>
+  <li>MRR（月經常性收入）可預測</li>
+  <li>客戶生命週期長（一個訂閱戶平均 18 個月）</li>
+  <li>Logo wall 漂亮，募資容易</li>
+  <li>「scale」的故事好說</li>
+</ul>
+<p>多少獨立開發者的目標是「做一個 $10K MRR 的 SaaS 然後 quit」 — 這是社群普遍的夢想。</p>
+
+<h2>SaaS 的隱藏成本</h2>
+<p>但社群很少談的：</p>
+<ul>
+  <li><strong>客戶支援是 24/7</strong>：客戶 Stripe 信用卡刷不過、忘記密碼、想退費 — 都得處理</li>
+  <li><strong>downtime = 退費</strong>：伺服器掛 1 小時可能直接賠半年訂閱</li>
+  <li><strong>合規成本</strong>：GDPR、PCI-DSS、SOC2 越大越貴</li>
+  <li><strong>競爭白熱化</strong>：每個熱門 niche 都有 30 個對手</li>
+  <li><strong>產品愛恨綁定</strong>：客戶覺得你的產品「不夠好」就退訂，個人感受像被拒絕</li>
+</ul>
+
+<h2>小遊戲的優勢</h2>
+<table>
+  <tr><th>面向</th><th>SaaS</th><th>小遊戲</th></tr>
+  <tr><td>客戶支援</td><td>每天必看</td><td>幾乎沒有（玩不爽就關）</td></tr>
+  <tr><td>downtime 影響</td><td>嚴重</td><td>玩家明天再來</td></tr>
+  <tr><td>邊際成本</td><td>低</td><td>幾乎 0</td></tr>
+  <tr><td>單款開發週期</td><td>3–6 個月</td><td>1–4 週</td></tr>
+  <tr><td>失敗成本</td><td>3 個月白做</td><td>1 週白做</td></tr>
+  <tr><td>創意空間</td><td>受 PMF 約束</td><td>幾乎無限</td></tr>
+  <tr><td>單款上限</td><td>$ infinity（理論上）</td><td>$ 中等</td></tr>
+  <tr><td>組合上限</td><td>單個產品</td><td>14 款 = 14 個收入來源</td></tr>
+</table>
+
+<h2>「組合對沖」策略</h2>
+<p>小遊戲最大的策略優勢是<strong>組合多樣化</strong>。SaaS 是 all-in 一個賭注，14 款小遊戲是 14 個小賭注。</p>
+<p>實際數據：14 款裡有 9 款流量很低、4 款中等、1 款（DODGE MASTER）爆紅。如果只做一款 SaaS 而那款剛好不 work，2024 全年 0 收入。多樣化讓「總有一款活」變成事實。</p>
+
+<h2>創作 vs 解決問題</h2>
+<p>SaaS 本質是「解決問題」。小遊戲本質是「創造體驗」。我發現自己偏向後者：</p>
+<ul>
+  <li>解決問題：付出努力，獲得效率提升</li>
+  <li>創造體驗：付出努力，獲得驚喜與情緒</li>
+</ul>
+<p>後者比較像「藝術創作」 — 比較難 scale，但做的過程更滿足。對個人 motivation 持續性影響很大。</p>
+
+<h2>收益面真實對比</h2>
+<p>我認識的 indie SaaS 朋友（5 年）：</p>
+<ul>
+  <li>主力 SaaS：MRR $4,500（≈ 月收 NT$135,000）</li>
+  <li>客戶數：180</li>
+  <li>每天客服 2 小時</li>
+</ul>
+<p>我的小遊戲組合（1 年半）：</p>
+<ul>
+  <li>AdSense + Gumroad：月均 NT$8,000（剛起步）</li>
+  <li>遊戲玩家數：每月 3,000+</li>
+  <li>每天客服：&lt; 10 分鐘</li>
+</ul>
+<p>當下 SaaS 收入贏，但時間 ROI 跟心理負擔小遊戲贏。長期看，當小遊戲組合的 base 累積起來，這個數字會逆轉。</p>
+
+<h2>什麼人適合 SaaS</h2>
+<ul>
+  <li>對「解決企業問題」有熱情</li>
+  <li>習慣 B2B 溝通與業務循環</li>
+  <li>願意 24/7 on-call 支援客戶</li>
+  <li>有業務經驗（cold email、demo、close deal）</li>
+  <li>有特定行業 domain knowledge（醫療、金融、HR…）</li>
+</ul>
+
+<h2>什麼人適合小遊戲</h2>
+<ul>
+  <li>對「創造體驗」有熱情</li>
+  <li>美術 / 設計 / 音樂任何一個是強項</li>
+  <li>能容忍「這款不紅」的失敗（很常見）</li>
+  <li>喜歡 1–4 週的短週期工作</li>
+  <li>對「viral」內容有觀察力</li>
+</ul>
+
+<h2>結語</h2>
+<p>「做 SaaS 才是正路」這個觀念在 indie hacker 社群很強，但其實只是其中一條路。小遊戲、教學內容、付費電子書、實體商品、開源贊助…… 每條路都有自己的經濟學跟生活方式。</p>
+<p>選擇要符合「你享受怎樣的工作日」 — 你願意 80% 時間做客戶支援？選 SaaS。你願意 80% 時間做創意實驗？選小遊戲。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/time-management-solo.html"><span class="related-cat">Indie Life</span>1 人工作室的時間管理</a>
+<a href="/blog/dodge-master-devlog.html"><span class="related-cat">Game Devlog</span>DODGE MASTER 開發日誌</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

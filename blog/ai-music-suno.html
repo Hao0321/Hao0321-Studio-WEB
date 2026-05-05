@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI 配樂在獨立遊戲：Suno 與 Udio 實戰心得 — Hao0321 Studio</title>
+<meta name="description" content="獨立工作室用 Suno 與 Udio 為瀏覽器遊戲產 BGM 的完整流程，prompt 模板、版權處理、實際成本對比。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/ai-music-suno.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="AI 配樂在獨立遊戲：Suno 與 Udio 實戰心得" /><meta property="og:url" content="https://hao0321.com/blog/ai-music-suno.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / AI 配樂</div>
+<span class="cat">AI · Music</span>
+<h1>AI 配樂在獨立遊戲：<em>Suno 與 Udio</em> 實戰心得</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 9 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>獨立遊戲最容易被忽略的一塊就是音樂。一首高品質 BGM 委託作曲師台灣行情 NT$3,000–10,000 起跳，工作室 14 款遊戲全部委託 = 4 萬到 14 萬。AI 配樂工具的出現徹底改寫這個成本結構。這篇講我用 Suno 跟 Udio 為遊戲大廳產 BGM 的真實流程。</p>
+
+<h2>兩套工具的定位</h2>
+<table>
+  <tr><th>工具</th><th>強項</th><th>弱項</th></tr>
+  <tr><td>Suno</td><td>歌曲完整性高、易上手、人聲品質好</td><td>純樂器作品偶爾結構鬆散</td></tr>
+  <tr><td>Udio</td><td>音色細節更精緻、控制度高</td><td>學習曲線陡、生成時間長</td></tr>
+</table>
+<p>實務分工：循環 BGM 用 Suno（速度快、結構完整），需要明確主題或情緒層次的用 Udio（細膩度高）。</p>
+
+<h2>Prompt 工程實戰</h2>
+<p>Suno / Udio 接受的 prompt 是「文字描述音樂風格、情緒、樂器、節奏」。實際好用的模板：</p>
+<pre>[Style/Genre]: synthwave, cyberpunk, retro
+[Mood]: tense but hopeful, late-night drive
+[Instruments]: analog synth, electric drums, ambient pad, no vocals
+[Tempo]: 110 BPM, 4/4 time signature
+[Structure]: intro 8 bars, main loop 32 bars, fade out
+[Reference]: similar to The Midnight, FM-84
+[Length]: 90 seconds</pre>
+
+<p>給 DODGE MASTER 的賽博龐克配樂用上面 prompt，3 次生成裡有 1 次可用，平均花 4 分鐘。</p>
+
+<h2>循環樂段的特殊處理</h2>
+<p>遊戲 BGM 需要無縫循環，但 AI 通常生成的是有開頭有結尾的「歌曲」。解法：</p>
+<ol>
+  <li>在 prompt 裡寫「seamless loop」</li>
+  <li>生成後用 Audacity / FFmpeg 後製：去掉前 4 秒 fade-in 跟最後 4 秒 fade-out</li>
+  <li>用 cross-fade 把首尾連起來</li>
+</ol>
+<pre># FFmpeg 簡易循環處理
+ffmpeg -i raw.mp3 -af "afade=t=in:st=0:d=2,afade=t=out:st=88:d=2" -t 90 loop.mp3</pre>
+
+<h2>版權與商業使用</h2>
+<p>2026 年版權狀況：</p>
+<ul>
+  <li><strong>Suno Pro / Premier</strong>：付費版產出明確可商用，公司持有商業使用權</li>
+  <li><strong>Udio Pro</strong>：付費版商用 OK，但要保留 Udio 原始檔案紀錄</li>
+  <li><strong>免費版</strong>：兩家都禁商業使用</li>
+  <li><strong>「跟某歌手很像」風險</strong>：避免用真實歌手名稱當 prompt</li>
+</ul>
+<p>本工作室政策：任何上線遊戲的 BGM 都用付費版生成，並把 prompt + seed + 生成日期記錄在 <code>credits.txt</code>。</p>
+
+<h2>實際成本對比</h2>
+<table>
+  <tr><th>方案</th><th>單曲成本</th><th>14 款遊戲總成本</th></tr>
+  <tr><td>委託作曲師</td><td>NT$5,000</td><td>NT$70,000</td></tr>
+  <tr><td>授權音樂庫</td><td>NT$1,000–3,000</td><td>NT$14,000–42,000</td></tr>
+  <tr><td>Suno Pro 訂閱</td><td>NT$0（月費 NT$300）</td><td>NT$3,600（一年）</td></tr>
+</table>
+<p>差距 20 倍以上。這是工作室從「不可能配樂」到「每款都有」的關鍵。</p>
+
+<h2>什麼樣的場景 AI 還做不來</h2>
+<ul>
+  <li><strong>Boss 戰的劇情高潮配樂</strong>：需要跟畫面 cue 點精準對位，AI 的隨機性不夠</li>
+  <li><strong>角色主題曲</strong>：需要強記憶點與一致動機，AI 偶爾才會生出可記憶的旋律</li>
+  <li><strong>大型遊戲整套 OST</strong>：20+ 曲子的風格一致性 AI 難管控</li>
+</ul>
+
+<h2>整合進工作室流程</h2>
+<ol>
+  <li>新遊戲設計階段就寫好「音樂需求文件」（情緒、風格、長度）</li>
+  <li>用 Suno 生 5 個版本，挑 1 個</li>
+  <li>FFmpeg 處理循環 / 音量正規化</li>
+  <li>放進遊戲，玩 3 場確認不違和</li>
+  <li>記錄到 credits.txt</li>
+</ol>
+
+<h2>結語</h2>
+<p>AI 配樂不是取代作曲師，是讓「沒有預算的小遊戲也能有音樂」變成可能。對獨立工作室是巨大的賦能 — 從「啞」遊戲到「有 BGM」是體驗的質變。</p>
+<p>有想交流 AI 音樂工作流的，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/web-audio-game-sfx.html"><span class="related-cat">Engineering</span>用 Web Audio API 做遊戲音效</a>
+<a href="/blog/ai-art-pipeline.html"><span class="related-cat">Workflow</span>AI 生圖在遊戲美術的工作流</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

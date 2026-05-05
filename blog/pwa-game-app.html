@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PWA 把網頁遊戲變成 app：manifest 與 service worker — Hao0321 Studio</title>
+<meta name="description" content="瀏覽器遊戲怎麼變成可離線、可安裝、有 icon 的 app？manifest.json、service worker、cache strategy 完整教學。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/pwa-game-app.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="PWA 把網頁遊戲變成 app" /><meta property="og:url" content="https://hao0321.com/blog/pwa-game-app.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / PWA 教學</div>
+<span class="cat">Engineering</span>
+<h1>PWA 把網頁遊戲變成 <em>可安裝 app</em></h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 9 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>瀏覽器遊戲的最大限制：使用者每次都要打開瀏覽器、輸入網址。PWA（Progressive Web App）解決這個問題 — 加 2 個檔案就能讓網站變成可加到桌面的 app，有 icon、可離線、跟原生 app 體驗極接近。這篇講工作室怎麼把遊戲大廳變成 PWA。</p>
+
+<h2>PWA 三件套</h2>
+<ol>
+  <li><code>manifest.json</code>：app metadata（名稱、icon、主題色）</li>
+  <li><code>service-worker.js</code>：背景 script（離線快取、推播）</li>
+  <li>HTTPS 部署：所有 PWA 必要條件</li>
+</ol>
+
+<h2>manifest.json</h2>
+<pre>{
+  "name": "Hao0321 遊戲大廳",
+  "short_name": "Hao0321",
+  "description": "14 款原創瀏覽器遊戲，無需註冊。",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4F4F7",
+  "theme_color": "#4A7BF5",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}</pre>
+
+<p>關鍵欄位：</p>
+<ul>
+  <li><code>display: "standalone"</code>：開啟時看不到瀏覽器 UI（網址列、書籤）</li>
+  <li><code>theme_color</code>：頂部狀態列顏色（Android）</li>
+  <li><code>icon purpose: "maskable"</code>：iOS / Android 各自有不同的 icon 形狀，maskable 確保任何裁切下都漂亮</li>
+</ul>
+
+<h3>HTML 引用</h3>
+<pre>&lt;link rel="manifest" href="/manifest.json"&gt;
+&lt;meta name="theme-color" content="#4A7BF5"&gt;
+&lt;link rel="apple-touch-icon" href="/icons/icon-192.png"&gt;</pre>
+
+<h2>service-worker.js — 快取核心檔案</h2>
+<pre>const CACHE = 'hao0321-v1';
+const ASSETS = [
+  '/',
+  '/play.html',
+  '/dodge-master-v5.html',
+  '/styles.css',
+  '/app.js',
+  '/icons/icon-192.png',
+];
+
+self.addEventListener('install', (e) =&gt; {
+  e.waitUntil(
+    caches.open(CACHE).then((cache) =&gt; cache.addAll(ASSETS))
+  );
+});
+
+self.addEventListener('activate', (e) =&gt; {
+  e.waitUntil(
+    caches.keys().then((keys) =&gt;
+      Promise.all(keys.filter(k =&gt; k !== CACHE).map(k =&gt; caches.delete(k)))
+    )
+  );
+});
+
+self.addEventListener('fetch', (e) =&gt; {
+  e.respondWith(
+    caches.match(e.request).then((cached) =&gt;
+      cached || fetch(e.request).then((res) =&gt; {
+        // 同時更新 cache
+        return caches.open(CACHE).then((cache) =&gt; {
+          if (res.ok) cache.put(e.request, res.clone());
+          return res;
+        });
+      })
+    )
+  );
+});</pre>
+
+<h2>註冊 service worker</h2>
+<pre>// 主頁面 JS
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () =&gt; {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then((reg) =&gt; console.log('SW registered:', reg.scope))
+      .catch((err) =&gt; console.error('SW error:', err));
+  });
+}</pre>
+
+<h2>離線體驗設計</h2>
+<p>PWA 的「離線」不是只 cache 檔案。要設計：</p>
+<ul>
+  <li><strong>離線時哪些功能可以用？</strong>單機遊戲全部可以；排行榜需要顯示 cached 版本 + 提示「離線中」</li>
+  <li><strong>離線提示</strong>：監聽 <code>online</code> / <code>offline</code> 事件</li>
+  <li><strong>Queue 寫入</strong>：分數提交在離線時放進 IndexedDB queue，online 時補送</li>
+</ul>
+
+<pre>window.addEventListener('offline', () =&gt; {
+  showBanner('目前離線，分數會在恢復連線時上傳');
+});
+window.addEventListener('online', () =&gt; {
+  hideBanner();
+  flushScoreQueue();
+});</pre>
+
+<h2>「Add to Home Screen」提示</h2>
+<p>使用者用 Chrome 瀏覽多次後，瀏覽器會自動跳「加到主畫面」。也可以主動觸發：</p>
+<pre>let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) =&gt; {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'block';
+});
+
+document.getElementById('installBtn').addEventListener('click', () =&gt; {
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then((choice) =&gt; {
+    console.log(choice.outcome);  // 'accepted' or 'dismissed'
+    deferredPrompt = null;
+  });
+});</pre>
+
+<h2>iOS 的特殊處理</h2>
+<p>iOS Safari 對 PWA 支援不完整：</p>
+<ul>
+  <li>沒有 <code>beforeinstallprompt</code> 事件，要使用者手動「分享 → 加到主畫面」</li>
+  <li>service worker 在 iOS 14+ 才支援，舊版完全離線不可用</li>
+  <li>standalone 模式下開啟外部連結會跳出 Safari，要用 <code>target="_self"</code></li>
+</ul>
+
+<h2>更新策略</h2>
+<p>PWA 最頭痛的是「使用者裝舊版本」。解法：</p>
+<pre>// service-worker.js 加版本號
+const CACHE = 'hao0321-v3';  // 改版時更新</pre>
+<p>新版本 install 後通知使用者：</p>
+<pre>navigator.serviceWorker.addEventListener('controllerchange', () =&gt; {
+  if (confirm('新版本可用，要重新整理嗎？')) {
+    window.location.reload();
+  }
+});</pre>
+
+<h2>Lighthouse PWA 分數</h2>
+<p>Lighthouse 跑 PWA tab 會給分。要拿滿分需要：</p>
+<ul>
+  <li>HTTPS</li>
+  <li>manifest 完整（name, short_name, icons, theme_color, background_color, start_url, display）</li>
+  <li>service worker 註冊成功</li>
+  <li>有 maskable icon</li>
+  <li>離線時可載入</li>
+</ul>
+
+<h2>結語</h2>
+<p>PWA 是被低估的「免費 app store 替代」。對獨立工作室是巨大的賦能 — 不用 App Store / Play Store 審核、不用 30% 抽成、不用懂 Swift / Kotlin。本工作室遊戲大廳變成 PWA 後，回流率（重複玩家）提升 25%。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/iframe-game-sdk.html"><span class="related-cat">Engineering</span>iframe 遊戲 SDK 設計</a>
+<a href="/blog/dodge-master-devlog.html"><span class="related-cat">Game Devlog</span>DODGE MASTER 開發日誌</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CSS Variables 與 Design Tokens：作品集網站的色彩系統實戰 — Hao0321 Studio</title>
+<meta name="description" content="不用 Sass 不用 Tailwind，純 CSS variables 怎麼建一套維護得起的設計系統。本站完整 token 解析。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/css-variables-design-tokens.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="CSS Variables 與 Design Tokens：作品集網站的色彩系統實戰" /><meta property="og:url" content="https://hao0321.com/blog/css-variables-design-tokens.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Design Tokens</div>
+<span class="cat">Design</span>
+<h1>CSS Variables 與 <em>Design Tokens</em> 實戰</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 8 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>本站的視覺一致性 — 從首頁到部落格到資源頁 — 完全靠一套約 30 個 CSS variables 撐起來。沒有 Sass、沒有 Tailwind、沒有 design system 套件。這篇拆解這套 token 系統的設計邏輯。</p>
+
+<h2>什麼是 design tokens</h2>
+<p>Design tokens 是「視覺決定的最小單位」 — 一個顏色、一個陰影、一個圓角值。每個 token 有名字（如 <code>--accent-blue</code>），其他 CSS 都引用名字而不是直接寫值。</p>
+<p>好處：改一個 token，全站視覺一致變動。</p>
+
+<h2>本站的 token 樹</h2>
+<pre>:root {
+  /* 1. 顏色 — 中性 */
+  --bg: #F4F4F7;
+  --bg-soft: #FBFBFD;
+  --surface: #FFFFFF;
+  --text: #0F0F1E;
+  --text-2: #4A4A5E;
+  --text-3: #8C8CA0;
+  --border: rgba(15,15,30,0.06);
+
+  /* 2. 顏色 — accent */
+  --accent-blue: #4A7BF5;
+  --accent-violet: #8E7CF0;
+  --grad-accent: linear-gradient(135deg, #4A7BF5, #8E7CF0);
+
+  /* 3. 圓角 */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --radius-pill: 9999px;
+
+  /* 4. 陰影 */
+  --shadow-sm: 0 1px 2px rgba(15,15,30,0.03), 0 4px 12px rgba(15,15,30,0.04);
+  --shadow-md: 0 4px 12px rgba(15,15,30,0.05), 0 12px 32px rgba(15,15,30,0.06);
+
+  /* 5. 字型 */
+  --font-sans: 'Plus Jakarta Sans', 'Noto Sans TC', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* 6. 動畫 */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}</pre>
+
+<h2>命名邏輯</h2>
+<table>
+  <tr><th>命名規則</th><th>例子</th></tr>
+  <tr><td>用途優先（不是顏色名）</td><td><code>--text</code> 比 <code>--dark-blue</code> 好</td></tr>
+  <tr><td>數字後綴表階層</td><td><code>--text-2</code> 是次強調，<code>--text-3</code> 更弱</td></tr>
+  <tr><td>類別前綴</td><td><code>--shadow-sm</code>, <code>--shadow-md</code> 配對好搜尋</td></tr>
+  <tr><td>避免機器命名</td><td><code>--blue-500</code> 雖然有規律但無語意</td></tr>
+</table>
+
+<h2>為什麼三層文字色</h2>
+<p>本站用 <code>--text</code>（標題）、<code>--text-2</code>（內文）、<code>--text-3</code>（meta、breadcrumb）。三層的層次感讓畫面有節奏：</p>
+<ul>
+  <li>看標題：第一眼定位</li>
+  <li>看內文：漸柔，不刺眼</li>
+  <li>看 meta：模糊化處理，但需要時找得到</li>
+</ul>
+
+<h2>用 rgba() 而不是 hex</h2>
+<p>邊框與陰影刻意用 <code>rgba(15,15,30,0.06)</code> 這種 alpha &lt; 1 的色值。原因：</p>
+<ul>
+  <li>跟下層顏色自動融合</li>
+  <li>淺色背景下變淺、深色背景下變深</li>
+  <li>不需要為每個情境準備不同 token</li>
+</ul>
+
+<h2>不用 Tailwind 的理由</h2>
+<p>Tailwind 在大型團隊很好。但對個人專案：</p>
+<ul>
+  <li>多一層 build step，違背 zero-build 哲學</li>
+  <li>HTML class 字串爆炸（30+ class 在一個 div 上）</li>
+  <li>Token 命名綁死 Tailwind 規範，不適合做有個性的視覺</li>
+</ul>
+
+<h2>跟設計師的協作</h2>
+<p>如果有設計師在 Figma 用同一套 token 系統，前後端一致性大增。Figma 的 Variables 功能跟 CSS variables 概念對應：</p>
+<table>
+  <tr><th>Figma</th><th>CSS</th></tr>
+  <tr><td>color/text/primary</td><td>--text</td></tr>
+  <tr><td>color/accent/blue</td><td>--accent-blue</td></tr>
+  <tr><td>radius/medium</td><td>--radius-md</td></tr>
+</table>
+
+<h2>暗黑模式的 token 切換</h2>
+<p>本站目前是 light only，但可以擴充：</p>
+<pre>:root { --bg: #F4F4F7; --text: #0F0F1E; }
+[data-theme="dark"] { --bg: #0A0A14; --text: #E8E8F0; }</pre>
+<p>所有用 <code>var(--bg)</code> 的地方自動切換。1 個 attribute 切換整站。</p>
+
+<h2>結語</h2>
+<p>CSS variables 是被低估的瀏覽器原生工具。30 個 token 配上一些命名紀律，足以撐起一個有個性的工作室網站。重點不是工具多進階，是 token 系統的<strong>克制與一致</strong>。</p>
+<p>本站完整 CSS 約 200 行，token 區塊只佔 30 行，但這 30 行決定了整站的視覺感。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/zero-build-philosophy.html"><span class="related-cat">Engineering</span>Zero-Build 哲學</a>
+<a href="/blog/typography-portfolio.html"><span class="related-cat">Design</span>字型選擇心法：作品集字型策略</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

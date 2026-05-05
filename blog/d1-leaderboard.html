@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>用 D1 做遊戲排行榜：分頁、快取、即時更新 — Hao0321 Studio</title>
+<meta name="description" content="Cloudflare D1 SQLite-on-edge 怎麼做高效排行榜 — schema 設計、INDEX 用法、KV 快取策略、每秒寫入限制處理。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/d1-leaderboard.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="用 D1 做遊戲排行榜" /><meta property="og:url" content="https://hao0321.com/blog/d1-leaderboard.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / D1 排行榜</div>
+<span class="cat">Backend</span>
+<h1>用 D1 做遊戲排行榜：<em>分頁、快取、即時</em></h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 10 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>遊戲大廳 14 款共用一套排行榜系統 — 全域榜（所有遊戲累計）+ 各遊戲獨立榜。看似簡單，但要做到「load 快、寫入不卡、即時更新」三者兼顧，需要 schema 設計、INDEX 配合、快取策略三層配合。</p>
+
+<h2>Schema 設計：兩張表 vs 一張表</h2>
+<p>選 1：一張 <code>scores</code> 表存所有歷史紀錄</p>
+<pre>CREATE TABLE scores (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT,
+  game_id TEXT,
+  score INTEGER,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+-- 排行榜查詢：
+SELECT user_id, MAX(score) as best
+FROM scores WHERE game_id = ?
+GROUP BY user_id ORDER BY best DESC LIMIT 20;</pre>
+<p>缺點：每次查排行榜都要 GROUP BY 全表，O(N log N)。</p>
+
+<p>選 2：兩張表 — scores（歷史）+ best_scores（每人單一最佳）</p>
+<pre>CREATE TABLE best_scores (
+  user_id TEXT NOT NULL,
+  game_id TEXT NOT NULL,
+  score INTEGER NOT NULL,
+  updated_at TEXT,
+  PRIMARY KEY (user_id, game_id)
+);
+CREATE INDEX idx_best_game_score ON best_scores(game_id, score DESC);
+
+-- 排行榜查詢：
+SELECT user_id, score FROM best_scores
+WHERE game_id = ? ORDER BY score DESC LIMIT 20;</pre>
+<p>優點：INDEX 直接命中，查詢 O(log N)。寫入時 UPSERT。</p>
+
+<h2>UPSERT 寫法</h2>
+<p>SQLite (D1) 支援 <code>INSERT OR REPLACE</code>：</p>
+<pre>INSERT OR REPLACE INTO best_scores
+  (user_id, game_id, score, updated_at)
+VALUES (?, ?, ?, datetime('now'));</pre>
+<p>但這會無條件覆寫 — 即使新分數低於舊紀錄也覆寫。應該：</p>
+<pre>INSERT INTO best_scores (user_id, game_id, score, updated_at)
+VALUES (?, ?, ?, datetime('now'))
+ON CONFLICT(user_id, game_id) DO UPDATE SET
+  score = MAX(best_scores.score, excluded.score),
+  updated_at = CASE
+    WHEN excluded.score &gt; best_scores.score
+    THEN excluded.updated_at
+    ELSE best_scores.updated_at
+  END;</pre>
+<p>這個 UPSERT 只在分數真的更高時才更新，省 INDEX 重建。</p>
+
+<h2>分頁：cursor-based 而不是 offset</h2>
+<p>排行榜的「下一頁」用 <code>OFFSET 100</code> 性能很糟（O(offset)）。改用 cursor：</p>
+<pre>-- 第一頁
+SELECT * FROM best_scores
+WHERE game_id = ?
+ORDER BY score DESC, user_id ASC
+LIMIT 20;
+
+-- 下一頁（傳上一頁最後一筆的 score + user_id）
+SELECT * FROM best_scores
+WHERE game_id = ?
+  AND (score, user_id) &lt; (?, ?)
+ORDER BY score DESC, user_id ASC
+LIMIT 20;</pre>
+<p>O(log N) 不論第幾頁。</p>
+
+<h2>JOIN users 的考量</h2>
+<p>排行榜要顯示玩家名稱與頭像 — 跨表 JOIN：</p>
+<pre>SELECT b.score, u.name, u.avatar, u.title
+FROM best_scores b
+INNER JOIN users u ON b.user_id = u.id
+WHERE b.game_id = ?
+ORDER BY b.score DESC LIMIT 20;</pre>
+<p>D1 對 INNER JOIN 支援良好，10K 筆 best_scores + 1K users 的 JOIN 約 5–10ms。</p>
+
+<h2>快取策略：Cache API</h2>
+<p>排行榜更新頻率低（一場結束才寫入），讀取頻率高。完美的快取場景：</p>
+<pre>const cacheKey = new Request(`https://internal/lb/${gameId}`);
+const cached = await caches.default.match(cacheKey);
+if (cached) return cached;
+
+const result = await db.prepare(SQL).bind(gameId).all();
+const response = new Response(JSON.stringify(result), {
+  headers: { 'Content-Type': 'application/json' },
+});
+response.headers.append('Cache-Control', 'public, max-age=60');
+await caches.default.put(cacheKey, response.clone());
+return response;</pre>
+<p>60 秒快取 = 高峰時段 1000 個請求只打 1 次 D1。</p>
+
+<h2>失效策略：寫入時主動清</h2>
+<pre>async function submitScore(userId, gameId, score) {
+  await db.prepare(UPSERT_SQL).bind(userId, gameId, score).run();
+  // 主動失效快取
+  await caches.default.delete(
+    new Request(`https://internal/lb/${gameId}`)
+  );
+  // 全域排行榜也要失效
+  await caches.default.delete(
+    new Request('https://internal/lb/global')
+  );
+}</pre>
+
+<h2>全域排行榜（跨遊戲累計）</h2>
+<pre>SELECT u.name, u.avatar,
+  SUM(b.score) as total,
+  COUNT(b.game_id) as games_played
+FROM best_scores b
+INNER JOIN users u ON b.user_id = u.id
+GROUP BY b.user_id
+ORDER BY total DESC LIMIT 20;</pre>
+<p>有 INDEX 配合下這個 query 在 10K users × 14 games（≈ 140K best_scores）約 30–50ms。</p>
+
+<h2>D1 寫入限制</h2>
+<p>免費版 10 萬寫入/月 = 平均 30/分鐘。對小型遊戲夠用，但有突發流量時注意：</p>
+<ul>
+  <li><strong>每場遊戲只送一次</strong>：遊戲結算時送，不要中途送</li>
+  <li><strong>客戶端 dedup</strong>：相同分數送過就不再送</li>
+  <li><strong>批次寫入</strong>：D1 支援 batch（多 INSERT 合一個 transaction）</li>
+</ul>
+
+<h2>即時排名查詢</h2>
+<p>「你目前在第幾名？」</p>
+<pre>SELECT COUNT(*) + 1 as rank
+FROM best_scores
+WHERE game_id = ? AND score &gt; ?;</pre>
+<p>O(log N) 因為 INDEX。</p>
+
+<h2>結語</h2>
+<p>D1 + 一點 SQL 巧思就能撐起 14 款遊戲共用的排行榜，沒有 Redis、沒有自架資料庫。對小到中型遊戲規模這個架構是甜蜜點。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/cloudflare-workers-d1.html"><span class="related-cat">Backend</span>Cloudflare Workers + D1 遊戲後端</a>
+<a href="/blog/jwt-on-edge.html"><span class="related-cat">Engineering</span>JWT 在 Edge 的簽章與驗證</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

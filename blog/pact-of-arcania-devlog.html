@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pact of Arcania 開發日誌：原創奇幻策略遊戲 — Hao0321 Studio</title>
+  <meta name="description" content="從世界觀設定、卡牌系統、AI 對手到 Steam 上架前的所有設計決策 — 一款原創奇幻策略遊戲的完整開發紀錄。" />
+  <meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/pact-of-arcania-devlog.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Pact of Arcania 開發日誌：原創奇幻策略遊戲" />
+  <meta property="og:description" content="一款原創奇幻策略遊戲的完整開發紀錄。" />
+  <meta property="og:url" content="https://hao0321.com/blog/pact-of-arcania-devlog.html" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}
+    .breadcrumb a{color:var(--text-3)}
+    .cat{display:inline-flex;align-items:center;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}
+    h2:first-child{margin-top:0}
+    h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}
+    pre code{background:none;border:none;padding:0;color:inherit;font-size:inherit}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/blog/" class="nav-back">← 部落格</a>
+  </nav>
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Pact of Arcania</div>
+    <span class="cat">Game Devlog</span>
+    <h1>Pact of Arcania 開發日誌：<em>原創奇幻策略</em>遊戲</h1>
+    <div class="meta"><span>2026 年 5 月 5 日</span><span>約 13 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+    <article>
+    <p>Pact of Arcania 是工作室目前在做的中型專案 — 一款結合卡牌構築與回合制戰術的奇幻策略遊戲。比起遊戲大廳那些 1 週上線的小品，這款預計開發週期 6 個月，是工作室第一次嘗試「規模較大、有完整故事線」的獨立遊戲。這篇把目前 4 個月的進度全部攤開講。</p>
+
+    <h2>世界觀設定：Arcania 是什麼地方</h2>
+    <p>很多獨立遊戲開發者會跳過這一步直接寫程式，但我相信「世界觀先行」對策略遊戲來說至關重要 — 玩家如果對為什麼有這個衝突沒有感覺，所有戰術選擇都變成抽象計算。</p>
+    <p>Arcania 是一個被「秘約（Pacts）」這個概念統治的世界。每個角色出生時就跟某種元素或神靈簽下契約，獲得力量但也受到限制。整個遊戲的核心衝突來自<strong>不同 Pact 之間的衝突</strong>：火與水、秩序與混沌、時間與空間。</p>
+
+    <h2>核心系統：契約卡牌</h2>
+    <p>每位玩家有一副 30 張的「契約卡牌組」，分四類：</p>
+    <table>
+      <tr><th>類型</th><th>數量</th><th>作用</th></tr>
+      <tr><td>元素</td><td>12 張</td><td>主要傷害來源</td></tr>
+      <tr><td>儀式</td><td>8 張</td><td>持續性增益 / 場地效果</td></tr>
+      <tr><td>盟約</td><td>6 張</td><td>角色召喚</td></tr>
+      <tr><td>禁忌</td><td>4 張</td><td>高風險高回報的破局牌</td></tr>
+    </table>
+    <p>設計重點：30 張感覺剛好。少於 25 張會讓對局太快結束，多於 35 張會讓玩家感覺手牌掌控感低。<strong>30 是個甜蜜點</strong>。</p>
+
+    <h2>回合制戰鬥</h2>
+    <p>每場戰鬥分回合，每回合 4 個階段：</p>
+    <ol>
+      <li><strong>抽牌</strong>：每回合抽 3 張，手牌上限 7。</li>
+      <li><strong>主階段</strong>：消耗能量打出卡牌，能量每回合自動 +2。</li>
+      <li><strong>戰鬥</strong>：解算所有效果。</li>
+      <li><strong>結束</strong>：丟棄超過上限的手牌。</li>
+    </ol>
+    <p>能量機制借鏡《Slay the Spire》，但卡牌設計更重視「組合技」 — 兩張看似平凡的牌組合起來會觸發第三個效果。例如「火元素」+「儀式：燒灼之地」會讓所有後續火傷害 +50%。</p>
+
+    <h2>AI 對手的層級設計</h2>
+    <p>策略遊戲最難的不是核心循環，而是 AI 對手。我設計了三層 AI：</p>
+    <table>
+      <tr><th>難度</th><th>策略</th><th>實作方式</th></tr>
+      <tr><td>新手</td><td>看到能打就打，不考慮 combo</td><td>simple greedy</td></tr>
+      <tr><td>普通</td><td>每回合計算最佳單張出牌</td><td>1-step lookahead</td></tr>
+      <tr><td>困難</td><td>考慮 3 回合內的 combo 連鎖</td><td>minimax + alpha-beta，深度 3</td></tr>
+    </table>
+    <p>困難 AI 的實作有個有趣細節：每張卡的「組合預期值」用機器學習離線訓練。我用幾百場 self-play 對戰收集資料，得到一張「卡牌組合熱度圖」，AI 用這張圖快速估值。</p>
+
+    <h2>美術風格決策</h2>
+    <p>原本想做完全寫實風（像 Magic 卡牌），實際做了一週發現：</p>
+    <ul>
+      <li>寫實風成本高（每張卡 NT$2,000–5,000 委託費）</li>
+      <li>視覺上不容易區分卡牌類型</li>
+      <li>跟其他 AAA 卡牌遊戲的市場差異化困難</li>
+    </ul>
+    <p>最後切換到「水墨 × 賽博龐克」混合風格。傳統水墨的暈染質感 + 霓虹色彩做點綴，視覺辨識度極高。每張卡用 Stable Diffusion 生成基底，再用 Aseprite 手動調整。</p>
+
+    <h2>玩家進度系統</h2>
+    <p>除了單次戰鬥，玩家在主線中累積：</p>
+    <ul>
+      <li><strong>角色等級</strong>：解鎖更多卡牌</li>
+      <li><strong>聲望（Reputation）</strong>：影響 NPC 對話與商人價格</li>
+      <li><strong>契約樹</strong>：選擇主要 Pact 後，深度技能樹分支</li>
+      <li><strong>遺物（Relic）</strong>：被動效果，每場戰鬥啟用</li>
+    </ul>
+
+    <h2>單機 vs 線上對戰</h2>
+    <p>第一版只做單機 PvE。線上對戰（PvP）會在 1.0 之後才考慮。理由：</p>
+    <ol>
+      <li>PvP 平衡是無底洞，1 人團隊不適合做</li>
+      <li>單機關卡的 narrative 才是賣點</li>
+      <li>沒有 server 維運成本</li>
+    </ol>
+
+    <h2>目前進度</h2>
+    <table>
+      <tr><th>系統</th><th>進度</th></tr>
+      <tr><td>核心戰鬥循環</td><td>90%</td></tr>
+      <tr><td>卡牌資料庫（80 張）</td><td>70%</td></tr>
+      <tr><td>AI 三難度</td><td>60%</td></tr>
+      <tr><td>主線劇情（10 章）</td><td>30%</td></tr>
+      <tr><td>美術（80 張卡 + 30 個角色）</td><td>50%</td></tr>
+      <tr><td>音效音樂</td><td>10%</td></tr>
+    </table>
+
+    <h2>結語</h2>
+    <p>Pact of Arcania 是工作室從「快速產 1 週小品」轉向「中等規模專案」的試金石。如果這個能順利做完並上 Steam，下一步會嘗試更大規模。預計試玩版 2026 Q3 釋出，正式版 Q4。</p>
+    <p>有興趣 beta 測試的朋友，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+    <div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+      <a href="/blog/dodge-master-devlog.html"><span class="related-cat">Game Devlog</span>DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲</a>
+      <a href="/blog/chess-master-architecture.html"><span class="related-cat">Game Devlog</span>Chess Master — 8 種棋類合一的 React 架構設計</a>
+    </div></div>
+    </article>
+  </main>
+  <footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

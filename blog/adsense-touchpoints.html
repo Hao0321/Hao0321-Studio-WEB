@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AdSense 觸點設計：6 個不打擾玩家的廣告策略 — Hao0321 Studio</title>
+<meta name="description" content="免費瀏覽器遊戲的廣告位置選擇 — opt-in 機制、獎勵設計、避免懲罰玩家的觸點哲學。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/adsense-touchpoints.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="AdSense 觸點設計：6 個不打擾玩家的廣告策略" /><meta property="og:url" content="https://hao0321.com/blog/adsense-touchpoints.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / AdSense 觸點</div>
+<span class="cat">Monetization</span>
+<h1>AdSense 觸點設計：<em>6 個不打擾玩家</em>的廣告策略</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 9 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>免費遊戲靠廣告收入，但廣告位置設計不對會直接趕跑玩家。本工作室 14 款遊戲累積出來的廣告觸點哲學就是一句話：<strong>所有廣告都是 opt-in 的、給玩家具體獎勵的、不打斷遊戲關鍵時刻的</strong>。這篇拆給你看。</p>
+
+<h2>原則：reward video 而不是 banner</h2>
+<p>傳統手遊有 3 種廣告形式：</p>
+<table>
+  <tr><th>類型</th><th>玩家體驗</th><th>單次收益</th></tr>
+  <tr><td>Banner</td><td>持續存在於畫面</td><td>低</td></tr>
+  <tr><td>Interstitial（插頁）</td><td>強制出現，可關</td><td>中</td></tr>
+  <tr><td>Rewarded video（獎勵）</td><td>玩家主動觀看，換獎勵</td><td>高</td></tr>
+</table>
+<p>本工作室政策：<strong>只用 Rewarded</strong>。Banner 太醜，Interstitial 趕人。</p>
+
+<h2>觸點 1：Revive（死亡復活）</h2>
+<p>玩家死亡後彈出：「看一支廣告獲得復活機會」。</p>
+<p>關鍵設計：</p>
+<ul>
+  <li>跳過按鈕同時存在（不強制）</li>
+  <li>復活後從死亡前 3 秒重新開始（不是死亡的瞬間，給玩家應對時間）</li>
+  <li>每場限一次（避免無限續命破壞挑戰）</li>
+</ul>
+<p>實測 30% 死亡玩家會選擇 revive，是最高轉換的觸點。</p>
+
+<h2>觸點 2：2x Coins（金幣翻倍）</h2>
+<p>遊戲結束結算畫面：「看廣告把這場金幣 ×2」。</p>
+<p>巧思：</p>
+<ul>
+  <li>金幣數字顯示動畫從 X 滾到 2X，視覺上衝擊力強</li>
+  <li>「看廣告」按鈕比「跳過」按鈕大 1.5 倍（視覺權重）</li>
+  <li>不是強制 — 跳過也能正常拿基本金幣</li>
+</ul>
+
+<h2>觸點 3：Bonus Spin（轉盤額外旋轉）</h2>
+<p>每天免費轉盤 1 次，看廣告解鎖第 2 次。轉盤獎勵範圍 50–500 金幣。心理學上「變動報酬」讓人特別想試。</p>
+
+<h2>觸點 4：Free Gacha（免費抽角色）</h2>
+<p>商店裡角色抽卡每次 100 金幣。看廣告免費抽 1 次。</p>
+<p>關鍵：</p>
+<ul>
+  <li>每天限 1 次免費 — 不破壞付費平衡</li>
+  <li>抽到稀有角色時的開獎動畫加長（驚喜感）</li>
+  <li>抽到 common 也給「下次必稀有 +1 進度」（不會純失望）</li>
+</ul>
+
+<h2>觸點 5：Daily x2（每日任務獎勵加倍）</h2>
+<p>每日任務完成後可以「看廣告把任務獎勵 ×2」。</p>
+<p>這個觸點最棒的地方：玩家剛完成任務，<strong>情緒在高點</strong> — 廣告轉換率極高（~40%）。</p>
+
+<h2>觸點 6：Shop Deal（商店特惠）</h2>
+<p>商店首頁固定一個「看廣告領 50 金幣」按鈕。每天可點 5 次。</p>
+<p>角色：給「不想花錢」的玩家一個明確的「賺錢途徑」。實測 60% 高黏度玩家會用滿這個觸點。</p>
+
+<h2>觸點放置的「禁區」</h2>
+<table>
+  <tr><th>場景</th><th>為什麼不能放廣告</th></tr>
+  <tr><td>遊戲中段（玩家正在玩）</td><td>打斷專注，永遠流失玩家</td></tr>
+  <tr><td>第一次開遊戲（前 60 秒）</td><td>新玩家還沒體驗就退出</td></tr>
+  <tr><td>關鍵失敗後（玩家心情差）</td><td>負面情緒 + 廣告 = 卸載</td></tr>
+  <tr><td>長時間 loading 之後</td><td>已經等很久了，再廣告 = 怒退</td></tr>
+</table>
+
+<h2>頻率限制</h2>
+<p>所有觸點加總，玩家一場遊戲最多看 1 支廣告。具體做法：</p>
+<pre>const COOLDOWN = 60_000;  // 1 分鐘 cooldown
+let lastAdAt = 0;
+
+function canShowAd() {
+  return Date.now() - lastAdAt &gt; COOLDOWN;
+}</pre>
+<p>看完一支廣告後 1 分鐘內，所有 reward 觸點按鈕灰掉並顯示倒數。避免玩家連看 5 支煩到關掉。</p>
+
+<h2>AdSense 政策考量</h2>
+<p>Google AdSense 對遊戲廣告有規則：</p>
+<ul>
+  <li>不能誘騙點擊（「點這裡得 100 萬！」是違規）</li>
+  <li>必須有清楚的「廣告」標示</li>
+  <li>不能修改廣告外觀、不能蓋住部分廣告</li>
+  <li>不能緊鄰功能按鈕（容易誤點）</li>
+</ul>
+<p>違規會被停權，前期的所有開發時間白費。</p>
+
+<h2>數據：實際收益</h2>
+<table>
+  <tr><th>項目</th><th>DODGE MASTER（最熱遊戲）</th></tr>
+  <tr><td>每天 active users</td><td>~ 200</td></tr>
+  <tr><td>平均每人看廣告數</td><td>2.3</td></tr>
+  <tr><td>eCPM（千次曝光 USD）</td><td>$1.80</td></tr>
+  <tr><td>每天廣告收益</td><td>~ $0.83 USD</td></tr>
+  <tr><td>每月收益</td><td>~ $25 USD ≈ NT$ 800</td></tr>
+</table>
+<p>單款不多，但 14 款組合起來開始有意義。重點是這個組合長期 compound — 每多一款好玩的遊戲就 +1 個收益管道。</p>
+
+<h2>結語</h2>
+<p>免費遊戲的廣告不是「越多越好」 — 是「<strong>恰好讓玩家感到值得</strong>」。Reward video 加上 opt-in 機制讓廣告變成「玩家主動要的」而不是「我們強塞的」。這個哲學讓本工作室的廣告轉換率高於業界平均，而且玩家 1 星評價極少。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/dodge-master-devlog.html"><span class="related-cat">Game Devlog</span>DODGE MASTER 開發日誌</a>
+<a href="/blog/why-small-games.html"><span class="related-cat">Indie Life</span>為什麼我選擇做小遊戲</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

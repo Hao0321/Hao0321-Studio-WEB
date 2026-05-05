@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>遊戲大廳的 iframe SDK 設計：跨來源安全與 postMessage 實戰 — Hao0321 Studio</title>
+  <meta name="description" content="14 款瀏覽器遊戲透過 iframe 嵌入大廳，分數上傳、用戶資訊、廣告觸發如何設計？postMessage、window.parent、CORS 全解析。" />
+  <meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/iframe-game-sdk.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" /><meta property="og:title" content="遊戲大廳的 iframe SDK 設計" /><meta property="og:url" content="https://hao0321.com/blog/iframe-game-sdk.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}
+    a{color:var(--accent-blue);text-decoration:none}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}
+    .breadcrumb a{color:var(--text-3)}
+    .cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}
+    h2:first-child{margin-top:0}
+    h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}
+    pre code{background:none;border:none;padding:0;color:inherit}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / iframe SDK</div>
+    <span class="cat">Engineering</span>
+    <h1>遊戲大廳的 <em>iframe SDK</em> 設計：跨來源安全實戰</h1>
+    <div class="meta"><span>2026 年 5 月 5 日</span><span>約 11 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+    <article>
+    <p>遊戲大廳裡 14 款遊戲都是用 iframe 嵌入 <code>play.html</code>。每款遊戲在自己的 iframe 沙箱裡跑，跟外殼大廳之間透過一套自製 SDK 通訊：上傳分數、讀取使用者、觸發廣告、回報遊玩進度。這套通訊機制看似簡單，但牽涉跨來源安全、postMessage 協定設計、版本管理三個複雜議題。</p>
+
+    <h2>為什麼用 iframe 而不是直接 import</h2>
+    <p>三個優勢：</p>
+    <ol>
+      <li><strong>故障隔離</strong>：一款遊戲爆掉不會帶倒整個大廳</li>
+      <li><strong>狀態隔離</strong>：每款遊戲的 localStorage 命名空間獨立</li>
+      <li><strong>外部嵌入</strong>：遊戲檔案可以獨立發布到 itch.io、Gumroad，不依賴大廳</li>
+    </ol>
+
+    <h2>SDK 的雙向設計</h2>
+    <p>iframe 跟父頁面（大廳）之間有兩個通訊方向：</p>
+    <table>
+      <tr><th>方向</th><th>用途</th></tr>
+      <tr><td>遊戲 → 大廳</td><td>上傳分數、回報玩遊戲、請求廣告播放、登出</td></tr>
+      <tr><td>大廳 → 遊戲</td><td>傳遞使用者資訊、暫停 / 繼續、調整音量</td></tr>
+    </table>
+
+    <h2>同源 vs 跨源</h2>
+    <p>本站架構：</p>
+    <ul>
+      <li>大廳：<code>https://game.hao0321.com/play.html</code></li>
+      <li>遊戲：<code>https://game.hao0321.com/dodge-master-v5.html</code></li>
+    </ul>
+    <p>同源（同 protocol、同 domain、同 port）所以可以用 <code>window.parent</code> 直接互讀。但為了未來想嵌入別站，還是設計了 postMessage 協定。</p>
+
+    <h2>SDK 的 API 設計</h2>
+    <p>大廳暴露給遊戲的全域物件：</p>
+    <pre>// 遊戲端使用方式
+window.parent.haoGame.reportScore(8240);
+window.parent.haoGame.getUser(); // → { id, name, coins, ... }
+window.parent.haoGame.requestAd('revive', { reward: 50 });
+window.parent.haoGame.setReady();
+
+// 大廳端定義 (在 play.html)
+window.haoGame = {
+  reportScore(score) { /* 上傳到 api.hao0321.com */ },
+  getUser() { return JSON.parse(localStorage.hao_user || 'null'); },
+  requestAd(type, params) { /* 觸發 AdSense */ },
+  setReady() { /* 隱藏 loading 動畫 */ },
+};</pre>
+
+    <h2>跨源備援：postMessage 協定</h2>
+    <p>當遊戲被嵌到其他網域時，<code>window.parent</code> 會被瀏覽器擋掉。SDK 自動降級到 postMessage：</p>
+
+    <pre>// 遊戲端 SDK
+function reportScore(score) {
+  if (sameOrigin()) {
+    window.parent.haoGame.reportScore(score);
+  } else {
+    window.parent.postMessage({
+      type: 'reportScore',
+      payload: { score },
+      __hao: true,
+    }, '*');
+  }
+}
+
+function sameOrigin() {
+  try {
+    return window.parent.location.origin === window.location.origin;
+  } catch {
+    return false;
+  }
+}</pre>
+
+    <p>大廳端 listener：</p>
+    <pre>window.addEventListener('message', (e) =&gt; {
+  // 安全檢查
+  if (!e.data || !e.data.__hao) return;
+  if (!isAllowedOrigin(e.origin)) return;
+
+  switch (e.data.type) {
+    case 'reportScore':
+      reportScore(e.data.payload.score);
+      break;
+    case 'requestAd':
+      requestAd(e.data.payload.type);
+      break;
+  }
+});</pre>
+
+    <h2>安全檢查：origin allowlist</h2>
+    <p>postMessage 最常見的漏洞是接受任何來源訊息。修法：</p>
+    <pre>const ALLOWED_ORIGINS = [
+  'https://game.hao0321.com',
+  'https://hao0321.com',
+  'https://itch.io',
+  'https://gum.co',
+];
+
+function isAllowedOrigin(origin) {
+  return ALLOWED_ORIGINS.some(o =&gt;
+    origin === o || origin.endsWith('.' + o.replace(/^https?:\/\//, ''))
+  );
+}</pre>
+
+    <h2>版本管理：API 演化</h2>
+    <p>SDK 一旦發布到外部，就要永遠相容。我用 <code>__hao_version</code> 欄位標記：</p>
+    <pre>window.parent.postMessage({
+  __hao: true,
+  __hao_version: 2,
+  type: 'reportScore',
+  payload: { score: 8240, gameId: 'dodge-master' },
+}, '*');</pre>
+    <p>大廳端根據版本決定怎麼處理。新版可以加欄位但不能改舊欄位語意。</p>
+
+    <h2>登入狀態同步</h2>
+    <p>玩家在大廳登入後，狀態存在 localStorage。但 iframe 因為同源所以可以共享 — 不需要額外傳遞。</p>
+    <p>跨源情境（嵌到別站）就需要明確傳：</p>
+    <pre>// 遊戲端
+function getUser() {
+  return new Promise((resolve) =&gt; {
+    if (sameOrigin()) {
+      resolve(JSON.parse(localStorage.hao_user || 'null'));
+      return;
+    }
+    const handler = (e) =&gt; {
+      if (e.data.__hao_reply === 'getUser') {
+        window.removeEventListener('message', handler);
+        resolve(e.data.payload);
+      }
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ __hao: true, type: 'getUser' }, '*');
+    setTimeout(() =&gt; resolve(null), 1000); // timeout
+  });
+}</pre>
+
+    <h2>X-Frame-Options 踩坑</h2>
+    <p>Cloudflare Pages 預設會把 <code>X-Frame-Options: DENY</code> 加到所有檔案，連同源 iframe 都被擋。修法：在 <code>_headers</code> 改成 SAMEORIGIN（或對 game/* 路徑單獨設）：</p>
+    <pre>/*
+  X-Frame-Options: SAMEORIGIN
+
+/game/*
+  X-Frame-Options: DENY  # 遊戲檔案禁止其他站嵌入</pre>
+
+    <h2>除錯技巧</h2>
+    <p>iframe 通訊壞掉時很難 debug，因為 console log 在不同 frame。我加了一個 wrapper：</p>
+    <pre>function log(...args) {
+  console.log('[GAME]', ...args);
+  if (sameOrigin()) {
+    window.parent.console.log('[FROM GAME]', ...args);
+  }
+}</pre>
+    <p>這樣大廳的 console 也看得到遊戲的 log，方便整合除錯。</p>
+
+    <h2>結語</h2>
+    <p>iframe + postMessage 是被低估的 web 平台特性。用對了可以做出組件化、可獨立發布、安全隔離的應用架構。本站 14 款遊戲共用一套 SDK，新遊戲開發只需要呼叫 5 個 API 就能整合到大廳。</p>
+    <p>SDK 完整原始碼（約 200 行）我計畫整理成 GitHub repo 開放。有興趣可以寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+    <div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+      <a href="/blog/dodge-master-devlog.html"><span class="related-cat">Game Devlog</span>DODGE MASTER 開發日誌</a>
+      <a href="/blog/cloudflare-workers-d1.html"><span class="related-cat">Backend</span>Cloudflare Workers + D1 遊戲後端</a>
+    </div></div>
+    </article>
+  </main>
+  <footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

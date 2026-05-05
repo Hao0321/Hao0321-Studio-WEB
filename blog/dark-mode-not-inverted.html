@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>暗黑模式不是反色：色彩理論的 dark theme 設計 — Hao0321 Studio</title>
+<meta name="description" content="為什麼直接反色的暗黑模式很醜？專業 dark theme 的對比度、彩度、層次設計，附完整色票範例。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/dark-mode-not-inverted.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="暗黑模式不是反色：色彩理論的 dark theme 設計" /><meta property="og:url" content="https://hao0321.com/blog/dark-mode-not-inverted.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Dark Mode</div>
+<span class="cat">Design</span>
+<h1>暗黑模式<em>不是反色</em>：色彩理論的 dark theme</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 8 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>很多開發者做暗黑模式的方法是 <code>filter: invert(1)</code> 或交換背景與文字色。看起來「黑底白字」就好了 — 結果做出來醜得讓使用者退出。這篇講為什麼，並提供一套真正可用的 dark theme 設計原則。</p>
+
+<h2>為什麼反色不行</h2>
+<p>三個技術原因：</p>
+
+<h3>1. 純黑 (#000) 對比度過高</h3>
+<p>白底黑字的對比度是 21:1，極佳的閱讀對比。但黑底純白（#FFF）也是 21:1 — 在低光環境下看會「刺眼」。眼睛在暗環境下瞳孔放大，過高對比反而疲勞。</p>
+<p><strong>修法</strong>：背景用 #0A0A14 而非 #000；文字用 #E8E8F0 而非 #FFF。</p>
+
+<h3>2. 彩色字體在反色後飽和度爆表</h3>
+<p>白底用 #4A7BF5 看起來合理。直接反成黑底用 #B58410（補色）會像「螢光筆刺眼」。</p>
+<p><strong>修法</strong>：dark theme 用更亮但飽和度稍低的同色系，如 #6E96FF。</p>
+
+<h3>3. 陰影邏輯倒過來</h3>
+<p>白底的陰影是「物件投在背景上的暗影」。黑底時，物件其實「發光」更合理 — 但反色不會這樣處理。</p>
+<p><strong>修法</strong>：dark theme 用「邊框」或「淺色 highlight」表達層次，不用陰影。</p>
+
+<h2>本站的 light → dark 對照</h2>
+<table>
+  <tr><th>用途</th><th>Light</th><th>Dark</th></tr>
+  <tr><td>背景</td><td>#F4F4F7</td><td>#0A0A14</td></tr>
+  <tr><td>表面</td><td>#FFFFFF</td><td>#1A1A2A</td></tr>
+  <tr><td>邊框</td><td>rgba(15,15,30,0.06)</td><td>rgba(255,255,255,0.08)</td></tr>
+  <tr><td>主文字</td><td>#0F0F1E</td><td>#E8E8F0</td></tr>
+  <tr><td>次文字</td><td>#4A4A5E</td><td>#A0A0B5</td></tr>
+  <tr><td>淡文字</td><td>#8C8CA0</td><td>#6B6B80</td></tr>
+  <tr><td>主色</td><td>#4A7BF5</td><td>#6E96FF</td></tr>
+  <tr><td>強調色</td><td>#8E7CF0</td><td>#A99CF5</td></tr>
+</table>
+<p>注意：每對顏色不是「直接反色」，是「<strong>感知亮度對等</strong>」。</p>
+
+<h2>WCAG 對比度要求</h2>
+<p>無障礙指南 WCAG 2.1 AA 要求：</p>
+<ul>
+  <li>正文（normal）：最低 4.5:1 對比</li>
+  <li>大標題：最低 3:1 對比</li>
+  <li>UI 元件邊界：最低 3:1 對比</li>
+</ul>
+<p>用工具檢查：<a href="https://webaim.org/resources/contrastchecker/">WebAIM Contrast Checker</a>。</p>
+
+<h2>「真黑」OLED 螢幕的特殊考量</h2>
+<p>iPhone / Galaxy 的 OLED 螢幕，純黑像素其實不發光（省電 + 真黑感）。所以許多 dark theme 用 #000 而非 #0A0A14：</p>
+<ul>
+  <li><strong>支持 OLED 黑</strong>：背景純 #000、卡片用 #0A0A14（有層次）</li>
+  <li><strong>不支持</strong>：背景 #0A0A14（一致性 across 螢幕類型）</li>
+</ul>
+<p>本站偏好後者 — 一致性勝過電力優化。</p>
+
+<h2>Dark theme 的圖片處理</h2>
+<p>有些 light theme 的截圖在 dark 裡會變得太亮。解法：</p>
+<pre>img.theme-aware {
+  filter: brightness(0.85) contrast(1.05);
+}
+[data-theme="dark"] img.theme-aware {
+  filter: brightness(0.7) contrast(1.1);
+}</pre>
+<p>或者乾脆每個圖準備兩個版本，根據主題切換。</p>
+
+<h2>實作：CSS variables 切換</h2>
+<pre>:root {
+  --bg: #F4F4F7;
+  --text: #0F0F1E;
+  /* ... */
+}
+
+[data-theme="dark"] {
+  --bg: #0A0A14;
+  --text: #E8E8F0;
+  /* ... */
+}</pre>
+<p>JS 切換：</p>
+<pre>document.documentElement.setAttribute(
+  'data-theme',
+  prefersDark() ? 'dark' : 'light'
+);</pre>
+
+<h2>跟隨系統 vs 強制主題</h2>
+<pre>const sysDark = matchMedia('(prefers-color-scheme: dark)').matches;
+const userPref = localStorage.getItem('theme'); // 使用者明確選的
+const theme = userPref || (sysDark ? 'dark' : 'light');</pre>
+<p>邏輯：使用者明確選了哪個主題就用哪個；沒選就跟系統。</p>
+
+<h2>過渡動畫</h2>
+<p>切換主題時整頁瞬間變色很突兀。加 0.3 秒過渡：</p>
+<pre>html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s !important;
+}</pre>
+<p>切換完移除 class，避免後續操作都很慢。</p>
+
+<h2>結語</h2>
+<p>好的 dark theme 是<strong>重新設計</strong>的成果，不是 light theme 反色的副產品。本站目前是 light only，但底層 token 系統設計就為未來做 dark theme 預留空間。對任何認真做產品的設計師，dark mode 都是值得獨立思考的議題。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/css-variables-design-tokens.html"><span class="related-cat">Design</span>CSS Variables 與 Design Tokens</a>
+<a href="/blog/typography-portfolio.html"><span class="related-cat">Design</span>字型選擇心法</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>用 Claude Code 寫 npm package 的工作流 — Hao0321 Studio</title>
+<meta name="description" content="從 0 到發布 npm 套件的全流程 — package.json 設定、TypeScript 與 ESM、CI、自動發版。Claude Code 怎麼配合每一步。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/claude-code-npm-package.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="用 Claude Code 寫 npm package 的工作流" /><meta property="og:url" content="https://hao0321.com/blog/claude-code-npm-package.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Claude Code npm</div>
+<span class="cat">AI · Workflow</span>
+<h1>用 <em>Claude Code</em> 寫 npm package 的工作流</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 10 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>Claude Code 不只是 chat 介面 — 它能執行 git 指令、改檔案、跑測試、自動 debug。配合 npm package 開發特別順手。這篇拆解工作室從 0 到發布 npm 套件的標準流程，AI 怎麼接手每一步。</p>
+
+<h2>第 1 步：規劃</h2>
+<p>跟 Claude Code 對話開新專案：</p>
+<pre>我要寫一個 npm package
+功能：把方波音效合成模組獨立出來
+名稱：@hao0321/web-sfx
+特性：
+- TypeScript 寫
+- ESM + CJS 雙格式輸出
+- 0 依賴
+- 支援 tree-shaking
+請列出開發計畫，先別動手</pre>
+<p>Claude 會回一份分階段計畫。確認後再開工。</p>
+
+<h2>第 2 步：初始化專案</h2>
+<p>讓 Claude Code 自動跑：</p>
+<pre>npm init -y
+npm i -D typescript @types/node tsup vitest
+npx tsc --init</pre>
+<p>它會直接建好 <code>package.json</code>、<code>tsconfig.json</code>，並在 <code>scripts</code> 加好 build / test / dev 指令。</p>
+
+<h2>第 3 步：核心程式碼</h2>
+<p>給它原本散在遊戲裡的音效函式：</p>
+<pre>把這個音效合成程式碼從 dodge-master-v5.html
+抽出來變成獨立的 TypeScript module，
+請維持 API 簡潔，每個函式有 JSDoc 註解。</pre>
+<p>它會：</p>
+<ol>
+  <li>抽出原始程式碼到 <code>src/index.ts</code></li>
+  <li>加 type 注解</li>
+  <li>分檔（如果太大）</li>
+  <li>幫每個 export 加 JSDoc</li>
+</ol>
+
+<h2>第 4 步：tsup 設定 ESM + CJS</h2>
+<p>tsup 是最簡單的 bundler 之一。設定：</p>
+<pre>// tsup.config.ts
+import { defineConfig } from 'tsup';
+
+export default defineConfig({
+  entry: ['src/index.ts'],
+  format: ['esm', 'cjs'],
+  dts: true,
+  clean: true,
+  treeshake: true,
+  sourcemap: true,
+});</pre>
+<p>package.json 對應：</p>
+<pre>{
+  "name": "@hao0321/web-sfx",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest"
+  }
+}</pre>
+
+<h2>第 5 步：寫測試</h2>
+<p>跟 Claude 說「寫測試」即可：</p>
+<pre>用 vitest 為這套 sfx module 寫測試。
+測試重點：
+- 每個 oscillator 確實產生對應頻率
+- gain 包絡曲線正確
+- audio context state 處理</pre>
+<p>它會用 <code>jsdom</code> + Web Audio mock 寫好測試。</p>
+
+<h2>第 6 步：README</h2>
+<pre>幫這個 package 寫 README，包含：
+- 一行介紹
+- 安裝（npm/pnpm/yarn）
+- 5 個 example
+- API reference
+- License (MIT)</pre>
+<p>Claude 寫的 README 通常結構完整、example 可運行。我只需要審一下語氣是否夠正式。</p>
+
+<h2>第 7 步：CI 自動化</h2>
+<p>GitHub Actions：</p>
+<pre># .github/workflows/ci.yml
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npm ci
+      - run: npm run build
+      - run: npm test</pre>
+<p>讓 Claude 直接寫這份 yml，避免手 typing 錯誤。</p>
+
+<h2>第 8 步：版本與發布</h2>
+<p>用 changesets 管版本：</p>
+<pre>npm i -D @changesets/cli
+npx changeset init
+# 每次改動：
+npx changeset
+# 發版：
+npx changeset publish</pre>
+<p>發版前先 <code>npm publish --dry-run</code> 看哪些檔案會上傳，避免意外打包進測試檔。</p>
+
+<h2>Claude Code 最有用的 5 個場景</h2>
+<table>
+  <tr><th>場景</th><th>怎麼用</th></tr>
+  <tr><td>type 推斷錯誤</td><td>「這個 type error 怎麼修？」貼 error 訊息</td></tr>
+  <tr><td>API 重構</td><td>「把這個 callback 風格改成 Promise」</td></tr>
+  <tr><td>跨檔案搜尋</td><td>「這個 function 哪裡被呼叫？」自動 grep</td></tr>
+  <tr><td>邊界 case</td><td>「列出這個函式所有可能的 input 異常」</td></tr>
+  <tr><td>升級套件</td><td>「跟著 vitest 3 → 4 changelog 更新我的設定檔」</td></tr>
+</table>
+
+<h2>不要交給 AI 的</h2>
+<ul>
+  <li><strong>API 設計決定</strong>：套件的 public API 是契約，要想清楚自己拍板</li>
+  <li><strong>License 選擇</strong>：MIT vs Apache vs GPL 是法律問題，自己決定</li>
+  <li><strong>命名空間</strong>：<code>@yourname/...</code> 還是 unscoped，影響長期</li>
+  <li><strong>release 時間點</strong>：v1.0 標記什麼時候發，需要產品判斷</li>
+</ul>
+
+<h2>結語</h2>
+<p>Claude Code + tsup + changesets 是 2026 年最流暢的 npm 套件開發組合。原本要 1 週的「弄熟工具」時間壓到 1 天，剩下都在寫真正的 feature 程式碼。對獨立工作室是巨大的賦能。</p>
+<p>有想交流 npm package 開發的，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/ai-pair-programming.html"><span class="related-cat">AI</span>AI 協作開發：Claude 怎麼幫我寫 14 款遊戲</a>
+<a href="/blog/web-audio-game-sfx.html"><span class="related-cat">Engineering</span>用 Web Audio API 做遊戲音效</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

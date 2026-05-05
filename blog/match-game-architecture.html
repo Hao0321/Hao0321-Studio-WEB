@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>連連看遊戲架構：圖塊匹配演算法與路徑搜尋 — Hao0321 Studio</title>
+<meta name="description" content="實作連連看的核心：圖塊配對、可連通路徑判斷（最多三條線）、提示功能、洗牌邏輯。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/match-game-architecture.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="連連看遊戲架構：圖塊匹配演算法" /><meta property="og:url" content="https://hao0321.com/blog/match-game-architecture.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / 連連看架構</div>
+<span class="cat">Game Devlog</span>
+<h1>連連看遊戲架構：<em>圖塊匹配</em>演算法</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 10 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>連連看是看似簡單的小遊戲，但核心邏輯有趣 — 兩個圖塊能消除的條件是「<strong>用最多 3 條線（最多兩個轉折）連起來且路徑上沒有其他圖塊</strong>」。這個約束讓「能否連線」的判斷不只是 BFS，要考慮路徑形狀。這篇拆解整套實作。</p>
+
+<h2>規則回顧</h2>
+<ol>
+  <li>玩家點兩個相同圖塊</li>
+  <li>系統檢查能否用 1、2 或 3 條直線連起來</li>
+  <li>路徑可以走出棋盤外圍（重要！）</li>
+  <li>路徑不能穿越其他未消除的圖塊</li>
+</ol>
+
+<h2>資料結構</h2>
+<pre>// 棋盤：N+2 × M+2 的二維陣列
+// 邊界一圈是 0（empty），讓路徑可繞外圍
+const board = [
+  [0,0,0,0,0,0,0,0,0,0],
+  [0,1,2,3,4,5,6,7,8,0],
+  [0,2,3,4,5,6,7,8,1,0],
+  [0,3,4,5,6,7,8,1,2,0],
+  [0,0,0,0,0,0,0,0,0,0],
+];
+// 0 = 空, 1-N = 圖塊類型</pre>
+
+<h2>核心：3 條線判斷</h2>
+<p>能用 1 條線連 → 顯然可以連 2 條 → 顯然可以連 3 條。所以由簡到繁判斷：</p>
+
+<h3>1 條線（直連）</h3>
+<pre>function canDirectConnect(a, b) {
+  if (a.x === b.x) {
+    // 垂直
+    const [y1, y2] = [Math.min(a.y, b.y), Math.max(a.y, b.y)];
+    for (let y = y1 + 1; y &lt; y2; y++) {
+      if (board[y][a.x] !== 0) return false;
+    }
+    return true;
+  }
+  if (a.y === b.y) {
+    // 水平
+    const [x1, x2] = [Math.min(a.x, b.x), Math.max(a.x, b.x)];
+    for (let x = x1 + 1; x &lt; x2; x++) {
+      if (board[a.y][x] !== 0) return false;
+    }
+    return true;
+  }
+  return false;
+}</pre>
+
+<h3>2 條線（一個轉折點）</h3>
+<p>兩個轉折候選點：(a.x, b.y) 跟 (b.x, a.y)：</p>
+<pre>function canTwoLineConnect(a, b) {
+  const corner1 = { x: a.x, y: b.y };
+  const corner2 = { x: b.x, y: a.y };
+
+  for (const c of [corner1, corner2]) {
+    if (board[c.y][c.x] !== 0) continue;
+    if (canDirectConnect(a, c) && canDirectConnect(c, b)) {
+      return [a, c, b];
+    }
+  }
+  return null;
+}</pre>
+
+<h3>3 條線（兩個轉折點）</h3>
+<p>掃所有可能的中間「直線」：</p>
+<pre>function canThreeLineConnect(a, b) {
+  // 嘗試所有水平中間線
+  for (let y = 0; y &lt; rows; y++) {
+    if (y === a.y || y === b.y) continue;
+    const c1 = { x: a.x, y };
+    const c2 = { x: b.x, y };
+    if (board[c1.y][c1.x] === 0 && board[c2.y][c2.x] === 0) {
+      if (canDirectConnect(a, c1)
+          && canDirectConnect(c1, c2)
+          && canDirectConnect(c2, b)) {
+        return [a, c1, c2, b];
+      }
+    }
+  }
+  // 同樣嘗試所有垂直中間線
+  for (let x = 0; x &lt; cols; x++) {
+    /* ... 對稱的實作 ... */
+  }
+  return null;
+}</pre>
+
+<h2>主判斷函式</h2>
+<pre>function findPath(a, b) {
+  if (board[a.y][a.x] !== board[b.y][b.x]) return null;
+  if (board[a.y][a.x] === 0) return null;
+
+  if (canDirectConnect(a, b)) return [a, b];
+  const two = canTwoLineConnect(a, b);
+  if (two) return two;
+  return canThreeLineConnect(a, b);
+}</pre>
+
+<h2>提示（Hint）功能</h2>
+<p>掃所有圖塊組合，找第一對能連的：</p>
+<pre>function findHint() {
+  const tiles = [];
+  for (let y = 0; y &lt; rows; y++) {
+    for (let x = 0; x &lt; cols; x++) {
+      if (board[y][x] !== 0) tiles.push({ x, y });
+    }
+  }
+  for (let i = 0; i &lt; tiles.length; i++) {
+    for (let j = i + 1; j &lt; tiles.length; j++) {
+      if (findPath(tiles[i], tiles[j])) {
+        return [tiles[i], tiles[j]];
+      }
+    }
+  }
+  return null;  // 沒有可消的組合 → 死局
+}</pre>
+<p>對 100 個圖塊的盤面這個複雜度約 5,000 次 findPath 呼叫，但每次很快，總時間 &lt; 50ms。</p>
+
+<h2>洗牌（Shuffle）邏輯</h2>
+<p>當沒有可消組合時自動洗牌：</p>
+<pre>function shuffle() {
+  // 收集所有非空圖塊
+  const types = [];
+  const positions = [];
+  for (let y = 0; y &lt; rows; y++) {
+    for (let x = 0; x &lt; cols; x++) {
+      if (board[y][x] !== 0) {
+        types.push(board[y][x]);
+        positions.push({ x, y });
+      }
+    }
+  }
+  // Fisher-Yates 洗牌
+  for (let i = types.length - 1; i &gt; 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [types[i], types[j]] = [types[j], types[i]];
+  }
+  // 重新放置
+  positions.forEach((p, i) =&gt; {
+    board[p.y][p.x] = types[i];
+  });
+  // 確認洗完還有可消組合，沒有就再洗
+  if (!findHint()) shuffle();
+}</pre>
+
+<h2>路徑視覺化</h2>
+<p>連線時畫出實際路徑（不是直接消除）：</p>
+<pre>function drawPath(path) {
+  ctx.strokeStyle = '#4A7BF5';
+  ctx.lineWidth = 4;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  path.forEach((p, i) =&gt; {
+    const px = p.x * tileSize + tileSize/2;
+    const py = p.y * tileSize + tileSize/2;
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+  // 200ms 後消失，圖塊隨即消除
+  setTimeout(() =&gt; {
+    clearPath();
+    removeTiles(path[0], path[path.length-1]);
+  }, 200);
+}</pre>
+
+<h2>難度設計</h2>
+<table>
+  <tr><th>難度</th><th>盤面</th><th>圖塊類型數</th></tr>
+  <tr><td>新手</td><td>8×6</td><td>8 種</td></tr>
+  <tr><td>普通</td><td>10×8</td><td>12 種</td></tr>
+  <tr><td>困難</td><td>12×10</td><td>20 種</td></tr>
+</table>
+
+<h2>結語</h2>
+<p>連連看的演算法看似簡單，但「3 條線判斷」+「死局偵測」+「路徑視覺化」三個元素湊起來才完整。整套核心邏輯約 200 行 JavaScript，是適合 1 個下午寫完的小專案。</p>
+<p>有想要完整實作的，可以寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/chess-master-architecture.html"><span class="related-cat">Game Devlog</span>Chess Master 8 棋類架構</a>
+<a href="/blog/gomoku-ai-minimax.html"><span class="related-cat">Game Devlog</span>五子棋 AI 設計</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

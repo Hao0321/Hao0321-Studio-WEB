@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zero-Build 哲學：為什麼我刻意不用 webpack / vite — Hao0321 Studio</title>
+  <meta name="description" content="從 Vite 切換到純靜態 HTML 一年的真實心得 — 失去什麼、得到什麼、什麼樣的專案適合 zero-build。" />
+  <meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/zero-build-philosophy.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" /><meta property="og:title" content="Zero-Build 哲學：為什麼我刻意不用 webpack / vite" /><meta property="og:url" content="https://hao0321.com/blog/zero-build-philosophy.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}
+    .breadcrumb a{color:var(--text-3)}
+    .cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}
+    h2:first-child{margin-top:0}
+    h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}
+    pre code{background:none;border:none;padding:0;color:inherit}
+    table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}
+    th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}
+    th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}
+    td{color:var(--text-2)}
+    tr:last-child td{border-bottom:none}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Zero-Build</div>
+    <span class="cat">Engineering</span>
+    <h1>Zero-Build 哲學：為什麼我<em>刻意不用</em> webpack / vite</h1>
+    <div class="meta"><span>2026 年 5 月 5 日</span><span>約 10 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+    <article>
+    <p>我做這個工作室前 10 年都活在 webpack / Vite / esbuild 的世界。每個專案都有 build step、有 npm install 的等待、有「為什麼 production 跑不起來但 dev 可以」的悶。一年前我做了一個實驗：能不能完全不用 build tool 做出 production 級的網站？這篇是答案。</p>
+
+    <h2>什麼是 zero-build</h2>
+    <p>定義：原始碼直接就是部署到 server 的內容。沒有 transpile、沒有 bundle、沒有 minify、沒有 npm install。</p>
+    <p>本站（hao0321.com）就是這樣。每個 HTML 檔案是手寫的、所有 CSS 寫在同一個 <code>&lt;style&gt;</code> 區塊、JS 直接 inline。整個工作室官網沒有 <code>package.json</code>。</p>
+
+    <h2>失去什麼</h2>
+
+    <h3>1. 模組化</h3>
+    <p>不能 <code>import</code>。所有跨檔案共用程式碼要靠 <code>&lt;script&gt;</code> 標籤的全域變數。本站的解法：每頁都複製貼上同一份 CSS（醜但穩）。</p>
+
+    <h3>2. TypeScript</h3>
+    <p>只能寫 vanilla JS。但實際上：</p>
+    <ul>
+      <li>VS Code 會根據 JSDoc 註解推導型別</li>
+      <li>用 <code>// @ts-check</code> 開啟檢查</li>
+      <li>單檔規模 &lt; 1000 行時，TypeScript 的價值很有限</li>
+    </ul>
+
+    <h3>3. CSS preprocessor</h3>
+    <p>沒有 Sass、Less、Tailwind compile。但 <strong>CSS variables</strong> 已經涵蓋 80% 我以前用 Sass 變數的場景。Nesting 也可以用原生 CSS。</p>
+
+    <h3>4. Hot reload</h3>
+    <p>沒有 dev server 自動重新整理。但用 VS Code 的 Live Server 擴充功能就有相同效果，不需要 build pipeline。</p>
+
+    <h2>得到什麼</h2>
+
+    <h3>1. 啟動時間 = 0</h3>
+    <p>打開檔案就能看效果。不需要 <code>npm run dev</code> 等 30 秒。心理上「想到 → 看到」的距離壓到最短。</p>
+
+    <h3>2. 部署時間 = 上傳時間</h3>
+    <p>沒有 CI build。Cloudflare Pages 收到檔案直接吐給 CDN。Hao0321 從 push 到 production 約 30 秒。</p>
+
+    <h3>3. Bundle size = 真實 size</h3>
+    <p>沒有 framework runtime overhead。本站首頁 JS 約 5KB（gzipped），這對任何 SPA 都是不可能的數字。</p>
+
+    <h3>4. 三年後還能跑</h3>
+    <p>這是最大的勝利。沒有依賴鏈意味著沒有 npm 套件升級的痛苦、沒有 deprecated API、沒有「為什麼新版 Node 跑不起來」。HTML/CSS/JS 是 web 三大支柱，向後相容性近乎永遠。</p>
+
+    <h3>5. 任何人都能 contribute</h3>
+    <p>不需要先讀懂 Vite config、不需要懂 Webpack alias、不需要設定 node_modules。打開 .html 檔就懂。</p>
+
+    <h2>不適合 zero-build 的場景</h2>
+    <table>
+      <tr><th>場景</th><th>為什麼</th></tr>
+      <tr><td>大型 SPA（&gt; 50 個畫面）</td><td>沒有 routing 框架會痛苦</td></tr>
+      <tr><td>需要 SSR / SSG 的內容站</td><td>純 HTML 已經是 SSG，但動態內容生成需要 build step</td></tr>
+      <tr><td>團隊 &gt; 3 人</td><td>缺乏編輯器型別檢查的協作風險高</td></tr>
+      <tr><td>SaaS 後台（高互動）</td><td>狀態管理很快會超出 vanilla JS 能輕鬆處理的規模</td></tr>
+      <tr><td>需要 npm 套件的核心邏輯</td><td>例如 Stripe SDK、認證套件，必須 bundle</td></tr>
+    </table>
+
+    <h2>適合 zero-build 的場景</h2>
+    <ul>
+      <li><strong>作品集 / 個人網站</strong>：頁面數量有限、視覺優先</li>
+      <li><strong>內容站</strong>：blog、產品說明、使用條款</li>
+      <li><strong>單頁應用工具</strong>：計算機、轉換器、視覺化</li>
+      <li><strong>瀏覽器小遊戲</strong>：單檔 HTML 易發布到任何平台</li>
+      <li><strong>Demo / Prototype</strong>：快速試做想法</li>
+    </ul>
+
+    <h2>混合策略：部分 build</h2>
+    <p>本站的妥協：<strong>主站 zero-build，但遊戲大廳的個別遊戲用 React via Babel</strong>（在瀏覽器即時轉譯）。這樣大部分頁面 zero-build，需要狀態管理的個別遊戲還能用 React。</p>
+
+    <pre>// play.html 動態載入 .jsx
+fetch('cat-battle.jsx')
+  .then(r =&gt; r.text())
+  .then(raw =&gt; {
+    const transformed = Babel.transform(raw, { presets: ['react'] }).code;
+    eval(transformed);
+  });</pre>
+
+    <p>缺點：每次切換遊戲多 100ms 轉譯時間。優點：依然沒有 build step。</p>
+
+    <h2>反面論點：build 不是問題，是工具進化</h2>
+    <p>誠實地講：Vite 比 webpack 快 10 倍、esbuild 比 Vite 又快 10 倍。「build 慢」這個問題在 2024 年之後幾乎不存在了。zero-build 的價值不是「快」，是「<strong>少一層複雜度</strong>」。</p>
+    <p>對個人專案，少一層複雜度的價值極高。對企業專案，多一層工具帶來的能力（型別、模組、樹搖優化）通常勝過簡潔。</p>
+
+    <h2>給想試試的人的建議</h2>
+    <ol>
+      <li><strong>從新專案開始</strong>，不要把現有 Vite 專案硬轉</li>
+      <li><strong>先設定 Live Server</strong>，把開發體驗補齊</li>
+      <li><strong>用 CSS variables 取代 Sass 變數</strong></li>
+      <li><strong>用 ES modules（&lt;script type="module"&gt;）取代 import 語法</strong>（限現代瀏覽器）</li>
+      <li><strong>JSDoc + // @ts-check 取代 TypeScript</strong></li>
+      <li><strong>用 Cloudflare Pages 部署</strong>（不需要設定 build command）</li>
+    </ol>
+
+    <h2>結語</h2>
+    <p>Zero-build 不是反潮流，是<strong>對「不必要複雜度」的抗議</strong>。對於規模適合的專案，省下的時間與心智能量足以做出更好的內容。一年下來我沒有想念過 webpack。</p>
+    <p>有想實驗 zero-build 但卡住的朋友，歡迎寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+    <div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+      <a href="/blog/tech-stack.html"><span class="related-cat">Engineering</span>Hao0321 Studio 的技術堆疊</a>
+      <a href="/blog/cloudflare-vs-vercel.html"><span class="related-cat">Engineering</span>為什麼我選 Cloudflare Pages 而不是 Vercel</a>
+    </div></div>
+    </article>
+  </main>
+  <footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

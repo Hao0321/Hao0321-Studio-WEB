@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JWT 在 Cloudflare Workers Edge 的簽章與驗證實戰 — Hao0321 Studio</title>
+  <meta name="description" content="不依賴 jsonwebtoken 套件、純 Web Crypto API 完成 HS256 JWT 簽章與驗證。完整程式碼、安全性檢查、常見錯誤。" />
+  <meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/blog/jwt-on-edge.html" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="article" /><meta property="og:title" content="JWT 在 Cloudflare Workers Edge 的簽章與驗證實戰" /><meta property="og:url" content="https://hao0321.com/blog/jwt-on-edge.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+  <meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--border-2:rgba(15,15,30,0.12);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}
+    a{color:var(--accent-blue);text-decoration:none;transition:color .2s}
+    a:hover{color:var(--accent-violet)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}
+    main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+    .breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}
+    .breadcrumb a{color:var(--text-3)}
+    .cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}
+    h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+    article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}
+    h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}
+    h2:first-child{margin-top:0}
+    h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}
+    p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}
+    strong{color:var(--text);font-weight:600}
+    ul,ol{padding-left:22px;margin-bottom:20px}
+    li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}
+    li strong{color:var(--text)}
+    code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}
+    pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}
+    pre code{background:none;border:none;padding:0;color:inherit}
+    .callout{background:rgba(245,158,11,0.06);border-left:3px solid #f59e0b;padding:14px 20px;margin:22px 0;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+    .callout strong{color:#b45309}
+    .article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+    .article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}
+    .related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+    .related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}
+    .related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}
+    .related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    @media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}
+  </style>
+</head>
+<body>
+  <nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+  <main>
+    <div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / JWT on Edge</div>
+    <span class="cat">Engineering</span>
+    <h1>JWT 在 Cloudflare Workers Edge 的<em>簽章與驗證</em>實戰</h1>
+    <div class="meta"><span>2026 年 5 月 5 日</span><span>約 11 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+    <article>
+    <p>Cloudflare Workers 的 runtime 不支援 Node.js built-ins，所以你不能 <code>npm install jsonwebtoken</code>。但其實也不需要 — Web Crypto API 內建在 V8 isolate 裡，HMAC-SHA256 簽章 30 行程式碼就搞定。這篇把整套生產環境用的 JWT 模組拆開講，包含三個我踩過的安全坑。</p>
+
+    <h2>為什麼不用套件</h2>
+    <p>選擇純 Web Crypto API 的理由：</p>
+    <ul>
+      <li><strong>套件兼容性</strong>：jsonwebtoken 依賴 Buffer、crypto，這些在 Workers runtime 不存在</li>
+      <li><strong>部署大小</strong>：jose 之類的純 JS 套件約 100KB，Web Crypto 是 0KB</li>
+      <li><strong>審計透明</strong>：自己寫的 30 行程式碼比 5,000 行依賴鏈好審</li>
+    </ul>
+
+    <h2>核心：簽章函式</h2>
+    <pre>async function signToken(payload, secret) {
+  const header = { alg: 'HS256', typ: 'JWT' };
+  const headerB64 = b64url(JSON.stringify(header));
+  const payloadB64 = b64url(JSON.stringify(payload));
+  const data = headerB64 + '.' + payloadB64;
+
+  const key = await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign']
+  );
+  const sig = await crypto.subtle.sign(
+    'HMAC', key, new TextEncoder().encode(data)
+  );
+  return data + '.' + b64url(new Uint8Array(sig));
+}
+
+function b64url(input) {
+  const bytes = typeof input === 'string'
+    ? new TextEncoder().encode(input)
+    : input;
+  return btoa(String.fromCharCode(...bytes))
+    .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}</pre>
+
+    <p>關鍵點：</p>
+    <ul>
+      <li><code>b64url()</code> — JWT 用的是 base64url，不是 base64。差別在 <code>+/=</code> 換成 <code>-_</code> 並去掉 padding</li>
+      <li><code>importKey</code> 的 secret 直接用字串，不需要先 hash</li>
+      <li><code>extractable: false</code> — secret 不可被讀回，安全多一層</li>
+    </ul>
+
+    <h2>驗證函式</h2>
+    <pre>async function verifyToken(token, secret) {
+  try {
+    const [headerB64, payloadB64, sigB64] = token.split('.');
+    if (!headerB64 || !payloadB64 || !sigB64) return null;
+
+    const key = await crypto.subtle.importKey(
+      'raw',
+      new TextEncoder().encode(secret),
+      { name: 'HMAC', hash: 'SHA-256' },
+      false,
+      ['verify']
+    );
+    const sigBytes = b64urlDecode(sigB64);
+    const valid = await crypto.subtle.verify(
+      'HMAC', key, sigBytes,
+      new TextEncoder().encode(headerB64 + '.' + payloadB64)
+    );
+    if (!valid) return null;
+
+    const payload = JSON.parse(
+      new TextDecoder().decode(b64urlDecode(payloadB64))
+    );
+    if (payload.exp && payload.exp &lt; Date.now() / 1000) return null;
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+function b64urlDecode(s) {
+  const padded = s.replace(/-/g, '+').replace(/_/g, '/')
+    + '=='.slice((s.length + 2) % 4);
+  const binStr = atob(padded);
+  return Uint8Array.from(binStr, c =&gt; c.charCodeAt(0));
+}</pre>
+
+    <h2>安全坑 1：用 verify 不是 decode</h2>
+    <div class="callout">
+      <strong>致命錯誤</strong>：<code>jwt.decode()</code> 只解碼不驗簽。攻擊者可以隨意改 payload 而你不會發現。一定要用 <code>verify()</code>。
+    </div>
+    <p>每次 code review 我看到 JWT 處理都會立刻搜 <code>decode\(</code>。如果你看到 <code>jwt.decode(token)</code> 後續被當成可信資料用 — 那是漏洞。</p>
+
+    <h2>安全坑 2：alg=none 攻擊</h2>
+    <p>JWT 規格有個惡名昭彰的「特性」：header 可以指定 <code>alg: 'none'</code>，表示「沒有簽章」。如果你的驗證實作沒檢查 alg，攻擊者可以送一個沒簽章的 token，你會接受。</p>
+    <p>修法：明確只接受 <code>HS256</code>：</p>
+    <pre>const header = JSON.parse(b64urlDecode(headerB64));
+if (header.alg !== 'HS256') return null;</pre>
+
+    <h2>安全坑 3：常數時間比較</h2>
+    <p>有些自己刻 JWT 的人會用 <code>===</code> 比簽章字串：</p>
+    <pre>// 危險寫法
+if (computedSig !== providedSig) return null;</pre>
+    <p>字串比較是 short-circuit 的，會在第一個不同的字元就 return。攻擊者可以透過時間差推測簽章。<code>crypto.subtle.verify</code> 內部用常數時間比較，所以正確用法是直接呼叫它，不自己比字串。</p>
+
+    <h2>過期時間設計</h2>
+    <p>JWT 的 <code>exp</code> 欄位是 Unix timestamp（秒）：</p>
+    <pre>const payload = {
+  sub: userId,
+  iat: Math.floor(Date.now() / 1000),
+  exp: Math.floor(Date.now() / 1000) + 30 * 24 * 3600,
+};</pre>
+    <p>30 天是一個常見值。太短使用者要常登入，太長 session 被偷的影響大。配合 refresh token 可以縮短到 1 小時。</p>
+
+    <h2>Secret 管理</h2>
+    <p>JWT secret 絕對不能 commit。Cloudflare Workers 的做法：</p>
+    <pre>$ wrangler secret put JWT_SECRET
+✔ Enter a secret value: ********
+🌀 Creating the secret for the Worker "hao-games-api"
+✨ Success!</pre>
+    <p>之後 worker 用 <code>env.JWT_SECRET</code> 讀取。Secret 不會出現在 dashboard、logs、wrangler.toml 任何地方。</p>
+
+    <h2>Rotate（換金鑰）的策略</h2>
+    <p>如果 secret 外洩，你需要 rotate。但直接換掉所有現有使用者的 session 都會作廢。實務做法：</p>
+    <ol>
+      <li>新增 <code>JWT_SECRET_NEW</code>，新簽 token 用新 secret</li>
+      <li>驗證時先用新 secret 試，失敗再用舊 secret 試</li>
+      <li>30 天後（所有舊 token 過期），把舊 secret 刪掉，新 secret 改名為 JWT_SECRET</li>
+    </ol>
+
+    <h2>跟 Google ID Token 整合</h2>
+    <p>外部 Google ID token 跟我們自己的 session JWT 是兩個不同的東西。流程：</p>
+    <ol>
+      <li>前端拿到 Google ID token（Google 簽的）</li>
+      <li>後端驗證 Google ID token（呼叫 tokeninfo + 檢查 aud, exp, sub）</li>
+      <li>後端用自己的 JWT_SECRET 簽一個 session JWT 回給前端</li>
+      <li>後續所有 API 用 session JWT 認證</li>
+    </ol>
+    <p>這個分層是必要的：Google ID token 1 小時就過期，不適合當 session。我們的 30 天 session JWT 才是真實的「登入狀態」。</p>
+
+    <h2>結語</h2>
+    <p>JWT 在 Edge 環境寫起來比想像中簡單。Web Crypto API 是被低估的工具 — 你不只能簽 JWT，還可以做 AES 加密、ECDSA 公鑰簽章、PBKDF2 密碼 hash，全部不用裝任何套件。</p>
+    <p>完整的 jwt.js（含 rotate、refresh）模組，我有計畫整理成 GitHub Gist。有興趣可以寄信 <a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>。</p>
+    <div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+      <a href="/blog/cloudflare-workers-d1.html"><span class="related-cat">Backend</span>用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端</a>
+      <a href="/blog/tech-stack.html"><span class="related-cat">Engineering</span>Hao0321 Studio 的技術堆疊</a>
+    </div></div>
+    </article>
+  </main>
+  <footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>

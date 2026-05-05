@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>微互動的 12 個經典場景：UI 細節讓網站從 60 分變 90 分 — Hao0321 Studio</title>
+<meta name="description" content="從 hover、click、scroll 到 form submit，網站常見的 12 個微互動場景與實作範例。" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/micro-interactions-12.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="微互動的 12 個經典場景" /><meta property="og:url" content="https://hao0321.com/blog/micro-interactions-12.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-05T00:00:00+08:00" />
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / 微互動</div>
+<span class="cat">Design</span>
+<h1>微互動的 <em>12 個經典場景</em>：60 分到 90 分的 UI 細節</h1>
+<div class="meta"><span>2026 年 5 月 5 日</span><span>約 9 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+<p>網站做完功能只是 60 分。剩下 30 分藏在「微互動」裡 — 那些使用者察覺不到但能感受到的小動畫、即時回饋、狀態變化。這篇整理 12 個經典場景，每個附 CSS / JS 範例。</p>
+
+<h2>1. Hover：尺寸放大 + 陰影加深</h2>
+<pre>.card {
+  transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(15,15,30,0.08);
+}</pre>
+<p>關鍵是 <code>cubic-bezier(0.22, 1, 0.36, 1)</code>。這條曲線比 <code>ease-out</code> 更自然，前段快、後段緩。Linear 動畫看起來機械，這條曲線看起來「物理感」。</p>
+
+<h2>2. 按鈕點擊：scale down 0.97</h2>
+<pre>button {
+  transition: transform 0.1s;
+}
+button:active {
+  transform: scale(0.97);
+}</pre>
+<p>0.1s 才有「真的被按下」的觸覺感。0.3s 太慢、0.05s 太快感覺不到。</p>
+
+<h2>3. Loading 狀態：skeleton 取代 spinner</h2>
+<p>白色閃光從左滑到右，比旋轉的 spinner 更降低焦慮感：</p>
+<pre>.skeleton {
+  background: linear-gradient(90deg, #f0f0f0, #e0e0e0, #f0f0f0);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}</pre>
+
+<h2>4. 表單驗證：邊框顏色 + 圖示</h2>
+<p>不要等 submit 才告訴使用者錯。輸入完離開欄位（blur）就驗證：</p>
+<pre>input.invalid { border-color: #e11d48; }
+input.valid { border-color: #15803d; }
+input:focus { outline: 2px solid var(--accent-blue); }</pre>
+
+<h2>5. Modal 開啟：fade + scale</h2>
+<pre>.modal {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.2s, transform 0.2s;
+}
+.modal.open {
+  opacity: 1;
+  transform: scale(1);
+}</pre>
+<p>scale 從 0.95 到 1 模擬「從遠處 zoom in」的感覺。比直接跳出更有層次。</p>
+
+<h2>6. 滾動觸發：IntersectionObserver + 淡入</h2>
+<pre>const io = new IntersectionObserver(entries =&gt; {
+  entries.forEach(e =&gt; {
+    if (e.isIntersecting) e.target.classList.add('in-view');
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el =&gt; io.observe(el));
+
+/* CSS */
+.reveal { opacity: 0; transform: translateY(20px); transition: 0.8s; }
+.reveal.in-view { opacity: 1; transform: translateY(0); }</pre>
+
+<h2>7. 數字滾動 (counter)</h2>
+<p>從 0 滑到目標數字，比直接顯示更有衝擊：</p>
+<pre>function animateCount(el, target, duration = 1500) {
+  const start = performance.now();
+  function step(now) {
+    const p = Math.min((now - start) / duration, 1);
+    const eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(eased * target);
+    if (p &lt; 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}</pre>
+
+<h2>8. Toast 通知：從上方滑入 + 自動消失</h2>
+<pre>.toast {
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+}
+.toast.show {
+  transform: translateY(0);
+}</pre>
+
+<h2>9. 切換主題：crossfade 整頁</h2>
+<pre>html.theme-transitioning * {
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s !important;
+}</pre>
+<p>暫時加個 class 讓所有元素都有 transition，切換完移除，避免後續操作都很慢。</p>
+
+<h2>10. 卡片進場：staggered animation</h2>
+<p>多個卡片不要同時出現，差 50ms 一個：</p>
+<pre>.card:nth-child(1) { animation-delay: 0ms; }
+.card:nth-child(2) { animation-delay: 50ms; }
+.card:nth-child(3) { animation-delay: 100ms; }</pre>
+<p>創造「依序出現」的節奏感，比一次彈出去自然。</p>
+
+<h2>11. 拖曳 (drag)：透明度 + 旋轉</h2>
+<p>拖曳時稍微透明 + 微旋轉，給予「正在拖」的明確感受：</p>
+<pre>.dragging {
+  opacity: 0.7;
+  transform: rotate(-2deg);
+  cursor: grabbing;
+}</pre>
+
+<h2>12. Form Submit：按鈕 → loading → success</h2>
+<p>三段狀態切換：</p>
+<pre>&lt;button class="btn-submit"&gt;
+  &lt;span class="label"&gt;提交&lt;/span&gt;
+  &lt;span class="spinner"&gt;⌛&lt;/span&gt;
+  &lt;span class="check"&gt;✓&lt;/span&gt;
+&lt;/button&gt;
+.btn-submit.loading .label { opacity: 0; }
+.btn-submit.loading .spinner { opacity: 1; }
+.btn-submit.success .check { opacity: 1; }</pre>
+
+<h2>原則總結</h2>
+<table>
+  <tr><th>原則</th><th>應用</th></tr>
+  <tr><td>動畫不超過 300ms</td><td>使用者注意力短，過久反而煩</td></tr>
+  <tr><td>用 cubic-bezier 不用 linear</td><td>自然物理感</td></tr>
+  <tr><td>狀態切換要可逆</td><td>不要只有「開」沒有「關」動畫</td></tr>
+  <tr><td>尊重 prefers-reduced-motion</td><td>無障礙考量</td></tr>
+  <tr><td>過度動畫 = 無動畫</td><td>節奏感比花哨重要</td></tr>
+</table>
+
+<h2>結語</h2>
+<p>使用者通常記不住網站視覺，但會記住「感覺好用」。這些微互動就是「感覺好用」的來源。每個都只是 5–10 行 CSS，組合起來決定一個網站的質感。</p>
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/css-variables-design-tokens.html"><span class="related-cat">Design</span>CSS Variables 與 Design Tokens</a>
+<a href="/blog/typography-portfolio.html"><span class="related-cat">Design</span>字型選擇心法</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>
