@@ -498,7 +498,7 @@ export default function App() {
           {/* Checklist toggle */}
           <button onClick={() => setCheckMode(!checkMode)} style={{
             padding: "7px 12px", borderRadius: 8,
-            border: checkMode ? `1.5px solid #4DB89A55` : "1.5px solid #222",
+            border: checkMode ? `1.5px solid #4DB89A55` : "1.5px solid rgba(15,15,30,0.12)",
             background: checkMode ? "#4DB89A0d" : "#FFFFFF",
             color: checkMode ? "#4DB89A" : "#4A4A5E",
             fontSize: 11, fontWeight: 600, cursor: "pointer",
@@ -524,8 +524,9 @@ export default function App() {
               borderRadius: 8, fontSize: 12, fontWeight: 600,
               cursor: "pointer", transition: "all 0.25s",
               fontFamily: "inherit",
-              background: tab === t.key ? "#FFFFFF" : "transparent",
+              background: tab === t.key ? "linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%)" : "transparent",
               color: tab === t.key ? "#FFFFFF" : "#4A4A5E",
+              boxShadow: tab === t.key ? "0 2px 8px rgba(74,123,245,0.25)" : "none",
             }}>{t.label}</button>
           ))}
         </div>
@@ -572,7 +573,7 @@ export default function App() {
             return (
               <button key={i} onClick={() => setSel(i)} style={{
                 flexShrink: 0, padding: "7px 14px", borderRadius: 8,
-                border: sel === i ? `1.5px solid ${p.color}55` : "1.5px solid #1a1a1f",
+                border: sel === i ? `1.5px solid ${p.color}55` : "1.5px solid rgba(15,15,30,0.08)",
                 background: sel === i ? `${p.color}0d` : allDone ? `${p.color}08` : "#FFFFFF",
                 color: sel === i ? p.color : allDone ? `${p.color}88` : "#4A4A5E",
                 fontSize: 12, fontWeight: 600, cursor: "pointer",
@@ -741,7 +742,7 @@ export default function App() {
             style={{
               flex: 1, padding: "12px 0", borderRadius: 10,
               border: "1px solid rgba(15,15,30,0.06)", background: "#FFFFFF",
-              color: sel === 0 ? "#D1D5DB" : "#8C8CA0",
+              color: sel === 0 ? "#D1D5DB" : "#0F0F1E",
               fontSize: 13, fontWeight: 600,
               cursor: sel === 0 ? "default" : "pointer",
               fontFamily: "inherit", transition: "all 0.2s",
@@ -763,7 +764,7 @@ export default function App() {
         {/* Footer */}
         <div style={{
           marginTop: 40, paddingTop: 20,
-          borderTop: "1px solid #18181c",
+          borderTop: "1px solid rgba(15,15,30,0.06)",
           fontSize: 10, color: "#0F0F1E",
           fontFamily: "'JetBrains Mono', monospace",
           textAlign: "center", letterSpacing: "0.06em",
