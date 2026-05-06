@@ -3,19 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Social Analytics — Hao0321 Studio</title>
-  <meta name="description" content="YouTube / 社群數據分析儀表板 — 追蹤訂閱數、觀看數、互動率。" />
-  <meta name="theme-color" content="#00b4ff" />
+  <title>YouTube Blade — 頻道數據分析 | Hao0321 Studio</title>
+  <meta name="description" content="YouTube 頻道數據分析儀表板 — 訂閱數、觀看數、互動率、熱門影片趨勢一站式呈現。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/analytics/" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="YouTube Blade — 頻道數據分析" />
+  <meta property="og:description" content="YouTube 頻道數據分析儀表板 — 訂閱數、觀看數、互動率、熱門影片趨勢一站式呈現。" />
+  <meta property="og:url" content="https://hao0321.com/analytics/" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #0a0a14; min-height: 100vh; }
+    body {
+      background: #F4F4F7;
+      min-height: 100vh;
+      font-family: 'Plus Jakarta Sans', 'Noto Sans TC', system-ui, sans-serif;
+      background-image:
+        radial-gradient(ellipse 900px 650px at 12% 3%, rgba(195,215,255,0.40), transparent 60%),
+        radial-gradient(ellipse 700px 560px at 88% 28%, rgba(180,190,240,0.22), transparent 60%);
+      background-attachment: fixed;
+    }
     #app-root { min-height: 100vh; }
-    .app-loading { display: flex; align-items: center; justify-content: center; min-height: 100vh; color: #555; font-family: monospace; font-size: 14px; letter-spacing: 2px; }
+    .app-loading {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; gap: 16px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .app-loading-spinner {
+      width: 36px; height: 36px;
+      border: 3px solid rgba(74,123,245,0.15);
+      border-top-color: #4A7BF5;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    .app-loading-text {
+      color: #8C8CA0; font-size: 13px; letter-spacing: 2px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
-  <div id="app-root"><div class="app-loading">LOADING ANALYTICS...</div></div>
+  <div id="app-root">
+    <div class="app-loading">
+      <div class="app-loading-spinner"></div>
+      <div class="app-loading-text">LOADING YOUTUBE BLADE...</div>
+    </div>
+  </div>
 
   <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
@@ -47,7 +86,7 @@
         var root = document.getElementById('app-root');
         while (root.firstChild) root.removeChild(root.firstChild);
         var d = document.createElement('div');
-        d.style.cssText = 'color:#f66;padding:40px;font-family:monospace';
+        d.style.cssText = 'color:#dc2626;padding:40px;font-family:monospace;text-align:center';
         d.textContent = 'Error: ' + (err && err.message ? err.message : err);
         root.appendChild(d);
       });

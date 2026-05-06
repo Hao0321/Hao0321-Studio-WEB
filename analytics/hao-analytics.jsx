@@ -19,7 +19,7 @@ async function resolveChannel(query) {
     if (hData.items && hData.items.length > 0) return hData.items[0].id;
   }
   // Fallback: search (100 units)
-  var res = await fetch(YT_BASE + '/search?part=snippet&type=channel&q=' + encodeURIComponent(q) + '&maxResults=1&key=' + YT_API_KEY);
+  var res = await fetch(YT_BASE + '/search?part=snippet&type=channel&q=' + encodeURIComponent(q) + '&maxResults=1');
   var data = await res.json();
   if (data.error) throw new Error(data.error.message || 'API error');
   return data.items && data.items.length > 0 ? data.items[0].snippet.channelId : null;
@@ -430,7 +430,7 @@ const BarChart = ({ data, color, height = 120 }) => {
 const DonutChart = ({ data, colors, size = 120 }) => {
   const entries = Object.entries(data);
   const total = entries.reduce((s, [, v]) => s + v, 0);
-  const defaultColors = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8B5CF6", "#EC4899", "#6B7280"];
+  const defaultColors = ["#3B82F6", "#10B981", "#F59E0B", "#EF4444", "#8E7CF0", "#EC4899", "#6B7280"];
   let cumAngle = -90;
 
   const segments = entries.map(([label, val], i) => {
@@ -658,8 +658,8 @@ export default function HaoAnalytics() {
   const delta30dPct = hist.length > 30 ? ((hist[hist.length - 1].value - hist[hist.length - 31].value) / hist[hist.length - 31].value) * 100 : 0;
 
   // Colors — Creators Academy palette
-  const P = "#FF2D78";  // primary pink
-  const S = "#8B5CF6";  // secondary purple
+  const P = "#4A7BF5";  // primary pink
+  const S = "#8E7CF0";  // secondary purple
   const A = "#00D4FF";  // accent cyan
 
   const tabs = [
@@ -672,15 +672,15 @@ export default function HaoAnalytics() {
   const predLast = prediction.predictions.length > 0 ? prediction.predictions[prediction.predictions.length - 1] : null;
 
   return (
-    <div style={{ minHeight: "100vh", fontFamily: "'Inter', 'Noto Sans TC', system-ui, sans-serif", background: "#FAFAFA" }}>
+    <div style={{ minHeight: "100vh", fontFamily: "'Plus Jakarta Sans', 'Noto Sans TC', system-ui, sans-serif", background: "#F4F4F7" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: #FAFAFA; background-image: radial-gradient(circle, #e0dfe4 1px, transparent 1px); background-size: 24px 24px; }
+        body { background: #F4F4F7; background-image: radial-gradient(circle, #e0dfe4 1px, transparent 1px); background-size: 24px 24px; }
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 5px; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-        input:focus { border-color: #FF2D78 !important; box-shadow: 0 0 0 3px rgba(255,45,120,0.1) !important; }
+        input:focus { border-color: #4A7BF5 !important; box-shadow: 0 0 0 3px rgba(255,45,120,0.1) !important; }
         button { transition: all 0.15s ease; }
         button:hover { transform: translateY(-1px); }
         button:active { transform: scale(0.97); }
@@ -694,14 +694,14 @@ export default function HaoAnalytics() {
         <div style={{ maxWidth: 920, margin: "0 auto" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #FF2D78, #8B5CF6)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 16 }}>H</div>
+              <div style={{ width: 36, height: 36, borderRadius: 10, background: "linear-gradient(135deg, #4A7BF5, #8E7CF0)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 900, fontSize: 16 }}>H</div>
               <div>
                 <div style={{ fontSize: 19, fontWeight: 900, color: "#1A1A2E", letterSpacing: -0.5 }}>Hao Analytics</div>
                 <div style={{ fontSize: 10, color: "#9CA3AF", fontWeight: 600, letterSpacing: 1 }}>YouTube 數據分析平台</div>
               </div>
             </div>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #FFF0F6, #F3E8FF)", border: "1px solid #F9A8D4", borderRadius: 20, padding: "5px 14px", fontSize: 10, fontWeight: 800, color: "#DB2777", letterSpacing: 0.5 }}>
-              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#DB2777" }} />
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "linear-gradient(135deg, #EBF1FF, #F0EDFF)", border: "1px solid #A8B4D6", borderRadius: 20, padding: "5px 14px", fontSize: 10, fontWeight: 800, color: "#4A7BF5", letterSpacing: 0.5 }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4A7BF5" }} />
               AI 驅動
             </div>
           </div>
@@ -712,7 +712,7 @@ export default function HaoAnalytics() {
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             />
-            <button style={{ background: "linear-gradient(135deg, #FF2D78, #8B5CF6)", border: "none", borderRadius: 12, padding: "11px 28px", color: "#fff", fontWeight: 800, fontSize: 13, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 3px 12px rgba(255,45,120,0.3)" }}
+            <button style={{ background: "linear-gradient(135deg, #4A7BF5, #8E7CF0)", border: "none", borderRadius: 12, padding: "11px 28px", color: "#fff", fontWeight: 800, fontSize: 13, cursor: "pointer", fontFamily: "inherit", boxShadow: "0 3px 12px rgba(255,45,120,0.3)" }}
               onClick={handleSearch}>
               {isSearching ? "..." : "搜尋"}
             </button>
@@ -755,7 +755,7 @@ export default function HaoAnalytics() {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 16 }}>
               <div style={{ display: "flex", gap: 16, alignItems: "center" }}>
                 {channelInfo.avatar
-                  ? <img src={channelInfo.avatar} alt="" style={{ width: 60, height: 60, borderRadius: 16, objectFit: "cover", border: "3px solid #F9A8D4" }} />
+                  ? <img src={channelInfo.avatar} alt="" style={{ width: 60, height: 60, borderRadius: 16, objectFit: "cover", border: "3px solid #A8B4D6" }} />
                   : <div style={{ width: 60, height: 60, borderRadius: 16, background: "linear-gradient(135deg, #FFE0EB, #E9D5FF)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: 900, color: P }}>{channelInfo.name?.[0] || "?"}</div>
                 }
                 <div>
@@ -796,7 +796,7 @@ export default function HaoAnalytics() {
             {tabs.map((t) => (
               <button key={t.key} onClick={() => setActiveTab(t.key)} style={{
                 flex: 1, padding: "11px 10px", border: "none", borderRadius: 11,
-                background: activeTab === t.key ? "linear-gradient(135deg, #FF2D78, #8B5CF6)" : "transparent",
+                background: activeTab === t.key ? "linear-gradient(135deg, #4A7BF5, #8E7CF0)" : "transparent",
                 color: activeTab === t.key ? "#fff" : "#6B7280",
                 fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit",
               }}>{t.label}</button>
@@ -910,7 +910,7 @@ export default function HaoAnalytics() {
                     { label: "每年", value: `$${fmt(Math.round(((platformData.estRevenue.min + platformData.estRevenue.max) / 2) * revenueMultiplier * 12))}` },
                     { label: "每部影片", value: `$${fmt(Math.round(((platformData.estRevenue.min + platformData.estRevenue.max) / 2) * revenueMultiplier / Math.max(Math.round(platformData.videos / 12), 1)))}` },
                   ].map((item, i) => (
-                    <div key={i} style={{ textAlign: "center", background: "#FAFAFA", borderRadius: 12, padding: 14, border: "1px solid #F3F4F6" }}>
+                    <div key={i} style={{ textAlign: "center", background: "#F4F4F7", borderRadius: 12, padding: 14, border: "1px solid #F3F4F6" }}>
                       <div className="ca-label">{item.label}</div>
                       <div style={{ fontSize: 20, fontWeight: 900, color: "#1A1A2E", marginTop: 2 }}>{item.value}</div>
                     </div>
@@ -978,7 +978,7 @@ export default function HaoAnalytics() {
                     { label: "近 30 天", value: `${delta30d >= 0 ? "+" : ""}${fmt(delta30d)}`, pct: fmtPct(delta30dPct), color: delta30d >= 0 ? "#10B981" : "#EF4444" },
                     { label: "日均成長", value: `+${basePrediction.dailyGrowth}`, pct: "每天", color: S },
                   ].map((item, i) => (
-                    <div key={i} style={{ textAlign: "center", background: "#FAFAFA", borderRadius: 12, padding: 16, border: "1px solid #F3F4F6" }}>
+                    <div key={i} style={{ textAlign: "center", background: "#F4F4F7", borderRadius: 12, padding: 16, border: "1px solid #F3F4F6" }}>
                       <div className="ca-label">{item.label}</div>
                       <div style={{ fontSize: 22, fontWeight: 900, color: item.color, marginTop: 4 }}>{item.value}</div>
                       <div style={{ fontSize: 11, color: item.color, fontWeight: 600, marginTop: 2 }}>{item.pct}</div>

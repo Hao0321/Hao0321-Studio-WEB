@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tools — 工作室自製工具 | Hao0321 Studio</title>
+  <meta name="description" content="Hao0321 Studio 自製的網頁工具：YouTube 頻道數據分析、影視/遊戲製作流程圖。免費使用。" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#F4F4F7" />
+  <link rel="canonical" href="https://hao0321.com/tools/" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Tools — Hao0321 Studio" />
+  <meta property="og:description" content="工作室自製的網頁工具：YouTube 頻道分析、製作流程圖。" />
+  <meta property="og:url" content="https://hao0321.com/tools/" />
+  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:locale" content="zh_TW" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--ease:cubic-bezier(0.22,1,0.36,1);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,-apple-system,sans-serif;--font-mono:'JetBrains Mono',monospace}
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth;font-size:16px}
+    body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%),radial-gradient(ellipse 760px 600px at 50% 100%,rgba(200,220,255,0.22),transparent 60%);background-attachment:fixed}
+    a{color:inherit;text-decoration:none;transition:all .2s var(--ease)}
+    .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);-webkit-backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text);white-space:nowrap}
+    .nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}
+    .nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill);transition:all .2s var(--ease)}
+    .nav-back:hover{color:var(--text);background:rgba(15,15,30,0.04)}
+
+    main{max-width:880px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}
+
+    .hero{margin-bottom:56px}
+    .hero-tag{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:20px}
+    h1{font-family:var(--font-sans);font-size:clamp(2.2rem,5.4vw,3.4rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.1;letter-spacing:-0.025em}
+    h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .lede{font-size:1.06rem;color:var(--text-2);max-width:640px;line-height:1.75}
+
+    .tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+    .tool-card{
+      display:block;background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:32px;
+      box-shadow:var(--shadow-sm);transition:all .25s var(--ease);
+      position:relative;overflow:hidden;
+    }
+    .tool-card::before{
+      content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+      background:var(--grad-accent);opacity:0;transition:opacity .25s var(--ease);
+    }
+    .tool-card:hover{transform:translateY(-3px);border-color:rgba(74,123,245,0.25);box-shadow:var(--shadow-md)}
+    .tool-card:hover::before{opacity:1}
+
+    .tool-icon{width:54px;height:54px;border-radius:14px;background:var(--grad-accent);color:#fff;display:grid;place-items:center;margin-bottom:18px;box-shadow:0 4px 12px rgba(74,123,245,0.25)}
+    .tool-tag{display:inline-block;font-family:var(--font-mono);font-size:0.66rem;font-weight:700;letter-spacing:0.14em;color:var(--accent-blue);text-transform:uppercase;padding:3px 10px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:10px}
+    .tool-title{font-family:var(--font-sans);font-weight:700;font-size:1.3rem;color:var(--text);margin-bottom:8px;letter-spacing:-0.01em}
+    .tool-desc{font-size:0.95rem;color:var(--text-2);line-height:1.7;margin-bottom:18px}
+    .tool-features{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+    .tool-feature{font-family:var(--font-mono);font-size:0.68rem;color:var(--text-3);background:var(--bg-soft);border:1px solid var(--border);padding:3px 10px;border-radius:var(--radius-pill);font-weight:500}
+    .tool-cta{display:inline-flex;align-items:center;gap:6px;color:var(--accent-blue);font-weight:600;font-size:0.92rem}
+    .tool-cta::after{content:'→';transition:transform .2s var(--ease)}
+    .tool-card:hover .tool-cta::after{transform:translateX(4px)}
+
+    footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3);position:relative;z-index:1}
+    footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+    footer a{color:var(--text-3);font-weight:500}
+    footer a:hover{color:var(--accent-blue)}
+
+    @media (max-width:640px){
+      main{padding:120px 16px 80px}
+      .tool-card{padding:24px;border-radius:var(--radius-md)}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a>
+    <a href="/" class="nav-back">← 回首頁</a>
+  </nav>
+
+  <main>
+    <div class="hero">
+      <div class="hero-tag">Tools · 工作室自製工具</div>
+      <h1>實用<em>工具箱</em></h1>
+      <p class="lede">工作室實際在用的網頁工具，全部免費。從 YouTube 頻道數據分析到影視/遊戲製作流程圖，每個都是為了解決真實工作問題而做。</p>
+    </div>
+
+    <div class="tools">
+      <a href="/analytics/" class="tool-card">
+        <div class="tool-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"/>
+            <path d="M7 14l4-4 4 4 5-5"/>
+          </svg>
+        </div>
+        <div class="tool-tag">YouTube · Analytics</div>
+        <div class="tool-title">YouTube Blade</div>
+        <div class="tool-desc">輸入 YouTube 頻道網址或 @handle，即時分析訂閱數、觀看數、互動率、最近影片表現、頻道評級。</div>
+        <div class="tool-features">
+          <span class="tool-feature">即時數據</span>
+          <span class="tool-feature">互動率分析</span>
+          <span class="tool-feature">頻道評級</span>
+        </div>
+        <span class="tool-cta">開啟工具</span>
+      </a>
+
+      <a href="/pipeline/" class="tool-card">
+        <div class="tool-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+            <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+            <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+            <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+            <path d="M10 6.5h4M6.5 10v4M17.5 10v4M10 17.5h4"/>
+          </svg>
+        </div>
+        <div class="tool-tag">VFX · Game · Indie</div>
+        <div class="tool-title">Production Pipeline</div>
+        <div class="tool-desc">影視特效 / 遊戲開發 / 獨立製作的完整流程圖。每階段附任務清單、學習資源連結、可勾選追蹤進度。</div>
+        <div class="tool-features">
+          <span class="tool-feature">VFX</span>
+          <span class="tool-feature">遊戲開發</span>
+          <span class="tool-feature">獨立製作</span>
+        </div>
+        <span class="tool-cta">開啟工具</span>
+      </a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="links">
+      <a href="/">首頁</a>
+      <a href="/about.html">關於</a>
+      <a href="/blog/">部落格</a>
+      <a href="/tools/">工具</a>
+      <a href="/resources/">資源</a>
+      <a href="/privacy.html">隱私權</a>
+      <a href="/terms.html">使用條款</a>
+    </div>
+    <div>© 2026 Hao0321 Studio. All rights reserved.</div>
+  </footer>
+</body>
+</html>

@@ -323,7 +323,7 @@ function Dot({ color, active, checked }) {
         boxShadow: `0 0 8px ${color}44`,
       }}>
         <svg width="6" height="6" viewBox="0 0 10 10" fill="none">
-          <path d="M2 5.5L4 7.5L8 3" stroke="#0c0c10" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M2 5.5L4 7.5L8 3" stroke="#F4F4F7" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
     );
@@ -332,7 +332,7 @@ function Dot({ color, active, checked }) {
     <div style={{
       width: 10, height: 10, borderRadius: "50%",
       background: active ? color : "transparent",
-      border: `2px solid ${active ? color : "#2a2a30"}`,
+      border: `2px solid ${active ? color : "#D1D5DB"}`,
       transition: "all 0.3s", flexShrink: 0,
       boxShadow: active ? `0 0 8px ${color}44` : "none",
     }} />
@@ -343,7 +343,7 @@ function VertLine({ color, active }) {
   return (
     <div style={{
       width: 2, height: 20, marginLeft: 4,
-      background: active ? `${color}33` : "#18181c",
+      background: active ? `${color}33` : "#E5E7EC",
       transition: "background 0.3s",
     }} />
   );
@@ -366,11 +366,11 @@ function Badge({ text, color, outline }) {
 function TimeBar({ phases, selIdx }) {
   return (
     <div style={{
-      background: "#111114", borderRadius: 10, padding: "14px 16px",
-      marginBottom: 20, border: "1px solid #1a1a1f",
+      background: "#FFFFFF", borderRadius: 10, padding: "14px 16px",
+      marginBottom: 20, border: "1px solid rgba(15,15,30,0.06)",
     }}>
       <div style={{
-        fontSize: 10, fontWeight: 600, color: "#555",
+        fontSize: 10, fontWeight: 600, color: "#4A4A5E",
         letterSpacing: "0.1em", textTransform: "uppercase",
         fontFamily: "'JetBrains Mono', monospace",
         marginBottom: 10,
@@ -389,10 +389,10 @@ function TimeBar({ phases, selIdx }) {
       </div>
       <div style={{
         display: "flex", justifyContent: "space-between",
-        marginTop: 8, fontSize: 10, color: "#555",
+        marginTop: 8, fontSize: 10, color: "#4A4A5E",
       }}>
         <span>{phases[selIdx]?.title}: <span style={{ color: phases[selIdx]?.color }}>{phases[selIdx]?.pct}%</span></span>
-        <span style={{ color: "#666" }}>{phases[selIdx]?.time}</span>
+        <span style={{ color: "#8C8CA0" }}>{phases[selIdx]?.time}</span>
       </div>
     </div>
   );
@@ -405,7 +405,7 @@ function ParallelHint({ parallel, color }) {
       display: "flex", alignItems: "center", gap: 6,
       padding: "8px 12px", borderRadius: 8,
       background: `${color}08`, border: `1px solid ${color}15`,
-      marginBottom: 16, fontSize: 11, color: "#777",
+      marginBottom: 16, fontSize: 11, color: "#4A4A5E",
     }}>
       <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style={{ flexShrink: 0 }}>
         <path d="M3 4h4v8H3M9 4h4v8H9" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -421,7 +421,7 @@ function ProgressRing({ total, done, color }) {
   return (
     <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
       <svg width="44" height="44" viewBox="0 0 44 44" style={{ transform: "rotate(-90deg)" }}>
-        <circle cx="22" cy="22" r={r} fill="none" stroke="#1a1a1f" strokeWidth="3" />
+        <circle cx="22" cy="22" r={r} fill="none" stroke="#E5E7EC" strokeWidth="3" />
         <circle cx="22" cy="22" r={r} fill="none" stroke={color} strokeWidth="3"
           strokeDasharray={c} strokeDashoffset={c * (1 - pct)}
           strokeLinecap="round" style={{ transition: "stroke-dashoffset 0.4s ease" }} />
@@ -429,7 +429,7 @@ function ProgressRing({ total, done, color }) {
       <div style={{
         position: "absolute", inset: 0,
         display: "flex", alignItems: "center", justifyContent: "center",
-        fontSize: 10, fontWeight: 700, color: pct === 1 ? color : "#666",
+        fontSize: 10, fontWeight: 700, color: pct === 1 ? color : "#8C8CA0",
         fontFamily: "'JetBrains Mono', monospace",
       }}>{done}/{total}</div>
     </div>
@@ -474,7 +474,7 @@ export default function App() {
 
   return (
     <div style={{
-      minHeight: "100vh", background: "#0c0c10", color: "#d0d0d0",
+      minHeight: "100vh", background: "#F4F4F7", color: "#0F0F1E",
       fontFamily: "'DM Sans', 'Noto Sans TC', -apple-system, sans-serif",
     }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -487,20 +487,20 @@ export default function App() {
           <div>
             <div style={{
               fontSize: 10, fontWeight: 500, letterSpacing: "0.14em",
-              color: "#444", textTransform: "uppercase",
+              color: "#8C8CA0", textTransform: "uppercase",
               fontFamily: "'JetBrains Mono', monospace", marginBottom: 6,
             }}>HAO0321 Studio</div>
             <h1 style={{
               margin: 0, fontSize: 22, fontWeight: 700,
-              color: "#eee", letterSpacing: "-0.02em",
+              color: "#0F0F1E", letterSpacing: "-0.02em",
             }}>Production Pipeline</h1>
           </div>
           {/* Checklist toggle */}
           <button onClick={() => setCheckMode(!checkMode)} style={{
             padding: "7px 12px", borderRadius: 8,
             border: checkMode ? `1.5px solid #4DB89A55` : "1.5px solid #222",
-            background: checkMode ? "#4DB89A0d" : "#111114",
-            color: checkMode ? "#4DB89A" : "#555",
+            background: checkMode ? "#4DB89A0d" : "#FFFFFF",
+            color: checkMode ? "#4DB89A" : "#4A4A5E",
             fontSize: 11, fontWeight: 600, cursor: "pointer",
             fontFamily: "inherit", transition: "all 0.25s",
             display: "flex", alignItems: "center", gap: 6, marginTop: 4,
@@ -516,7 +516,7 @@ export default function App() {
         {/* Tabs */}
         <div style={{
           display: "flex", gap: 2, marginTop: 20,
-          background: "#131316", borderRadius: 10, padding: 3,
+          background: "#FBFBFD", borderRadius: 10, padding: 3,
         }}>
           {tabs.map(t => (
             <button key={t.key} onClick={() => setTab(t.key)} style={{
@@ -524,8 +524,8 @@ export default function App() {
               borderRadius: 8, fontSize: 12, fontWeight: 600,
               cursor: "pointer", transition: "all 0.25s",
               fontFamily: "inherit",
-              background: tab === t.key ? "#1c1c22" : "transparent",
-              color: tab === t.key ? "#fff" : "#555",
+              background: tab === t.key ? "#FFFFFF" : "transparent",
+              color: tab === t.key ? "#FFFFFF" : "#4A4A5E",
             }}>{t.label}</button>
           ))}
         </div>
@@ -537,15 +537,15 @@ export default function App() {
           <div style={{
             display: "flex", alignItems: "center", gap: 14,
             padding: "12px 16px", borderRadius: 10,
-            background: "#111114", border: "1px solid #1a1a1f",
+            background: "#FFFFFF", border: "1px solid rgba(15,15,30,0.06)",
             marginBottom: 16,
           }}>
             <ProgressRing total={totalTasks} done={totalChecked} color={phase.color} />
             <div>
-              <div style={{ fontSize: 13, fontWeight: 600, color: "#ccc" }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "#0F0F1E" }}>
                 Overall Progress
               </div>
-              <div style={{ fontSize: 11, color: "#555", marginTop: 2 }}>
+              <div style={{ fontSize: 11, color: "#4A4A5E", marginTop: 2 }}>
                 {totalChecked} of {totalTasks} tasks completed
               </div>
             </div>
@@ -573,8 +573,8 @@ export default function App() {
               <button key={i} onClick={() => setSel(i)} style={{
                 flexShrink: 0, padding: "7px 14px", borderRadius: 8,
                 border: sel === i ? `1.5px solid ${p.color}55` : "1.5px solid #1a1a1f",
-                background: sel === i ? `${p.color}0d` : allDone ? `${p.color}08` : "#111114",
-                color: sel === i ? p.color : allDone ? `${p.color}88` : "#555",
+                background: sel === i ? `${p.color}0d` : allDone ? `${p.color}08` : "#FFFFFF",
+                color: sel === i ? p.color : allDone ? `${p.color}88` : "#4A4A5E",
                 fontSize: 12, fontWeight: 600, cursor: "pointer",
                 transition: "all 0.25s", fontFamily: "inherit", whiteSpace: "nowrap",
                 display: "flex", alignItems: "center", gap: 7,
@@ -589,7 +589,7 @@ export default function App() {
                 {checkMode && done > 0 && (
                   <span style={{
                     fontSize: 9, fontFamily: "'JetBrains Mono', monospace",
-                    color: allDone ? p.color : "#555",
+                    color: allDone ? p.color : "#4A4A5E",
                   }}>{done}/{p.tasks.length}</span>
                 )}
               </button>
@@ -602,7 +602,7 @@ export default function App() {
           {data.map((p, i) => (
             <div key={i} style={{
               flex: 1, height: 2, borderRadius: 1,
-              background: i <= sel ? p.color : "#18181c",
+              background: i <= sel ? p.color : "#E5E7EC",
               opacity: i === sel ? 1 : i < sel ? 0.3 : 0.1,
               transition: "all 0.4s",
             }} />
@@ -620,16 +620,16 @@ export default function App() {
               fontFamily: "'JetBrains Mono', monospace",
               color: phase.color, opacity: 0.5,
             }}>{String(safeSel + 1).padStart(2, "0")}/{String(data.length).padStart(2, "0")}</span>
-            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#eee" }}>
+            <h2 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: "#0F0F1E" }}>
               {phase.title}
             </h2>
             {phase.core && <Badge text="Core" color="#4DB89A" />}
             {phase.alert && <Badge text="Alert" color="#C45050" />}
             {phase.time && phase.time !== "—" && (
-              <Badge text={phase.time} color="#888" outline />
+              <Badge text={phase.time} color="#8C8CA0" outline />
             )}
           </div>
-          <p style={{ margin: "0 0 12px", fontSize: 13, color: "#555" }}>{phase.sub}</p>
+          <p style={{ margin: "0 0 12px", fontSize: 13, color: "#4A4A5E" }}>{phase.sub}</p>
         </div>
 
         {/* Parallel hint */}
@@ -656,7 +656,7 @@ export default function App() {
                     onClick={() => setExpandedTask(isOpen ? null : i)}
                     style={{
                       padding: "10px 14px", borderRadius: 10,
-                      background: isOpen ? "#14141a" : "transparent",
+                      background: isOpen ? "#FBFBFD" : "transparent",
                       border: isOpen ? `1px solid ${phase.color}1a` : "1px solid transparent",
                       cursor: "pointer", transition: "all 0.2s",
                     }}
@@ -667,7 +667,7 @@ export default function App() {
                     }}>
                       <span style={{
                         fontSize: 14, fontWeight: 600,
-                        color: isChecked && checkMode ? `${phase.color}99` : isOpen ? "#e8e8e8" : "#999",
+                        color: isChecked && checkMode ? `${phase.color}99` : isOpen ? "#0F0F1E" : "#8C8CA0",
                         transition: "color 0.2s",
                         textDecoration: isChecked && checkMode ? "line-through" : "none",
                         textDecorationColor: `${phase.color}44`,
@@ -694,7 +694,7 @@ export default function App() {
                           </button>
                         )}
                         <span style={{
-                          fontSize: 14, color: "#444",
+                          fontSize: 14, color: "#8C8CA0",
                           transform: isOpen ? "rotate(45deg)" : "rotate(0deg)",
                           transition: "transform 0.2s",
                           lineHeight: 1, userSelect: "none",
@@ -708,7 +708,7 @@ export default function App() {
                     }}>
                       <p style={{
                         margin: "8px 0 4px", fontSize: 12,
-                        color: "#777", lineHeight: 1.8,
+                        color: "#4A4A5E", lineHeight: 1.8,
                       }}>{t.detail}</p>
                       {t.res && (
                         <a href={t.res} target="_blank" rel="noopener noreferrer" style={{
@@ -740,8 +740,8 @@ export default function App() {
             disabled={sel === 0}
             style={{
               flex: 1, padding: "12px 0", borderRadius: 10,
-              border: "1px solid #1c1c22", background: "#111114",
-              color: sel === 0 ? "#2a2a30" : "#888",
+              border: "1px solid rgba(15,15,30,0.06)", background: "#FFFFFF",
+              color: sel === 0 ? "#D1D5DB" : "#8C8CA0",
               fontSize: 13, fontWeight: 600,
               cursor: sel === 0 ? "default" : "pointer",
               fontFamily: "inherit", transition: "all 0.2s",
@@ -753,7 +753,7 @@ export default function App() {
               flex: 1, padding: "12px 0", borderRadius: 10,
               border: `1px solid ${phase.color}30`,
               background: `${phase.color}0d`,
-              color: sel === data.length - 1 ? "#2a2a30" : phase.color,
+              color: sel === data.length - 1 ? "#D1D5DB" : phase.color,
               fontSize: 13, fontWeight: 600,
               cursor: sel === data.length - 1 ? "default" : "pointer",
               fontFamily: "inherit", transition: "all 0.2s",
@@ -764,7 +764,7 @@ export default function App() {
         <div style={{
           marginTop: 40, paddingTop: 20,
           borderTop: "1px solid #18181c",
-          fontSize: 10, color: "#333",
+          fontSize: 10, color: "#0F0F1E",
           fontFamily: "'JetBrains Mono', monospace",
           textAlign: "center", letterSpacing: "0.06em",
         }}>
