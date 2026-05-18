@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cursor vs Claude Code 完整比較 — 2026 年 AI 程式編輯器實測 — Hao0321 Studio</title>
+<meta name="description" content="2026 年最熱的兩款 AI 程式工具實測對比 — 補全速度、Agent 模式、價格、上下文長度、整合度、適用情境。" />
+<meta name="keywords" content="Cursor 教學, Claude Code, AI 程式工具, AI 編輯器比較, Cursor vs Copilot, Claude AI, 2026 AI 工具" />
+<meta name="robots" content="index, follow" /><meta name="theme-color" content="#F4F4F7" />
+<link rel="canonical" href="https://hao0321.com/blog/cursor-vs-claude-code.html" /><link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta property="og:type" content="article" /><meta property="og:title" content="Cursor vs Claude Code 完整比較 — 2026 實測" /><meta property="og:description" content="兩款都用過半年的真實對比與選擇邏輯。" /><meta property="og:url" content="https://hao0321.com/blog/cursor-vs-claude-code.html" /><meta property="og:image" content="https://hao0321.com/og-image.jpg" /><meta property="og:locale" content="zh_TW" />
+<meta property="article:published_time" content="2026-05-18T00:00:00+08:00" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Cursor vs Claude Code 完整比較 — 2026 年 AI 程式編輯器實測","description":"2026 年最熱的兩款 AI 程式工具實測對比 — 補全速度、Agent 模式、價格、上下文長度、整合度、適用情境。","author":{"@type":"Person","name":"Hao0321 Studio","url":"https://hao0321.com/about"},"datePublished":"2026-05-18","dateModified":"2026-05-18","image":"https://hao0321.com/og-image.jpg","publisher":{"@type":"Organization","name":"Hao0321 Studio","logo":{"@type":"ImageObject","url":"https://hao0321.com/favicon.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"https://hao0321.com/blog/cursor-vs-claude-code.html"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>:root{--bg:#F4F4F7;--bg-soft:#FBFBFD;--surface:#FFFFFF;--text:#0F0F1E;--text-2:#4A4A5E;--text-3:#8C8CA0;--border:rgba(15,15,30,0.06);--accent-blue:#4A7BF5;--accent-violet:#8E7CF0;--grad-accent:linear-gradient(135deg,#4A7BF5 0%,#8E7CF0 100%);--radius-sm:12px;--radius-md:20px;--radius-lg:28px;--radius-pill:9999px;--shadow-sm:0 1px 2px rgba(15,15,30,0.03),0 4px 12px rgba(15,15,30,0.04);--shadow-md:0 4px 12px rgba(15,15,30,0.05),0 12px 32px rgba(15,15,30,0.06);--shadow-nav:0 2px 8px rgba(15,15,30,0.04),0 8px 24px rgba(15,15,30,0.06);--font-sans:'Plus Jakarta Sans','Noto Sans TC',system-ui,sans-serif;--font-mono:'JetBrains Mono',monospace}*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth;font-size:16px}body{background:var(--bg);color:var(--text);font-family:var(--font-sans);line-height:1.7;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(ellipse 900px 650px at 12% 3%,rgba(195,215,255,0.40),transparent 60%),radial-gradient(ellipse 700px 560px at 88% 28%,rgba(180,190,240,0.22),transparent 60%);background-attachment:fixed}a{color:var(--accent-blue);text-decoration:none}a:hover{color:var(--accent-violet)}.nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:min(calc(100% - 32px),720px);z-index:100;padding:8px 8px 8px 22px;background:rgba(255,255,255,0.78);backdrop-filter:blur(20px) saturate(180%);border:1px solid var(--border);border-radius:var(--radius-pill);box-shadow:var(--shadow-nav);display:flex;align-items:center;justify-content:space-between;gap:16px}.nav-logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px;color:var(--text)}.nav-logo-mark{width:26px;height:26px;border-radius:7px;background:var(--grad-accent);color:#fff;font-weight:800;font-size:13px;display:grid;place-items:center;box-shadow:0 2px 6px rgba(74,123,245,0.3)}.nav-back{font-size:13px;font-weight:500;color:var(--text-2);padding:8px 16px;border-radius:var(--radius-pill)}main{max-width:720px;margin:0 auto;padding:140px 24px 100px;position:relative;z-index:1}.breadcrumb{font-family:var(--font-mono);font-size:0.74rem;color:var(--text-3);margin-bottom:18px}.breadcrumb a{color:var(--text-3)}.cat{display:inline-flex;gap:8px;font-size:0.72rem;font-weight:600;letter-spacing:0.18em;color:var(--accent-blue);text-transform:uppercase;padding:6px 14px;background:rgba(74,123,245,0.08);border:1px solid rgba(74,123,245,0.16);border-radius:var(--radius-pill);margin-bottom:22px}h1{font-size:clamp(1.9rem,4.6vw,2.8rem);font-weight:800;color:var(--text);margin-bottom:18px;line-height:1.18;letter-spacing:-0.02em}h1 em{font-style:normal;background:var(--grad-accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.meta{display:flex;gap:20px;font-family:var(--font-mono);font-size:0.76rem;color:var(--text-3);margin-bottom:42px;padding-bottom:24px;border-bottom:1px solid var(--border);flex-wrap:wrap}article{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 44px;box-shadow:var(--shadow-sm)}h2{font-size:1.45rem;font-weight:700;color:var(--text);margin:44px 0 16px;letter-spacing:-0.01em}h2:first-child{margin-top:0}h3{font-size:1.08rem;font-weight:700;color:var(--text);margin:28px 0 10px}p{font-size:1rem;color:var(--text-2);margin-bottom:18px;line-height:1.78}strong{color:var(--text);font-weight:600}ul,ol{padding-left:22px;margin-bottom:20px}li{margin-bottom:8px;font-size:0.98rem;color:var(--text-2);line-height:1.7}li strong{color:var(--text)}code{font-family:var(--font-mono);font-size:0.86rem;color:var(--accent-violet);background:rgba(142,124,240,0.08);border:1px solid rgba(142,124,240,0.14);padding:1px 7px;border-radius:6px}pre{background:#0F0F1E;border-radius:var(--radius-sm);padding:20px 22px;margin:22px 0;overflow-x:auto;font-family:var(--font-mono);font-size:0.84rem;line-height:1.7;color:#E8E8F0}pre code{background:none;border:none;padding:0;color:inherit}table{width:100%;border-collapse:collapse;margin:22px 0;font-size:0.92rem;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden}th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--border)}th{font-weight:700;color:var(--text);background:rgba(74,123,245,0.05);font-size:0.86rem}td{color:var(--text-2)}tr:last-child td{border-bottom:none}.tldr{background:linear-gradient(135deg,rgba(74,123,245,0.06),rgba(142,124,240,0.06));border:1px solid rgba(74,123,245,0.15);border-radius:var(--radius-md);padding:24px 28px;margin:32px 0}.tldr h3{margin-top:0;color:var(--accent-blue);font-size:0.78rem;letter-spacing:0.16em;text-transform:uppercase}.article-footer{margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}.article-footer h3{color:var(--text-3);font-size:0.78rem;font-weight:700;margin-bottom:14px;letter-spacing:0.16em;text-transform:uppercase}.related{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}.related a{display:block;background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 22px;font-size:0.9rem;color:var(--text);font-weight:500}.related a:hover{border-color:var(--accent-blue);box-shadow:var(--shadow-md)}.related-cat{font-family:var(--font-mono);font-size:0.66rem;color:var(--accent-blue);letter-spacing:0.14em;display:block;margin-bottom:6px;font-weight:600;text-transform:uppercase}footer{padding:48px 24px;text-align:center;font-size:0.84rem;color:var(--text-3)}footer .links{margin-bottom:14px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap}footer a{color:var(--text-3);font-weight:500}@media (max-width:640px){main{padding:120px 16px 80px}article{padding:32px 24px;border-radius:var(--radius-md)}h1{font-size:1.7rem}h2{font-size:1.25rem}}</style></head>
+<body><nav class="nav"><a href="/" class="nav-logo"><span class="nav-logo-mark">H</span>Hao0321 Studio</a><a href="/blog/" class="nav-back">← 部落格</a></nav>
+<main><div class="breadcrumb"><a href="/">首頁</a> / <a href="/blog/">部落格</a> / Cursor vs Claude Code</div>
+<span class="cat">AI · Tooling</span>
+<h1><em>Cursor vs Claude Code</em> 完整比較 — 2026 實測</h1>
+<div class="meta"><span>2026 年 5 月 18 日</span><span>約 12 分鐘閱讀</span><span>作者：Hao0321 Studio</span></div>
+<article>
+
+<div class="tldr">
+<h3>TL;DR — 30 秒摘要</h3>
+<ul>
+<li><strong>Cursor</strong>：IDE 內補全速度快、UI 順手、適合「邊寫邊改」的開發風格</li>
+<li><strong>Claude Code (CLI)</strong>：Agent 能力強、能自主跑指令改檔、適合「丟一個任務交給 AI」</li>
+<li><strong>我的選擇</strong>：兩個都用。日常寫程式用 Cursor，重構/大型任務用 Claude Code</li>
+<li><strong>價格</strong>：兩者都 $20/月起，Claude Code 額度比較大方</li>
+</ul>
+</div>
+
+<p>2026 年 AI 程式工具市場已經洗牌完畢。主流選擇從早期的 GitHub Copilot 演進到現在的 Cursor 跟 Claude Code。我兩款都用了半年以上，這篇是實測對比 — 不是廠商業配、不是 listicle 抄抄，是真實使用者的選擇邏輯。</p>
+
+<h2>本質差異：IDE vs CLI Agent</h2>
+
+<p>很多人問「哪個比較好」前根本沒搞清楚兩者的本質定位：</p>
+
+<table>
+<tr><th>面向</th><th>Cursor</th><th>Claude Code</th></tr>
+<tr><td>形式</td><td>VS Code fork 的 IDE</td><td>命令列工具（CLI）</td></tr>
+<tr><td>主要用法</td><td>編輯器內 tab 補全 / Cmd+K</td><td>對話式，下指令給 agent 跑</td></tr>
+<tr><td>自主程度</td><td>需要人類點 accept</td><td>可自主跑 bash、改檔、debug</td></tr>
+<tr><td>適合任務</td><td>寫單個函式、refactor 區塊</td><td>實作整個 feature、跨檔案改動</td></tr>
+<tr><td>學習曲線</td><td>10 分鐘上手</td><td>1-2 小時熟悉</td></tr>
+</table>
+
+<h2>面向 1：補全速度與品質</h2>
+
+<h3>Cursor</h3>
+<p>Cursor 的 Tab 補全是這款工具的招牌。打到一半，按 Tab 就把完整邏輯補上。實測平均回應時間 200-400ms，幾乎感覺不到延遲。模型是自己 fine-tune 過的，對 React、TypeScript、Python 特別敏感。</p>
+
+<p>Cmd+K 開啟「行內編輯」 — 選一段程式碼，下 prompt「把這段改成 async」、「加 error handling」，10 秒內完成。比 ChatGPT 來回複製貼上快 10 倍。</p>
+
+<h3>Claude Code</h3>
+<p>Claude Code 沒有「補全」概念。它是 agent — 你不是「打字邊讓 AI 猜下一個 token」，而是「跟 AI 對話描述需求，它自己去看檔案、改檔、跑測試」。</p>
+
+<p>速度上 Claude Code 慢一些（每個 turn 5-30 秒），但完成的任務複雜度比 Cursor 高一個量級。例如「重構整個 auth 系統用 JWT」這種跨多檔的任務 Cursor 做不到，Claude Code 可以。</p>
+
+<h2>面向 2：Agent 能力</h2>
+
+<p>2025-2026 年是「Agent 元年」。AI 不只是補全工具，而是能自主執行的協作者。這方面 Claude Code 完勝。</p>
+
+<h3>Cursor Agent 模式</h3>
+<p>Cursor 在 2025 年加入 Agent 模式，但實際使用上仍有限制：</p>
+<ul>
+<li>能跨檔案改動，但需要人類 confirm 每一步</li>
+<li>無法自主跑長時間任務（如「跑測試直到全綠」）</li>
+<li>對 bash 指令支援有限</li>
+</ul>
+
+<h3>Claude Code 的 Agent</h3>
+<p>Claude Code 從設計起就是 agent：</p>
+<ul>
+<li>可以自主跑 <code>npm install</code>、<code>npm test</code>、<code>git diff</code></li>
+<li>可以 loop until done（跑測試→失敗→修→再跑）</li>
+<li>可以使用 MCP（Model Context Protocol）連外部工具，如 Cloudflare、Figma、Browser</li>
+<li>實際幫我寫了 14 款瀏覽器小遊戲，平均一款 2-3 天完成</li>
+</ul>
+
+<h2>面向 3：價格與額度</h2>
+
+<table>
+<tr><th>方案</th><th>Cursor</th><th>Claude Code</th></tr>
+<tr><td>免費版</td><td>2 週試用 + 限量補全</td><td>無（需 Claude API 或 Pro 訂閱）</td></tr>
+<tr><td>個人方案</td><td>$20/月（Pro）</td><td>$20/月（Pro，含 5x 額度）</td></tr>
+<tr><td>進階方案</td><td>$40/月（Ultra）</td><td>$100/月（Max 20x）</td></tr>
+<tr><td>用量限制</td><td>每月 ~500 次 fast requests</td><td>5h-windows，limit by token</td></tr>
+<tr><td>超量怎麼算</td><td>降速使用</td><td>等下個 5h window</td></tr>
+</table>
+
+<p>實測下來：</p>
+<ul>
+<li><strong>輕度使用</strong>（每天 1-2h 寫 code）：Cursor Pro 跟 Claude Code Pro 都夠</li>
+<li><strong>中度使用</strong>（每天 4-6h）：Cursor Pro 會撞到 fast request 上限；Claude Code 也會撞到 5h window 但通常還有閒置時間</li>
+<li><strong>重度使用</strong>（每天 8h+）：需要 Cursor Ultra 或 Claude Code Max</li>
+</ul>
+
+<h2>面向 4：上下文長度</h2>
+<p>上下文是 AI 對你 codebase 的「理解範圍」。</p>
+
+<table>
+<tr><th>工具</th><th>單次上下文</th></tr>
+<tr><td>Cursor (Sonnet 4.7)</td><td>200K tokens</td></tr>
+<tr><td>Claude Code (Sonnet 4.7)</td><td>200K tokens（可 compact 後延長）</td></tr>
+<tr><td>Cursor (GPT-5)</td><td>128K tokens</td></tr>
+</table>
+
+<p>差異：Cursor 把整個專案做 RAG（檢索增強），Claude Code 是「主動讀檔案」。前者快但會遺漏細節，後者慢但精準。對大型 codebase（&gt; 10 萬行）Claude Code 表現比較穩。</p>
+
+<h2>面向 5：整合度</h2>
+
+<h3>Cursor</h3>
+<ul>
+<li>VS Code 全套 extension 都能用</li>
+<li>Git GUI、debugger、terminal 都在編輯器內</li>
+<li>支援 Vim / Emacs keybinding</li>
+<li>多 cursor 編輯、split panel — 標準 IDE 體驗</li>
+</ul>
+
+<h3>Claude Code</h3>
+<ul>
+<li>純 CLI，跑在 terminal 裡</li>
+<li>但有 Plugin / Skill 系統可擴展</li>
+<li>MCP 可以接 Figma、Slack、Cloudflare 等外部服務</li>
+<li>能用任何編輯器同步看檔（VS Code、Cursor、Neovim）</li>
+</ul>
+
+<h2>面向 6：適用情境</h2>
+
+<h3>用 Cursor 比較好的場景</h3>
+<ul>
+<li><strong>UI 開發</strong>：需要邊調 CSS 邊看畫面</li>
+<li><strong>快速 prototype</strong>：一邊想一邊寫，補全跟上節奏</li>
+<li><strong>新手學 React/TypeScript</strong>：補全示範正確語法</li>
+<li><strong>debug 單一函式</strong>：選範圍 Cmd+K 立刻改</li>
+</ul>
+
+<h3>用 Claude Code 比較好的場景</h3>
+<ul>
+<li><strong>大型重構</strong>：「把所有 callback 改成 async/await」</li>
+<li><strong>跨檔案 feature</strong>：「新增使用者登入流程」（要動 auth, routes, UI, db）</li>
+<li><strong>測試 driven dev</strong>：「跑測試直到全綠」</li>
+<li><strong>不熟的 codebase</strong>：「先讀過所有檔案，告訴我這專案在做什麼」</li>
+<li><strong>非互動式任務</strong>：跑批次處理、產生大量內容</li>
+</ul>
+
+<h2>實際工作流：兩個都用</h2>
+
+<p>我目前的工作流：</p>
+
+<ol>
+<li><strong>日常開發</strong>：Cursor 開著，邊寫邊用 Tab + Cmd+K</li>
+<li><strong>遇到大任務</strong>：開 terminal，跑 <code>claude</code>，下指令讓它跑</li>
+<li><strong>等 Claude 跑的時候</strong>：繼續用 Cursor 改別的部分</li>
+<li><strong>Code review</strong>：用 Cursor 看 diff，請 Claude Code 做 PR review</li>
+</ol>
+
+<p>兩個工具一起用月成本 $40，但產出大概是 1.5 個工程師。划算。</p>
+
+<h2>哪個適合你</h2>
+
+<table>
+<tr><th>你的狀況</th><th>建議</th></tr>
+<tr><td>第一次用 AI 寫程式</td><td>Cursor 先（學習曲線低）</td></tr>
+<tr><td>用過 Copilot 想升級</td><td>Cursor（無痛遷移）</td></tr>
+<tr><td>常寫整套 feature</td><td>Claude Code</td></tr>
+<tr><td>會用 terminal 不怕</td><td>Claude Code（功能上限高）</td></tr>
+<tr><td>主要寫前端 UI</td><td>Cursor</td></tr>
+<tr><td>主要寫後端、CLI、tooling</td><td>Claude Code</td></tr>
+<tr><td>預算只有 $20</td><td>Cursor Pro（CP 值高）</td></tr>
+<tr><td>預算 $40+ / 月</td><td>兩個都用</td></tr>
+</table>
+
+<h2>不推薦這兩個的情境</h2>
+<ul>
+<li><strong>大企業 enterprise codebase</strong>：考慮 GitHub Copilot Business（資安、合規面比較成熟）</li>
+<li><strong>純資料分析</strong>：Jupyter + Claude API 比較直接</li>
+<li><strong>嚴重斷網環境</strong>：兩款都要連雲端，無法 offline</li>
+</ul>
+
+<h2>2026 年趨勢觀察</h2>
+<p>未來 12 個月 AI 程式工具的方向：</p>
+<ol>
+<li><strong>Agent 化</strong>：Cursor 會繼續強化 Agent，Claude Code 會把編輯器整合得更深</li>
+<li><strong>MCP 標準化</strong>：兩家都會 support，工具生態大爆發</li>
+<li><strong>多模態</strong>：截圖 → code（特別是 UI 開發）</li>
+<li><strong>長任務</strong>：「給我跑一晚上，明天交付」變成可能</li>
+<li><strong>價格戰</strong>：年底前可能會有 $10/月 的個人方案</li>
+</ol>
+
+<h2>結語</h2>
+<p>「Cursor vs Claude Code」這個問題在 2026 年的答案其實是「兩個都用」。它們不是替代品，是<strong>互補工具</strong>。Cursor 解決「邊寫邊改」的即時需求，Claude Code 解決「丟一個任務給 AI 跑」的批次需求。</p>
+
+<p>如果你只能選一個：</p>
+<ul>
+<li>你會用 terminal、寫過 bash 腳本 → <strong>Claude Code</strong>（產能加乘最大）</li>
+<li>你習慣 GUI、IDE 為主 → <strong>Cursor</strong>（學習曲線低）</li>
+</ul>
+
+<p>剩下不用太糾結。試用一個禮拜你就會知道適不適合自己。</p>
+
+<div class="article-footer"><h3>延伸閱讀</h3><div class="related">
+<a href="/blog/ai-pair-programming.html"><span class="related-cat">AI</span>AI 協作開發：Claude 怎麼幫我寫 14 款遊戲</a>
+<a href="/blog/claude-code-npm-package.html"><span class="related-cat">Workflow</span>用 Claude Code 寫 npm package</a>
+</div></div>
+</article></main>
+<footer><div class="links"><a href="/">首頁</a><a href="/about.html">關於</a><a href="/blog/">部落格</a><a href="/resources/">資源</a><a href="/privacy.html">隱私權</a><a href="/terms.html">使用條款</a></div><div>© 2026 Hao0321 Studio. All rights reserved.</div></footer>
+</body></html>
