@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Hao0321 Studio — 技術日誌</title>
+  <link>https://hao0321.com/blog/</link>
+  <description>獨立工作室的技術日誌 — AI、遊戲開發、Cloudflare、VFX 製作流程</description>
+  <language>zh-Hant</language>
+  <lastBuildDate>Tue, 19 May 2026 18:14:55 GMT</lastBuildDate>
+  <atom:link href="https://hao0321.com/blog/rss.xml" rel="self" type="application/rss+xml" />
+  <item>
+    <title>Cursor vs Claude Code 完整比較 — 2026 年 AI 程式編輯器實測</title>
+    <link>https://hao0321.com/blog/cursor-vs-claude-code.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/cursor-vs-claude-code.html</guid>
+    <pubDate>Sun, 17 May 2026 16:00:00 GMT</pubDate>
+    <description>2026 年最熱的兩款 AI 程式工具實測對比 — 補全速度、Agent 模式、價格、上下文長度、整合度、適用情境。</description>
+  </item>
+  <item>
+    <title>從 0 到 100 個 Cloudflare 部署：學到的 5 件事</title>
+    <link>https://hao0321.com/blog/100-deploys-lessons.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/100-deploys-lessons.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>一年累積 100 次 Cloudflare 部署的觀察與教訓 — 速度、回滾、命名、自動化、心理。</description>
+  </item>
+  <item>
+    <title>前端無障礙實戰：5 個容易忽略的 a11y 細節</title>
+    <link>https://hao0321.com/blog/a11y-5-overlooked.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/a11y-5-overlooked.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>網站做 a11y 不只 alt 跟 aria-label — 5 個常被忽略的關鍵：focus 順序、prefers-reduced-motion、跳過導航、表單錯誤、顏色 + 圖示。</description>
+  </item>
+  <item>
+    <title>24 小時 Game Jam 經驗：從題目到上線的時間分配</title>
+    <link>https://hao0321.com/blog/game-jam-24h.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/game-jam-24h.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>獨立開發者怎麼在 24 小時內做出可玩遊戲？時間分配、題材選擇、必砍與必留的功能、發布策略。</description>
+  </item>
+  <item>
+    <title>從遊戲設計借來的 5 個 web UX 技巧</title>
+    <link>https://hao0321.com/blog/game-ux-tricks-for-web.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/game-ux-tricks-for-web.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>進度回饋、變動報酬、新手引導、記憶點觸發、零摩擦撤銷 — 遊戲業界的 UX 模式怎麼用在一般網站。</description>
+  </item>
+  <item>
+    <title>GitHub Actions 最低成本 CI 配置：個人專案的 8 個核心 workflow</title>
+    <link>https://hao0321.com/blog/github-actions-minimal-ci.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/github-actions-minimal-ci.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>個人專案不需要 enterprise 級 CI — 8 個必要、夠用、可重複的 GitHub Actions 配置範本，每月用量在免費額度內。</description>
+  </item>
+  <item>
+    <title>IndexedDB 取代 localStorage：什麼時候該升級</title>
+    <link>https://hao0321.com/blog/indexeddb-vs-localstorage.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/indexeddb-vs-localstorage.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>localStorage 的 5MB 限制怎麼處理？IndexedDB 進階：版本遷移、index 查詢、跨頁同步、性能對比。</description>
+  </item>
+  <item>
+    <title>localStorage 在遊戲開發的 5 個應用模式</title>
+    <link>https://hao0321.com/blog/localstorage-game-patterns.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/localstorage-game-patterns.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>瀏覽器遊戲怎麼存玩家資料？localStorage 的 schema 設計、遷移策略、防止損毀的實戰技巧。</description>
+  </item>
+  <item>
+    <title>響應式設計的 7 個 mobile-first 原則</title>
+    <link>https://hao0321.com/blog/mobile-first-7-rules.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/mobile-first-7-rules.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>從 5 年作品集網站經驗濃縮 — touch target、字型尺寸、效能 budget、橫螢幕考量等實戰原則。</description>
+  </item>
+  <item>
+    <title>為什麼我關掉所有 Notification</title>
+    <link>https://hao0321.com/blog/notification-off-deep-work.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/notification-off-deep-work.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>一年來不再收 Slack、Line、Email push 的真實體驗 — 生產力提升、焦慮降低、客戶反應、補償機制。</description>
+  </item>
+  <item>
+    <title>開源 vs 閉源：個人專案的選擇邏輯</title>
+    <link>https://hao0321.com/blog/open-vs-closed-source.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/open-vs-closed-source.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>什麼專案該開源、什麼該閉源？License 選擇、收益模式、社群維護成本的真實考量。</description>
+  </item>
+  <item>
+    <title>WebGL 入門：在 Canvas 裡做 3D</title>
+    <link>https://hao0321.com/blog/webgl-canvas-3d.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/webgl-canvas-3d.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>從 2D Canvas 升級到 WebGL — shader、buffer、texture 三件套的最小可運作範例與實戰場景。</description>
+  </item>
+  <item>
+    <title>為什麼我每週寫 3 篇技術部落格</title>
+    <link>https://hao0321.com/blog/writing-3-blog-posts-weekly.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/writing-3-blog-posts-weekly.html</guid>
+    <pubDate>Tue, 05 May 2026 16:00:00 GMT</pubDate>
+    <description>持續寫技術部落格的真實 ROI、克服「沒題材」的 7 個方法、發布節奏與心理。</description>
+  </item>
+  <item>
+    <title>AdSense 觸點設計：6 個不打擾玩家的廣告策略</title>
+    <link>https://hao0321.com/blog/adsense-touchpoints.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/adsense-touchpoints.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>免費瀏覽器遊戲的廣告位置選擇 — opt-in 機制、獎勵設計、避免懲罰玩家的觸點哲學。</description>
+  </item>
+  <item>
+    <title>AI 配樂在獨立遊戲：Suno 與 Udio 實戰心得</title>
+    <link>https://hao0321.com/blog/ai-music-suno.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/ai-music-suno.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>獨立工作室用 Suno 與 Udio 為瀏覽器遊戲產 BGM 的完整流程，prompt 模板、版權處理、實際成本對比。</description>
+  </item>
+  <item>
+    <title>用 AI 寫 NPC 對話：對話樹設計與 prompt 模板</title>
+    <link>https://hao0321.com/blog/ai-npc-dialogue.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/ai-npc-dialogue.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>獨立遊戲怎麼用 LLM 生成 NPC 對話而不失靈魂？對話樹結構、人格設定、避免重複的具體做法。</description>
+  </item>
+  <item>
+    <title>用 Claude Code 寫 npm package 的工作流</title>
+    <link>https://hao0321.com/blog/claude-code-npm-package.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/claude-code-npm-package.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>從 0 到發布 npm 套件的全流程 — package.json 設定、TypeScript 與 ESM、CI、自動發版。Claude Code 怎麼配合每一步。</description>
+  </item>
+  <item>
+    <title>Cloudflare Pages 部署陷阱：5 個踩過的坑</title>
+    <link>https://hao0321.com/blog/cloudflare-pages-traps.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/cloudflare-pages-traps.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>從 SSL 子網域、_headers 解析、direct upload 與 git 同步、preview 過期、wrangler.toml 衝突 — 真實踩過的雷紀錄。</description>
+  </item>
+  <item>
+    <title>CSS Variables 與 Design Tokens：作品集網站的色彩系統實戰</title>
+    <link>https://hao0321.com/blog/css-variables-design-tokens.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/css-variables-design-tokens.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>不用 Sass 不用 Tailwind，純 CSS variables 怎麼建一套維護得起的設計系統。本站完整 token 解析。</description>
+  </item>
+  <item>
+    <title>用 D1 做遊戲排行榜：分頁、快取、即時更新</title>
+    <link>https://hao0321.com/blog/d1-leaderboard.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/d1-leaderboard.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>Cloudflare D1 SQLite-on-edge 怎麼做高效排行榜 — schema 設計、INDEX 用法、KV 快取策略、每秒寫入限制處理。</description>
+  </item>
+  <item>
+    <title>暗黑模式不是反色：色彩理論的 dark theme 設計</title>
+    <link>https://hao0321.com/blog/dark-mode-not-inverted.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/dark-mode-not-inverted.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>為什麼直接反色的暗黑模式很醜？專業 dark theme 的對比度、彩度、層次設計，附完整色票範例。</description>
+  </item>
+  <item>
+    <title>一年內接 3 個案的時間經濟學</title>
+    <link>https://hao0321.com/blog/freelance-economics.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/freelance-economics.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>獨立工作室除了自己的產品還能接幾個案子？時間預算的真實算法、案件 vs 自製產品的 ROI 對比。</description>
+  </item>
+  <item>
+    <title>從零開始接案：報價、合約、付款的 3 個地雷</title>
+    <link>https://hao0321.com/blog/freelance-traps.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/freelance-traps.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>獨立工作室接案 5 年踩過的痛 — 三個血淋淋的真實案例與避免方式，給剛起步的設計師 / 工程師。</description>
+  </item>
+  <item>
+    <title>五子棋 AI 設計：Minimax + Alpha-Beta 剪枝實戰</title>
+    <link>https://hao0321.com/blog/gomoku-ai-minimax.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/gomoku-ai-minimax.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>從零實作五子棋 AI 對手 — 評估函式設計、minimax 搜尋深度、Alpha-Beta 剪枝、move ordering 優化。</description>
+  </item>
+  <item>
+    <title>為什麼用 Google OAuth 而不是 Email + 密碼</title>
+    <link>https://hao0321.com/blog/google-oauth-not-password.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/google-oauth-not-password.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>獨立工作室的認證系統選擇 — Google Sign-In 的成本對比、安全考量、客戶轉換率影響、常見實作陷阱。</description>
+  </item>
+  <item>
+    <title>為什麼工作室首頁 hero 用 3D 而不是 2D</title>
+    <link>https://hao0321.com/blog/hero-3d-vs-2d.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/hero-3d-vs-2d.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>3D liquid chrome 的 hero 動畫比 2D illustration 多花 5 倍時間，但帶來的差異化值得。完整製作流程拆解。</description>
+  </item>
+  <item>
+    <title>遊戲大廳的 iframe SDK 設計：跨來源安全與 postMessage 實戰</title>
+    <link>https://hao0321.com/blog/iframe-game-sdk.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/iframe-game-sdk.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>14 款瀏覽器遊戲透過 iframe 嵌入大廳，分數上傳、用戶資訊、廣告觸發如何設計？postMessage、window.parent、CORS 全解析。</description>
+  </item>
+  <item>
+    <title>JWT 在 Cloudflare Workers Edge 的簽章與驗證實戰</title>
+    <link>https://hao0321.com/blog/jwt-on-edge.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/jwt-on-edge.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>不依賴 jsonwebtoken 套件、純 Web Crypto API 完成 HS256 JWT 簽章與驗證。完整程式碼、安全性檢查、常見錯誤。</description>
+  </item>
+  <item>
+    <title>連連看遊戲架構：圖塊匹配演算法與路徑搜尋</title>
+    <link>https://hao0321.com/blog/match-game-architecture.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/match-game-architecture.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>實作連連看的核心：圖塊配對、可連通路徑判斷（最多三條線）、提示功能、洗牌邏輯。</description>
+  </item>
+  <item>
+    <title>從 Maya 到 Unreal 的 VFX Pipeline 實戰</title>
+    <link>https://hao0321.com/blog/maya-to-unreal-vfx.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/maya-to-unreal-vfx.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>獨立工作室的 VFX 工作流 — 在 Maya 建模、Houdini 模擬、Unreal Engine 5 渲染整合，每個交接點的格式與優化技巧。</description>
+  </item>
+</channel>
+</rss>
