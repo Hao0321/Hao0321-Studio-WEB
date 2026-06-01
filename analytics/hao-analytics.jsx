@@ -706,7 +706,7 @@ export default function HaoAnalytics() {
             </div>
           </div>
           <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
-            <input style={{ flex: 1, background: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 12, padding: "11px 18px", color: "#1A1A2E", fontSize: 13, fontFamily: "inherit", outline: "none" }}
+            <input aria-label="搜尋 YouTube 頻道（輸入 @handle、頻道名稱或網址）" style={{ flex: 1, background: "#F9FAFB", border: "1px solid #E5E7EB", borderRadius: 12, padding: "11px 18px", color: "#1A1A2E", fontSize: 13, fontFamily: "inherit" }}
               placeholder="輸入 @handle、頻道名稱或 YouTube 網址..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

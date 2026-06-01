@@ -5,7 +5,7 @@
   <link>https://hao0321.com/blog/</link>
   <description>獨立工作室的技術日誌 — AI、遊戲開發、Cloudflare、VFX 製作流程</description>
   <language>zh-Hant</language>
-  <lastBuildDate>Tue, 19 May 2026 18:14:55 GMT</lastBuildDate>
+  <lastBuildDate>Mon, 01 Jun 2026 02:49:46 GMT</lastBuildDate>
   <atom:link href="https://hao0321.com/blog/rss.xml" rel="self" type="application/rss+xml" />
   <item>
     <title>Cursor vs Claude Code 完整比較 — 2026 年 AI 程式編輯器實測</title>
@@ -216,6 +216,132 @@
     <guid isPermaLink="true">https://hao0321.com/blog/maya-to-unreal-vfx.html</guid>
     <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
     <description>獨立工作室的 VFX 工作流 — 在 Maya 建模、Houdini 模擬、Unreal Engine 5 渲染整合，每個交接點的格式與優化技巧。</description>
+  </item>
+  <item>
+    <title>微互動的 12 個經典場景：UI 細節讓網站從 60 分變 90 分</title>
+    <link>https://hao0321.com/blog/micro-interactions-12.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/micro-interactions-12.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>從 hover、click、scroll 到 form submit，網站常見的 12 個微互動場景與實作範例。</description>
+  </item>
+  <item>
+    <title>Pact of Arcania 開發日誌：原創奇幻策略遊戲</title>
+    <link>https://hao0321.com/blog/pact-of-arcania-devlog.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/pact-of-arcania-devlog.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>從世界觀設定、卡牌系統、AI 對手到 Steam 上架前的所有設計決策 — 一款原創奇幻策略遊戲的完整開發紀錄。</description>
+  </item>
+  <item>
+    <title>Poker Fortune 設計：撲克牌占卜的隨機性與儀式感</title>
+    <link>https://hao0321.com/blog/poker-fortune-design.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/poker-fortune-design.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>把塔羅占卜的儀式感包進撲克牌互動 — 為什麼隨機性需要包裝、UI 動畫如何強化沉浸感、跨語言文案怎麼維持神秘感。</description>
+  </item>
+  <item>
+    <title>PWA 把網頁遊戲變成 app：manifest 與 service worker</title>
+    <link>https://hao0321.com/blog/pwa-game-app.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/pwa-game-app.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>瀏覽器遊戲怎麼變成可離線、可安裝、有 icon 的 app？manifest.json、service worker、cache strategy 完整教學。</description>
+  </item>
+  <item>
+    <title>1 人工作室的時間管理：90 分鐘工作塊與多專案切換</title>
+    <link>https://hao0321.com/blog/time-management-solo.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/time-management-solo.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>同時推進 14 款遊戲、官網、後端、blog 的真實時間表 — 90 分鐘工作塊、深淺工作分配、避免 burnout 的技巧。</description>
+  </item>
+  <item>
+    <title>字型選擇心法：作品集網站的字型策略</title>
+    <link>https://hao0321.com/blog/typography-portfolio.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/typography-portfolio.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>為什麼本站用 Plus Jakarta Sans 而不是 Inter？中英混排、字重、行高、字距完整解析。</description>
+  </item>
+  <item>
+    <title>為什麼我選擇做小遊戲而不是 SaaS</title>
+    <link>https://hao0321.com/blog/why-small-games.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/why-small-games.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>獨立開發者的策略選擇 — 小遊戲 vs SaaS 的時間成本、收益曲線、心理負擔對比，一個過來人的完整思考。</description>
+  </item>
+  <item>
+    <title>Zero-Build 哲學：為什麼我刻意不用 webpack / vite</title>
+    <link>https://hao0321.com/blog/zero-build-philosophy.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/zero-build-philosophy.html</guid>
+    <pubDate>Mon, 04 May 2026 16:00:00 GMT</pubDate>
+    <description>從 Vite 切換到純靜態 HTML 一年的真實心得 — 失去什麼、得到什麼、什麼樣的專案適合 zero-build。</description>
+  </item>
+  <item>
+    <title>AI 生圖在遊戲美術的工作流：28 張像素插圖怎麼產</title>
+    <link>https://hao0321.com/blog/ai-art-pipeline.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/ai-art-pipeline.html</guid>
+    <pubDate>Sun, 03 May 2026 16:00:00 GMT</pubDate>
+    <description>從 Midjourney 到 Stable Diffusion，獨立工作室用 AI 工具產遊戲美術的完整流程 — prompt 工程、後處理、批次優化的實戰紀錄。</description>
+  </item>
+  <item>
+    <title>為什麼我選 Cloudflare Pages 而不是 Vercel：兩個都用過的對比</title>
+    <link>https://hao0321.com/blog/cloudflare-vs-vercel.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/cloudflare-vs-vercel.html</guid>
+    <pubDate>Sun, 03 May 2026 16:00:00 GMT</pubDate>
+    <description>從邊緣節點分布、免費額度、DX、限制、適用場景五個面向深入比較，附我的實際選擇邏輯。</description>
+  </item>
+  <item>
+    <title>獨立開發者 SEO 實戰：28 天從 0 到 20 個 Google 點擊</title>
+    <link>https://hao0321.com/blog/seo-from-zero.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/seo-from-zero.html</guid>
+    <pubDate>Sun, 03 May 2026 16:00:00 GMT</pubDate>
+    <description>新網站冷啟動的 SEO 真實數據紀錄 — 結構化資料、sitemap、canonical、內容策略，全部從 Search Console 截圖驗證。</description>
+  </item>
+  <item>
+    <title>用 Web Audio API 做遊戲音效：不用任何音檔，純 code 生成</title>
+    <link>https://hao0321.com/blog/web-audio-game-sfx.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/web-audio-game-sfx.html</guid>
+    <pubDate>Sun, 03 May 2026 16:00:00 GMT</pubDate>
+    <description>DODGE MASTER 整套音效（撞擊、金幣、雷射、引擎）都是純 JavaScript 生成的，沒有任何音檔。完整實作與相容性踩坑紀錄。</description>
+  </item>
+  <item>
+    <title>AI 協作開發：Claude 怎麼幫我寫 14 款遊戲</title>
+    <link>https://hao0321.com/blog/ai-pair-programming.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/ai-pair-programming.html</guid>
+    <pubDate>Thu, 30 Apr 2026 16:00:00 GMT</pubDate>
+    <description>一年下來把 Claude 當成 pair programmer 的真實心得 — 哪些任務能放心丟給 AI、哪些必須自己把關、怎麼避免 AI 生成的隱形 bug。</description>
+  </item>
+  <item>
+    <title>Chess Master — 8 種棋類合一的 React 架構設計</title>
+    <link>https://hao0321.com/blog/chess-master-architecture.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/chess-master-architecture.html</guid>
+    <pubDate>Sun, 26 Apr 2026 16:00:00 GMT</pubDate>
+    <description>象棋、圍棋、五子棋、暗棋、飛行棋、跳棋、日麻、台麻八合一。共用元件如何抽取、AI 如何分層、資料結構如何統一。</description>
+  </item>
+  <item>
+    <title>為什麼我做了一個台灣版大富翁 — 設計決策全記錄</title>
+    <link>https://hao0321.com/blog/taiwan-monopoly-design.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/taiwan-monopoly-design.html</guid>
+    <pubDate>Fri, 24 Apr 2026 16:00:00 GMT</pubDate>
+    <description>從地名選擇、事件卡文案、到破產邏輯 bug 追查 — 一款本土化大富翁遊戲的完整設計拆解。</description>
+  </item>
+  <item>
+    <title>用 Cloudflare Workers + D1 打造 1 人可營運的遊戲後端</title>
+    <link>https://hao0321.com/blog/cloudflare-workers-d1.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/cloudflare-workers-d1.html</guid>
+    <pubDate>Mon, 20 Apr 2026 16:00:00 GMT</pubDate>
+    <description>14 款遊戲共用的登入、簽到、排行榜、金幣、成就系統 — JWT、D1 schema、Google OAuth、API 速率限制全公開。</description>
+  </item>
+  <item>
+    <title>DODGE MASTER 開發日誌：用 Canvas 寫一款賽博龐克閃避遊戲</title>
+    <link>https://hao0321.com/blog/dodge-master-devlog.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/dodge-master-devlog.html</guid>
+    <pubDate>Mon, 20 Apr 2026 16:00:00 GMT</pubDate>
+    <description>從零打造一款支援觸控與鍵盤、有角色稀有度、金幣商店、廣告觸點的街機閃避遊戲。Canvas 效能、物件池、AdSense 整合的實戰紀錄。</description>
+  </item>
+  <item>
+    <title>Hao0321 Studio 的技術堆疊：1 人工作室的全端架構</title>
+    <link>https://hao0321.com/blog/tech-stack.html</link>
+    <guid isPermaLink="true">https://hao0321.com/blog/tech-stack.html</guid>
+    <pubDate>Mon, 20 Apr 2026 16:00:00 GMT</pubDate>
+    <description>從前端、後端、認證到 CDN — 一個人可維護、月成本 200 元以下的完整網站架構。</description>
   </item>
 </channel>
 </rss>

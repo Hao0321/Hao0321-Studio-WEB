@@ -89,7 +89,7 @@ const rss = `<?xml version="1.0" encoding="UTF-8"?>
   <language>zh-Hant</language>
   <lastBuildDate>${buildDate}</lastBuildDate>
   <atom:link href="${SITE}/blog/rss.xml" rel="self" type="application/rss+xml" />
-${items.slice(0, 30).map(it => `  <item>
+${items.map(it => `  <item>
     <title>${esc(it.title)}</title>
     <link>${it.url}</link>
     <guid isPermaLink="true">${it.url}</guid>

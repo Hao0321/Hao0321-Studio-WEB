@@ -6,7 +6,9 @@
   <title>Hao0321 Studio — 設計 · 創新 · 啟發</title>
   <meta name="description" content="Hao0321 Studio — 結合 AI、遊戲開發與視覺設計的創意工作室。打造令人驚艷的數位體驗。" />
   <meta name="theme-color" content="#F4F4F7" />
+  <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://hao0321.com/" />
+  <link rel="preload" as="image" href="hero-frames-new/frame_0001.webp" fetchpriority="high" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Hao0321 Studio" />
@@ -36,7 +38,7 @@
       --surface: #FFFFFF;
       --text: #0F0F1E;
       --text-2: #4A4A5E;
-      --text-3: #8C8CA0;
+      --text-3: #6B6B80;
       --border: rgba(15,15,30,0.06);
       --border-2: rgba(15,15,30,0.12);
 
@@ -104,6 +106,12 @@
     img, svg, canvas { display: block; max-width: 100%; }
     button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
     input, textarea { font: inherit; color: inherit; }
+    :focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
+    .skip-link { position: absolute; left: 12px; top: -60px; z-index: 9999; background: var(--accent-ink); color: #fff; padding: 10px 18px; border-radius: 8px; font-weight: 600; transition: top .2s; }
+    .skip-link:focus { top: 12px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
 
     /* ========== SUBTLE WAVE BG (like reference) ========== */
     .bg-waves {
@@ -1240,6 +1248,7 @@
 </head>
 <body>
 
+  <a href="#main-content" class="skip-link">跳到主要內容</a>
   <div class="bg-waves" aria-hidden="true"></div>
 
   <!-- ========== NAVBAR ========== -->
@@ -1283,6 +1292,7 @@
   </aside>
 
   <!-- ========== HERO (pinned: tall section wraps a sticky viewport) ========== -->
+  <main id="main-content">
   <section class="hero" id="hero">
    <div class="hero-sticky" id="heroSticky">
     <!-- Full-bleed canvas background -->
@@ -1507,6 +1517,8 @@
     </div>
   </section>
 
+  </main>
+
   <!-- ========== FOOTER ========== -->
   <footer class="footer">
     <div class="container">
@@ -1717,7 +1729,7 @@
             if (img.naturalWidth) frames[i] = img;
             loaded++;
             loaderFill.style.width = (loaded/FRAME_COUNT*100) + '%';
-            if (loaded >= Math.min(2, FRAME_COUNT) && !ready) onFirstReady();
+            if (loaded >= 1 && !ready) onFirstReady();
           };
           img.src = PATH + pad(i+1) + '.webp';
         }
