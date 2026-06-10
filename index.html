@@ -1244,6 +1244,49 @@
       .a11y-fs button { width: 30px; height: 30px; }
       .a11y-fs .fs-label { display: none; }
     }
+
+    /* ========== LIQUID GLASS LAYER (extends .hero-left / .btn-glass language) ========== */
+    .service-item,
+    .work-card,
+    .portfolio-card {
+      background: rgba(255,255,255,0.5) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.55) !important;
+      box-shadow:
+        0 6px 28px rgba(15,15,30,0.07),
+        0 1px 3px rgba(15,15,30,0.04),
+        inset 0 1px 0 rgba(255,255,255,0.7) !important;
+    }
+    .service-item { border-radius: 20px; }
+    .service-item:hover,
+    .work-card:hover,
+    .portfolio-card:hover {
+      background: rgba(255,255,255,0.68) !important;
+      border-color: rgba(255,255,255,0.85) !important;
+      box-shadow:
+        0 18px 48px rgba(15,15,30,0.13),
+        inset 0 1px 0 rgba(255,255,255,0.85) !important;
+    }
+    .cta-card {
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.4) !important;
+      box-shadow:
+        0 12px 44px rgba(74,123,245,0.20),
+        inset 0 1px 0 rgba(255,255,255,0.5) !important;
+    }
+    /* hero panel: deepen the existing glass a touch */
+    .hero-left {
+      background: rgba(255,255,255,0.32) !important;
+      -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
+      backdrop-filter: blur(22px) saturate(170%) !important;
+      border: 1px solid rgba(255,255,255,0.5) !important;
+    }
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .service-item, .work-card, .portfolio-card { background: var(--surface) !important; }
+      .hero-left { background: rgba(255,255,255,0.92) !important; }
+    }
   </style>
 </head>
 <body>
