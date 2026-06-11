@@ -1287,6 +1287,44 @@
       .service-item, .work-card, .portfolio-card { background: var(--surface) !important; }
       .hero-left { background: rgba(255,255,255,0.92) !important; }
     }
+
+    /* ===== LIQUID GLASS v3 — visible frost: colour pools + stronger panes ===== */
+    body {
+      background-color: #EEF1F8 !important;
+      background-image:
+        radial-gradient(circle 540px at 14% 14%, rgba(74,123,245,0.22), transparent 60%),
+        radial-gradient(circle 660px at 86% 8%, rgba(142,124,240,0.20), transparent 60%),
+        radial-gradient(circle 600px at 82% 84%, rgba(110,170,255,0.18), transparent 60%),
+        radial-gradient(circle 500px at 16% 94%, rgba(168,140,255,0.16), transparent 60%) !important;
+      background-attachment: fixed !important;
+    }
+    .work-card, .portfolio-card, .service-item {
+      background: linear-gradient(140deg, rgba(255,255,255,0.58), rgba(255,255,255,0.38)) !important;
+      -webkit-backdrop-filter: blur(26px) saturate(200%) !important;
+      backdrop-filter: blur(26px) saturate(200%) !important;
+      border: 1px solid rgba(255,255,255,0.72) !important;
+      box-shadow:
+        0 12px 40px rgba(15,15,30,0.10),
+        0 2px 8px rgba(15,15,30,0.05),
+        inset 0 1px 1px rgba(255,255,255,0.95),
+        inset 0 -1px 1px rgba(15,15,30,0.04) !important;
+    }
+    .work-card:hover, .portfolio-card:hover, .service-item:hover {
+      background: linear-gradient(140deg, rgba(255,255,255,0.76), rgba(255,255,255,0.56)) !important;
+      border-color: rgba(255,255,255,0.95) !important;
+      box-shadow:
+        0 24px 64px rgba(15,15,30,0.18),
+        inset 0 1px 1px rgba(255,255,255,1) !important;
+    }
+    .hero-left {
+      background: linear-gradient(150deg, rgba(255,255,255,0.40), rgba(255,255,255,0.20)) !important;
+      -webkit-backdrop-filter: blur(26px) saturate(180%) !important;
+      backdrop-filter: blur(26px) saturate(180%) !important;
+      border: 1px solid rgba(255,255,255,0.6) !important;
+      box-shadow:
+        0 20px 60px rgba(15,15,30,0.16),
+        inset 0 1px 1px rgba(255,255,255,0.9) !important;
+    }
   </style>
 </head>
 <body>

@@ -1,6 +1,8 @@
-// Liquid Glass layer for shared-style pages. Idempotent (marker: liquid-glass-v2).
-// Lifts flat white cards/article into frosted translucent glass matching the
-// existing index.html .btn-glass / .hero-left recipe. Keeps colours + layout.
+// Liquid Glass v3 — VISIBLE frosted glass on the light theme.
+// The trick: enrich the page background with colour pools so the frost has
+// something to refract, then strengthen lens borders / specular highlights /
+// float shadows / diagonal sheen so cards read as real glass panes.
+// Idempotent (marker: liquid-glass-v3). Appended last => wins over v2.
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -12,42 +14,44 @@ const targets = [
   'about.html',
 ];
 
-const MARK = '/*liquid-glass-v2*/';
+const MARK = '/*liquid-glass-v3*/';
 const GLASS =
   MARK +
-  // card surfaces (lists: blog index, tools, resources)
-  '.post-card,.tool-card,.res-card,.cta-box{' +
-    'background:rgba(255,255,255,0.55)!important;' +
-    '-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);' +
-    'border:1px solid rgba(255,255,255,0.55)!important;' +
-    'box-shadow:0 6px 28px rgba(15,15,30,0.06),0 1px 3px rgba(15,15,30,0.04),inset 0 1px 0 rgba(255,255,255,0.7)!important;' +
+  // 1. richer colour pools behind everything → gives the frost something to blur
+  'body{background-image:' +
+    'radial-gradient(circle 520px at 14% 16%,rgba(74,123,245,0.22),transparent 60%),' +
+    'radial-gradient(circle 640px at 86% 10%,rgba(142,124,240,0.20),transparent 60%),' +
+    'radial-gradient(circle 580px at 80% 86%,rgba(110,170,255,0.18),transparent 60%),' +
+    'radial-gradient(circle 480px at 18% 92%,rgba(168,140,255,0.16),transparent 60%)!important;' +
+    'background-attachment:fixed!important;background-color:#EEF1F8!important}' +
+  // 2. list / utility cards → strong glass pane
+  '.post-card,.tool-card,.res-card,.cta-box,.related a{' +
+    'background:linear-gradient(140deg,rgba(255,255,255,0.60),rgba(255,255,255,0.40))!important;' +
+    '-webkit-backdrop-filter:blur(24px) saturate(200%);backdrop-filter:blur(24px) saturate(200%);' +
+    'border:1px solid rgba(255,255,255,0.7)!important;' +
+    'box-shadow:0 10px 36px rgba(15,15,30,0.10),0 2px 8px rgba(15,15,30,0.05),' +
+      'inset 0 1px 1px rgba(255,255,255,0.95),inset 0 -1px 1px rgba(15,15,30,0.04)!important;' +
   '}' +
-  '.post-card:hover,.tool-card:hover,.res-card:hover{' +
-    'background:rgba(255,255,255,0.72)!important;' +
-    'border-color:rgba(255,255,255,0.85)!important;' +
-    'box-shadow:0 18px 48px rgba(15,15,30,0.13),inset 0 1px 0 rgba(255,255,255,0.85)!important;' +
+  '.post-card:hover,.tool-card:hover,.res-card:hover,.related a:hover{' +
+    'background:linear-gradient(140deg,rgba(255,255,255,0.78),rgba(255,255,255,0.58))!important;' +
+    'border-color:rgba(255,255,255,0.95)!important;' +
+    'box-shadow:0 22px 60px rgba(15,15,30,0.18),inset 0 1px 1px rgba(255,255,255,1)!important;' +
   '}' +
-  // reading container on article pages — lighter blur for scroll perf
+  // 3. article reading container → glass but a touch more opaque for legibility
   'article{' +
-    'background:rgba(255,255,255,0.68)!important;' +
-    '-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);' +
-    'border:1px solid rgba(255,255,255,0.55)!important;' +
-    'box-shadow:0 8px 36px rgba(15,15,30,0.07),inset 0 1px 0 rgba(255,255,255,0.7)!important;' +
+    'background:linear-gradient(140deg,rgba(255,255,255,0.74),rgba(255,255,255,0.58))!important;' +
+    '-webkit-backdrop-filter:blur(20px) saturate(185%);backdrop-filter:blur(20px) saturate(185%);' +
+    'border:1px solid rgba(255,255,255,0.72)!important;' +
+    'box-shadow:0 12px 44px rgba(15,15,30,0.10),inset 0 1px 1px rgba(255,255,255,0.95)!important;' +
   '}' +
-  // related-post chips
-  '.related a{' +
-    'background:rgba(255,255,255,0.5)!important;' +
-    '-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);' +
-    'border:1px solid rgba(255,255,255,0.5)!important;' +
+  // 4. CTA box keeps its tint but gains the lens edge + sheen
+  '.cta-box{' +
+    'box-shadow:0 14px 48px rgba(74,123,245,0.20),inset 0 1px 1px rgba(255,255,255,0.9)!important;' +
+    'border:1px solid rgba(255,255,255,0.7)!important;' +
   '}' +
-  '.related a:hover{background:rgba(255,255,255,0.7)!important;border-color:rgba(255,255,255,0.8)!important}' +
-  // frosted pills
-  '.cat,.hero-tag,.tool-tag,.res-tier,.post-tag{' +
-    '-webkit-backdrop-filter:saturate(150%) blur(8px);backdrop-filter:saturate(150%) blur(8px);' +
-  '}' +
-  // graceful fallback where backdrop-filter is unsupported
+  // graceful fallback
   '@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){' +
-    '.post-card,.tool-card,.res-card,.cta-box,article,.related a{background:var(--surface,#fff)!important}' +
+    '.post-card,.tool-card,.res-card,.cta-box,article,.related a{background:rgba(255,255,255,0.95)!important}' +
   '}';
 
 let changed = 0;
@@ -61,4 +65,4 @@ for (const rel of targets) {
   fs.writeFileSync(fp, html);
   changed++;
 }
-console.log(`✨ liquid-glass injected into ${changed} files`);
+console.log(`✨ liquid-glass v3 injected into ${changed} files`);
