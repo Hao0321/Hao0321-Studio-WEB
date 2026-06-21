@@ -1343,6 +1343,7 @@ function CheckersGame({ onBack }) {
   const [winner, setWinner] = useState(null);
   const [lastMove, setLastMove] = useState(null);
   const [vsAI, setVsAI] = useState(true);
+  const [flyingJump, setFlyingJump] = useState(true); // 飛跳/空跳：隔 n 空跳過一子，落在對稱的 n 空之後
   const aiRef = useRef(0);
 
   const hexStep = useCallback((r, c, dir) => {
@@ -1357,19 +1358,54 @@ function CheckersGame({ onBack }) {
 
   const getJumps = useCallback((bd, r, c, visited = new Set()) => {
     const jumps = [];
+    const occupied = (rr, cc) => {
+      const v = bd[`${rr},${cc}`];
+      return v !== null && v !== undefined;
+    };
     for (const dir of CC_HEX_DIRS) {
-      const [ar, ac] = hexStep(r, c, dir);
-      if (!validSet.current.has(`${ar},${ac}`) || bd[`${ar},${ac}`] === null || bd[`${ar},${ac}`] === undefined) continue;
-      const [jr, jc] = hexStep(ar, ac, dir);
-      const key = `${jr},${jc}`;
-      if (validSet.current.has(key) && bd[key] === null && !visited.has(key)) {
-        visited.add(key);
-        jumps.push([jr, jc]);
-        jumps.push(...getJumps(bd, jr, jc, visited));
+      if (flyingJump) {
+        // 飛跳/空跳：沿方向找到走廊上「第一顆棋子」(支點)，
+        // 起點到支點之間 n 格全空，支點之後同距離 n 格也全空，落點與起點對稱。
+        // n=0 即退化為傳統的相鄰短跳。
+        let pr = r, pc = c, dist = 0, foundPivot = false, offBoard = false;
+        while (true) {
+          const [nr, nc] = hexStep(pr, pc, dir);
+          if (!validSet.current.has(`${nr},${nc}`)) { offBoard = true; break; }
+          dist++;
+          pr = nr; pc = nc;
+          if (occupied(pr, pc)) { foundPivot = true; break; } // 第一顆棋子 = 支點
+          // 空格 → 繼續往前找支點（走廊必須全空，已由此確保）
+        }
+        if (offBoard || !foundPivot) continue;
+        // 從支點再走 dist 步（對稱），沿途與落點都必須是空的
+        let lr = pr, lc = pc, clear = true;
+        for (let i = 0; i < dist; i++) {
+          const [nr, nc] = hexStep(lr, lc, dir);
+          if (!validSet.current.has(`${nr},${nc}`) || occupied(nr, nc)) { clear = false; break; }
+          lr = nr; lc = nc;
+        }
+        if (!clear) continue;
+        const key = `${lr},${lc}`;
+        if (!visited.has(key)) {
+          visited.add(key);
+          jumps.push([lr, lc]);
+          jumps.push(...getJumps(bd, lr, lc, visited)); // 連跳
+        }
+      } else {
+        // 傳統相鄰跳：跨過緊鄰的一子，落在其後緊鄰的空格
+        const [ar, ac] = hexStep(r, c, dir);
+        if (!validSet.current.has(`${ar},${ac}`) || !occupied(ar, ac)) continue;
+        const [jr, jc] = hexStep(ar, ac, dir);
+        const key = `${jr},${jc}`;
+        if (validSet.current.has(key) && bd[key] === null && !visited.has(key)) {
+          visited.add(key);
+          jumps.push([jr, jc]);
+          jumps.push(...getJumps(bd, jr, jc, visited));
+        }
       }
     }
     return jumps;
-  }, [hexStep]);
+  }, [hexStep, flyingJump]);
 
   const getMoves = useCallback((bd, r, c) => {
     const moves = [];
@@ -1494,6 +1530,11 @@ function CheckersGame({ onBack }) {
           background: vsAI ? COLORS.gold : COLORS.surface,
           color: vsAI ? COLORS.bg : COLORS.textDim, fontFamily:fontSans,
         }}>{vsAI?'人機':'同機'}</button>
+        <button onClick={()=>setFlyingJump(f=>!f)} title="飛跳/空跳：隔 n 個空格跳過一子，落在對稱的 n 個空格之後（關閉則為傳統相鄰跳）" style={{
+          padding:'4px 8px', fontSize:11, borderRadius:4, border:'none', cursor:'pointer',
+          background: flyingJump ? COLORS.gold : COLORS.surface,
+          color: flyingJump ? COLORS.bg : COLORS.textDim, fontFamily:fontSans,
+        }}>飛跳</button>
         <button onClick={()=>reset()} style={{
           padding:'4px 8px', fontSize:11, borderRadius:4, border:'none', cursor:'pointer',
           background:COLORS.surface, color:COLORS.textDim, fontFamily:fontSans,
