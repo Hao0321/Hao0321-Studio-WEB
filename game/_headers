@@ -4,3 +4,8 @@
   X-XSS-Protection: 1; mode=block
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Large, static game sources — cache 1h so repeated launches don't re-download
+# the full .jsx (e.g. chess-master.jsx ~137KB) while updates still propagate quickly.
+/*.jsx
+  Cache-Control: public, max-age=3600

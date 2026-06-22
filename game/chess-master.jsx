@@ -1099,7 +1099,7 @@ function FlightGame({ onBack }) {
     for (let i = 0; i < 4; i++) {
       const pos = p[t][i];
       if (pos === -1 && d === 6) return true;
-      if (pos >= 0 && pos < TRACK) return true;
+      if (pos >= 0 && pos < TRACK && pos + d <= TRACK) return true; // 必須能落點，否則此子不算可動（避免只剩爆點棋子時卡死）
     }
     return false;
   };

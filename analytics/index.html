@@ -46,15 +46,23 @@
       color: #8C8CA0; font-size: 13px; letter-spacing: 2px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
+    .skip-link { position: absolute; left: 12px; top: -60px; z-index: 9999; background: #0F0F1E; color: #fff; padding: 10px 18px; border-radius: 8px; font-weight: 600; transition: top .2s; }
+    .skip-link:focus { top: 12px; }
+    :focus-visible { outline: 2px solid #4A7BF5; outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      .app-loading-spinner { animation: none; }
+      .skip-link { transition: none; }
+    }
   </style>
 </head>
 <body>
-  <div id="app-root">
+  <a href="#app-root" class="skip-link">跳到主要內容</a>
+  <main id="app-root">
     <div class="app-loading">
       <div class="app-loading-spinner"></div>
       <div class="app-loading-text">LOADING YOUTUBE BLADE...</div>
     </div>
-  </div>
+  </main>
 
   <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>

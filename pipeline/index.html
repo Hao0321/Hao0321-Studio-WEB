@@ -95,6 +95,13 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-text { color: #8C8CA0; font-size: 13px; letter-spacing: 0.1em; font-family: 'JetBrains Mono', monospace; }
+    .skip-link { position: absolute; left: 12px; top: -60px; z-index: 9999; background: #0F0F1E; color: #fff; padding: 10px 18px; border-radius: 8px; font-weight: 600; transition: top .2s; }
+    .skip-link:focus { top: 12px; }
+    :focus-visible { outline: 2px solid #4A7BF5; outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      .loading-spinner { animation: none; }
+      .skip-link { transition: none; }
+    }
 
     /* App root */
     #pipeline-root { padding-top: 100px; min-height: 100vh; }
@@ -145,6 +152,7 @@
   </style>
 </head>
 <body>
+  <a href="#pipeline-root" class="skip-link">跳到主要內容</a>
   <!-- Studio Topbar -->
   <div class="studio-bar">
     <div class="studio-bar-left">
@@ -164,7 +172,7 @@
   </div>
 
   <!-- App -->
-  <div id="pipeline-root"></div>
+  <main id="pipeline-root"></main>
 
   <!-- CTA Footer -->
   <div class="cta-footer">

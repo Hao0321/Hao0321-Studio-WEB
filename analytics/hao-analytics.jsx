@@ -654,8 +654,10 @@ export default function HaoAnalytics() {
   const hist = getHistory();
   const delta7d = hist.length > 7 ? hist[hist.length - 1].value - hist[hist.length - 8].value : 0;
   const delta30d = hist.length > 30 ? hist[hist.length - 1].value - hist[hist.length - 31].value : 0;
-  const delta7dPct = hist.length > 7 ? ((hist[hist.length - 1].value - hist[hist.length - 8].value) / hist[hist.length - 8].value) * 100 : 0;
-  const delta30dPct = hist.length > 30 ? ((hist[hist.length - 1].value - hist[hist.length - 31].value) / hist[hist.length - 31].value) * 100 : 0;
+  const base7d = hist.length > 7 ? hist[hist.length - 8].value : 0;
+  const base30d = hist.length > 30 ? hist[hist.length - 31].value : 0;
+  const delta7dPct = base7d ? ((hist[hist.length - 1].value - base7d) / base7d) * 100 : 0;
+  const delta30dPct = base30d ? ((hist[hist.length - 1].value - base30d) / base30d) * 100 : 0;
 
   // Colors — Creators Academy palette
   const P = "#4A7BF5";  // primary pink
@@ -898,10 +900,10 @@ export default function HaoAnalytics() {
               {/* Revenue Calculator */}
               <div className="ca-card">
                 <div style={{ fontSize: 14, fontWeight: 800, color: "#1A1A2E", marginBottom: 4 }}>收益計算器</div>
-                <div style={{ fontSize: 11, color: "#9CA3AF", marginBottom: 16 }}>基於 CPM 模型預估</div>
+                <div style={{ fontSize: 11, color: "#6B7280", marginBottom: 16 }}>基於 CPM 模型預估</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 16 }}>
                   <span style={{ fontSize: 12, color: "#6B7280" }}>CPM 倍率：</span>
-                  <input type="range" min="0.5" max="3" step="0.1" value={revenueMultiplier} onChange={(e) => setRevenueMultiplier(parseFloat(e.target.value))} style={{ flex: 1, accentColor: P }} />
+                  <input type="range" min="0.5" max="3" step="0.1" value={revenueMultiplier} onChange={(e) => setRevenueMultiplier(parseFloat(e.target.value))} aria-label="CPM 倍率" aria-valuetext={revenueMultiplier.toFixed(1) + "x"} style={{ flex: 1, accentColor: P }} />
                   <span style={{ fontSize: 13, fontWeight: 800, color: "#1A1A2E", minWidth: 40 }}>{revenueMultiplier.toFixed(1)}x</span>
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>

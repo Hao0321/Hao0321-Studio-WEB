@@ -93,11 +93,15 @@ async function checkCoinAchievements(env, uid, coins) {
 }
 
 // Whitelist of known game IDs (used by /play and /score to prevent abuse)
+// Must stay in sync with the GAMES map in game/play.html plus the standalone HTML games.
 const ALLOWED_GAMES = new Set([
   'cat-battle', 'dodge-master', 'pact-of-arcania', 'poker-fortune',
   'taiwan-monopoly', 'chess-master', 'color-match', 'snake-classic',
   'tetris-clone', 'memory-flip', '2048', 'minesweeper',
   'reaction-time', 'breakout',
+  // play.html GAMES keys that were missing from the whitelist:
+  'frost-survival', 'hao-survivor', 'poker-suite', 'save-the-dog',
+  'water-sort', 'werewolf', 'downstairs', 'splat-ring',
 ]);
 
 async function checkStreakAchievements(env, uid, streak) {
@@ -265,6 +269,8 @@ export default {
         if (!body) return err('body required');
         const { game, score } = body;
         if (!game || score === undefined) return err('game and score required');
+        // Whitelist the game id (mirror /play) so the shared leaderboard can't be polluted with arbitrary game_ids
+        if (typeof game !== 'string' || game.length > 64 || !ALLOWED_GAMES.has(game)) return err('unknown game');
         if (typeof score !== 'number' || !Number.isFinite(score) || score < 0 || score > 1e9) return err('invalid score');
 
         // Record score

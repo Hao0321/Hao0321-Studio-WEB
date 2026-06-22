@@ -242,9 +242,9 @@
       .toc ol { columns: 1; }
       main { padding: calc(var(--nav-h) + 40px) 20px 64px; }
     }
-  /*a11y-seo-fix-v1*/:focus-visible{outline:2px solid #2C5ED9;outline-offset:2px;border-radius:4px}@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}</style>
+  /*a11y-seo-fix-v1*/:focus-visible{outline:2px solid #2C5ED9;outline-offset:2px;border-radius:4px}@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}/*a11y-skiplink-v1*/.skip-link{position:absolute;left:12px;top:-60px;z-index:9999;background:#0F0F1E;color:#fff;padding:10px 18px;border-radius:8px;font-weight:600;transition:top .2s}.skip-link:focus{top:12px}@media (prefers-reduced-motion:reduce){.skip-link{transition:none}}</style>
 </head>
-<body>
+<body><a href="#main-content" class="skip-link">跳到主要內容</a>
   <div class="bg-waves"></div>
 
   <nav class="topnav">
@@ -255,7 +255,7 @@
     <a href="/" class="back-link">← 回首頁</a>
   </nav>
 
-  <main>
+  <main id="main-content">
     <div class="doc-label">Legal / Terms</div>
     <h1>使用條款</h1>
     <p class="updated">最後更新：2026 年 4 月 21 日 · 生效日期：2026 年 4 月 21 日</p>
