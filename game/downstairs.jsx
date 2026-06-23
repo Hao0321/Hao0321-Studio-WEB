@@ -56,15 +56,75 @@ function rr(ctx, x, y, w, h, r) {
   ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
 }
 
+// ---- Lightweight procedural WebAudio SFX (no assets) ----
+let _ac = null;
+function _getAC() {
+  try {
+    if (!_ac) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) _ac = new AC();
+    }
+    return _ac;
+  } catch (e) { return null; }
+}
+// muted: a ref-like object { current: bool }; sound only plays when not muted
+function sfx(type, muted) {
+  try {
+    if (muted && muted.current) return;
+    const ac = _getAC();
+    if (!ac) return;
+    if (ac.state === "suspended") ac.resume();
+    const now = ac.currentTime;
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
+    let dur = 0.08, vol = 0.08;
+    if (type === "land") {
+      osc.type = "square"; osc.frequency.setValueAtTime(440, now); dur = 0.06; vol = 0.05;
+    } else if (type === "boost") {
+      osc.type = "sine"; osc.frequency.setValueAtTime(300, now);
+      osc.frequency.exponentialRampToValueAtTime(700, now + 0.14); dur = 0.16; vol = 0.08;
+    } else if (type === "item") {
+      osc.type = "triangle"; osc.frequency.setValueAtTime(660, now);
+      osc.frequency.exponentialRampToValueAtTime(990, now + 0.1); dur = 0.12; vol = 0.07;
+    } else if (type === "combo") {
+      osc.type = "square"; osc.frequency.setValueAtTime(880, now); dur = 0.09; vol = 0.06;
+    } else if (type === "death") {
+      osc.type = "sawtooth"; osc.frequency.setValueAtTime(200, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.3); dur = 0.32; vol = 0.1;
+    }
+    gain.gain.setValueAtTime(vol, now);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+    osc.start(now); osc.stop(now + dur + 0.02);
+  } catch (e) { /* no-op */ }
+}
+// Mobile haptics, gated behind the same mute toggle; no-op where unsupported
+function buzz(pattern, muted) {
+  try {
+    if (muted && muted.current) return;
+    if (navigator.vibrate) navigator.vibrate(pattern);
+  } catch (e) { /* no-op */ }
+}
+
 export default function Game() {
   const cvs = useRef(null);
   const [state, setState] = useState("menu");
   const [score, setScore] = useState(0);
-  const [best, setBest] = useState(0);
+  const [best, setBest] = useState(() => {
+    try { return parseInt(localStorage.getItem("downstairs_best") || "0", 10) || 0; }
+    catch (e) { return 0; }
+  });
   const g = useRef({});
   const keys = useRef({ l: false, r: false });
   const touch = useRef({ on: false, x: 0 });
   const raf = useRef(null);
+  // Mute toggle (audio + haptics), persisted; muteUI forces button re-render
+  const muted = useRef((() => {
+    try { return localStorage.getItem("downstairs_muted") === "1"; }
+    catch (e) { return false; }
+  })());
+  const [muteUI, setMuteUI] = useState(muted.current);
+  const reduceMotion = useRef(false);
 
   const init = useCallback(() => {
     const plats = [];
@@ -89,11 +149,36 @@ export default function Game() {
       const d = e.type === "keydown";
       if (e.key === "ArrowLeft" || e.key === "a") keys.current.l = d;
       if (e.key === "ArrowRight" || e.key === "d") keys.current.r = d;
-      if ((e.key === " " || e.key === "Enter") && state !== "playing") start();
+      if ((e.key === " " || e.key === "Enter") && state !== "playing" && state !== "paused") start();
+      if (d && (e.key === "p" || e.key === "P")) {
+        if (state === "playing") setState("paused");
+        else if (state === "paused") setState("playing");
+      }
     };
     window.addEventListener("keydown", kd); window.addEventListener("keyup", kd);
     return () => { window.removeEventListener("keydown", kd); window.removeEventListener("keyup", kd); };
   }, [state, start]);
+
+  // Respect prefers-reduced-motion (dampens shake/particles/tint)
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const apply = () => { reduceMotion.current = mq.matches; };
+    apply();
+    try { mq.addEventListener("change", apply); }
+    catch (e) { mq.addListener && mq.addListener(apply); }
+    return () => {
+      try { mq.removeEventListener("change", apply); }
+      catch (e) { mq.removeListener && mq.removeListener(apply); }
+    };
+  }, []);
+
+  // Auto-pause when the tab/window loses focus (no unfair backgrounded deaths)
+  useEffect(() => {
+    const onBlur = () => setState(s => (s === "playing" ? "paused" : s));
+    window.addEventListener("blur", onBlur);
+    return () => window.removeEventListener("blur", onBlur);
+  }, []);
 
   const ts = e => { const t2 = e.touches[0], r = cvs.current?.getBoundingClientRect(); if (r) touch.current = { on: true, x: t2.clientX - r.left }; };
   const tm = e => { e.preventDefault(); const t2 = e.touches[0], r = cvs.current?.getBoundingClientRect(); if (r) touch.current.x = t2.clientX - r.left; };
@@ -101,7 +186,8 @@ export default function Game() {
 
   // Spawn landing dust
   function spawnDust(d, x, y, color) {
-    for (let i = 0; i < 5; i++) {
+    const n = reduceMotion.current ? 2 : 5;
+    for (let i = 0; i < n; i++) {
       const angle = Math.PI + (Math.random() - 0.5) * 1.8; // spread upward
       const speed = 1 + Math.random() * 1.8;
       d.dust.push({
@@ -149,7 +235,7 @@ export default function Game() {
 
       if (d.reversed) {
         d.revTimer--;
-        d.tintAlpha = Math.min(d.tintAlpha + 0.005, 0.05);
+        d.tintAlpha = Math.min(d.tintAlpha + 0.005, reduceMotion.current ? 0.02 : 0.05);
         if (d.revTimer <= 0) { d.reversed = false; }
       } else {
         d.tintAlpha = Math.max(d.tintAlpha - 0.005, 0);
@@ -190,10 +276,13 @@ export default function Game() {
                 d.shield = false; d.shake = 5;
                 p.vy = d.reversed ? 5 : -5;
                 spawnDust(d, cx, pl.y, C.mint);
+                buzz(30, muted); sfx("item", muted);
                 continue;
               }
               d.shake = 10;
-              setState("gameover"); setBest(b => Math.max(b, d.score));
+              sfx("death", muted); buzz(60, muted);
+              setState("gameover");
+              setBest(b => { const nb = Math.max(b, d.score); try { localStorage.setItem("downstairs_best", String(nb)); } catch (e) {} return nb; });
               if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(d.score);
               return;
             }
@@ -205,6 +294,7 @@ export default function Game() {
             // Landing dust
             const dustY = d.reversed ? pl.y + PLATH : pl.y;
             spawnDust(d, cx, dustY, pl.color);
+            if (pl.type !== T.BOOST) sfx("land", muted);
 
             if (pl.type === T.CONV) p.vx += pl.convDir * 2.5;
 
@@ -219,14 +309,17 @@ export default function Game() {
             }
             if (pl.type === T.BOOST) {
               p.vy = d.reversed ? 9 : -9; p.land = 0;
+              sfx("boost", muted); buzz(10, muted);
             }
 
             d.combo++; d.comboTimer = 90;
+            if (d.combo === 5) { sfx("combo", muted); buzz([0, 20, 40, 20], muted); }
             const pts = d.combo >= 5 ? 3 : d.combo >= 3 ? 2 : 1;
             d.score += pts; setScore(d.score);
 
             if (pl.item !== ITEM.NONE && !pl.itemTaken) {
               pl.itemTaken = true;
+              sfx("item", muted);
               if (pl.item === ITEM.REVERSE) {
                 d.reversed = !d.reversed; d.revTimer = d.revMax;
                 p.vy = d.reversed ? -3 : 3;
@@ -258,7 +351,9 @@ export default function Game() {
 
       const dead = d.reversed ? (p.y > GH + 50 || p.y < -PH - 30) : (p.y < -PH - 10 || p.y > GH + 50);
       if (dead) {
-        d.shake = 10; setState("gameover"); setBest(b => Math.max(b, d.score));
+        d.shake = 10; sfx("death", muted); buzz(60, muted);
+        setState("gameover");
+        setBest(b => { const nb = Math.max(b, d.score); try { localStorage.setItem("downstairs_best", String(nb)); } catch (e) {} return nb; });
         if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(d.score);
         return;
       }
@@ -267,7 +362,7 @@ export default function Game() {
       if (d.shake > 0) d.shake--;
 
       // ========= RENDER =========
-      const sk = d.shake > 0 ? (Math.random() - .5) * d.shake * 0.4 : 0;
+      const sk = (d.shake > 0 && !reduceMotion.current) ? (Math.random() - .5) * d.shake * 0.4 : 0;
       ctx.save(); ctx.translate(sk, sk);
 
       ctx.fillStyle = d.reversed ? "#f0f7f8" : C.bg;
@@ -533,6 +628,12 @@ export default function Game() {
   const mw = typeof window !== "undefined" ? Math.min(GW, window.innerWidth - 20) : GW;
   const mh = mw * (GH / GW);
 
+  const toggleMute = () => {
+    muted.current = !muted.current;
+    setMuteUI(muted.current);
+    try { localStorage.setItem("downstairs_muted", muted.current ? "1" : "0"); } catch (e) {}
+  };
+
   const Ov = ({ children }) => (
     <div style={{
       position: "absolute", inset: 0, display: "flex", flexDirection: "column",
@@ -561,6 +662,17 @@ export default function Game() {
     }}>
       <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
 
+      {state !== "playing" && (
+        <button onClick={toggleMute} aria-label={muteUI ? "開啟音效" : "關閉音效"}
+          style={{
+            position: "absolute", top: 14, right: 14, width: 40, height: 40,
+            borderRadius: 12, border: "none", cursor: "pointer",
+            background: "rgba(255,255,255,0.85)", color: muteUI ? "#bbb" : C.purple,
+            fontSize: 17, lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center",
+            boxShadow: "0 2px 8px rgba(0,0,0,.08)", touchAction: "manipulation", zIndex: 5
+          }}>{muteUI ? "🔇" : "🔊"}</button>
+      )}
+
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
         {state !== "playing" && (
           <div style={{ textAlign: "center", marginBottom: 2, animation: "fi .4s ease-out" }}>
@@ -578,7 +690,37 @@ export default function Game() {
         }}>
           <canvas ref={cvs} width={GW} height={GH}
             onTouchStart={ts} onTouchMove={tm} onTouchEnd={te}
+            aria-label="下樓梯遊戲畫面"
             style={{ display: "block", width: mw, height: mh, touchAction: "none" }} />
+
+          {/* Off-screen aria-live score announcer for screen readers */}
+          <div aria-live="polite" style={{
+            position: "absolute", width: 1, height: 1, overflow: "hidden",
+            clip: "rect(0 0 0 0)", whiteSpace: "nowrap", border: 0, padding: 0, margin: -1
+          }}>
+            {state === "gameover" ? `遊戲結束，分數 ${score}` : (state === "playing" ? `分數 ${score}` : "")}
+          </div>
+
+          {/* On-canvas pause button (touch-friendly), only while playing */}
+          {state === "playing" && (
+            <button onClick={() => setState("paused")} aria-label="暫停"
+              style={{
+                position: "absolute", top: 8, right: 8, width: 40, height: 40,
+                borderRadius: 12, border: "none", cursor: "pointer",
+                background: "rgba(255,255,255,0.85)", color: C.purple,
+                fontSize: 16, fontWeight: 800, lineHeight: 1,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: "0 2px 8px rgba(0,0,0,.08)", touchAction: "manipulation"
+              }}>❚❚</button>
+          )}
+
+          {state === "paused" && (
+            <Ov>
+              <p style={{ fontSize: 26, fontWeight: 800, color: C.purple, margin: "0 0 14px", letterSpacing: 2 }}>暫停</p>
+              <Btn onClick={() => setState("playing")}>RESUME</Btn>
+              <p style={{ marginTop: 10, fontSize: 11, color: C.dark, opacity: .4, fontWeight: 700 }}>按 P 繼續</p>
+            </Ov>
+          )}
 
           {state === "menu" && (
             <Ov>

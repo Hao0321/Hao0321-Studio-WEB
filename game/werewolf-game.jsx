@@ -11,6 +11,20 @@ function pick(a){return a[Math.floor(Math.random()*a.length)];}
 function wait(ms){return new Promise(r=>setTimeout(r,ms));}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
 
+// ━━━ SFX (WebAudio) + HAPTICS — pure procedural, no files/network ━━━
+const AC=typeof window!=="undefined"&&(window.AudioContext||window.webkitAudioContext);
+let _ac=null;
+const ac=()=>{if(!AC)return null;try{if(!_ac)_ac=new AC();if(_ac.state==="suspended")_ac.resume();}catch(e){return null;}return _ac;};
+// module-level mirrors of settings so top-level tone/buzz can read them
+let _sfxOn=true,_hapticsOn=true;
+function tone(freq,dur,type="sine",gain=0.15,delay=0){const c=ac();if(!c||!_sfxOn)return;try{const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=freq;const t0=c.currentTime+delay;g.gain.setValueAtTime(gain,t0);g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+dur);}catch(e){}}
+function arpeggio(freqs,step=0.12,type="triangle",gain=0.14){freqs.forEach((f,i)=>tone(f,step*1.4,type,gain,i*step));}
+function buzz(p){if(typeof navigator!=="undefined"&&navigator.vibrate&&_hapticsOn){try{navigator.vibrate(p);}catch(e){}}}
+
+// ━━━ STATS PERSISTENCE (localStorage) ━━━━━━━━━━━━━━━━━━━━━━━━━
+function loadStats(){try{return JSON.parse(localStorage.getItem("ww_stats"))||{};}catch(e){return {};}}
+function saveStats(s){try{localStorage.setItem("ww_stats",JSON.stringify(s));}catch(e){}}
+
 // ━━━ AI BRAIN (same logic, compacted) ━━━━━━━━━━━━━━━━━━━━━━━━
 class AIBrain {
   constructor(ps){this.sus={};this.sr={};this.lp=null;this.ah=[];this.dh=[];this.pa=null;ps.forEach(p=>{this.sus[p.id]={};ps.forEach(q=>{if(p.id!==q.id)this.sus[p.id][q.id]=0.5;});});}
@@ -44,19 +58,24 @@ const CSS = `
 @keyframes moonGlow{0%,100%{box-shadow:0 0 60px 20px rgba(200,200,255,.03)}50%{box-shadow:0 0 80px 30px rgba(200,200,255,.06)}}
 @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
 @keyframes ripple{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.5);opacity:0}}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-2px)}}
+@keyframes redflash{0%{opacity:0}15%{opacity:.55}100%{opacity:0}}
+button:focus-visible{outline:2px solid #c084fc;outline-offset:2px;}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.05ms!important;}}
 `;
 
 // ━━━ PARTICLES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function Particles({count=20,color="rgba(255,70,87,.1)"}){
+function Particles({count=20,color="rgba(255,70,87,.1)",enabled=true}){
   const pts=useMemo(()=>Array.from({length:count},(_,i)=>({id:i,x:Math.random()*100,y:Math.random()*100,s:1.5+Math.random()*3,d:12+Math.random()*20,dl:Math.random()*8})),[count]);
+  if(!enabled)return null;
   return <div style={{position:"absolute",inset:0,overflow:"hidden",pointerEvents:"none"}}>{pts.map(p=><div key={p.id} style={{position:"absolute",left:p.x+"%",top:p.y+"%",width:p.s,height:p.s,borderRadius:"50%",background:color,animation:`float ${p.d}s ease-in-out ${p.dl}s infinite alternate`}}/>)}</div>;
 }
 
 // ━━━ MOON ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function Moon({size=120,top="6%",opacity=1}){
+function Moon({size=120,top="6%",opacity=1,reduce=false}){
   return (
     <div style={{position:"absolute",top,left:"50%",transform:"translateX(-50%)",zIndex:0,opacity,transition:"opacity 1.5s"}}>
-      <div style={{width:size,height:size,borderRadius:"50%",background:"radial-gradient(circle at 35% 35%, #e8e4d4 0%, #c8c4b4 40%, #a8a498 70%, #888478 100%)",boxShadow:`0 0 ${size/2}px ${size/6}px rgba(200,200,180,.08), inset -${size/6}px -${size/8}px ${size/4}px rgba(0,0,0,.3)`,animation:"moonGlow 6s ease-in-out infinite",position:"relative",overflow:"hidden"}}>
+      <div style={{width:size,height:size,borderRadius:"50%",background:"radial-gradient(circle at 35% 35%, #e8e4d4 0%, #c8c4b4 40%, #a8a498 70%, #888478 100%)",boxShadow:`0 0 ${size/2}px ${size/6}px rgba(200,200,180,.08), inset -${size/6}px -${size/8}px ${size/4}px rgba(0,0,0,.3)`,animation:reduce?"none":"moonGlow 6s ease-in-out infinite",position:"relative",overflow:"hidden"}}>
         <div style={{position:"absolute",top:"20%",left:"25%",width:size*.18,height:size*.18,borderRadius:"50%",background:"rgba(0,0,0,.08)"}}/>
         <div style={{position:"absolute",top:"55%",left:"60%",width:size*.12,height:size*.12,borderRadius:"50%",background:"rgba(0,0,0,.06)"}}/>
         <div style={{position:"absolute",top:"35%",left:"55%",width:size*.08,height:size*.08,borderRadius:"50%",background:"rgba(0,0,0,.05)"}}/>
@@ -69,7 +88,7 @@ function Moon({size=120,top="6%",opacity=1}){
 function TBtn({p,onClick,color,disabled,showRole}){
   const [h,setH]=useState(false);const c=color||"#ff4757";
   return(
-    <button onClick={onClick} disabled={disabled} onPointerDown={()=>setH(true)} onPointerUp={()=>setH(false)} onPointerLeave={()=>setH(false)}
+    <button onClick={onClick} disabled={disabled} aria-label={(showRole?p.role+" ":"")+p.name} onPointerDown={()=>setH(true)} onPointerUp={()=>setH(false)} onPointerLeave={()=>setH(false)}
       style={{display:"flex",flexDirection:"column",alignItems:"center",gap:5,padding:"14px 16px",minWidth:72,background:h?`linear-gradient(160deg,${c}20,${c}08)`:"linear-gradient(160deg,rgba(255,255,255,.03),rgba(255,255,255,.01))",border:`1px solid ${h?c+"70":"rgba(255,255,255,.06)"}`,borderRadius:16,color:"#e8e6f0",cursor:disabled?"default":"pointer",transition:"all .2s cubic-bezier(.4,0,.2,1)",fontFamily:"inherit",outline:"none",WebkitTapHighlightColor:"transparent",transform:h?"scale(.93)":"none",boxShadow:h?`0 4px 24px ${c}18,inset 0 0 12px ${c}08`:"0 2px 8px rgba(0,0,0,.2)",opacity:disabled?.25:1,backdropFilter:"blur(8px)"}}>
       <span style={{fontSize:30,lineHeight:1,transition:"transform .2s",transform:h?"scale(1.15)":"none"}}>{p.avatar}</span>
       <span style={{fontSize:11,fontWeight:600,letterSpacing:.5,color:h?c:"rgba(255,255,255,.7)"}}>{p.name}</span>
@@ -78,10 +97,10 @@ function TBtn({p,onClick,color,disabled,showRole}){
   );
 }
 
-function GlowBtn({children,onClick,color,small,sx}){
+function GlowBtn({children,onClick,color,small,sx,ariaLabel}){
   const [h,setH]=useState(false);const c=color||"#ff4757";
   return(
-    <button onClick={onClick} onPointerDown={()=>setH(true)} onPointerUp={()=>setH(false)} onPointerLeave={()=>setH(false)}
+    <button onClick={onClick} aria-label={ariaLabel} onPointerDown={()=>setH(true)} onPointerUp={()=>setH(false)} onPointerLeave={()=>setH(false)}
       style={{position:"relative",padding:small?"11px 28px":"18px 56px",fontSize:small?13:15,fontWeight:800,letterSpacing:small?2:4,background:h?`linear-gradient(135deg,${c},${c}bb)`:"transparent",color:h?"#fff":c,border:`1.5px solid ${h?c:c+"80"}`,borderRadius:14,cursor:"pointer",transition:"all .3s cubic-bezier(.4,0,.2,1)",fontFamily:"'Noto Sans TC',sans-serif",outline:"none",WebkitTapHighlightColor:"transparent",transform:h?"scale(.96)":"none",boxShadow:h?`0 6px 32px ${c}35,0 0 0 4px ${c}10`:`0 0 20px ${c}08`,overflow:"hidden",...(sx||{})}}>
       {children}
       {h&&<div style={{position:"absolute",inset:0,background:`linear-gradient(90deg,transparent,${c}20,transparent)`,animation:"shimmer 1s linear infinite",backgroundSize:"200% 100%"}}/>}
@@ -124,7 +143,7 @@ function SpeechPanel({players,me,onChoice,seerResults}){
 function SpeechOpt({icon,label,desc,color,onClick}){
   const [h,setH]=useState(false);
   return(
-    <button onClick={onClick} onPointerDown={()=>setH(true)} onPointerUp={()=>setH(false)} onPointerLeave={()=>setH(false)}
+    <button onClick={onClick} aria-label={label+"："+desc} onPointerDown={()=>setH(true)} onPointerUp={()=>setH(false)} onPointerLeave={()=>setH(false)}
       style={{display:"flex",alignItems:"center",gap:14,padding:"12px 18px",background:h?color+"12":"rgba(255,255,255,.015)",border:`1px solid ${h?color+"40":"rgba(255,255,255,.04)"}`,borderRadius:14,cursor:"pointer",transition:"all .2s",fontFamily:"inherit",outline:"none",WebkitTapHighlightColor:"transparent",textAlign:"left",transform:h?"translateX(4px)":"none",boxShadow:h?`0 0 20px ${color}10`:"none"}}>
       <span style={{fontSize:22,flexShrink:0,width:32,textAlign:"center"}}>{icon}</span>
       <div><div style={{fontSize:13,fontWeight:700,color}}>{label}</div><div style={{fontSize:10,color:"#555",marginTop:2}}>{desc}</div></div>
@@ -171,28 +190,61 @@ export default function WerewolfGame(){
   const [showSpeech,setShowSpeech]=useState(false);
   const [voteTally,setVoteTally]=useState(null);
   const [pSeer,setPSeer]=useState({});
+  // settings (persisted)
+  const [sfxOn,setSfxOn]=useState(()=>{try{return localStorage.getItem("ww_sfx")!=="0";}catch(e){return true;}});
+  const [hapticsOn,setHapticsOn]=useState(()=>{try{return localStorage.getItem("ww_hap")!=="0";}catch(e){return true;}});
+  const [reduceMotion,setReduceMotion]=useState(()=>{try{const v=localStorage.getItem("ww_rm");if(v!=null)return v==="1";}catch(e){}return typeof window!=="undefined"&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;});
+  const [showSettings,setShowSettings]=useState(false);
+  // stats (persisted)
+  const [stats,setStats]=useState(loadStats);
+  // death juice
+  const [shakeKey,setShakeKey]=useState(0);
+  const [flash,setFlash]=useState(false);
   const endRef=useRef(null);
   const brainRef=useRef(null);
   const ndRef=useRef({wk:null,ds:null});
 
   useEffect(()=>{endRef.current?.scrollIntoView({behavior:"smooth"});},[msgs]);
+  // mirror settings to module-level so top-level tone/buzz can read them + persist
+  useEffect(()=>{_sfxOn=sfxOn;try{localStorage.setItem("ww_sfx",sfxOn?"1":"0");}catch(e){}},[sfxOn]);
+  useEffect(()=>{_hapticsOn=hapticsOn;try{localStorage.setItem("ww_hap",hapticsOn?"1":"0");}catch(e){}},[hapticsOn]);
+  useEffect(()=>{try{localStorage.setItem("ww_rm",reduceMotion?"1":"0");}catch(e){}},[reduceMotion]);
+
+  // death-juice helper (suppressed under reduce-motion)
+  const punch=useCallback((strong)=>{if(reduceMotion)return;setShakeKey(k=>k+1);setFlash(true);setTimeout(()=>setFlash(false),strong?600:380);},[reduceMotion]);
+
+  // stats: record once per game on reaching "over"
+  useEffect(()=>{
+    if(screen==="over"&&winner&&players[0]){
+      const me=players[0];
+      const iw=(winner==="good"&&me.role!==R.W)||(winner==="evil"&&me.role===R.W);
+      const s=loadStats();
+      s.games=(s.games||0)+1;
+      if(iw){s.wins=(s.wins||0)+1;s.streak=(s.streak||0)+1;s.best=Math.max(s.best||0,s.streak);if(me.role===R.W)s.evilWins=(s.evilWins||0)+1;else s.goodWins=(s.goodWins||0)+1;if(!s.fastest||dayNum<s.fastest)s.fastest=dayNum;}
+      else{s.streak=0;}
+      saveStats(s);setStats(s);
+      // win/lose audio cue
+      if(iw)arpeggio([523,659,784,1047],0.13,"triangle",0.13);
+      else arpeggio([523,440,349,262],0.16,"sine",0.13);
+    }
+  },[screen]);
 
   const log=useCallback((t,type,sp)=>{setMsgs(p=>[...p,{text:t,type:type||"sys",speaker:sp||null,id:Date.now()+Math.random()}]);},[]);
   const checkWin=ps=>{const w=ps.filter(p=>p.alive&&p.role===R.W).length;const g=ps.filter(p=>p.alive&&p.role!==R.W).length;if(!w)return"good";if(w>=g)return"evil";return null;};
 
-  const startGame=()=>{const p=initGame();const b=new AIBrain(p);setPlayers(p);brainRef.current=b;setMsgs([]);setDayNum(0);setPhase("night");setVotingOpen(false);setNightStep("");setWinner(null);setPVoted(false);setHunterModal(null);setNightAnim(false);setLastProt(null);setShowSpeech(false);setVoteTally(null);setPSeer({});ndRef.current={wk:null,ds:null};setScreen("reveal");};
-  const enterGame=()=>{setScreen("game");startNight(players,1);};
+  const startGame=()=>{ac();const p=initGame();const b=new AIBrain(p);setPlayers(p);brainRef.current=b;setMsgs([]);setDayNum(0);setPhase("night");setVotingOpen(false);setNightStep("");setWinner(null);setPVoted(false);setHunterModal(null);setNightAnim(false);setLastProt(null);setShowSpeech(false);setVoteTally(null);setPSeer({});ndRef.current={wk:null,ds:null};setScreen("reveal");};
+  const enterGame=()=>{ac();setScreen("game");startNight(players,1);};
 
   // ━━━ NIGHT FLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  const startNight=async(ps,n)=>{const num=n||dayNum+1;setDayNum(num);setPhase("night");setNightAnim(true);ndRef.current={wk:null,ds:null};setVoteTally(null);await wait(500);log(` 第 ${num} 個夜晚，所有人閉眼...`,"phase");await wait(700);beginWolf(ps);};
+  const startNight=async(ps,n)=>{const num=n||dayNum+1;setDayNum(num);setPhase("night");setNightAnim(true);ndRef.current={wk:null,ds:null};setVoteTally(null);tone(55,1.2,"sine",0.18);await wait(500);log(` 第 ${num} 個夜晚，所有人閉眼...`,"phase");await wait(700);beginWolf(ps);};
   const beginWolf=async ps=>{const me=ps.find(p=>p.id===0);log(" 狼人請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.W){const tm=ps.filter(p=>p.alive&&p.role===R.W&&p.id!==0);if(tm.length)log(`隊友：${tm.map(t=>t.avatar+t.name).join("、")}`,"wolfinfo");setNightStep("wolf");}else{setBusy(true);await wait(1400);const b=brainRef.current;const t=b.wolfKill(ps.filter(p=>p.alive&&p.role===R.W),ps);ndRef.current.wk=t?t.id:null;log(" 狼人閉眼。","phase");await wait(400);beginSeer(ps);setBusy(false);}};
   const onWolf=async tid=>{ndRef.current.wk=tid;const t=players.find(p=>p.id===tid);log(` 鎖定：${t.name}`,"action");setNightStep("");await wait(500);log(" 狼人閉眼。","phase");await wait(400);beginSeer(players);};
   const beginSeer=async ps=>{const me=ps.find(p=>p.id===0);log(" 預言家請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.S){setNightStep("seer");}else{setBusy(true);await wait(1100);const b=brainRef.current;ps.filter(p=>p.alive&&p.role===R.S&&!p.isPlayer).forEach(s=>{const t=b.seerTgt(s.id,ps);if(t)b.recSeer(t.id,t.role===R.W);});log(" 預言家閉眼。","phase");await wait(400);beginDoc(ps);setBusy(false);}};
-  const onSeer=async tid=>{const t=players.find(p=>p.id===tid);const isW=t.role===R.W;brainRef.current.recSeer(tid,isW);setPSeer(prev=>({...prev,[tid]:isW}));log(` ${t.name} ${isW?"──  狼人！":"──  好人"}`,isW?"danger":"safe");setNightStep("");await wait(700);log(" 預言家閉眼。","phase");await wait(400);beginDoc(players);};
+  const onSeer=async tid=>{const t=players.find(p=>p.id===tid);const isW=t.role===R.W;brainRef.current.recSeer(tid,isW);setPSeer(prev=>({...prev,[tid]:isW}));if(isW){tone(180,0.45,"sawtooth",0.16);tone(190,0.45,"sawtooth",0.12);}else{tone(880,0.3,"triangle",0.14);}buzz(30);log(` ${t.name} ${isW?"──  狼人！":"──  好人"}`,isW?"danger":"safe");setNightStep("");await wait(700);log(" 預言家閉眼。","phase");await wait(400);beginDoc(players);};
   const beginDoc=async ps=>{const me=ps.find(p=>p.id===0);log(" 醫生請睜眼...","phase");await wait(500);if(me.alive&&me.role===R.D){setNightStep("doctor");}else{setBusy(true);await wait(1100);const b=brainRef.current;const docs=ps.filter(p=>p.alive&&p.role===R.D&&!p.isPlayer);if(docs.length){const t=b.docTgt(docs[0].id,ps);if(t)ndRef.current.ds=t.id;}log(" 醫生閉眼。","phase");await wait(400);resolveNight(ps);setBusy(false);}};
   const onDoc=async tid=>{ndRef.current.ds=tid;setLastProt(tid);const t=players.find(p=>p.id===tid);log(` 守護：${t.name}`,"action");setNightStep("");await wait(500);log(" 醫生閉眼。","phase");await wait(400);resolveNight(players);};
 
-  const resolveNight=async ps=>{setBusy(true);await wait(1200);const{wk,ds}=ndRef.current;setPhase("day");setNightStep("");setNightAnim(false);const b=brainRef.current;b.pa=null;if(wk!=null&&wk!==ds){const v=ps.find(p=>p.id===wk);let np=ps.map(p=>p.id===wk?{...p,alive:false}:p);setPlayers(np);b.recDeath(wk);log(` 天亮了，第 ${dayNum} 天白天`,"phase");log(pick([`昨夜，${v.name} 倒在了血泊中... 身份：${v.role}${RICON[v.role]}`,`${v.name} 在沉睡中離開了... 身份：${v.role}${RICON[v.role]}`]),"death");if(v.role===R.H){await wait(800);np=await handleHunter(v,np);}const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}setBusy(false);return;}await wait(1000);b.updSus(np);runDay(np);}else{log(` 天亮了，第 ${dayNum} 天白天`,"phase");log(pick(["平安夜！醫生成功守護了目標！","所有人安全度過了夜晚。"]),"safe");await wait(1000);b.updSus(ps);runDay(ps);}setBusy(false);};
+  const resolveNight=async ps=>{setBusy(true);await wait(1200);const{wk,ds}=ndRef.current;setPhase("day");setNightStep("");setNightAnim(false);const b=brainRef.current;b.pa=null;if(wk!=null&&wk!==ds){const v=ps.find(p=>p.id===wk);let np=ps.map(p=>p.id===wk?{...p,alive:false}:p);setPlayers(np);b.recDeath(wk);log(` 天亮了，第 ${dayNum} 天白天`,"phase");tone(70,0.6,"sine",0.25);if(wk===0){buzz([40,30,60]);punch(true);}else{buzz(30);punch(false);}log(pick([`昨夜，${v.name} 倒在了血泊中... 身份：${v.role}${RICON[v.role]}`,`${v.name} 在沉睡中離開了... 身份：${v.role}${RICON[v.role]}`]),"death");if(v.role===R.H){await wait(800);np=await handleHunter(v,np);}const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}setBusy(false);return;}await wait(1000);b.updSus(np);runDay(np);}else{log(` 天亮了，第 ${dayNum} 天白天`,"phase");log(pick(["平安夜！醫生成功守護了目標！","所有人安全度過了夜晚。"]),"safe");await wait(1000);b.updSus(ps);runDay(ps);}setBusy(false);};
 
   // ━━━ DAY FLOW ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   const runDay=async ps=>{setBusy(true);const b=brainRef.current;const alive=ps.filter(p=>p.alive&&!p.isPlayer);const order=shuffle(alive).slice(0,Math.min(4,alive.length));const me=ps.find(p=>p.id===0);const half=Math.ceil(order.length/2);for(let i=0;i<half;i++){await wait(800+Math.random()*600);const sp=b.genSpeech(order[i],ps,dayNum);if(sp)log(sp,"chat",order[i]);}if(me.alive){await wait(400);setShowSpeech(true);setBusy(false);return;}for(let i=half;i<order.length;i++){await wait(800+Math.random()*600);const sp=b.genSpeech(order[i],ps,dayNum);if(sp)log(sp,"chat",order[i]);}await wait(500);log(" 討論結束，開始投票！","phase");setVotingOpen(true);setPVoted(false);setBusy(false);};
@@ -200,11 +252,11 @@ export default function WerewolfGame(){
   const onPlayerSpeech=async(type,tid)=>{setShowSpeech(false);setBusy(true);const me=players[0];const b=brainRef.current;const alive=players.filter(p=>p.alive&&!p.isPlayer);if(type==="accuse"||type==="frame"){const t=players.find(p=>p.id===tid);b.setPA(tid);b.recAcc(0,tid);log(me.role===R.W?`我覺得${t.name}非常可疑，大家注意他！`:`我指控${t.name}！他的行為很不正常。`,"playerchat",me);await wait(600);for(const r of shuffle(alive).slice(0,2)){await wait(500+Math.random()*400);const rx=b.react(r,players,"accuse",tid);if(rx)log(rx,"chat",r);}}else if(type==="defend"){log("我是好人！你們可以觀察我的表現，我沒有可疑行為。","playerchat",me);await wait(600);const r=pick(alive);const rx=b.react(r,players,"defend",null);if(rx)log(rx,"chat",r);}else if(type==="claim"){const ck=Object.entries(pSeer);if(ck.length){const res=ck.map(([id,isW])=>{const p=players.find(pp=>pp.id===parseInt(id));return p?`${p.name}${isW?"是狼人":"是好人"}`:""}).filter(Boolean).join("，");log(`我跳預言家！查驗結果：${res}`,"playerchat",me);await wait(600);const wolves=alive.filter(p=>p.role===R.W);if(wolves.length&&Math.random()>0.4){await wait(500);log(pick(["你是假預言家吧？我才是真的！","別聽他的，他在騙人！"]),"chat",pick(wolves));}}}else if(type==="hint"){log("投我的人要三思。我有底牌，狼人不會想讓我死。","playerchat",me);}else if(type==="silent"){log("（你保持沉默，觀察局勢）","dim");}await wait(500);for(const sp of shuffle(alive).slice(0,2)){await wait(700+Math.random()*500);const speech=b.genSpeech(sp,players,dayNum);if(speech)log(speech,"chat",sp);}await wait(500);log(" 討論結束，開始投票！","phase");b.updSus(players);setVotingOpen(true);setPVoted(false);setBusy(false);};
 
   // ━━━ VOTE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  const doVote=async vid=>{if(pVoted)return;setPVoted(true);setBusy(true);const b=brainRef.current;const t=players.find(p=>p.id===vid);if(players[0].alive)log(`你投了 ${t.name}`,"vote",players[0]);const tally={};if(players[0].alive)tally[vid]=1;for(const ai of players.filter(p=>p.alive&&!p.isPlayer)){await wait(300+Math.random()*200);const vt=b.getVote(ai.id,ai.role,players);if(vt){tally[vt.id]=(tally[vt.id]||0)+1;log(`${ai.name} → ${vt.name}`,"vote",ai);}}await wait(500);setVoteTally(tally);await wait(1000);let maxV=0,outId=null;Object.entries(tally).forEach(([id,c])=>{if(c>maxV){maxV=c;outId=parseInt(id);}});const ties=Object.entries(tally).filter(([_,c])=>c===maxV);if(ties.length>1){log(` 平票（${maxV}票），無人被放逐。`,"phase");setVotingOpen(false);await wait(1000);startNight(players);setBusy(false);return;}const out=players.find(p=>p.id===outId);let np=players.map(p=>p.id===outId?{...p,alive:false}:p);setPlayers(np);log(` ${out.name} 以 ${maxV} 票被放逐`,"elim");await wait(400);if(!out.isPlayer){log(` ${out.name}：「${out.role===R.W?pick(["哼...你們贏了這次。","可惜，差一點。"]):pick(["我是好人，你們投錯了！","冤枉...希望你們找到真狼。"])}」`,"chat",out);await wait(500);}log(` 身份：${out.role} ${RICON[out.role]}`,"reveal");setVotingOpen(false);if(out.role===R.H){await wait(800);np=await handleHunter(out,np);}const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}setBusy(false);return;}await wait(1000);startNight(np);setBusy(false);};
+  const doVote=async vid=>{if(pVoted)return;setPVoted(true);setBusy(true);const b=brainRef.current;const t=players.find(p=>p.id===vid);if(players[0].alive)log(`你投了 ${t.name}`,"vote",players[0]);const tally={};if(players[0].alive)tally[vid]=1;for(const ai of players.filter(p=>p.alive&&!p.isPlayer)){await wait(300+Math.random()*200);const vt=b.getVote(ai.id,ai.role,players);if(vt){tally[vt.id]=(tally[vt.id]||0)+1;log(`${ai.name} → ${vt.name}`,"vote",ai);}}await wait(500);setVoteTally(tally);await wait(1000);let maxV=0,outId=null;Object.entries(tally).forEach(([id,c])=>{if(c>maxV){maxV=c;outId=parseInt(id);}});const ties=Object.entries(tally).filter(([_,c])=>c===maxV);if(ties.length>1){log(` 平票（${maxV}票），無人被放逐。`,"phase");setVotingOpen(false);await wait(1000);startNight(players);setBusy(false);return;}const out=players.find(p=>p.id===outId);let np=players.map(p=>p.id===outId?{...p,alive:false}:p);setPlayers(np);tone(120,0.5,"square",0.18);buzz(out.id===0?[40,30,60]:30);punch(out.id===0);log(` ${out.name} 以 ${maxV} 票被放逐`,"elim");await wait(400);if(!out.isPlayer){log(` ${out.name}：「${out.role===R.W?pick(["哼...你們贏了這次。","可惜，差一點。"]):pick(["我是好人，你們投錯了！","冤枉...希望你們找到真狼。"])}」`,"chat",out);await wait(500);}log(` 身份：${out.role} ${RICON[out.role]}`,"reveal");setVotingOpen(false);if(out.role===R.H){await wait(800);np=await handleHunter(out,np);}const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}setBusy(false);return;}await wait(1000);startNight(np);setBusy(false);};
 
   // ━━━ HUNTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  const handleHunter=async(dead,ps)=>{if(dead.isPlayer)return new Promise(res=>setHunterModal({ps,resolve:res}));const b=brainRef.current;const targets=ps.filter(p=>p.alive&&p.id!==dead.id);const se=Object.entries(b.sus[dead.id]||{}).filter(([id])=>{const p=ps.find(pp=>pp.id===parseInt(id));return p&&p.alive&&p.id!==dead.id;}).sort((a,b2)=>b2[1]-a[1]);const t=se.length?ps.find(p=>p.id===parseInt(se[0][0])):pick(targets);log(` ${dead.name}是獵人！帶走了 ${t.name}（${t.role}${RICON[t.role]}）`,"hunter");const np=ps.map(p=>p.id===t.id?{...p,alive:false}:p);setPlayers(np);await wait(800);return np;};
-  const confirmHunter=tid=>{if(!hunterModal)return;const t=hunterModal.ps.find(p=>p.id===tid);log(` 你帶走了 ${t.name}（${t.role}${RICON[t.role]}）`,"hunter");const np=hunterModal.ps.map(p=>p.id===tid?{...p,alive:false}:p);setPlayers(np);const res=hunterModal.resolve;setHunterModal(null);const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}return;}res(np);};
+  const handleHunter=async(dead,ps)=>{if(dead.isPlayer)return new Promise(res=>setHunterModal({ps,resolve:res}));const b=brainRef.current;const targets=ps.filter(p=>p.alive&&p.id!==dead.id);const se=Object.entries(b.sus[dead.id]||{}).filter(([id])=>{const p=ps.find(pp=>pp.id===parseInt(id));return p&&p.alive&&p.id!==dead.id;}).sort((a,b2)=>b2[1]-a[1]);const t=se.length?ps.find(p=>p.id===parseInt(se[0][0])):pick(targets);tone(140,0.45,"square",0.2);punch(false);log(` ${dead.name}是獵人！帶走了 ${t.name}（${t.role}${RICON[t.role]}）`,"hunter");const np=ps.map(p=>p.id===t.id?{...p,alive:false}:p);setPlayers(np);await wait(800);return np;};
+  const confirmHunter=tid=>{if(!hunterModal)return;const t=hunterModal.ps.find(p=>p.id===tid);tone(140,0.45,"square",0.2);buzz(40);punch(false);log(` 你帶走了 ${t.name}（${t.role}${RICON[t.role]}）`,"hunter");const np=hunterModal.ps.map(p=>p.id===tid?{...p,alive:false}:p);setPlayers(np);const res=hunterModal.resolve;setHunterModal(null);const w=checkWin(np);if(w){setWinner(w);setScreen("over");if(typeof window!=="undefined"&&window.haoGame){const me=(np||players)[0];const iw=(w==="good"&&me.role!==R.W)||(w==="evil"&&me.role===R.W);window.haoGame.reportScore(dayNum*10+(iw?100:0));}return;}res(np);};
   const doNight=tid=>{if(nightStep==="wolf")onWolf(tid);else if(nightStep==="seer")onSeer(tid);else if(nightStep==="doctor")onDoc(tid);};
 
   // ━━━ STYLES ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -217,11 +269,11 @@ export default function WerewolfGame(){
     return(
       <div style={page}><style>{CSS}</style>
         <div style={{position:"absolute",inset:0,background:"radial-gradient(ellipse at 50% 20%,rgba(20,15,40,1) 0%,#08080e 65%)"}}/>
-        <Moon size={100} top="8%"/>
-        <Particles count={30} color="rgba(200,180,255,.06)"/>
+        <Moon size={100} top="8%" reduce={reduceMotion}/>
+        <Particles count={30} color="rgba(200,180,255,.06)" enabled={!reduceMotion}/>
         <div style={{position:"absolute",bottom:0,left:0,right:0,height:"30%",background:"linear-gradient(0deg,rgba(8,8,14,1) 0%,transparent 100%)",pointerEvents:"none",zIndex:1}}/>
         <div style={{flex:1,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",padding:28,position:"relative",zIndex:2}}>
-          <div style={{fontSize:88,marginBottom:28,animation:"breathe 4s ease infinite"}}></div>
+          <div style={{fontSize:88,marginBottom:28,animation:reduceMotion?"none":"breathe 4s ease infinite"}}></div>
           <h1 style={{fontFamily:"'Cinzel',serif",fontSize:52,fontWeight:900,letterSpacing:16,margin:0,color:"#fff",textShadow:"0 0 60px rgba(255,71,87,.2),0 2px 4px rgba(0,0,0,.5)"}}>狼人殺</h1>
           <p style={{fontFamily:"'Cinzel',serif",fontSize:11,letterSpacing:14,color:"#4a4a5a",marginTop:12}}>WEREWOLF</p>
           <div style={{width:100,height:1,background:"linear-gradient(90deg,transparent,rgba(255,71,87,.2),transparent)",margin:"32px auto"}}/>
@@ -244,7 +296,7 @@ export default function WerewolfGame(){
     return(
       <div style={page}><style>{CSS}</style>
         <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse at 50% 30%,${rc}08,#08080e 60%)`}}/>
-        <Particles count={18} color={rc+"14"}/>
+        <Particles count={18} color={rc+"14"} enabled={!reduceMotion}/>
         <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:28,position:"relative",zIndex:2}}>
           <div style={{textAlign:"center",padding:"52px 36px",background:"rgba(255,255,255,.015)",borderRadius:32,border:"1px solid rgba(255,255,255,.05)",maxWidth:380,width:"100%",position:"relative",overflow:"hidden",backdropFilter:"blur(16px)",boxShadow:`0 20px 80px ${rc}08`}}>
             <div style={{position:"absolute",top:-80,left:"50%",transform:"translateX(-50%)",width:240,height:240,borderRadius:"50%",background:`radial-gradient(circle,${rc}10,transparent)`,filter:"blur(60px)"}}/>
@@ -277,7 +329,7 @@ export default function WerewolfGame(){
     return(
       <div style={page}><style>{CSS}</style>
         <div style={{position:"absolute",inset:0,background:`radial-gradient(ellipse at 50% 30%,${c}06,#08080e 60%)`}}/>
-        <Particles count={30} color={c+"14"}/>
+        <Particles count={30} color={c+"14"} enabled={!reduceMotion}/>
         <div style={{flex:1,display:"flex",alignItems:"center",justifyContent:"center",padding:24,position:"relative",zIndex:2}}>
           <div style={{textAlign:"center",padding:"44px 28px",maxWidth:440,width:"100%",background:"rgba(255,255,255,.015)",borderRadius:32,border:"1px solid rgba(255,255,255,.05)",backdropFilter:"blur(16px)",boxShadow:`0 20px 80px ${c}08`}}>
             <div style={{fontSize:76,marginBottom:16,filter:`drop-shadow(0 0 20px ${c}30)`}}>{isWin?"":""}</div>
@@ -290,6 +342,16 @@ export default function WerewolfGame(){
                 <span style={{fontSize:10,color:RCOL[p.role],fontWeight:800}}>{RICON[p.role]}{p.role}</span>
               </div>))}
             </div>
+            {stats&&stats.games>0&&(
+              <div style={{display:"flex",justifyContent:"space-around",gap:6,marginBottom:24,padding:"14px 10px",background:"rgba(255,255,255,.02)",borderRadius:16,border:"1px solid rgba(255,255,255,.05)"}}>
+                {[["勝率",Math.round((stats.wins||0)/stats.games*100)+"%"],["連勝",(stats.streak||0)+""],["最佳連勝",(stats.best||0)+""],["最快",(stats.fastest?stats.fastest+" 天":"—")]].map(([k,v])=>(
+                  <div key={k} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:4,flex:1}}>
+                    <span style={{fontSize:18,fontWeight:900,color:c,letterSpacing:.5}}>{v}</span>
+                    <span style={{fontSize:9,color:"#666",fontWeight:600,letterSpacing:1}}>{k}</span>
+                  </div>
+                ))}
+              </div>
+            )}
             <GlowBtn onClick={()=>{setScreen("menu");setMsgs([]);}}>再來一局</GlowBtn>
           </div>
         </div>
@@ -305,7 +367,7 @@ export default function WerewolfGame(){
   const nc=nightStep==="wolf"?"#ff4757":nightStep==="seer"?"#c084fc":"#34d399";
 
   return(
-    <div style={{...page,minHeight:"100dvh"}}>
+    <div key={shakeKey} style={{...page,minHeight:"100dvh",animation:shakeKey?"shake .4s":"none"}}>
       <style>{CSS}</style>
 
       {/* BG gradient */}
@@ -314,8 +376,8 @@ export default function WerewolfGame(){
       {/* Night overlay */}
       {nightAnim&&(<div style={{position:"fixed",inset:0,zIndex:5,pointerEvents:"none",transition:"opacity 1s"}}>
         <div style={{position:"absolute",inset:0,background:"linear-gradient(180deg,rgba(5,5,25,.5) 0%,rgba(8,8,20,.3) 50%,rgba(5,5,25,.5) 100%)"}}/>
-        <Moon size={60} top="2%" opacity={.7}/>
-        <Particles count={10} color="rgba(120,160,255,.06)"/>
+        <Moon size={60} top="2%" opacity={.7} reduce={reduceMotion}/>
+        <Particles count={10} color="rgba(120,160,255,.06)" enabled={!reduceMotion}/>
       </div>)}
 
       {/* Header */}
@@ -327,15 +389,18 @@ export default function WerewolfGame(){
           </div>
           <div style={{fontSize:10,color:"#555",padding:"4px 12px",background:"rgba(255,255,255,.03)",borderRadius:20,fontWeight:600,letterSpacing:1,border:"1px solid rgba(255,255,255,.03)"}}>{aliveN} 存活</div>
         </div>
-        <div style={{fontSize:11,fontWeight:800,padding:"5px 14px",borderRadius:20,background:`linear-gradient(135deg,${RCOL[me.role]}12,${RCOL[me.role]}06)`,border:`1px solid ${RCOL[me.role]}30`,color:RCOL[me.role],display:"flex",alignItems:"center",gap:5,letterSpacing:1}}>
-          {RICON[me.role]}<span>{me.role}</span>{!me.alive&&<span style={{opacity:.5}}></span>}
+        <div style={{display:"flex",alignItems:"center",gap:8}}>
+          <div style={{fontSize:11,fontWeight:800,padding:"5px 14px",borderRadius:20,background:`linear-gradient(135deg,${RCOL[me.role]}12,${RCOL[me.role]}06)`,border:`1px solid ${RCOL[me.role]}30`,color:RCOL[me.role],display:"flex",alignItems:"center",gap:5,letterSpacing:1}}>
+            {RICON[me.role]}<span>{me.role}</span>{!me.alive&&<span style={{opacity:.5}}></span>}
+          </div>
+          <button onClick={()=>setShowSettings(true)} aria-label="設定" style={{width:40,height:40,display:"flex",alignItems:"center",justifyContent:"center",borderRadius:12,background:"rgba(255,255,255,.03)",border:"1px solid rgba(255,255,255,.06)",color:"#888",cursor:"pointer",fontFamily:"inherit",fontSize:18,outline:"none",WebkitTapHighlightColor:"transparent",flexShrink:0}}>⚙</button>
         </div>
       </div>
 
       {/* Player strip */}
       <div style={{display:"flex",gap:3,padding:"10px 10px",justifyContent:"center",flexWrap:"wrap",borderBottom:"1px solid rgba(255,255,255,.025)",background:"rgba(255,255,255,.005)",flexShrink:0,position:"relative",zIndex:1}}>
         {players.map(p=>(
-          <div key={p.id} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"6px 9px",borderRadius:14,minWidth:44,opacity:p.alive?1:.12,background:p.isPlayer?`linear-gradient(180deg,${RCOL[me.role]}08,transparent)`:"transparent",border:p.isPlayer?`1.5px solid ${RCOL[me.role]}20`:"1.5px solid transparent",transition:"all .6s cubic-bezier(.4,0,.2,1)"}}>
+          <div key={p.id} aria-label={p.name+(p.alive?"":" 已出局")} style={{display:"flex",flexDirection:"column",alignItems:"center",gap:3,padding:"6px 9px",borderRadius:14,minWidth:44,opacity:p.alive?1:.12,background:p.isPlayer?`linear-gradient(180deg,${RCOL[me.role]}08,transparent)`:"transparent",border:p.isPlayer?`1.5px solid ${RCOL[me.role]}20`:"1.5px solid transparent",transition:"all .6s cubic-bezier(.4,0,.2,1)"}}>
             <span style={{fontSize:20,lineHeight:1,transition:"all .3s",filter:p.alive?"none":"grayscale(1)"}}>{p.alive?p.avatar:""}</span>
             <span style={{fontSize:9,color:p.alive?"#666":"#222",fontWeight:600,letterSpacing:.5}}>{p.name}</span>
           </div>
@@ -343,7 +408,7 @@ export default function WerewolfGame(){
       </div>
 
       {/* Messages */}
-      <div style={{flex:1,overflowY:"auto",padding:"12px 14px",display:"flex",flexDirection:"column",gap:6,WebkitOverflowScrolling:"touch",position:"relative",zIndex:1}}>
+      <div role="log" aria-live="polite" aria-relevant="additions" style={{flex:1,overflowY:"auto",padding:"12px 14px",display:"flex",flexDirection:"column",gap:6,WebkitOverflowScrolling:"touch",position:"relative",zIndex:1}}>
         {msgs.map(m=>{
           const s=MS[m.type]||MS.chat;
           const isSmall=m.type==="vote";
@@ -370,7 +435,7 @@ export default function WerewolfGame(){
 
         {votingOpen&&me.alive&&!pVoted&&(
           <div style={{textAlign:"center",animation:"slideUp .3s ease"}}>
-            <p style={{fontSize:10,color:"#888",marginBottom:12,fontWeight:700,letterSpacing:3,textTransform:"uppercase"}}>選擇放逐目標</p>
+            <p aria-live="assertive" style={{fontSize:10,color:"#888",marginBottom:12,fontWeight:700,letterSpacing:3,textTransform:"uppercase"}}>選擇放逐目標</p>
             <div style={{display:"flex",flexWrap:"wrap",gap:8,justifyContent:"center"}}>
               {players.filter(p=>p.alive&&p.id!==0).map(p=><TBtn key={p.id} p={p} onClick={()=>doVote(p.id)}/>)}
             </div>
@@ -385,7 +450,7 @@ export default function WerewolfGame(){
 
         {["wolf","seer","doctor"].includes(nightStep)&&me.alive&&(
           <div style={{textAlign:"center",animation:"slideUp .3s ease"}}>
-            <p style={{fontSize:11,color:nc,marginBottom:12,fontWeight:800,letterSpacing:3}}>
+            <p aria-live="assertive" style={{fontSize:11,color:nc,marginBottom:12,fontWeight:800,letterSpacing:3}}>
               {nightStep==="wolf"?" 選擇獵殺目標":nightStep==="seer"?" 選擇查驗對象":" 選擇守護對象"}
             </p>
             {nightStep==="doctor"&&lastProt!=null&&(<p style={{fontSize:10,color:"#555",marginBottom:8}}> 不可連守（上次：{players.find(p=>p.id===lastProt)?.name}）</p>)}
@@ -402,6 +467,30 @@ export default function WerewolfGame(){
           </div>
         )}
       </div>
+
+      {/* Red flash on death/exile */}
+      {flash&&<div style={{position:"fixed",inset:0,background:"radial-gradient(ellipse at center,transparent 40%,rgba(255,30,40,.6))",zIndex:40,pointerEvents:"none",animation:"redflash .5s ease"}}/>}
+
+      {/* Settings */}
+      {showSettings&&(
+        <div onClick={()=>setShowSettings(false)} style={{position:"fixed",inset:0,background:"rgba(0,0,0,.88)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:55,padding:20,backdropFilter:"blur(12px)",animation:"fadeIn .3s ease"}}>
+          <div onClick={e=>e.stopPropagation()} style={{background:"linear-gradient(180deg,#1a1a30,#0e0e1a)",border:"1px solid rgba(192,132,252,.18)",borderRadius:28,padding:"32px 26px",maxWidth:360,width:"100%",boxShadow:"0 24px 80px rgba(0,0,0,.6),0 0 40px rgba(192,132,252,.05)"}}>
+            <h3 style={{fontFamily:"'Cinzel',serif",color:"#c084fc",margin:"0 0 4px",fontSize:20,fontWeight:900,letterSpacing:5,textAlign:"center"}}>設定</h3>
+            <p style={{color:"#666",fontSize:11,marginBottom:20,textAlign:"center",letterSpacing:1}}>SETTINGS</p>
+            {[["音效",sfxOn,()=>setSfxOn(v=>!v)],["震動",hapticsOn,()=>setHapticsOn(v=>!v)],["減少動態",reduceMotion,()=>setReduceMotion(v=>!v)]].map(([label,on,toggle])=>(
+              <div key={label} style={{display:"flex",alignItems:"center",justifyContent:"space-between",padding:"12px 4px",borderBottom:"1px solid rgba(255,255,255,.04)"}}>
+                <span style={{fontSize:14,color:"#ccc",fontWeight:600}}>{label}</span>
+                <button onClick={toggle} role="switch" aria-checked={on} aria-label={label} style={{width:52,height:30,minWidth:52,borderRadius:15,border:"none",cursor:"pointer",background:on?"linear-gradient(135deg,#c084fc,#a855f7)":"rgba(255,255,255,.1)",position:"relative",transition:"background .25s",outline:"none",WebkitTapHighlightColor:"transparent",flexShrink:0}}>
+                  <span style={{position:"absolute",top:3,left:on?25:3,width:24,height:24,borderRadius:"50%",background:"#fff",transition:"left .25s",boxShadow:"0 2px 6px rgba(0,0,0,.3)"}}/>
+                </button>
+              </div>
+            ))}
+            <div style={{marginTop:22,textAlign:"center"}}>
+              <GlowBtn onClick={()=>setShowSettings(false)} color="#c084fc" small ariaLabel="關閉設定">關閉</GlowBtn>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hunter */}
       {hunterModal&&(

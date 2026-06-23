@@ -65,14 +65,67 @@ const clamp = (v,lo,hi) => Math.max(lo,Math.min(hi,v));
 const pick = (a,n) => [...a].sort(()=>Math.random()-0.5).slice(0,n);
 const lerp = (a,b,t) => a+(b-a)*t;
 
+// ── WebAudio SFX (lazy singleton, no assets/network) ──
+let audioCtx = null;
+const sfx = (type) => {
+  if (typeof window === "undefined" || !sfx._on) return;
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+    const t0 = audioCtx.currentTime;
+    const tone = (freq, wave, dur, vol, freq2) => {
+      const o = audioCtx.createOscillator(), gn = audioCtx.createGain();
+      o.type = wave; o.frequency.setValueAtTime(freq, t0);
+      if (freq2) o.frequency.exponentialRampToValueAtTime(Math.max(1, freq2), t0 + dur);
+      gn.gain.setValueAtTime(vol, t0);
+      gn.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      o.connect(gn); gn.connect(audioCtx.destination);
+      o.start(t0); o.stop(t0 + dur + 0.02);
+    };
+    switch (type) {
+      case "shoot":     tone(220, "square", 0.05, 0.04); break;
+      case "hit":       tone(330, "square", 0.04, 0.05); break;
+      case "crit":      tone(880, "triangle", 0.12, 0.08, 440); break;
+      case "death":     tone(160, "sawtooth", 0.12, 0.06, 60); break;
+      case "hurt":      tone(110, "sawtooth", 0.16, 0.09, 70); break;
+      case "levelup":   [523,659,784,1047].forEach((f,i)=>tone(f,"sine",0.14,0.07)); break;
+      case "bossSpawn": tone(60, "sawtooth", 0.5, 0.12, 40); tone(90,"square",0.5,0.06); break;
+      case "clear":     [659,784,988,1319].forEach((f,i)=>tone(f,"triangle",0.2,0.08)); break;
+      case "over":      tone(220, "sawtooth", 0.5, 0.1, 55); break;
+      case "record":    [784,988,1319,1568].forEach((f,i)=>tone(f,"sine",0.18,0.08)); break;
+      case "ui":        tone(440, "sine", 0.04, 0.04); break;
+      default: break;
+    }
+  } catch (e) {}
+};
+sfx._on = true; // toggled by settings via soundOnRef effect
+
+// ── Best-score persistence ──
+const loadBest = () => {
+  try { return JSON.parse(localStorage.getItem("haoSurvivorBest")) || { kills:0, time:0, level:1, cleared:0 }; }
+  catch (e) { return { kills:0, time:0, level:1, cleared:0 }; }
+};
+const saveBest = (b) => { try { localStorage.setItem("haoSurvivorBest", JSON.stringify(b)); } catch (e) {} };
+const loadStages = () => {
+  try { const v = parseInt(localStorage.getItem("haoSurvivorStages"), 10); return (v && v >= 1) ? v : 1; }
+  catch (e) { return 1; }
+};
+
 export default function HaoSurvivor() {
   const [screen, setScreen] = useState("title");
   const [selectedChar, setSelectedChar] = useState(null);
   const [selectedStage, setSelectedStage] = useState(0);
   const [skillChoices, setSkillChoices] = useState([]);
-  const [gameStats, setGameStats] = useState({ kills:0, time:0, level:1 });
-  const [stagesUnlocked, setStagesUnlocked] = useState(1);
+  const [gameStats, setGameStats] = useState({ kills:0, time:0, level:1, isRecord:false });
+  const [stagesUnlocked, setStagesUnlocked] = useState(loadStages);
   const [joyVis, setJoyVis] = useState(null); // { ox, oy, cx, cy }
+  const [best, setBest] = useState(loadBest);
+  const [isPaused, setIsPaused] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [settings, setSettings] = useState(() => ({
+    sound: true,
+    reduceMotion: (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches),
+  }));
 
   const canvasRef = useRef(null);
   const gameRef = useRef(null);
@@ -80,6 +133,41 @@ export default function HaoSurvivor() {
   const animRef = useRef(null);
   const lastTimeRef = useRef(0);
   const joyRef = useRef({ active:false, ox:0, oy:0, cx:0, cy:0, dx:0, dy:0 });
+  const soundOnRef = useRef(true);
+  const reduceMotionRef = useRef(false);
+  const bestRef = useRef(best);
+  useEffect(() => { bestRef.current = best; }, [best]);
+
+  // Compute & persist a new best record from a finished run; returns isRecord
+  const finalizeRun = (g, p, cleared) => {
+    const prev = bestRef.current || { kills:0, time:0, level:1, cleared:0 };
+    const cur = { kills:g.kills, time:Math.floor(g.time), level:p.level, cleared: cleared ? 1 : 0 };
+    const isRecord = cur.kills > prev.kills || cur.time > prev.time || cur.level > prev.level;
+    const merged = {
+      kills: Math.max(prev.kills, cur.kills),
+      time: Math.max(prev.time, cur.time),
+      level: Math.max(prev.level, cur.level),
+      cleared: Math.max(prev.cleared || 0, cur.cleared),
+    };
+    bestRef.current = merged;
+    saveBest(merged); setBest(merged);
+    if (isRecord) sfx("record");
+    return isRecord;
+  };
+
+  // Mirror settings into refs (game loop reads without re-render) + sfx gate
+  useEffect(() => {
+    soundOnRef.current = settings.sound;
+    reduceMotionRef.current = settings.reduceMotion;
+    sfx._on = settings.sound;
+  }, [settings]);
+
+  // Persist unlocked stages across reloads
+  useEffect(() => {
+    try { localStorage.setItem("haoSurvivorStages", String(stagesUnlocked)); } catch (e) {}
+  }, [stagesUnlocked]);
+
+  const vibrate = (pat) => { try { if (navigator && navigator.vibrate) navigator.vibrate(pat); } catch (e) {} };
 
   const [dims, setDims] = useState({ w: 800, h: 600 });
   useEffect(() => {
@@ -176,7 +264,9 @@ export default function HaoSurvivor() {
 
   const addShake = (intensity) => {
     const g = gameRef.current;
-    if (g) g.shake.intensity = Math.min(g.shake.intensity + intensity, 10);
+    if (!g) return;
+    const mult = reduceMotionRef.current ? 0.25 : 1;
+    g.shake.intensity = Math.min(g.shake.intensity + intensity * mult, 10);
   };
 
   const gameLoop = useCallback((timestamp) => {
@@ -275,6 +365,7 @@ export default function HaoSurvivor() {
         });
         g.enemies = g.enemies.filter(e => e.isBoss);
         addShake(8); g.flash = 0.8;
+        sfx("bossSpawn"); vibrate([0,80,40,80]);
       }
     }
 
@@ -336,7 +427,7 @@ export default function HaoSurvivor() {
           fired = true;
         }
       });
-      if (fired) p.lastAtk = g.time;
+      if (fired) { p.lastAtk = g.time; sfx("shoot"); }
     }
 
     // Projectiles
@@ -357,6 +448,7 @@ export default function HaoSurvivor() {
         if (dist(pr,e)<e.r+pr.r) {
           let dmg = pr.atk; if (pr.isCrit) dmg*=2.5;
           e.hp-=dmg; e.hitFlash=8;
+          sfx(pr.isCrit ? "crit" : "hit");
           if (p.lifesteal>0) { const healAmt=Math.min(dmg*p.lifesteal, 8); p.hp=Math.min(p.hp+healAmt,p.maxHp); }
 
           const hitAngle = Math.atan2(pr.vy, pr.vx);
@@ -429,6 +521,7 @@ export default function HaoSurvivor() {
             g.enemies.splice(i,1);
             g.kills++; g.killCombo++; g.comboTimer=2;
             addShake(e.isBoss ? 8 : 1.5);
+            sfx("death");
             if (e.isBoss) { g.bossDefeated=true; g.flash=1; }
           }
           return false;
@@ -473,6 +566,7 @@ export default function HaoSurvivor() {
         if (p.shield>0) { const ab=Math.min(p.shield,dmg); p.shield-=ab; dmg-=ab; }
         p.hp-=dmg; p.invincible=0.4;
         addShake(4); g.flash=0.3;
+        sfx("hurt"); vibrate(40);
         g.dmgTexts.push({ x:p.x, y:p.y-p.r-15, text:Math.round(e.atk), color:"#ff4444", life:40, maxLife:40, scale:1.5 });
         for (let i2=0;i2<6;i2++) {
           g.particles.push({ x:p.x, y:p.y, vx:rand(-4,4), vy:rand(-4,4), life:15, maxLife:15, color:"#ff4444", r:rand(2,5) });
@@ -493,7 +587,9 @@ export default function HaoSurvivor() {
         }
         if (p.hp<=0) {
           g.paused=true;
-          setGameStats({kills:g.kills,time:g.time,level:p.level});
+          const isRecord = finalizeRun(g, p, false);
+          setGameStats({kills:g.kills,time:g.time,level:p.level,isRecord});
+          sfx("over"); vibrate([0,120,60,120]);
           setScreen("gameover");
           if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(g.kills);
         }
@@ -517,9 +613,14 @@ export default function HaoSurvivor() {
         if (p.shield>0) { const ab=Math.min(p.shield,dmg); p.shield-=ab; dmg-=ab; }
         p.hp -= dmg; p.invincible = 0.3;
         addShake(2); g.flash=0.15;
+        sfx("hurt"); vibrate(40);
         g.dmgTexts.push({ x:p.x, y:p.y-p.r-10, text:Math.round(dmg), color:"#ff6b6b", life:35, maxLife:35, scale:1.2 });
         if (p.hp<=0) {
-          g.paused=true; setGameStats({kills:g.kills,time:g.time,level:p.level}); setScreen("gameover");
+          g.paused=true;
+          const isRecord = finalizeRun(g, p, false);
+          setGameStats({kills:g.kills,time:g.time,level:p.level,isRecord});
+          sfx("over"); vibrate([0,120,60,120]);
+          setScreen("gameover");
           if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(g.kills);
         }
         return false;
@@ -574,6 +675,7 @@ export default function HaoSurvivor() {
           p.xp-=p.xpNext; p.level++;
           p.xpNext=XP_PER_LEVEL[Math.min(p.level,XP_PER_LEVEL.length-1)];
           g.paused=true; g.flash=0.3; addShake(3);
+          sfx("levelup"); vibrate(60);
           setSkillChoices(pick(ALL_SKILLS,3));
           setScreen("levelup");
           for(let i2=0;i2<20;i2++){
@@ -591,7 +693,9 @@ export default function HaoSurvivor() {
 
     if (g.bossDefeated && g.enemies.length===0) {
       g.paused=true;
-      setGameStats({kills:g.kills,time:g.time,level:p.level});
+      const isRecord = finalizeRun(g, p, true);
+      setGameStats({kills:g.kills,time:g.time,level:p.level,isRecord});
+      sfx("clear"); vibrate([0,60,40,60,40,120]);
       if (g.stageIdx+1<STAGES.length) setStagesUnlocked(prev=>Math.max(prev,g.stageIdx+2));
       setScreen("stageclear");
       if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(g.kills + 1000);
@@ -756,7 +860,19 @@ export default function HaoSurvivor() {
     });
 
     if(g.flash>0){
-      ctx.fillStyle=`rgba(255,255,255,${g.flash*0.3})`; ctx.fillRect(0,0,W,H);
+      const flashMul = reduceMotionRef.current ? 0.3 : 1;
+      ctx.fillStyle=`rgba(255,255,255,${g.flash*0.3*flashMul})`; ctx.fillRect(0,0,W,H);
+    }
+
+    // Low-HP danger vignette (pulsing red from edges, static when reduced-motion)
+    const hpFrac = p.hp/p.maxHp;
+    if (hpFrac < 0.3) {
+      const danger = (0.3 - hpFrac)/0.3;
+      const pulse = reduceMotionRef.current ? 0.5 : (0.5 + Math.sin(g.time*6)*0.5);
+      const vg = ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.25,W/2,H/2,Math.max(W,H)*0.7);
+      vg.addColorStop(0,"rgba(239,68,68,0)");
+      vg.addColorStop(1,`rgba(239,68,68,${(0.35*danger*pulse).toFixed(3)})`);
+      ctx.fillStyle=vg; ctx.fillRect(0,0,W,H);
     }
 
     // HUD
@@ -806,12 +922,23 @@ export default function HaoSurvivor() {
     animRef.current = requestAnimationFrame(gameLoop);
   }, [spawnTrickle, spawnBoss]);
 
+  const togglePause = useCallback(() => {
+    const g = gameRef.current;
+    if (g) { g.paused = !g.paused; if (!g.paused) lastTimeRef.current = 0; setIsPaused(g.paused); }
+    sfx("ui");
+  }, []);
+
   useEffect(()=>{
-    const d=e=>{keysRef.current[e.key.toLowerCase()]=true;};
+    const d=e=>{
+      const key=e.key.toLowerCase();
+      keysRef.current[key]=true;
+      // P / Escape toggles manual pause only while actively playing (not on levelup overlay)
+      if ((key==="p"||key==="escape") && screen==="playing") { e.preventDefault(); togglePause(); }
+    };
     const u=e=>{keysRef.current[e.key.toLowerCase()]=false;};
     window.addEventListener("keydown",d); window.addEventListener("keyup",u);
     return()=>{window.removeEventListener("keydown",d); window.removeEventListener("keyup",u);};
-  },[]);
+  },[screen,togglePause]);
 
   useEffect(()=>{
     if(screen==="playing"){
@@ -880,6 +1007,14 @@ export default function HaoSurvivor() {
 
   const startGame = () => {
     if(selectedChar===null)return;
+    // Init/resume AudioContext on this user gesture to satisfy autoplay policy
+    try {
+      if (typeof window !== "undefined" && settings.sound) {
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+      }
+    } catch (e) {}
+    setIsPaused(false);
     initGame(selectedChar,selectedStage); setScreen("playing");
   };
 
@@ -899,8 +1034,37 @@ export default function HaoSurvivor() {
           <h1 style={S.title}>HAO SURVIVOR</h1>
           <p style={{fontSize:14,color:"#64748b",letterSpacing:6,margin:0}}>卡通RPG生存射擊</p>
           <button style={S.btnGold} onClick={()=>setScreen("select")}>開始遊戲</button>
+          {(best.kills>0||best.time>0) && (
+            <div style={{display:"flex",gap:14,fontSize:12,color:"#94a3b8",flexWrap:"wrap",justifyContent:"center"}}>
+              <span>最佳擊殺 {best.kills}</span>
+              <span>最久存活 {best.time}s</span>
+              <span>最高等級 Lv.{best.level}</span>
+            </div>
+          )}
           <p style={{fontSize:12,color:"#475569",margin:0}}> WASD / 觸控搖桿 移動 · 自動攻擊</p>
+          <button onClick={()=>setShowSettings(true)} aria-label="設定" title="設定"
+            style={{position:"fixed",top:12,right:12,width:44,height:44,borderRadius:12,
+              background:"#111827",border:"1.5px solid #334155",color:"#fbbf24",fontSize:20,
+              cursor:"pointer",zIndex:60,display:"flex",alignItems:"center",justifyContent:"center"}}>⚙</button>
         </div>
+        {showSettings && (
+          <div style={S.overlay} onClick={()=>setShowSettings(false)}>
+            <div style={{...S.levelUpBox,animation:"scaleIn 0.2s ease-out"}} onClick={e=>e.stopPropagation()}>
+              <h2 style={{fontSize:20,fontWeight:900,color:"#fbbf24",margin:"0 0 14px"}}>設定</h2>
+              <button role="switch" aria-checked={settings.sound} aria-label="音效開關"
+                onClick={()=>setSettings(s=>({...s,sound:!s.sound}))}
+                style={{...S.settingRow, borderColor:settings.sound?"#fbbf24":"#334155"}}>
+                <span>音效</span><span style={{color:settings.sound?"#4ade80":"#64748b",fontWeight:800}}>{settings.sound?"開 ON":"關 OFF"}</span>
+              </button>
+              <button role="switch" aria-checked={settings.reduceMotion} aria-label="減少動態效果"
+                onClick={()=>setSettings(s=>({...s,reduceMotion:!s.reduceMotion}))}
+                style={{...S.settingRow, borderColor:settings.reduceMotion?"#fbbf24":"#334155"}}>
+                <span>減少晃動/閃光</span><span style={{color:settings.reduceMotion?"#4ade80":"#64748b",fontWeight:800}}>{settings.reduceMotion?"開 ON":"關 OFF"}</span>
+              </button>
+              <button style={{...S.btnGhost,marginTop:14,width:"100%"}} onClick={()=>setShowSettings(false)}>關閉</button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -913,6 +1077,8 @@ export default function HaoSurvivor() {
           <div style={S.charGrid}>
             {CHARACTERS.map((c,i) => (
               <div key={c.id} onClick={()=>setSelectedChar(i)}
+                role="button" tabIndex={0} aria-label={`選擇角色 ${c.name}`} aria-pressed={selectedChar===i}
+                onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setSelectedChar(i);}}}
                 style={{...S.charCard,
                   borderColor:selectedChar===i?c.color:"#1e293b",
                   boxShadow:selectedChar===i?`0 0 20px ${c.color}44`:"none",
@@ -931,6 +1097,9 @@ export default function HaoSurvivor() {
           <div style={S.stageRow}>
             {STAGES.map((s,i) => (
               <div key={s.id} onClick={()=>i<stagesUnlocked&&setSelectedStage(i)}
+                role="button" tabIndex={i<stagesUnlocked?0:-1} aria-disabled={i>=stagesUnlocked}
+                aria-label={`選擇關卡 ${s.name}`} aria-pressed={selectedStage===i}
+                onKeyDown={e=>{if((e.key==="Enter"||e.key===" ")&&i<stagesUnlocked){e.preventDefault();setSelectedStage(i);}}}
                 style={{...S.stageCard,
                   borderColor:selectedStage===i?"#fbbf24":"#1e293b",
                   opacity:i<stagesUnlocked?1:0.35,
@@ -964,6 +1133,29 @@ export default function HaoSurvivor() {
               left:55+Math.max(-40,Math.min(40,(joyVis.cx-joyVis.ox)*0.7))-20,
               top:55+Math.max(-40,Math.min(40,(joyVis.cy-joyVis.oy)*0.7))-20,
             }}/>
+          </div>
+        )}
+
+        {screen==="playing" && (
+          <button onClick={togglePause} aria-label="暫停遊戲" title="暫停"
+            style={{position:"fixed",top:8,left:"50%",transform:"translateX(-50%)",
+              width:44,height:44,borderRadius:12,zIndex:60,
+              background:"#111827cc",border:"1.5px solid #fbbf24",color:"#fbbf24",
+              fontSize:18,fontWeight:900,cursor:"pointer",display:"flex",
+              alignItems:"center",justifyContent:"center"}}>❚❚</button>
+        )}
+
+        {screen==="playing" && isPaused && (
+          <div style={S.overlay}>
+            <div style={{...S.levelUpBox,animation:"scaleIn 0.2s ease-out"}}>
+              <div style={{fontSize:36}}>⏸</div>
+              <h2 style={{fontSize:22,fontWeight:900,color:"#fbbf24",margin:"4px 0"}}>已暫停</h2>
+              <p style={{fontSize:12,color:"#94a3b8",margin:"0 0 16px"}}>PAUSED</p>
+              <div style={{display:"flex",flexDirection:"column",gap:10}}>
+                <button style={S.btnGold} onClick={togglePause}>繼續遊戲</button>
+                <button style={S.btnGhost} onClick={()=>{const g=gameRef.current;if(g)g.paused=false;setIsPaused(false);setScreen("title");}}>結束本局</button>
+              </div>
+            </div>
           </div>
         )}
 
@@ -1007,10 +1199,14 @@ export default function HaoSurvivor() {
         <div style={S.center}>
           <div style={{fontSize:60}}></div>
           <h1 style={{fontSize:34,fontWeight:900,color:"#ef4444",margin:0}}>陣亡</h1>
+          {gameStats.isRecord && (
+            <div style={{fontSize:16,fontWeight:900,color:"#fbbf24",letterSpacing:2,animation:"float 1s ease-in-out infinite"}}>★ NEW RECORD 新紀錄 ★</div>
+          )}
           <div style={S.resultBox}>
             <div> 擊殺 {gameStats.kills}</div>
             <div> 存活 {Math.floor(gameStats.time)}s</div>
             <div> 等級 Lv.{gameStats.level}</div>
+            <div style={{borderTop:"1px solid #1e293b",marginTop:4,paddingTop:6,fontSize:12,color:"#64748b"}}>最佳 擊殺 {best.kills} · 存活 {best.time}s · Lv.{best.level}</div>
           </div>
           <div style={{display:"flex",gap:12}}>
             <button style={S.btnGhost} onClick={()=>setScreen("title")}>主選單</button>
@@ -1028,10 +1224,14 @@ export default function HaoSurvivor() {
           <div style={{fontSize:60,animation:"float 1.5s ease-in-out infinite"}}></div>
           <h1 style={{fontSize:34,fontWeight:900,color:"#fbbf24",margin:0}}>通關！</h1>
           <p style={{color:"#94a3b8",fontSize:13,margin:0}}>{STAGES[selectedStage].name} 已征服</p>
+          {gameStats.isRecord && (
+            <div style={{fontSize:16,fontWeight:900,color:"#fbbf24",letterSpacing:2,animation:"float 1s ease-in-out infinite"}}>★ NEW RECORD 新紀錄 ★</div>
+          )}
           <div style={S.resultBox}>
             <div> 擊殺 {gameStats.kills}</div>
             <div> 時間 {Math.floor(gameStats.time)}s</div>
             <div> 等級 Lv.{gameStats.level}</div>
+            <div style={{borderTop:"1px solid #1e293b",marginTop:4,paddingTop:6,fontSize:12,color:"#64748b"}}>最佳 擊殺 {best.kills} · 存活 {best.time}s · Lv.{best.level}</div>
           </div>
           <div style={{display:"flex",gap:12}}>
             <button style={S.btnGhost} onClick={()=>setScreen("title")}>主選單</button>
@@ -1059,4 +1259,5 @@ const S = {
   overlay:{position:"fixed",inset:0,background:"#000b",display:"flex",alignItems:"center",justifyContent:"center",zIndex:100,padding:16},
   levelUpBox:{background:"linear-gradient(145deg,#111827,#0d1117)",border:"2px solid #fbbf24",borderRadius:20,padding:"20px 16px",textAlign:"center",maxWidth:"92vw",width:380,boxShadow:"0 0 50px #fbbf2422"},
   resultBox:{background:"#111827",borderRadius:14,padding:"14px 24px",display:"flex",flexDirection:"column",gap:6,fontSize:15,border:"1px solid #1e293b"},
+  settingRow:{display:"flex",justifyContent:"space-between",alignItems:"center",width:"100%",gap:14,background:"#1e293b",border:"2px solid #334155",borderRadius:12,padding:"12px 16px",marginBottom:10,cursor:"pointer",fontSize:14,fontWeight:700,color:"#e2e8f0",fontFamily:"inherit"},
 };

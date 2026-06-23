@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef, useMemo } from "react";
+import { useState, useCallback, useEffect, useRef, useMemo, createContext, useContext } from "react";
 
 // ============================================================
 // CONSTANTS & UTILITIES
@@ -14,6 +14,59 @@ const COLORS = {
 
 const font = `'Noto Serif TC', 'Source Han Serif TC', serif`;
 const fontSans = `'Noto Sans TC', 'Source Han Sans TC', sans-serif`;
+
+// ============================================================
+// SFX / HAPTICS ENGINE (module-level singleton, additive, no game logic)
+// ============================================================
+const SFX = (()=>{
+  let ctx;
+  const on = { v:true };
+  const beep = (freq,dur,type='sine',gain=0.06)=>{
+    if(!on.v) return;
+    try{
+      ctx = ctx || new (window.AudioContext||window.webkitAudioContext)();
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type; o.frequency.value = freq; g.gain.value = gain;
+      o.connect(g); g.connect(ctx.destination);
+      const t = ctx.currentTime;
+      g.gain.setValueAtTime(gain,t);
+      g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+      o.start(t); o.stop(t+dur);
+    }catch(e){}
+  };
+  const buzz = (ms)=>{ if(on.v && typeof navigator!=='undefined' && navigator.vibrate){ try{ navigator.vibrate(ms); }catch(e){} } };
+  return {
+    place:  ()=>{ beep(440,0.07,'triangle'); buzz(8); },
+    capture:()=>{ beep(220,0.12,'sawtooth',0.08); buzz([12,20,12]); },
+    win:    ()=>{ [523,659,784,1047].forEach((f,i)=>setTimeout(()=>beep(f,0.18,'sine',0.07),i*110)); buzz([15,30,15,30,40]); },
+    dice:   ()=>{ beep(330,0.05,'square',0.05); buzz(6); },
+    toggle: (v)=>{ on.v = v; },
+  };
+})();
+
+// ============================================================
+// PREFS (sound / reduce-motion) + STATS (win/streak) — localStorage persist
+// ============================================================
+const PREFS = {
+  get:()=>{ try{ return JSON.parse(localStorage.getItem('cm_prefs'))||{}; }catch(e){ return {}; } },
+  set:(p)=>{ try{ localStorage.setItem('cm_prefs',JSON.stringify(p)); }catch(e){} },
+};
+const STATS = {
+  get:()=>{ try{ return JSON.parse(localStorage.getItem('cm_stats'))||{}; }catch(e){ return {}; } },
+  record:(id,won)=>{
+    const s = STATS.get();
+    const g = s[id] || { w:0, l:0, streak:0, best:0 };
+    if(won){ g.w++; g.streak++; g.best = Math.max(g.best, g.streak); }
+    else { g.l++; g.streak = 0; }
+    s[id] = g;
+    try{ localStorage.setItem('cm_stats',JSON.stringify(s)); }catch(e){}
+    return g;
+  },
+};
+
+// Lightweight prefs context so games can read reduceMotion without prop-drilling.
+const PrefsCtx = createContext({ sound:true, reduceMotion:false });
+const useReduceMotion = () => useContext(PrefsCtx).reduceMotion;
 
 // ============================================================
 // GAME DEFINITIONS
@@ -73,6 +126,49 @@ function ScrollBoard({ children, style }) {
   return (
     <div style={{ overflow:'auto', WebkitOverflowScrolling:'touch', maxWidth:'100vw', maxHeight:'80vh', touchAction:'pan-x pan-y', ...style }}>
       {children}
+    </div>
+  );
+}
+
+// Shared victory overlay (additive UI layer — does not affect any win logic)
+function WinOverlay({ title, sub, onAgain, streak, reduceMotion }) {
+  useEffect(() => { SFX.win(); }, []);
+  const confettiColors = ['#ffe066', COLORS.gold, COLORS.red, COLORS.green, COLORS.blue, COLORS.goldLight];
+  return (
+    <div style={{
+      position:'fixed', inset:0, zIndex:9999, display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center',
+      background:'rgba(8,8,14,0.78)', backdropFilter:'blur(3px)',
+    }}>
+      <style>{`@keyframes confettiFall { to { transform: translateY(110vh) rotate(540deg); opacity:0; } }`}</style>
+      {!reduceMotion && Array.from({ length:20 }, (_,i) => {
+        const left = (i * 53) % 100;
+        const delay = (i % 7) * 0.18;
+        const dur = 2.2 + (i % 5) * 0.4;
+        const col = confettiColors[i % confettiColors.length];
+        const sz = 7 + (i % 4) * 3;
+        return (
+          <div key={i} style={{
+            position:'absolute', top:'-20px', left:`${left}%`,
+            width:sz, height:sz, background:col, borderRadius:i%2?'50%':2,
+            animation:`confettiFall ${dur}s linear ${delay}s infinite`,
+          }}/>
+        );
+      })}
+      <div style={{
+        position:'relative', zIndex:1, textAlign:'center', padding:'32px 40px',
+        borderRadius:16, border:'2px solid #ffe066',
+        background:'linear-gradient(160deg, #3a2e10, #1a1505 70%)',
+        boxShadow:'0 12px 48px rgba(0,0,0,0.6), 0 0 32px rgba(255,224,102,0.25)',
+        minWidth:240, maxWidth:'90vw',
+      }}>
+        <div style={{ fontSize:30, fontFamily:font, color:'#ffe066', marginBottom:6, textShadow:'0 2px 8px rgba(255,224,102,0.4)' }}>{title}</div>
+        {sub && <div style={{ fontSize:14, color:COLORS.textDim, marginBottom:12, fontFamily:fontSans }}>{sub}</div>}
+        {streak > 0 && <div style={{ fontSize:15, color:COLORS.goldLight, marginBottom:16, fontFamily:fontSans }}>🔥 連勝 {streak}</div>}
+        <div style={{ marginTop: streak>0 ? 0 : 12 }}>
+          <Btn onClick={onAgain} active>再來一局</Btn>
+        </div>
+      </div>
     </div>
   );
 }
@@ -178,7 +274,10 @@ function XiangqiGame({ onBack }) {
   const aiRef = useRef(0);
   const boardR = useRef(board); useEffect(()=>{boardR.current=board;},[board]);
   const capR = useRef(captured); useEffect(()=>{capR.current=captured;},[captured]);
-  const CS = 38;
+  const reduceMotion = useReduceMotion();
+  const histRef = useRef([]);
+  const recordedRef = useRef(false);
+  const CS = useMemo(()=> (typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(max-width:640px)').matches) ? 40 : 38, []);
 
   // Check if board has flying general (將帥對面)
   const hasFlyingGeneral = (bd) => {
@@ -243,21 +342,24 @@ function XiangqiGame({ onBack }) {
     if (sel) {
       const isValid = moves.some(m => m[0]===r && m[1]===c);
       if (isValid) {
+        histRef.current.push({ board: board.map(row=>[...row]), turn, captured: { r:[...captured.r], b:[...captured.b] }, lastMove });
         const nb = board.map(row => [...row]);
         const cap = nb[r][c];
         nb[r][c] = nb[sel[0]][sel[1]];
         nb[sel[0]][sel[1]] = null;
+        cap ? SFX.capture() : SFX.place();
         if (cap) {
           const nc = { ...captured };
           nc[turn] = [...nc[turn], cap];
           setCaptured(nc);
-          if (cap.t==='帅'||cap.t==='将') { setWinner(turn); if(turn==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
+          if (cap.t==='帅'||cap.t==='将') { setWinner(turn); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('xiangqi',turn==='r');} if(turn==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
         }
         const nextT = turn==='r'?'b':'r';
         setBoard(nb); setTurn(nextT); setSel(null); setMoves([]); setLastMove([r,c]);
         // Check if opponent is checkmated
         if (!hasAnyLegalMove(nb, nextT)) {
           setWinner(turn);
+          if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('xiangqi',turn==='r');}
           if(turn==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1);
         }
       } else if (p && p.c === turn) {
@@ -268,7 +370,19 @@ function XiangqiGame({ onBack }) {
     }
   };
 
-  const reset = () => { aiRef.current++; setBoard(XQ_INIT()); setSel(null); setTurn('r'); setMoves([]); setWinner(null); setCaptured({r:[],b:[]}); setLastMove(null); };
+  const reset = () => { aiRef.current++; histRef.current=[]; recordedRef.current=false; setBoard(XQ_INIT()); setSel(null); setTurn('r'); setMoves([]); setWinner(null); setCaptured({r:[],b:[]}); setLastMove(null); };
+
+  const undo = () => {
+    const h = histRef.current;
+    if (!h.length || winner) return;
+    SFX.place();
+    let snap;
+    if (vsAI) { const steps = h.length>=2?2:1; for(let i=0;i<steps;i++) snap = h.pop(); }
+    else snap = h.pop();
+    if (!snap) return;
+    setBoard(snap.board); setTurn(snap.turn); setCaptured(snap.captured); setLastMove(snap.lastMove);
+    setSel(null); setMoves([]);
+  };
 
   // Check if a side's king is under attack
 
@@ -295,7 +409,7 @@ function XiangqiGame({ onBack }) {
           }
         }
       }
-      if (legalMoves.length===0) { setWinner('r'); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); return; } // checkmate
+      if (legalMoves.length===0) { setWinner('r'); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('xiangqi',true);} if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); return; } // checkmate
 
       // Score each move
       for (const m of legalMoves) {
@@ -339,10 +453,12 @@ function XiangqiGame({ onBack }) {
       const best = legalMoves[0].score;
       const top = legalMoves.filter(m => m.score >= best - 5);
       const mv = top[Math.floor(Math.random()*top.length)];
+      histRef.current.push({ board: board.map(row=>[...row]), turn:'b', captured: { r:[...capR.current.r], b:[...capR.current.b] }, lastMove });
       const nb = board.map(row=>[...row]);
       const cap = nb[mv.tr][mv.tc];
       nb[mv.tr][mv.tc]=nb[mv.fr][mv.fc]; nb[mv.fr][mv.fc]=null;
-      if(cap){const nc={...capR.current};nc.b=[...nc.b,cap];setCaptured(nc);if(cap.t==='帅')setWinner('b');}
+      cap ? SFX.capture() : SFX.place();
+      if(cap){const nc={...capR.current};nc.b=[...nc.b,cap];setCaptured(nc);if(cap.t==='帅'){setWinner('b');if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('xiangqi',false);}}}
       setBoard(nb); setTurn('r'); setSel(null); setMoves([]); setLastMove([mv.tr,mv.tc]);
     }, 400);
     return () => clearTimeout(timer);
@@ -359,6 +475,7 @@ function XiangqiGame({ onBack }) {
           <span style={{ fontSize:11, color:COLORS.textDim, marginLeft:8 }}>Chinese Chess</span>
         </div>
         <Btn onClick={()=>{setVsAI(!vsAI);reset();}} small active={vsAI} style={{marginRight:6}}>{vsAI?'人機':'雙人'}</Btn>
+        <Btn onClick={undo} small disabled={!histRef.current.length||!!winner} style={{marginRight:6}}>悔棋</Btn>
         <Btn onClick={reset} small>重開</Btn>
       </div>
       <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'12px 8px', gap:10 }}>
@@ -403,9 +520,9 @@ function XiangqiGame({ onBack }) {
                 boxShadow: isSel ? `0 0 0 3px ${COLORS.gold}, 0 4px 12px rgba(201,168,76,0.5)`
                   : isLast && p ? '0 0 0 2px #ffe066, 0 0 12px #ffe06688, 0 3px 8px rgba(0,0,0,0.35)'
                   : p ? '0 3px 8px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255,255,255,0.2)' : 'none',
-                animation: isLast && p ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
+                animation: (isLast && p && !reduceMotion) ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
                 zIndex: p ? 3 : 2, transition: 'box-shadow 0.15s, transform 0.1s',
-                transform: isSel ? 'scale(1.08)' : 'none',
+                transform: (isSel && !reduceMotion) ? 'scale(1.08)' : 'none',
               }}>
                 {p && <span style={{ fontSize:sz*0.48, fontFamily:font, fontWeight:700, userSelect:'none',
                   color: p.c==='r' ? '#8b1a1a' : '#e8e0d0',
@@ -418,6 +535,7 @@ function XiangqiGame({ onBack }) {
         </div>
         </ScrollBoard>
       </div>
+      {winner && <WinOverlay title={winner==='r'?'紅方 勝!':'黑方 勝!'} sub={vsAI?(winner==='r'?'你贏了':'AI 獲勝'):''} onAgain={reset} streak={vsAI&&winner==='r'?(STATS.get().xiangqi?.streak||0):0} reduceMotion={reduceMotion} />}
     </div>
   );
 }
@@ -450,8 +568,12 @@ function DarkChessGame({ onBack }) {
   const [winner, setWinner] = useState(null);
   const [score, setScore] = useState({ r:0, b:0 });
   const [lastMove, setLastMove] = useState(null);
+  const reduceMotion = useReduceMotion();
+  const histRef = useRef([]);
+  const recordedRef = useRef(false);
   useEffect(()=>{dcBoardRef.current=board;},[board]);
   useEffect(()=>{dcScoreRef.current=score;},[score]);
+  const snapDC = () => ({ board: board.map(row=>row.map(cell=>cell?{...cell}:null)), turn, score:{...score}, lastMove });
 
   const canCapture = (attacker, defender) => {
     if (attacker.t==='炮') return true;
@@ -503,28 +625,34 @@ function DarkChessGame({ onBack }) {
       const ms = getMoves(sel[0], sel[1]);
       const mv = ms.find(m => m[0]===r && m[1]===c);
       if (mv) {
+        histRef.current.push(snapDC());
         const nb = board.map(row => row.map(cell => cell ? {...cell} : null));
         const cap = nb[r][c];
         nb[r][c] = nb[sel[0]][sel[1]];
         nb[sel[0]][sel[1]] = null;
+        cap ? SFX.capture() : SFX.place();
         if (cap) {
           const ns = {...score}; ns[turn]++; setScore(ns);
           const remaining = nb.flat().filter(x => x);
           const opp = turn==='r'?'b':'r';
-          if (!remaining.some(x => x.c===opp)) { setWinner(turn); if(turn==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
+          if (!remaining.some(x => x.c===opp)) { setWinner(turn); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('darkchess',turn==='r');} if(turn==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
         }
         setBoard(nb); setTurn(turn==='r'?'b':'r'); setSel(null); setLastMove([r,c]);
       } else if (p && p.hidden) {
+        histRef.current.push(snapDC());
         const nb = board.map(row => row.map(cell => cell ? {...cell} : null));
         nb[r][c].hidden = false;
+        SFX.place();
         setBoard(nb); setTurn(turn==='r'?'b':'r'); setSel(null); setLastMove([r,c]);
       } else if (p && !p.hidden && p.c===turn) {
         setSel([r,c]);
       } else { setSel(null); }
     } else {
       if (p && p.hidden) {
+        histRef.current.push(snapDC());
         const nb = board.map(row => row.map(cell => cell ? {...cell} : null));
         nb[r][c].hidden = false;
+        SFX.place();
         setBoard(nb); setTurn(turn==='r'?'b':'r'); setLastMove([r,c]);
       } else if (p && !p.hidden && p.c===turn) {
         setSel([r,c]);
@@ -532,7 +660,19 @@ function DarkChessGame({ onBack }) {
     }
   };
 
-  const reset = () => { aiRef.current++; setBoard(initBoard()); setSel(null); setTurn('r'); setWinner(null); setScore({r:0,b:0}); setLastMove(null); };
+  const reset = () => { aiRef.current++; histRef.current=[]; recordedRef.current=false; setBoard(initBoard()); setSel(null); setTurn('r'); setWinner(null); setScore({r:0,b:0}); setLastMove(null); };
+
+  const undo = () => {
+    const h = histRef.current;
+    if (!h.length || winner) return;
+    SFX.place();
+    let snap;
+    if (vsAI) { const steps = h.length>=2?2:1; for(let i=0;i<steps;i++) snap = h.pop(); }
+    else snap = h.pop();
+    if (!snap) return;
+    aiRef.current++;
+    setBoard(snap.board); setTurn(snap.turn); setScore(snap.score); setLastMove(snap.lastMove); setSel(null);
+  };
 
   useEffect(() => {
     if (!vsAI || turn !== 'b' || winner) return;
@@ -550,6 +690,7 @@ function DarkChessGame({ onBack }) {
           ms.forEach(m=>{if(m[2]==='capture')caps.push({fr:r,fc:c,tr:m[0],tc:m[1]});else mvs.push({fr:r,fc:c,tr:m[0],tc:m[1]});});
         }
       }
+      const pushSnap=()=>{ histRef.current.push({ board: dcBoardRef.current.map(row=>row.map(cell=>cell?{...cell}:null)), turn:'b', score:{...dcScoreRef.current}, lastMove }); };
       if(caps.length>0){
         // Prefer capturing high-value pieces with low-value attackers
         caps.sort((a,b)=>{
@@ -557,22 +698,29 @@ function DarkChessGame({ onBack }) {
           if(bVal!==aVal) return bVal-aVal;
           return DC_RANK[nb[a.fr][a.fc].t]-DC_RANK[nb[b.fr][b.fc].t];
         });
+        pushSnap();
         const m=caps[0];
         const cap=nb[m.tr][m.tc];
         nb[m.tr][m.tc]=nb[m.fr][m.fc];nb[m.fr][m.fc]=null;
-        if(cap){const ns={...dcScoreRef.current};ns.b++;setScore(ns);if(!nb.flat().filter(x=>x).some(x=>x.c==='r'))setWinner('b');}
+        SFX.capture();
+        if(cap){const ns={...dcScoreRef.current};ns.b++;setScore(ns);if(!nb.flat().filter(x=>x).some(x=>x.c==='r')){setWinner('b');if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('darkchess',false);}}}
         setBoard(nb);setTurn('r');setSel(null);setLastMove([m.tr,m.tc]);
       } else if(mvs.length>0){
+        pushSnap();
         const m=mvs[Math.floor(Math.random()*mvs.length)];
         nb[m.tr][m.tc]=nb[m.fr][m.fc];nb[m.fr][m.fc]=null;
+        SFX.place();
         setBoard(nb);setTurn('r');setSel(null);setLastMove([m.tr,m.tc]);
       } else if(flips.length>0){
+        pushSnap();
         const [r,c]=flips[Math.floor(Math.random()*flips.length)];
         nb[r][c].hidden=false;
+        SFX.place();
         setBoard(nb);setTurn('r');setSel(null);setLastMove([r,c]);
       } else {
         // AI has no legal actions — AI loses
         setWinner('r');
+        if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('darkchess',true);}
         if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1);
       }
     }, 500);
@@ -588,7 +736,7 @@ function DarkChessGame({ onBack }) {
       if (p && p.hidden) { hasAction = true; break; }
       if (p && !p.hidden && p.c === turn && getMoves(r, c, board, turn).length > 0) hasAction = true;
     }
-    if (!hasAction) { const w = turn === 'r' ? 'b' : 'r'; setWinner(w); if(w==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
+    if (!hasAction) { const w = turn === 'r' ? 'b' : 'r'; setWinner(w); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('darkchess',w==='r');} if(w==='r'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
   }, [board, turn, winner]);
   const CS = 44;
   const ms = sel ? getMoves(sel[0],sel[1]) : [];
@@ -601,6 +749,7 @@ function DarkChessGame({ onBack }) {
         <div style={{ fontSize:14, color:COLORS.textDim, marginBottom:12 }}>黑方{vsAI?' (AI)':''}: {score.b} 子</div>
         <div style={{ display:'flex', gap:4, marginBottom:12 }}>
           <Btn onClick={()=>{setVsAI(!vsAI);reset();}} small active={vsAI}>{vsAI?'人機':'雙人'}</Btn>
+          <Btn onClick={undo} small disabled={!histRef.current.length||!!winner}>悔棋</Btn>
           <Btn onClick={reset} small>重開</Btn>
         </div>
       </div>
@@ -619,7 +768,7 @@ function DarkChessGame({ onBack }) {
               background: isSel ? COLORS.surfaceLight : isTarget ? 'rgba(201,168,76,0.15)' : COLORS.bgCard,
               borderRadius:6, cursor:'pointer', border: isSel ? `2px solid ${COLORS.gold}` : isTarget ? `1px solid ${COLORS.goldDim}` : isLast ? '2px solid #ffe066' : `1px solid ${COLORS.border}`,
               transition:'all 0.15s',
-              animation: isLast ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
+              animation: (isLast && !reduceMotion) ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
             }}>
               {p ? (p.hidden ?
                 <div style={{ width:CS*0.7, height:CS*0.7, borderRadius:6, background:'linear-gradient(135deg, #3a3020, #2a2018)', border:'1px solid #4a4030', display:'flex', alignItems:'center', justifyContent:'center' }}>
@@ -641,6 +790,7 @@ function DarkChessGame({ onBack }) {
         })}
       </div>
       </ScrollBoard>
+      {winner && <WinOverlay title={winner==='r'?'紅方 勝利!':'黑方 勝利!'} sub={vsAI?(winner==='r'?'你贏了':'AI 獲勝'):''} onAgain={reset} streak={vsAI&&winner==='r'?(STATS.get().darkchess?.streak||0):0} reduceMotion={reduceMotion} />}
     </GameShell>
   );
 }
@@ -649,7 +799,8 @@ function DarkChessGame({ onBack }) {
 // 3. GO (圍棋) - 9x9
 // ============================================================
 function GoGame({ onBack }) {
-  const SIZE = 9, CS = 38;
+  const SIZE = 9;
+  const CS = useMemo(()=> (typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(max-width:640px)').matches) ? 40 : 38, []);
   const [board, setBoard] = useState(Array(SIZE).fill(null).map(() => Array(SIZE).fill(null)));
   const [turn, setTurn] = useState('b');
   const [pass, setPass] = useState(0);
@@ -659,6 +810,9 @@ function GoGame({ onBack }) {
   const [winner, setWinner] = useState(null);
   const [vsAI, setVsAI] = useState(true);
   const aiRef = useRef(0);
+  const reduceMotion = useReduceMotion();
+  const undoRef = useRef([]);
+  const recordedRef = useRef(false);
 
   const getGroup = (bd, r, c, color) => {
     const visited = new Set();
@@ -701,10 +855,25 @@ function GoGame({ onBack }) {
     const boardStr = JSON.stringify(r2.board);
     if (history.includes(boardStr)) return; // ko
     if (r2.count > 0) return; // suicide when no capture
+    undoRef.current.push({ board: board.map(row=>[...row]), turn, captured:{...captured}, pass, lastMove, history:[...history] });
+    r1.count > 0 ? SFX.capture() : SFX.place();
     const nc = { ...captured }; nc[turn] += r1.count;
     setCaptured(nc);
     setBoard(r1.board); setTurn(opp); setPass(0); setLastMove([r,c]);
     setHistory([...history, boardStr]);
+  };
+
+  const undo = () => {
+    const h = undoRef.current;
+    if (!h.length || winner) return;
+    SFX.place();
+    let snap;
+    if (vsAI) { const steps = h.length>=2?2:1; for(let i=0;i<steps;i++) snap = h.pop(); }
+    else snap = h.pop();
+    if (!snap) return;
+    aiRef.current++;
+    setBoard(snap.board); setTurn(snap.turn); setCaptured(snap.captured);
+    setPass(snap.pass); setLastMove(snap.lastMove); setHistory(snap.history);
   };
 
   const handlePass = useCallback(() => {
@@ -732,23 +901,26 @@ function GoGame({ onBack }) {
       const wScore = wStones + territory.w + 5.5;
       const blackWins = bScore > wScore;
       setWinner(blackWins ? `黑 ${bScore} vs 白 ${wScore.toFixed(1)} — 黑方勝` : `白 ${wScore.toFixed(1)} vs 黑 ${bScore} — 白方勝`);
+      if (vsAIRef.current && !recordedRef.current) { recordedRef.current = true; STATS.record('go', blackWins); }
       if (blackWins && typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(1);
       return;
     }
     setPass(p=>p+1); setTurn(t=>t==='b'?'w':'b');
   }, []);
 
-  const reset = () => { aiRef.current++; setBoard(Array(SIZE).fill(null).map(() => Array(SIZE).fill(null))); setTurn('b'); setPass(0); setCaptured({b:0,w:0}); setLastMove(null); setHistory([]); setWinner(null); };
+  const reset = () => { aiRef.current++; undoRef.current=[]; recordedRef.current=false; setBoard(Array(SIZE).fill(null).map(() => Array(SIZE).fill(null))); setTurn('b'); setPass(0); setCaptured({b:0,w:0}); setLastMove(null); setHistory([]); setWinner(null); };
 
   // Use refs so AI always reads latest state
   const boardRef = useRef(board);
   const histRef = useRef(history);
   const capRef = useRef(captured);
   const passRef = useRef(pass);
+  const vsAIRef = useRef(vsAI);
   useEffect(() => { boardRef.current = board; }, [board]);
   useEffect(() => { histRef.current = history; }, [history]);
   useEffect(() => { capRef.current = captured; }, [captured]);
   useEffect(() => { passRef.current = pass; }, [pass]);
+  useEffect(() => { vsAIRef.current = vsAI; }, [vsAI]);
 
   // Stronger AI with influence-based evaluation
   const goAiScore = useCallback((bd, r, c, me, opp) => {
@@ -847,6 +1019,8 @@ function GoGame({ onBack }) {
           return;
         }
         const mv = candidates[0];
+        undoRef.current.push({ board: boardRef.current.map(row=>[...row]), turn:'w', captured:{...capRef.current}, pass:passRef.current, lastMove, history:[...histRef.current] });
+        mv.caps > 0 ? SFX.capture() : SFX.place();
         const nc = {...capRef.current}; nc.w += mv.caps;
         setCaptured(nc);
         setBoard(mv.board); setTurn('b'); setPass(0); setLastMove([mv.r,mv.c]);
@@ -873,6 +1047,7 @@ function GoGame({ onBack }) {
         </div>
         <Btn onClick={()=>{setVsAI(!vsAI);reset();}} small active={vsAI} style={{marginRight:6}}>{vsAI?'人機':'雙人'}</Btn>
         <Btn onClick={handlePass} small style={{ marginRight:6 }}>虛手</Btn>
+        <Btn onClick={undo} small disabled={!undoRef.current.length||!!winner} style={{ marginRight:6 }}>悔棋</Btn>
         <Btn onClick={reset} small>重開</Btn>
       </div>
       <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'12px 8px', gap:10 }}>
@@ -911,7 +1086,7 @@ function GoGame({ onBack }) {
                     ? '0 3px 6px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15)'
                     : '0 3px 6px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.8)',
                   border: isLast ? '2.5px solid #ffe066' : 'none',
-                  animation: isLast ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
+                  animation: (isLast && !reduceMotion) ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
                 }}/>}
               </div>
             );
@@ -919,6 +1094,7 @@ function GoGame({ onBack }) {
         </div>
         </ScrollBoard>
       </div>
+      {winner && <WinOverlay title={winner.includes('黑方勝')?'黑方勝!':'白方勝!'} sub={winner} onAgain={reset} streak={vsAI&&winner.includes('黑方勝')?(STATS.get().go?.streak||0):0} reduceMotion={reduceMotion} />}
     </div>
   );
 }
@@ -927,13 +1103,17 @@ function GoGame({ onBack }) {
 // 4. GOMOKU (五子棋)
 // ============================================================
 function GomokuGame({ onBack }) {
-  const SIZE = 15, CS = 22;
+  const SIZE = 15;
+  const CS = useMemo(()=> (typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(max-width:640px)').matches) ? 26 : 22, []);
   const [board, setBoard] = useState(Array(SIZE).fill(null).map(() => Array(SIZE).fill(null)));
   const [turn, setTurn] = useState('b');
   const [winner, setWinner] = useState(null);
   const [lastMove, setLastMove] = useState(null);
   const [vsAI, setVsAI] = useState(true);
   const moveGen = useRef(0);
+  const reduceMotion = useReduceMotion();
+  const histRef = useRef([]);
+  const recordedRef = useRef(false);
 
   const checkWin = (bd, r, c, color) => {
     const dirs = [[0,1],[1,0],[1,1],[1,-1]];
@@ -982,10 +1162,11 @@ function GomokuGame({ onBack }) {
   const handleClick = (r, c) => {
     if (winner || board[r][c]) return;
     if (vsAI && turn !== 'b') return;
+    histRef.current.push({ board: board.map(row=>[...row]), turn, lastMove });
     const nb = board.map(row => [...row]);
     nb[r][c] = turn;
-    setBoard(nb); setLastMove([r,c]);
-    if (checkWin(nb, r, c, turn)) { setWinner(turn); if(turn==='b'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); return; }
+    setBoard(nb); setLastMove([r,c]); SFX.place();
+    if (checkWin(nb, r, c, turn)) { setWinner(turn); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('gomoku',turn==='b');} if(turn==='b'&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); return; }
     // Draw check
     if (nb.every(row => row.every(cell => cell !== null))) { setWinner('draw'); return; }
     if (vsAI) {
@@ -996,8 +1177,8 @@ function GomokuGame({ onBack }) {
         const [ar, ac] = aiMove(nb);
         const nb2 = nb.map(row => [...row]);
         nb2[ar][ac] = 'w';
-        setBoard(nb2); setLastMove([ar,ac]);
-        if (checkWin(nb2, ar, ac, 'w')) setWinner('w');
+        setBoard(nb2); setLastMove([ar,ac]); SFX.place();
+        if (checkWin(nb2, ar, ac, 'w')) { setWinner('w'); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('gomoku',false);} }
         else setTurn('b');
       }, 200);
     } else {
@@ -1005,7 +1186,19 @@ function GomokuGame({ onBack }) {
     }
   };
 
-  const reset = () => { moveGen.current++; setBoard(Array(SIZE).fill(null).map(() => Array(SIZE).fill(null))); setTurn('b'); setWinner(null); setLastMove(null); };
+  const reset = () => { moveGen.current++; histRef.current=[]; recordedRef.current=false; setBoard(Array(SIZE).fill(null).map(() => Array(SIZE).fill(null))); setTurn('b'); setWinner(null); setLastMove(null); };
+
+  const undo = () => {
+    const h = histRef.current;
+    if (!h.length || winner) return;
+    SFX.place();
+    let snap;
+    if (vsAI) { const steps = h.length>=2?2:1; for(let i=0;i<steps;i++) snap = h.pop(); }
+    else snap = h.pop();
+    if (!snap) return;
+    moveGen.current++;
+    setBoard(snap.board); setTurn(snap.turn); setLastMove(snap.lastMove);
+  };
   const bw = (SIZE-1)*CS;
 
   return (
@@ -1017,6 +1210,7 @@ function GomokuGame({ onBack }) {
           <span style={{ fontSize:11, color:COLORS.textDim, marginLeft:8 }}>Gomoku</span>
         </div>
         <Btn onClick={() => { setVsAI(!vsAI); reset(); }} small active={vsAI} style={{ marginRight:6 }}>{vsAI?'人機':'雙人'}</Btn>
+        <Btn onClick={undo} small disabled={!histRef.current.length||!!winner} style={{ marginRight:6 }}>悔棋</Btn>
         <Btn onClick={reset} small>重開</Btn>
       </div>
       <div style={{ display:'flex', flexDirection:'column', alignItems:'center', padding:'12px 8px', gap:10 }}>
@@ -1055,7 +1249,7 @@ function GomokuGame({ onBack }) {
                     ? '0 3px 6px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.15)'
                     : '0 3px 6px rgba(0,0,0,0.3), inset 0 1px 3px rgba(255,255,255,0.8)',
                   border: isLast ? '2.5px solid #ffe066' : 'none',
-                  animation: isLast ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
+                  animation: (isLast && !reduceMotion) ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
                 }}/>}
               </div>
             );
@@ -1063,6 +1257,7 @@ function GomokuGame({ onBack }) {
         </div>
         </ScrollBoard>
       </div>
+      {winner && winner!=='draw' && <WinOverlay title={winner==='b'?'黑方勝!':'白方勝!'} sub={vsAI?(winner==='b'?'你贏了':'AI 獲勝'):''} onAgain={reset} streak={vsAI&&winner==='b'?(STATS.get().gomoku?.streak||0):0} reduceMotion={reduceMotion} />}
     </div>
   );
 }
@@ -1082,6 +1277,8 @@ function FlightGame({ onBack }) {
   const [winner, setWinner] = useState(null);
   const [vsAI, setVsAI] = useState(true);
   const [message, setMessage] = useState('');
+  const reduceMotion = useReduceMotion();
+  const recordedRef = useRef(false);
 
   // Each player starts at a different offset on the circular track
   // pieces[player][i] stores "steps traveled" (0=just entered, TRACK=home, -1=base)
@@ -1113,7 +1310,7 @@ function FlightGame({ onBack }) {
       setDice(d);
       count++;
       if (count > 8) {
-        clearInterval(iv); setRolling(false);
+        clearInterval(iv); setRolling(false); SFX.dice();
         // Auto-skip if no valid moves
         if (!canAnyMove(d, pieces, turn)) {
           setMessage(`${pNames[turn]}方無法移動，跳過!`);
@@ -1149,17 +1346,17 @@ function FlightGame({ onBack }) {
           }
         }
       }
-      if (bumped) setMessage(`${pNames[turn]}方撞飛了對手的棋子!`);
-      else setMessage('');
-    } else setMessage('');
+      if (bumped) { setMessage(`${pNames[turn]}方撞飛了對手的棋子!`); SFX.capture(); }
+      else { setMessage(''); SFX.place(); }
+    } else { setMessage(''); SFX.place(); }
     // Check win
-    if (np[turn].every(p => p === TRACK)) { setWinner(turn); if(turn===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
+    if (np[turn].every(p => p === TRACK)) { setWinner(turn); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('flight',turn===0);} if(turn===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
     // Roll again on 6
     const nextTurn = dice === 6 ? turn : (turn+1)%players;
     setPieces(np); setDice(null); setTurn(nextTurn);
   };
 
-  const reset = () => { setDice(null); setTurn(0); setWinner(null); setMessage(''); const p={}; for(let i=0;i<players;i++) p[i]=[-1,-1,-1,-1]; setPieces(p); };
+  const reset = () => { recordedRef.current=false; setDice(null); setTurn(0); setWinner(null); setMessage(''); const p={}; for(let i=0;i<players;i++) p[i]=[-1,-1,-1,-1]; setPieces(p); };
 
   // AI auto-play for non-player-0 turns
   useEffect(() => {
@@ -1167,7 +1364,7 @@ function FlightGame({ onBack }) {
     const timer = setTimeout(() => {
       // AI roll
       const d = Math.floor(Math.random()*6)+1;
-      setDice(d);
+      setDice(d); SFX.dice();
       setTimeout(() => {
         if (!canAnyMove(d, pieces, turn)) {
           setDice(null); setTurn((turn+1)%players); return;
@@ -1187,8 +1384,10 @@ function FlightGame({ onBack }) {
           else { const npos=pos+d; np[turn][pi]=npos>TRACK?TRACK:npos; }
           // Bump: compare actual positions
           const newPos=np[turn][pi];
-          if(newPos>=0&&newPos<TRACK){const myAct=getActualPos(newPos,turn);for(let op=0;op<players;op++){if(op===turn)continue;for(let oi=0;oi<4;oi++){if(np[op][oi]>=0&&np[op][oi]<TRACK&&getActualPos(np[op][oi],op)===myAct)np[op][oi]=-1;}}}
-          if(np[turn].every(p=>p===TRACK)) setWinner(turn);
+          let aiBumped=false;
+          if(newPos>=0&&newPos<TRACK){const myAct=getActualPos(newPos,turn);for(let op=0;op<players;op++){if(op===turn)continue;for(let oi=0;oi<4;oi++){if(np[op][oi]>=0&&np[op][oi]<TRACK&&getActualPos(np[op][oi],op)===myAct){np[op][oi]=-1;aiBumped=true;}}}}
+          aiBumped ? SFX.capture() : SFX.place();
+          if(np[turn].every(p=>p===TRACK)){ setWinner(turn); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('flight',false);} }
           const next=d===6?turn:(turn+1)%players;
           setPieces(np); setDice(null); setTurn(next);
         }
@@ -1267,6 +1466,7 @@ function FlightGame({ onBack }) {
         }))}
       </div>
       </ScrollBoard>
+      {winner!==null && <WinOverlay title={`${pNames[winner]}方 勝利!`} sub={vsAI?(winner===0?'你贏了':'AI 獲勝'):''} onAgain={reset} streak={vsAI&&winner===0?(STATS.get().flight?.streak||0):0} reduceMotion={reduceMotion} />}
     </GameShell>
   );
 }
@@ -1321,9 +1521,12 @@ const CC_HEX_DIRS = [
 ];
 
 function CheckersGame({ onBack }) {
-  const CS = 24;
+  const CS = useMemo(()=> (typeof window!=='undefined'&&window.matchMedia&&window.matchMedia('(max-width:640px)').matches) ? 28 : 24, []);
   const [numPlayers, setNumPlayers] = useState(2);
   const validSet = useRef(new Set());
+  const reduceMotion = useReduceMotion();
+  const histRef = useRef([]);
+  const recordedRef = useRef(false);
 
   const initBoard = useCallback((np) => {
     const b = {};
@@ -1437,11 +1640,13 @@ function CheckersGame({ onBack }) {
     if (sel) {
       const ms = getMoves(board, sel[0], sel[1]);
       if (ms.some(([mr,mc]) => mr===r && mc===c)) {
+        histRef.current.push({ board: { ...board }, turn, lastMove });
         const nb = { ...board };
         nb[key] = nb[`${sel[0]},${sel[1]}`];
         nb[`${sel[0]},${sel[1]}`] = null;
+        SFX.place();
         const w = checkWin(nb, numPlayers);
-        if (w !== null) { setWinner(w); if(w===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
+        if (w !== null) { setWinner(w); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('checkers',w===0);} if(w===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
         setBoard(nb); setTurn(nextTurn(turn, numPlayers)); setSel(null); setLastMove([r,c]);
       } else if (board[key] === turn) {
         setSel([r, c]);
@@ -1453,9 +1658,25 @@ function CheckersGame({ onBack }) {
 
   const reset = useCallback((np) => {
     aiRef.current++;
+    histRef.current=[]; recordedRef.current=false;
     const n = np || numPlayers;
     setBoard(initBoard(n)); setSel(null); setTurn(0); setWinner(null); setLastMove(null);
   }, [numPlayers, initBoard]);
+
+  const undo = () => {
+    const h = histRef.current;
+    if (!h.length || winner !== null) return;
+    SFX.place();
+    let snap;
+    if (vsAI) {
+      // pop back to player 0's previous turn (player move + all AI moves since)
+      const steps = Math.min(h.length, (CC_LAYOUTS[numPlayers]||CC_LAYOUTS[2]).length);
+      for(let i=0;i<steps;i++){ const s=h.pop(); if(s){ snap=s; if(s.turn===0) break; } }
+    } else snap = h.pop();
+    if (!snap) return;
+    aiRef.current++;
+    setBoard(snap.board); setTurn(snap.turn); setLastMove(snap.lastMove); setSel(null);
+  };
 
   // AI
   useEffect(() => {
@@ -1486,11 +1707,13 @@ function CheckersGame({ onBack }) {
       allMoves.sort((a,b) => b.score - a.score);
       const top = allMoves.filter(m => m.score >= allMoves[0].score - 1);
       const mv = top[Math.floor(Math.random()*top.length)];
+      histRef.current.push({ board: { ...board }, turn, lastMove });
       const nb = { ...board };
       nb[`${mv.tr},${mv.tc}`] = nb[`${mv.fr},${mv.fc}`];
       nb[`${mv.fr},${mv.fc}`] = null;
+      SFX.place();
       const w = checkWin(nb, numPlayers);
-      if (w !== null) { setWinner(w); if(w===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
+      if (w !== null) { setWinner(w); if(vsAI&&!recordedRef.current){recordedRef.current=true;STATS.record('checkers',w===0);} if(w===0&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(1); }
       setBoard(nb); setTurn(nextTurn(turn, numPlayers)); setSel(null); setLastMove([mv.tr,mv.tc]);
     }, 400);
     return () => clearTimeout(timer);
@@ -1535,6 +1758,12 @@ function CheckersGame({ onBack }) {
           background: flyingJump ? COLORS.gold : COLORS.surface,
           color: flyingJump ? COLORS.bg : COLORS.textDim, fontFamily:fontSans,
         }}>飛跳</button>
+        <button onClick={undo} disabled={!histRef.current.length||winner!==null} style={{
+          padding:'4px 8px', fontSize:11, borderRadius:4, border:'none',
+          cursor:(!histRef.current.length||winner!==null)?'default':'pointer',
+          opacity:(!histRef.current.length||winner!==null)?0.4:1,
+          background:COLORS.surface, color:COLORS.textDim, fontFamily:fontSans,
+        }}>悔棋</button>
         <button onClick={()=>reset()} style={{
           padding:'4px 8px', fontSize:11, borderRadius:4, border:'none', cursor:'pointer',
           background:COLORS.surface, color:COLORS.textDim, fontFamily:fontSans,
@@ -1605,9 +1834,9 @@ function CheckersGame({ onBack }) {
                   : pieceColor
                     ? `inset 0 1px 3px rgba(255,255,255,0.4), 0 3px 6px rgba(0,0,0,0.35)`
                     : 'inset 0 2px 4px rgba(0,0,0,0.2)',
-                animation: isLast && pieceColor ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
+                animation: (isLast && pieceColor && !reduceMotion) ? 'lastPulse 1.5s ease-in-out infinite' : 'none',
                 transition: 'transform 0.12s, box-shadow 0.12s',
-                transform: isSel ? 'scale(1.2)' : 'none',
+                transform: (isSel && !reduceMotion) ? 'scale(1.2)' : 'none',
                 zIndex: isSel ? 10 : pieceColor ? 2 : 1,
               }}/>
             );
@@ -1615,6 +1844,7 @@ function CheckersGame({ onBack }) {
         </div>
         </ScrollBoard>
       </div>
+      {winner!==null && <WinOverlay title={`${CC_NAMES[layout[winner]]}方 勝利!`} sub={vsAI?(winner===0?'你贏了':'AI 獲勝'):''} onAgain={()=>reset()} streak={vsAI&&winner===0?(STATS.get().checkers?.streak||0):0} reduceMotion={reduceMotion} />}
     </div>
   );
 }
@@ -1859,9 +2089,15 @@ function MahjongGame({ onBack, variant }) {
   const [winnerInfo,setWinnerInfo]=useState(null);
   const [turnCount,setTurnCount]=useState(0);
   const [riichi,setRiichi]=useState(Array(4).fill(false)); // per-player riichi status
+  const mjStatId = variant === 'tw' ? 'twmahjong' : 'jpmahjong';
+  const mjRecordedRef = useRef(false);
 
   useEffect(() => {
-    if (winnerInfo && winnerInfo.player === 0 && typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(1);
+    if (winnerInfo) {
+      SFX.win();
+      if (!mjRecordedRef.current) { mjRecordedRef.current = true; STATS.record(mjStatId, winnerInfo.player === 0); }
+      if (winnerInfo.player === 0 && typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(1);
+    }
   }, [winnerInfo]);
 
   // Refs for AI to avoid stale closures
@@ -2054,6 +2290,7 @@ function MahjongGame({ onBack, variant }) {
     setDealer(dl);setWall(remWall);setHands(h);setMelds(m);setDiscards(d);
     setTurn(dl);setPhase('draw');setCurrentTile(null);setSelected(null);
     setLastDiscard(null);setClaimOptions(null);setWinnerInfo(null);setTurnCount(0);setRiichi(Array(np).fill(false));
+    mjRecordedRef.current=false;
     setMessage(`${MJ_WIND_NAMES[dl]||'P'+(dl+1)} 莊`);
   }, [isJP,handSize,numP]);
 
@@ -2142,6 +2379,7 @@ function MahjongGame({ onBack, variant }) {
   const drawTile=()=>{
     if(phase!=='draw'||turn!==0)return;
     if(wall.length===0){setPhase('end');setMessage('流局');return;}
+    SFX.place();
     setTurnCount(c=>c+1);
     const nw=[...wall];let t=nw.pop();
     // Handle flower tiles: set aside and draw replacement
@@ -2191,6 +2429,7 @@ function MahjongGame({ onBack, variant }) {
 
   const playerDiscard=(idx)=>{
     if(phase!=='discard'||turn!==0||claimOptions)return;
+    SFX.place();
     const allT=[...hands[0]];if(currentTile)allT.push(currentTile);
     const disc=allT[idx]; const newH=sortH(allT.filter((_,i)=>i!==idx));
     const nh=hands.map(h=>[...h]);nh[0]=newH;
@@ -2689,8 +2928,10 @@ function MahjongGame({ onBack, variant }) {
 // ============================================================
 // HOME SCREEN
 // ============================================================
-function HomeScreen({ onSelect }) {
+function HomeScreen({ onSelect, prefs = { sound:true, reduceMotion:false }, setPref }) {
   const [hovered, setHovered] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const stats = STATS.get();
   return (
     <div style={{ minHeight:'100vh', background:COLORS.bg, fontFamily:fontSans }}>
       <style>{`
@@ -2698,6 +2939,8 @@ function HomeScreen({ onSelect }) {
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @media (max-width: 640px) { .mj-landscape-hint { display:block; } }
         @keyframes lastPulse { 0%,100%{box-shadow:0 0 0 2px #ffe066,0 0 8px #ffe06688;} 50%{box-shadow:0 0 0 3px #ffe066,0 0 16px #ffe066aa;} }
+        @keyframes confettiFall { to { transform: translateY(110vh) rotate(540deg); opacity:0; } }
+        @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
         body { background: ${COLORS.bg}; }
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: ${COLORS.bg}; }
@@ -2705,10 +2948,34 @@ function HomeScreen({ onSelect }) {
       `}</style>
       {/* Header */}
       <div style={{
+        position:'relative',
         padding:'48px 32px 32px', textAlign:'center',
         background:`linear-gradient(180deg, ${COLORS.bgCard} 0%, ${COLORS.bg} 100%)`,
         borderBottom:`1px solid ${COLORS.border}`,
       }}>
+        {/* Settings (gear) */}
+        <div style={{ position:'absolute', top:16, right:16, zIndex:10 }}>
+          <button onClick={() => setShowSettings(s => !s)} aria-label="設定"
+            style={{ width:42, height:42, borderRadius:'50%', cursor:'pointer',
+              background: showSettings ? COLORS.gold : 'transparent',
+              color: showSettings ? COLORS.bg : COLORS.gold,
+              border:`1px solid ${COLORS.goldDim}`, fontSize:20, fontFamily:fontSans, lineHeight:1 }}>⚙</button>
+          {showSettings && (
+            <div style={{ position:'absolute', top:50, right:0, width:200, padding:16,
+              background:COLORS.bgCard, border:`1px solid ${COLORS.goldDim}`, borderRadius:10,
+              boxShadow:'0 8px 24px rgba(0,0,0,0.5)', textAlign:'left' }}>
+              <div style={{ fontSize:13, color:COLORS.goldLight, fontFamily:fontSans, marginBottom:12 }}>設定</div>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:10 }}>
+                <span style={{ fontSize:13, color:COLORS.text }}>音效</span>
+                <Btn small active={prefs.sound} onClick={() => setPref && setPref('sound', !prefs.sound)}>{prefs.sound?'開':'關'}</Btn>
+              </div>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between' }}>
+                <span style={{ fontSize:13, color:COLORS.text }}>減少動態</span>
+                <Btn small active={prefs.reduceMotion} onClick={() => setPref && setPref('reduceMotion', !prefs.reduceMotion)}>{prefs.reduceMotion?'開':'關'}</Btn>
+              </div>
+            </div>
+          )}
+        </div>
         <div style={{ fontSize:14, letterSpacing:8, color:COLORS.goldDim, marginBottom:12, fontFamily:fontSans, fontWeight:300 }}>HAO0321 STUDIO</div>
         <h1 style={{ fontFamily:font, fontSize:42, color:COLORS.gold, fontWeight:700, marginBottom:8, letterSpacing:4 }}>棋牌大師</h1>
         <div style={{ fontSize:14, color:COLORS.textDim, letterSpacing:2 }}>BOARD GAME COLLECTION</div>
@@ -2723,13 +2990,19 @@ function HomeScreen({ onSelect }) {
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
               style={{
+                position:'relative',
                 background: hovered===i ? COLORS.bgHover : COLORS.bgCard,
                 border: `1px solid ${hovered===i ? COLORS.goldDim : COLORS.border}`,
                 borderRadius: 12, padding: 24, cursor: 'pointer',
-                transition: 'all 0.25s ease',
-                transform: hovered===i ? 'translateY(-4px)' : 'none',
+                transition: prefs.reduceMotion ? 'none' : 'all 0.25s ease',
+                transform: (hovered===i && !prefs.reduceMotion) ? 'translateY(-4px)' : 'none',
                 boxShadow: hovered===i ? `0 8px 24px rgba(0,0,0,0.4), 0 0 0 1px ${COLORS.goldDim}` : '0 2px 8px rgba(0,0,0,0.2)',
               }}>
+              {stats[g.id]?.streak > 0 && (
+                <div style={{ position:'absolute', top:10, right:10, padding:'2px 8px', borderRadius:10,
+                  background:`${COLORS.gold}22`, border:`1px solid ${COLORS.goldDim}`,
+                  fontSize:11, color:COLORS.goldLight, fontFamily:fontSans }}>🔥{stats[g.id].streak}</div>
+              )}
               <div style={{
                 width:48, height:48, borderRadius:8,
                 background:`linear-gradient(135deg, ${COLORS.gold}20, ${COLORS.gold}08)`,
@@ -2761,18 +3034,32 @@ function HomeScreen({ onSelect }) {
 // ============================================================
 export default function App() {
   const [game, setGame] = useState(null);
+  const [prefs, setPrefs] = useState(() => {
+    const saved = PREFS.get();
+    const prefersReduce = (typeof window !== 'undefined' && window.matchMedia)
+      ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false;
+    return {
+      sound: saved.sound !== undefined ? saved.sound : true,
+      reduceMotion: saved.reduceMotion !== undefined ? saved.reduceMotion : prefersReduce,
+    };
+  });
+  // Keep SFX engine + localStorage in sync with prefs.
+  useEffect(() => { SFX.toggle(prefs.sound); PREFS.set(prefs); }, [prefs.sound, prefs.reduceMotion]);
+  const setPref = (k, v) => setPrefs(p => ({ ...p, [k]: v }));
   const back = () => setGame(null);
 
-  if (!game) return <HomeScreen onSelect={setGame} />;
-  switch (game) {
-    case 'xiangqi': return <XiangqiGame onBack={back} />;
-    case 'darkchess': return <DarkChessGame onBack={back} />;
-    case 'go': return <GoGame onBack={back} />;
-    case 'gomoku': return <GomokuGame onBack={back} />;
-    case 'flight': return <FlightGame onBack={back} />;
-    case 'checkers': return <CheckersGame onBack={back} />;
-    case 'jpmahjong': return <MahjongGame onBack={back} variant="jp" />;
-    case 'twmahjong': return <MahjongGame onBack={back} variant="tw" />;
-    default: return <HomeScreen onSelect={setGame} />;
+  let view;
+  if (!game) view = <HomeScreen onSelect={setGame} prefs={prefs} setPref={setPref} />;
+  else switch (game) {
+    case 'xiangqi': view = <XiangqiGame onBack={back} />; break;
+    case 'darkchess': view = <DarkChessGame onBack={back} />; break;
+    case 'go': view = <GoGame onBack={back} />; break;
+    case 'gomoku': view = <GomokuGame onBack={back} />; break;
+    case 'flight': view = <FlightGame onBack={back} />; break;
+    case 'checkers': view = <CheckersGame onBack={back} />; break;
+    case 'jpmahjong': view = <MahjongGame onBack={back} variant="jp" />; break;
+    case 'twmahjong': view = <MahjongGame onBack={back} variant="tw" />; break;
+    default: view = <HomeScreen onSelect={setGame} prefs={prefs} setPref={setPref} />;
   }
+  return <PrefsCtx.Provider value={prefs}>{view}</PrefsCtx.Provider>;
 }

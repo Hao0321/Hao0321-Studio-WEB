@@ -53,6 +53,16 @@ const PC=["#f97316","#3b82f6","#a855f7","#22c55e"];
 const PN=["你","電腦A","電腦B","電腦C"];
 const PA=["","","",""];
 
+/* ── Audio + haptics (additive, no external files) ── */
+const _ac={ctx:null};
+const sfx=(type)=>{ try{ if(typeof window==='undefined')return; if(window.__monoMute)return; const C=window.AudioContext||window.webkitAudioContext; if(!C)return; _ac.ctx=_ac.ctx||new C(); const ac=_ac.ctx; if(ac.state==='suspended')ac.resume(); const t=ac.currentTime; const beep=(f,d,g=0.06,wave='sine',delay=0)=>{const o=ac.createOscillator(),vol=ac.createGain();o.type=wave;o.frequency.value=f;o.connect(vol);vol.connect(ac.destination);vol.gain.setValueAtTime(0,t+delay);vol.gain.linearRampToValueAtTime(g,t+delay+0.01);vol.gain.exponentialRampToValueAtTime(0.0001,t+delay+d);o.start(t+delay);o.stop(t+delay+d+0.02);}; const map={dice:()=>beep(220,0.08,0.05,'square'),move:()=>beep(440,0.05,0.03,'sine'),buy:()=>{beep(523,0.1);beep(784,0.14,0.05,'sine',0.08);},build:()=>{beep(659,0.09);beep(880,0.12,0.05,'sine',0.07);},rent:()=>beep(160,0.18,0.06,'sawtooth'),tax:()=>beep(120,0.22,0.07,'sawtooth'),win:()=>{[523,659,784,1046].forEach((f,i)=>beep(f,0.18,0.06,'sine',i*0.12));},bust:()=>beep(90,0.4,0.08,'sawtooth'),wheel:()=>beep(330,0.06,0.04,'triangle'),event:()=>{beep(196,0.2,0.06,'square');beep(294,0.2,0.05,'square',0.1);}}; (map[type]||(()=>{}))(); }catch(e){} };
+const haptic=(ms)=>{try{if(typeof navigator!=='undefined'&&navigator.vibrate&&!window.__monoMute)navigator.vibrate(ms);}catch(e){}};
+
+/* ── Best-score persistence ── */
+const LS_KEY='taiwanMono_best';
+const loadBest=()=>{try{return JSON.parse(localStorage.getItem(LS_KEY))||{money:0,wins:0};}catch(e){return{money:0,wins:0};}};
+const saveBest=(b)=>{try{localStorage.setItem(LS_KEY,JSON.stringify(b));}catch(e){}};
+
 const c2g=id=>{if(id<=7)return{c:7-id,r:7};if(id<=13)return{c:0,r:7-(id-7)};if(id<=21)return{c:id-14,r:0};return{c:7,r:id-21};};
 const getRent=(p,hs,ow,oid)=>{if(p.t!=="prop")return p.r[0]||0;const h=hs[p.id]||0;let rent=p.r[h]||p.r[0];if(h===0){const g=P.filter(x=>x.g===p.g&&x.g>0);if(g.every(x=>ow[x.id]===oid))rent*=2;}return rent;};
 const aiWants=(p,prop,ow)=>{const l=p.money-prop.pr;if(l<400)return prop.pr<=600;if(prop.t==="station")return true;const g=P.filter(x=>x.g===prop.g&&x.g>0);const oc=g.filter(x=>ow[x.id]===p.id).length;if(oc>=g.length-1)return true;if(oc>=1)return l>1000;if(p.money>8000)return true;return p.money>3500&&Math.random()>0.3;};
@@ -175,11 +185,11 @@ function Info({prop,ow,hs,ps,onClose,onBuild,canB}){
         <span style={{fontSize:13,fontWeight:600,color:owner.color}}>{owner.name}</span>
       </div>}
       <div style={{display:"flex",gap:8}}>
-        {canB&&ip&&h<5&&<button onClick={()=>onBuild(prop)} style={{
-          flex:1,padding:"11px 0",background:"linear-gradient(135deg,#22c55e,#16a34a)",
+        {canB&&ip&&h<5&&<button onClick={()=>onBuild(prop)} aria-label={`${prop.n} ${h<4?"蓋房":"升級飯店"} $${cost}`} style={{
+          flex:1,padding:"11px 0",minHeight:44,background:"linear-gradient(135deg,#22c55e,#16a34a)",
           border:"none",borderRadius:12,color:"#fff",fontSize:13,fontWeight:700,cursor:"pointer",
           boxShadow:"0 4px 14px rgba(34,197,94,0.3)"}}>{h<4?` 蓋房 $${cost}`:` 升級飯店 $${cost}`}</button>}
-        <button onClick={onClose} style={{flex:canB&&ip&&h<5?0:1,minWidth:80,padding:"11px 0",
+        <button onClick={onClose} aria-label="關閉" style={{flex:canB&&ip&&h<5?0:1,minWidth:80,padding:"11px 0",minHeight:44,
           background:"#f1f5f9",border:"none",borderRadius:12,color:"#94a3b8",fontSize:13,fontWeight:600,cursor:"pointer"}}>關閉</button>
       </div>
     </div>
@@ -211,6 +221,9 @@ export default function Game(){
   const[wheelOn,setWheelOn]=useState(false);const[wheelRes,setWheelRes]=useState(null);
   const[infoP,setInfoP]=useState(null);const[confetti,setCon]=useState(false);
   const[gEv,setGEv]=useState(null);const[shk,setShk]=useState(false);const[locked,setLocked]=useState(false);
+  const[mute,setMute]=useState(false);const reduceMotion=useRef(false);
+  const[best,setBest]=useState(()=>typeof window!=="undefined"?loadBest():{money:0,wins:0});
+  const[newRecord,setNewRecord]=useState(false);const[showAssets,setShowAssets]=useState(false);
 
   const uid=useRef(0);const gs=useRef({});const busy=useRef(false);const pwRef=useRef(null);
 
@@ -218,17 +231,20 @@ export default function Game(){
     fn();window.addEventListener("resize",fn);return()=>window.removeEventListener("resize",fn);},[]);
   useEffect(()=>{gs.current={ps,ow,hs,cur,winner,mySlot,mode,tc};},[ps,ow,hs,cur,winner,mySlot,mode,tc]);
   useEffect(()=>()=>{if(pollRef.current)clearInterval(pollRef.current);},[]);
+  useEffect(()=>{try{const m=window.matchMedia('(prefers-reduced-motion: reduce)');reduceMotion.current=m.matches;const h=e=>{reduceMotion.current=e.matches;};m.addEventListener?.('change',h);return()=>m.removeEventListener?.('change',h);}catch(e){}},[]);
+  useEffect(()=>{try{window.__monoMute=mute;}catch(e){}},[mute]);
 
   const addLog=useCallback(m=>setLog(p=>[m,...p].slice(0,50)),[]);
   const showM=useCallback((pid,a)=>{if(!a)return;const id=++uid.current;
     setMAn(p=>[...p,{id,pid,a}]);setTimeout(()=>setMAn(p=>p.filter(x=>x.id!==id)),1800);},[]);
-  const pop=()=>{setCon(true);setTimeout(()=>setCon(false),3000);};
-  const shake=()=>{setShk(true);setTimeout(()=>setShk(false),600);};
+  const pop=()=>{if(reduceMotion.current)return;setCon(true);setTimeout(()=>setCon(false),3000);};
+  const shake=()=>{if(reduceMotion.current)return;setShk(true);setTimeout(()=>setShk(false),600);};
 
   // ══════ SOLO ══════
   const startSolo=(n)=>{const p=Array.from({length:1+n},(_,i)=>({id:i,name:PN[i],money:6000,position:0,color:PC[i],bk:false,isAI:i>0}));
     const ap={};p.forEach(x=>{ap[x.id]=0;});setPs(p);setAPos(ap);setCur(0);setOw({});setHs({});setWinner(null);
     setLog([]);setShowBuy(false);setWheelOn(false);setMoving(false);setRolling(false);setTc(0);setLocked(false);
+    setNewRecord(false);setShowAssets(false);
     setMsg("擲骰子吧！");addLog(" 遊戲開始！");setMode("solo");setMySlot(0);setScr("game");};
 
   // ══════ BUILD ══════
@@ -237,18 +253,18 @@ export default function Game(){
     const grp=P.filter(x=>x.g===prop.g&&x.g>0);if(!grp.every(x=>g.ow[x.id]===p.id)){setMsg("需集滿同色！");return;}
     const up=g.ps.map(x=>({...x}));up[g.cur].money-=cost;const nh={...g.hs,[prop.id]:h+1};
     showM(g.cur,-cost);setPs(up);setHs(nh);
-    addLog(`${p.name} ${prop.n} ${h<4?`×${h+1}`:""}`);pop();setInfoP(null);
+    addLog(`${p.name} ${prop.n} ${h<4?`×${h+1}`:""}`);pop();sfx('build');haptic(30);setInfoP(null);
   };
 
   // ══════ ROLL ══════
   const doRoll=useCallback(()=>{if(rolling||showBuy||moving||winner||wheelOn||locked)return;
     const g=gs.current;if(g.ps[g.cur]?.isAI)return;exeRoll();},[rolling,showBuy,moving,winner,wheelOn,locked]);
   const exeRoll=()=>{setRolling(true);let c=0;const iv=setInterval(()=>{
-    setDice([Math.ceil(Math.random()*6),Math.ceil(Math.random()*6)]);
+    setDice([Math.ceil(Math.random()*6),Math.ceil(Math.random()*6)]);sfx('dice');
     if(++c>8){clearInterval(iv);const d1=Math.ceil(Math.random()*6),d2=Math.ceil(Math.random()*6);
-      setDice([d1,d2]);setRolling(false);beginMove(d1+d2);}},75);};
+      setDice([d1,d2]);setRolling(false);haptic(15);beginMove(d1+d2);}},75);};
   const beginMove=(steps)=>{setMoving(true);const g=gs.current,start=g.ps[g.cur].position;
-    let step=0,passed=false;const tick=()=>{step++;const pos=(start+step)%BS;
+    let step=0,passed=false;const tick=()=>{step++;const pos=(start+step)%BS;sfx('move');
       setAPos(p=>({...p,[g.cur]:pos}));if(pos===0&&step>0)passed=true;
       if(step<steps)setTimeout(tick,145);else setTimeout(()=>finishMove(pos,passed),200);};setTimeout(tick,160);};
   const finishMove=(np,passed)=>{setMoving(false);const g=gs.current;const up=g.ps.map(p=>({...p}));
@@ -258,17 +274,17 @@ export default function Game(){
   // ══════ LANDING ══════
   const handleLand=(p,o,h,c,pos)=>{const cell=P[pos];if(!cell){endTurn(p,o,h);return;}const pl=p[c];
     if(cell.t==="fate"||cell.t==="chance"){const r=WHEEL[Math.floor(Math.random()*WHEEL.length)];
-      setWheelRes(r);setWheelOn(true);pwRef.current={p,o,h,c,r};return;}
+      sfx('wheel');setWheelRes(r);setWheelOn(true);pwRef.current={p,o,h,c,r};return;}
     if(cell.t==="tax"){const up=p.map(x=>({...x}));up[c].money=Math.max(0,up[c].money-cell.r[0]);
-      showM(c,-cell.r[0]);setMsg(`繳稅 $${cell.r[0]}`);addLog(`${pl.name} 繳稅 -$${cell.r[0]}`);shake();
-      if(up[c].money<=0)up[c].bk=true;setPs(up);checkWin(up);endTurn(up,o,h);return;}
+      showM(c,-cell.r[0]);setMsg(`繳稅 $${cell.r[0]}`);addLog(`${pl.name} 繳稅 -$${cell.r[0]}`);sfx('tax');haptic(40);shake();
+      if(up[c].money<=0){up[c].bk=true;sfx('bust');}setPs(up);checkWin(up);endTurn(up,o,h);return;}
     const buyable=["prop","station","util"].includes(cell.t);
     if(!buyable){setMsg(`${cell.e} ${cell.n}`);endTurn(p,o,h);return;}
     if(o[cell.id]!==undefined&&o[cell.id]!==c){const oid=o[cell.id],rent=getRent(cell,h,o,oid);
       const up=p.map(x=>({...x}));up[c].money=Math.max(0,up[c].money-rent);up[oid].money+=rent;
       showM(c,-rent);setTimeout(()=>showM(oid,rent),350);
-      setMsg(`付 $${rent} 給 ${up[oid].name}`);addLog(`${pl.name}→${up[oid].name} $${rent}`);
-      if(rent>=1000)shake();if(up[c].money<=0)up[c].bk=true;setPs(up);checkWin(up);endTurn(up,o,h);return;}
+      setMsg(`付 $${rent} 給 ${up[oid].name}`);addLog(`${pl.name}→${up[oid].name} $${rent}`);sfx('rent');haptic([20,40,20]);
+      if(rent>=1000)shake();if(up[c].money<=0){up[c].bk=true;sfx('bust');}setPs(up);checkWin(up);endTurn(up,o,h);return;}
     if(o[cell.id]===c){setMsg(`自己的地盤！`);endTurn(p,o,h);return;}
     if(pl.money<cell.pr){setMsg("資金不足！");endTurn(p,o,h);return;}
     if(pl.isAI){if(aiWants(pl,cell,o)){const up=p.map(x=>({...x}));up[c].money-=cell.pr;const no={...o,[cell.id]:c};
@@ -283,21 +299,23 @@ export default function Game(){
     setWheelOn(false);setWheelRes(null);pwRef.current=null;
     const up=pw.p.map(x=>({...x}));up[pw.c].money=Math.max(0,up[pw.c].money+pw.r.amt);
     showM(pw.c,pw.r.amt);addLog(`${up[pw.c].name}: ${pw.r.text} ${pw.r.amt>0?"+":""}$${Math.abs(pw.r.amt)}`);
-    if(pw.r.amt>0)pop();if(pw.r.amt<-500)shake();if(up[pw.c].money<=0)up[pw.c].bk=true;
+    sfx(pw.r.amt>0?'buy':'tax');if(pw.r.amt>0)pop();if(pw.r.amt<-500)shake();if(up[pw.c].money<=0){up[pw.c].bk=true;sfx('bust');}
     setPs(up);checkWin(up);endTurn(up,pw.o,pw.h);};
 
   const doBuyAct=()=>{if(!buyPr)return;const g=gs.current;const up=g.ps.map(x=>({...x}));
     up[g.cur].money-=buyPr.pr;const no={...g.ow,[buyPr.id]:g.cur};showM(g.cur,-buyPr.pr);
-    addLog(`${up[g.cur].name} 買 ${buyPr.n}`);pop();setPs(up);setOw(no);setShowBuy(false);setBuyPr(null);endTurn(up,no,g.hs);};
+    addLog(`${up[g.cur].name} 買 ${buyPr.n}`);pop();sfx('buy');haptic(30);setPs(up);setOw(no);setShowBuy(false);setBuyPr(null);endTurn(up,no,g.hs);};
   const skipBuyAct=()=>{addLog(`${gs.current.ps[gs.current.cur].name} 跳過`);setShowBuy(false);setBuyPr(null);endTurn();};
-  const checkWin=(p)=>{const a=p.filter(x=>!x.bk);if(a.length===1){setWinner(a[0]);setMsg(` ${a[0].name} 獲勝！`);addLog(` ${a[0].name} 贏了！`);pop();if(!a[0].isAI&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(Math.max(1,Math.floor((a[0].money||0)/1000)));}};
+  const checkWin=(p)=>{const a=p.filter(x=>!x.bk);if(a.length===1){setWinner(a[0]);setMsg(` ${a[0].name} 獲勝！`);addLog(` ${a[0].name} 贏了！`);pop();sfx('win');haptic([40,60,40,60,80]);
+    if(a[0].isAI===false){const nm=a[0].money||0;setNewRecord(nm>best.money);const nb={money:Math.max(best.money,nm),wins:(best.wins||0)+1};setBest(nb);saveBest(nb);}
+    if(!a[0].isAI&&typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(Math.max(1,Math.floor((a[0].money||0)/1000)));}};
 
   const endTurn=(uP,uO,uH)=>{setLocked(true);const g=gs.current;let p=uP||g.ps,o=uO||g.ow,h=uH||g.hs;
     if(g.winner||p.filter(x=>!x.bk).length<=1)return;
     let next=(g.cur+1)%p.length,guard=0;while(p[next]?.bk&&guard++<p.length)next=(next+1)%p.length;
     const ntc=(g.tc||0)+1;setTc(ntc);
     if(ntc>0&&ntc%8===0&&Math.random()>0.3){const ev=GEV[Math.floor(Math.random()*GEV.length)];
-      setGEv(ev);shake();p=ev.fn(p.map(x=>({...x})));
+      setGEv(ev);sfx('event');haptic([30,50,30]);shake();p=ev.fn(p.map(x=>({...x})));
       // Post-event bankruptcy sweep
       p=p.map(x=>x.bk?x:(x.money<=0?{...x,bk:true}:x));
       p.filter(x=>x.bk).forEach(x=>addLog(` ${x.name} 破產！`));
@@ -357,6 +375,8 @@ export default function Game(){
             <span key={f} style={{fontSize:10,background:"#1e1b2e",color:"#f97316",
               padding:"4px 10px",borderRadius:20,fontWeight:700,letterSpacing:0.5}}>{f}</span>)}
         </div>
+        {best.money>0&&<div style={{marginTop:12,fontSize:12,color:"#94a3b8",fontWeight:700,letterSpacing:0.5}}>
+          🏆 最佳資產 ${best.money.toLocaleString()} · 🥇 {best.wins} 勝</div>}
       </div>
     </div>;
   }
@@ -386,9 +406,12 @@ export default function Game(){
       </div>
       <div style={{display:"flex",alignItems:"center",gap:6}}>
         <span style={{fontSize:10,color:"#cbd5e1",fontWeight:700}}>R{tc}</span>
-        <button onClick={goMenu} style={{width:28,height:28,borderRadius:8,background:"#f1f5f9",
-          border:"none",fontSize:12,cursor:"pointer",color:"#94a3b8",display:"flex",
-          alignItems:"center",justifyContent:"center"}}></button>
+        <button onClick={()=>setMute(m=>!m)} aria-label={mute?"開啟音效":"關閉音效"} style={{minWidth:40,minHeight:40,
+          width:40,height:40,borderRadius:10,background:"#f1f5f9",border:"none",fontSize:18,cursor:"pointer",
+          color:"#94a3b8",display:"flex",alignItems:"center",justifyContent:"center"}}>{mute?"🔇":"🔊"}</button>
+        <button onClick={goMenu} aria-label="返回主選單" style={{width:40,height:40,minWidth:40,minHeight:40,
+          borderRadius:10,background:"#f1f5f9",border:"none",fontSize:16,cursor:"pointer",color:"#94a3b8",
+          display:"flex",alignItems:"center",justifyContent:"center"}}>☰</button>
       </div>
     </div>
 
@@ -477,7 +500,7 @@ export default function Game(){
             boxShadow:ic?`0 0 0 2px ${p.color}50,0 4px 12px ${p.color}40`:`0 2px 8px ${p.color}30`,
             display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,
             transition:"left 0.13s ease-out,top 0.13s ease-out",
-            animation:moving&&ic?"hop 0.15s ease-out":"none",
+            animation:(moving&&ic&&!reduceMotion.current)?"hop 0.15s ease-out":"none",
             zIndex:ic?20:10}}>
             {PA[p.id]}
           </div>;
@@ -505,24 +528,27 @@ export default function Game(){
           {/* Actions */}
           <div style={{pointerEvents:"auto",display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
             {showBuy&&buyPr?<div style={{display:"flex",gap:8,animation:"scaleIn 0.3s cubic-bezier(0.34,1.56,0.64,1)"}}>
-              <button onClick={doBuyAct} style={{padding:"10px 22px",
+              <button onClick={doBuyAct} aria-label={`購買 ${buyPr.n} $${buyPr.pr}`} style={{padding:"10px 22px",
                 background:"linear-gradient(135deg,#22c55e,#16a34a)",border:"none",borderRadius:12,
-                color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",
+                color:"#fff",fontSize:13,fontWeight:800,cursor:"pointer",minHeight:40,
                 boxShadow:"0 4px 14px rgba(34,197,94,0.3)"}}>購買 ${buyPr.pr}</button>
-              <button onClick={skipBuyAct} style={{padding:"10px 22px",background:"#fff",
-                border:"2px solid #e5e2de",borderRadius:12,color:"#94a3b8",fontSize:13,
+              <button onClick={skipBuyAct} aria-label="跳過購買" style={{padding:"10px 22px",background:"#fff",
+                border:"2px solid #e5e2de",borderRadius:12,color:"#94a3b8",fontSize:13,minHeight:40,
                 fontWeight:700,cursor:"pointer"}}>跳過</button>
             </div>:winner?<div style={{textAlign:"center",animation:"scaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1)"}}>
               <div style={{fontSize:48,marginBottom:6}}></div>
               <div style={{fontSize:20,fontWeight:900,color:winner.color,marginBottom:10,
                 textShadow:`0 0 20px ${winner.color}30`}}>{winner.name} 獲勝！</div>
+              {newRecord&&winner.isAI===false&&<div style={{display:"inline-block",marginBottom:10,
+                background:"linear-gradient(135deg,#fef3c7,#fde68a)",border:"1.5px solid #fbbf24",
+                borderRadius:10,padding:"4px 12px",fontSize:12,fontWeight:800,color:"#92400e"}}>🎉 新紀錄！</div>}
               <button onClick={goMenu} style={{padding:"10px 28px",
                 background:"linear-gradient(135deg,#f97316,#ea580c)",color:"#fff",border:"none",
                 borderRadius:12,fontSize:14,fontWeight:800,cursor:"pointer",
                 boxShadow:"0 4px 16px rgba(249,115,22,0.3)"}}>再來一局</button>
             </div>:<>
-              <button onClick={canRoll?doRoll:undefined} style={{
-                padding:"11px 32px",border:"none",borderRadius:14,fontSize:14,fontWeight:800,
+              <button onClick={canRoll?doRoll:undefined} aria-label="擲骰子" style={{
+                padding:"11px 32px",border:"none",borderRadius:14,fontSize:14,fontWeight:800,minHeight:40,
                 letterSpacing:1,transition:"all 0.2s",
                 background:canRoll?"linear-gradient(135deg,#f97316,#ea580c)":"#e5e2de",
                 color:canRoll?"#fff":"#94a3b8",
@@ -550,6 +576,31 @@ export default function Game(){
       {log.slice(0,20).map((l,i)=><div key={i} style={{fontSize:10,color:i===0?"#475569":"#cbd5e1",
         padding:"2px 0",borderBottom:"1px solid #f8f7f4",
         animation:i===0?"fadeUp 0.3s ease":"none",fontWeight:i===0?600:400}}>{l}</div>)}
+    </div>
+
+    {/* My assets */}
+    <div style={{maxWidth:bPx,margin:"6px auto 0"}}>
+      <button onClick={()=>setShowAssets(s=>!s)} aria-label="查看我的資產" aria-expanded={showAssets}
+        style={{width:"100%",minHeight:40,padding:"10px 14px",background:"#fff",border:"1px solid #f0eeeb",
+        borderRadius:14,fontSize:12,fontWeight:800,color:"#475569",cursor:"pointer",display:"flex",
+        alignItems:"center",justifyContent:"center",gap:6,boxShadow:"0 1px 6px rgba(0,0,0,0.03)"}}>
+        📋 我的資產 {showAssets?"▲":"▼"}</button>
+      {showAssets&&(()=>{const mine=P.filter(p=>ow[p.id]===mySlot);
+        return <div style={{marginTop:6,background:"#fff",border:"1px solid #f0eeeb",borderRadius:14,
+          padding:"10px 12px",boxShadow:"0 1px 6px rgba(0,0,0,0.03)",animation:"scaleIn 0.25s ease"}}>
+          {mine.length===0?<div style={{fontSize:12,color:"#94a3b8",textAlign:"center",padding:"6px 0"}}>尚未擁有任何土地</div>:
+            mine.map(p=>{const h=hs[p.id]||0;const lvl=p.t==="prop"?(["空地","×1","×2","×3","×4","飯店"][h]||"空地"):p.t==="station"?"車站":"公共";
+              const rent=getRent(p,hs,ow,mySlot);
+              return <div key={p.id} style={{display:"flex",alignItems:"center",gap:8,padding:"6px 4px",
+                borderBottom:"1px solid #f8f7f4"}}>
+                <span style={{fontSize:18,width:24,textAlign:"center"}}>{p.e}</span>
+                <div style={{flex:1,minWidth:0}}>
+                  <div style={{fontSize:12,fontWeight:700,color:"#334155"}}>{p.n}</div>
+                  <div style={{fontSize:10,color:"#94a3b8"}}>{lvl}</div>
+                </div>
+                <div style={{fontSize:12,fontWeight:800,color:p.color}}>租 ${rent.toLocaleString()}</div>
+              </div>;})}
+        </div>;})()}
     </div>
   </div>;
 }

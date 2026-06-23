@@ -4,6 +4,29 @@ const BASE_W = 400, BASE_H = 700;
 const B_DOG = 14, B_BEE = 7, B_LW = 7;
 const DRAW_T = 200, SURV_T = 360;
 
+const LS_KEY = "haoSaveDog.best";
+function getBest() { try { return +localStorage.getItem(LS_KEY) || 0; } catch (e) { return 0; } }
+function setBest(n) { try { if (n > getBest()) localStorage.setItem(LS_KEY, String(n)); } catch (e) {} }
+
+// --- procedural audio + haptics ---
+function playTone(ctx, freq, dur, type, gain, when) {
+  if (!ctx) return;
+  try {
+    type = type || "sine"; gain = gain == null ? .06 : gain;
+    const t0 = (when == null ? ctx.currentTime : when);
+    const osc = ctx.createOscillator(), g = ctx.createGain();
+    osc.type = type; osc.frequency.setValueAtTime(freq, t0);
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(gain, t0 + .01);
+    g.gain.exponentialRampToValueAtTime(.0001, t0 + dur);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(t0); osc.stop(t0 + dur + .02);
+  } catch (e) {}
+}
+function vibrate(pattern, settings) {
+  try { if (settings && settings.haptics && navigator.vibrate) navigator.vibrate(pattern); } catch (e) {}
+}
+
 const v2d = (a, b) => Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
 const d2 = (ax, ay, bx, by) => ax * bx + ay * by;
 
@@ -107,7 +130,7 @@ function collideDogBody(dog, body, DR, LW) {
  * UNIFIED BEE MOVEMENT: substep loop that checks obstacles + line + ground at every micro-step.
  * This is the ONLY way to guarantee no tunneling through thin objects.
  */
-function moveBeeUnified(b, obs, body, gnd, W, BR, LW, particles) {
+function moveBeeUnified(b, obs, body, gnd, W, BR, LW, particles, onLineHit) {
   const STEPS = 6;
   const sx = b.vx / STEPS, sy = b.vy / STEPS;
   const th = BR + LW / 2 + 1;
@@ -159,6 +182,7 @@ function moveBeeUnified(b, obs, body, gnd, W, BR, LW, particles) {
         appImp(body, minCp.x, minCp.y, -nx * is, -ny * is);
         b.rage += 12;
         b.cd = 8;
+        if (onLineHit) onLineHit();
         // particles
         for (let p = 0; p < 4; p++)
           particles.push({ x: minCp.x, y: minCp.y, vx: nx * 1.5 + (Math.random() - .5) * 3, vy: ny * 1.5 + (Math.random() - .5) * 3, life: 18, ml: 18, c: [63, 81, 181] });
@@ -203,15 +227,16 @@ function spawnBees(n, dog, W, H) {
 }
 
 /* ── render ── */
-function renderBg(ctx, f, W, H, GND) {
+function renderBg(ctx, f, W, H, GND, reduced) {
   const g = ctx.createLinearGradient(0, 0, 0, GND);
   g.addColorStop(0, "#42A5F5"); g.addColorStop(.55, "#64B5F6"); g.addColorStop(1, "#BBDEFB");
   ctx.fillStyle = g; ctx.fillRect(0, 0, W, GND);
   ctx.fillStyle = "#FFF59D"; ctx.shadowColor = "rgba(255,245,157,.35)"; ctx.shadowBlur = W * .06;
   ctx.beginPath(); ctx.arc(W * .87, H * .07, W * .065, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
   ctx.fillStyle = "#fff";
+  const cf = reduced ? 0 : f;
   for (const [sp, cy, sc] of [[.3, .06, 1], [.18, .12, .7], [.24, .04, .55]]) {
-    const cx = (f * sp) % (W * 1.5) - W * .25, s = sc * W / 400;
+    const cx = (cf * sp) % (W * 1.5) - W * .25, s = sc * W / 400;
     ctx.save(); ctx.translate(cx, H * cy); ctx.scale(s, s); ctx.globalAlpha = .75;
     ctx.beginPath(); ctx.arc(0, 0, 24, 0, Math.PI * 2); ctx.arc(28, -4, 18, 0, Math.PI * 2); ctx.arc(50, 3, 20, 0, Math.PI * 2); ctx.arc(22, 10, 15, 0, Math.PI * 2); ctx.fill();
     ctx.globalAlpha = 1; ctx.restore();
@@ -226,7 +251,7 @@ function renderBg(ctx, f, W, H, GND) {
   ctx.fillStyle = "#795548"; ctx.fillRect(0, GND + Math.max(6, H * .015), W, H);
   ctx.fillStyle = "#7CB342";
   for (let x = -2; x < W; x += W * .02) {
-    const sw = Math.sin(f * .025 + x * .15) * 1.5;
+    const sw = reduced ? 0 : Math.sin(f * .025 + x * .15) * 1.5;
     ctx.beginPath(); ctx.moveTo(x, GND + 1); ctx.quadraticCurveTo(x + 2 + sw, GND - 5, x + 4, GND + 1); ctx.fill();
   }
 }
@@ -245,9 +270,9 @@ function renderOb(ctx, o) {
   }
   ctx.fillStyle = "rgba(0,0,0,.04)"; ctx.fillRect(o.x, o.y + o.h - 2, o.w, 2);
 }
-function renderDog(ctx, dog, f, phase, S) {
+function renderDog(ctx, dog, f, phase, S, reduced) {
   const scared = phase === "play" || phase === "lose", happy = phase === "win";
-  const sh = scared ? Math.sin(f * .8) * 2 * S : 0, jmp = happy ? Math.abs(Math.sin(f * .12)) * 7 * S : 0;
+  const sh = (scared && !reduced) ? Math.sin(f * .8) * 2 * S : 0, jmp = (happy && !reduced) ? Math.abs(Math.sin(f * .12)) * 7 * S : 0;
   ctx.save(); ctx.translate(dog.x + sh, dog.y - jmp); ctx.rotate(Math.atan2(dog.vy || 0, 10) * .12); ctx.scale(S, S);
   ctx.fillStyle = "rgba(0,0,0,.06)"; ctx.beginPath(); ctx.ellipse(0, 15, 12, 3.5, 0, 0, Math.PI * 2); ctx.fill();
   ctx.fillStyle = "#FFECB3"; ctx.beginPath(); ctx.ellipse(0, 2, 12, 9 + Math.sin(f * .07), 0, 0, Math.PI * 2); ctx.fill();
@@ -325,10 +350,42 @@ function renderBody(ctx, body, LW) {
 export default function App() {
   const ref = useRef(null);
   const G = useRef({ W: 400, H: 700, GND: 616, S: 1, DR: 14, BR: 7, LW: 7 });
+  const prefersReduced = typeof window !== "undefined" && window.matchMedia
+    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches : false;
   const ST = useRef({ phase: "menu", level: 0, dog: { x: 200, y: 600, vx: 0, vy: 0, onGround: true },
-    bees: [], body: null, curLine: [], ink: 0, frame: 0, timer: 0, drawTimer: 0, particles: [], levels: [] });
-  const drawing = useRef(false), raf = useRef(null);
+    bees: [], body: null, curLine: [], ink: 0, frame: 0, timer: 0, drawTimer: 0, particles: [], levels: [],
+    paused: false, best: getBest(), btnPause: null, lastStars: 0, modalT: 0, lastSfx: 0,
+    settings: { sound: true, haptics: true, reducedMotion: prefersReduced } });
+  const drawing = useRef(false), raf = useRef(null), audioRef = useRef(null);
   const [, re] = useState(0);
+  const [settings, setSettings] = useState({ sound: true, haptics: true, reducedMotion: prefersReduced });
+  const [panelOpen, setPanelOpen] = useState(false);
+  useEffect(() => { ST.current.settings = settings; }, [settings]);
+
+  const getAudio = useCallback(() => {
+    try {
+      if (!audioRef.current) {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (AC) audioRef.current = new AC();
+      }
+      if (audioRef.current && audioRef.current.state === "suspended") audioRef.current.resume();
+    } catch (e) {}
+    return audioRef.current;
+  }, []);
+  const sfx = useCallback((kind) => {
+    const st = ST.current;
+    if (!st.settings.sound) return;
+    try {
+      const ac = getAudio(); if (!ac) return;
+      const now = ac.currentTime;
+      if (kind === "buzz") { playTone(ac, 140 + Math.random() * 40, .07, "sawtooth", .03); }
+      else if (kind === "click") { playTone(ac, 520, .05, "square", .04); }
+      else if (kind === "lose") { playTone(ac, 330, .18, "sine", .07); playTone(ac, 196, .3, "sine", .07, now + .12); }
+      else if (kind === "win") {
+        [523, 659, 784].forEach((fr, i) => playTone(ac, fr, .22, "triangle", .06, now + i * .11));
+      }
+    } catch (e) {}
+  }, [getAudio]);
 
   const resize = useCallback(() => {
     const c = ref.current; if (!c) return;
@@ -353,12 +410,17 @@ export default function App() {
       const ds = [sm[0]]; for (let i = 1; i < sm.length; i++) if (v2d(sm[i], ds[ds.length-1]) > 5) ds.push(sm[i]);
       if (ds.length > 1) s.body = createBody(ds);
     }
+    // stars based on how little ink was used (pure display, does not affect score)
+    const { W } = G.current;
+    const used = W ? s.ink / (W * 3) : 1;
+    s.lastStars = used < .4 ? 3 : used < .7 ? 2 : 1;
     s.curLine = []; s.phase = "play"; s.timer = SURV_T; re(v => v + 1);
   }, []);
   const init = useCallback((n) => {
     resize(); const { W, H } = G.current; const l = ST.current.levels[n];
     Object.assign(ST.current, { level: n, dog: { ...l.dog, vx: 0, vy: 0, onGround: true }, bees: spawnBees(l.bc, l.dog, W, H),
-      body: null, curLine: [], ink: 0, phase: "ready", timer: SURV_T, drawTimer: DRAW_T, particles: [] }); re(v => v + 1);
+      body: null, curLine: [], ink: 0, phase: "ready", timer: SURV_T, drawTimer: DRAW_T, particles: [],
+      paused: false, modalT: 0, best: getBest() }); re(v => v + 1);
   }, [resize]);
 
   useEffect(() => { resize(); window.addEventListener("resize", resize); return () => window.removeEventListener("resize", resize); }, [resize]);
@@ -367,10 +429,17 @@ export default function App() {
     const c = ref.current; if (!c) return;
     const ctx = c.getContext("2d");
     const onD = (e) => { e.preventDefault(); const s = ST.current;
+      getAudio();
+      // pause button hit-test (play/drawing only)
+      if ((s.phase === "play" || s.phase === "drawing") && s.btnPause) {
+        const p = gp(e), bp = s.btnPause;
+        if ((p.x - bp.x) ** 2 + (p.y - bp.y) ** 2 <= bp.r * bp.r) { s.paused = !s.paused; re(v => v + 1); return; }
+      }
+      if (s.phase === "play" && s.paused) { s.paused = false; re(v => v + 1); return; }
       if (s.phase === "menu") { init(0); return; }
       if (s.phase === "win") { s.level + 1 < s.levels.length ? init(s.level + 1) : (s.phase = "menu", re(v => v + 1)); return; }
       if (s.phase === "lose") { init(s.level); return; }
-      if (s.phase === "ready") { s.phase = "drawing"; s.drawTimer = DRAW_T; drawing.current = true; s.curLine = [gp(e)]; re(v => v + 1); }
+      if (s.phase === "ready") { s.phase = "drawing"; s.drawTimer = DRAW_T; drawing.current = true; s.curLine = [gp(e)]; sfx("click"); re(v => v + 1); }
     };
     const onM = (e) => { e.preventDefault(); const s = ST.current; const { GND, W, DR } = G.current;
       if (!drawing.current || s.phase !== "drawing") return;
@@ -383,21 +452,44 @@ export default function App() {
       if (s.ink + d <= W * 3) { cl.push(p); s.ink += d; }
     };
     const onU = (e) => { e.preventDefault(); if (drawing.current && ST.current.phase === "drawing") finalize(); };
+    const onKey = (e) => {
+      const s = ST.current;
+      if (s.phase === "menu") return;
+      if (e.key === "r" || e.key === "R") { e.preventDefault(); init(s.level); }
+      else if ((e.key === " " || e.key === "Escape") && (s.phase === "play" || s.phase === "drawing")) {
+        e.preventDefault(); s.paused = !s.paused; re(v => v + 1);
+      }
+    };
     c.addEventListener("mousedown", onD); c.addEventListener("mousemove", onM); c.addEventListener("mouseup", onU); c.addEventListener("mouseleave", onU);
     c.addEventListener("touchstart", onD, { passive: false }); c.addEventListener("touchmove", onM, { passive: false }); c.addEventListener("touchend", onU, { passive: false });
+    window.addEventListener("keydown", onKey);
 
+    let lastAria = "";
     const loop = () => {
       const s = ST.current; s.frame++; const f = s.frame;
       const { W, H, GND, S: sc, DR, BR, LW } = G.current;
       const lvl = s.levels[s.level] || s.levels[0];
       if (!lvl) { raf.current = requestAnimationFrame(loop); return; }
+      // a11y: keep canvas aria-label in sync with game state
+      const ariaKey = s.phase + ":" + s.level + ":" + (s.paused ? "p" : "");
+      if (ariaKey !== lastAria) {
+        lastAria = ariaKey;
+        const lv = s.level + 1;
+        const desc = s.phase === "menu" ? "救救狗狗 主選單"
+          : s.phase === "ready" ? `救救狗狗 第${lv}關 準備畫線`
+          : s.phase === "drawing" ? `救救狗狗 第${lv}關 畫線中`
+          : s.phase === "play" ? (s.paused ? `救救狗狗 第${lv}關 已暫停` : `救救狗狗 第${lv}關 遊戲進行中`)
+          : s.phase === "win" ? `救救狗狗 第${lv}關 過關` : `救救狗狗 第${lv}關 失敗`;
+        try { c.setAttribute("aria-label", desc); } catch (e) {}
+      }
+      const reduced = s.settings.reducedMotion;
       ctx.clearRect(0, 0, W, H);
-      renderBg(ctx, f, W, H, GND);
+      renderBg(ctx, f, W, H, GND, reduced);
       const fs = Math.min(20, Math.round(16 * sc));
 
       if (s.phase === "menu") {
         for (const o of lvl.obs) renderOb(ctx, o);
-        renderDog(ctx, { x: W / 2, y: GND - DR - 2, vx: 0, vy: 0 }, f, "menu", sc);
+        renderDog(ctx, { x: W / 2, y: GND - DR - 2, vx: 0, vy: 0 }, f, "menu", sc, reduced);
         for (let i = 0; i < 5; i++) { const a = (Math.PI * 2 / 5) * i + f * .015;
           renderBee(ctx, { x: W / 2 + Math.cos(a) * W * .2, y: GND - H * .15 + Math.sin(a) * H * .06, wt: i * 18, rage: 0 }, f, sc); }
         ctx.textAlign = "center";
@@ -406,6 +498,10 @@ export default function App() {
         ctx.fillText("拯救狗狗", W / 2, H * .16);
         ctx.fillStyle = "#6D4C41"; ctx.font = `${fs}px 'Helvetica Neue','PingFang TC',sans-serif`;
         ctx.fillText("畫線保護狗狗 · 蜜蜂會把線推走", W / 2, H * .21);
+        if (s.best > 0) {
+          ctx.fillStyle = "#FF6E40"; ctx.font = `bold ${Math.round(fs * .85)}px 'Helvetica Neue','PingFang TC',sans-serif`;
+          ctx.fillText(`最佳：第 ${s.best} 關`, W / 2, H * .245);
+        }
         const pu = .93 + Math.sin(f * .06) * .07, bw = Math.min(280, W * .38), bh = Math.min(52, H * .06);
         ctx.save(); ctx.translate(W / 2, GND + (H - GND) / 2); ctx.scale(pu, pu);
         ctx.fillStyle = "#FF6E40"; ctx.shadowColor = "rgba(0,0,0,.1)"; ctx.shadowBlur = 5;
@@ -427,15 +523,15 @@ export default function App() {
         for (let i = 1; i < s.curLine.length; i++) ctx.lineTo(s.curLine[i].x, s.curLine[i].y); ctx.stroke();
       }
       renderBody(ctx, s.body, LW);
-      if (s.phase === "drawing") { s.drawTimer--; if (s.drawTimer <= 0) finalize(); }
-      if (s.phase === "play") {
+      if (s.phase === "drawing" && !s.paused) { s.drawTimer--; if (s.drawTimer <= 0) finalize(); }
+      if (s.phase === "play" && !s.paused) {
         if (s.body && s.body.alive) stepBody(s.body, lvl.obs, GND, W);
         stepDog(s.dog, lvl.obs, GND, W, DR);
         collideDogBody(s.dog, s.body, DR, LW);
       }
-      renderDog(ctx, s.dog, f, s.phase, sc);
+      renderDog(ctx, s.dog, f, s.phase, sc, reduced);
 
-      if (s.phase === "play") {
+      if (s.phase === "play" && !s.paused) {
         const spd = lvl.bs * sc;
         for (const b of s.bees) {
           b.cd = Math.max(0, b.cd - 1); b.rage = Math.max(0, b.rage - .1);
@@ -465,7 +561,9 @@ export default function App() {
           if (cs > ms) { b.vx = b.vx / cs * ms; b.vy = b.vy / cs * ms; }
 
           // UNIFIED substep movement (obstacles + line + ground in one loop)
-          moveBeeUnified(b, lvl.obs, s.body, GND, W, BR, LW, s.particles);
+          moveBeeUnified(b, lvl.obs, s.body, GND, W, BR, LW, s.particles, () => {
+            if (f - s.lastSfx > 6) { s.lastSfx = f; sfx("buzz"); }
+          });
 
           // off screen redirect
           if (b.x < -80 || b.x > W + 80 || b.y < -80 || b.y > H + 80) {
@@ -474,19 +572,25 @@ export default function App() {
             b.x = Math.max(-15, Math.min(W + 15, b.x)); b.y = Math.max(-15, b.y);
           }
           if (v2d(b, s.dog) < DR + BR) {
-            s.phase = "lose";
-            for (let p = 0; p < 18; p++)
+            s.phase = "lose"; s.modalT = 0;
+            const lp = reduced ? 9 : 18;
+            for (let p = 0; p < lp; p++)
               s.particles.push({ x: s.dog.x, y: s.dog.y, vx: (Math.random() - .5) * 6, vy: (Math.random() - .5) * 6, life: 35, ml: 35, c: [244, 67, 54] });
+            sfx("lose"); vibrate(120, s.settings);
+            setBest(s.level); s.best = getBest();
             if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(s.level);
             re(v => v + 1);
           }
         }
         s.timer--;
         if (s.timer <= 0 && s.phase === "play") {
-          s.phase = "win";
-          for (let p = 0; p < 35; p++)
+          s.phase = "win"; s.modalT = 0;
+          const wp = reduced ? 17 : 35;
+          for (let p = 0; p < wp; p++)
             s.particles.push({ x: s.dog.x + (Math.random() - .5) * 50, y: s.dog.y + (Math.random() - .5) * 50,
               vx: (Math.random() - .5) * 6, vy: -Math.random() * 5 - 2, life: 50, ml: 50, c: Math.random() > .5 ? [255, 193, 7] : [255, 112, 67] });
+          sfx("win"); vibrate([40, 40, 40], s.settings);
+          setBest(s.level + 1); s.best = getBest();
           if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(s.level + 1);
           re(v => v + 1);
         }
@@ -508,6 +612,21 @@ export default function App() {
       ctx.beginPath(); ctx.roundRect(W - pd - W * .17, pd, W * .17, bH * .9, bR); ctx.fill(); ctx.shadowBlur = 0;
       ctx.fillStyle = "#E65100"; ctx.font = `bold ${Math.round(bH * .45)}px sans-serif`;
       ctx.fillText(`×${lvl.bc}`, W - pd - W * .085, pd + bH * .6);
+      // pause button (play/drawing) — touch target >=44px
+      if (s.phase === "play" || s.phase === "drawing") {
+        const pr = Math.max(22, Math.min(28, W * .055)), pcx = W - pd - pr, pcy = pd + bH + pr + H * .015;
+        s.btnPause = { x: pcx, y: pcy, r: pr };
+        ctx.fillStyle = "#fff"; ctx.shadowColor = "rgba(0,0,0,.12)"; ctx.shadowBlur = 5;
+        ctx.beginPath(); ctx.arc(pcx, pcy, pr, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0;
+        ctx.fillStyle = "#6D4C41";
+        if (s.paused) { // play triangle
+          ctx.beginPath(); ctx.moveTo(pcx - pr * .25, pcy - pr * .35); ctx.lineTo(pcx + pr * .4, pcy); ctx.lineTo(pcx - pr * .25, pcy + pr * .35); ctx.closePath(); ctx.fill();
+        } else { // pause bars
+          const bw = pr * .22, bh2 = pr * .7;
+          ctx.fillRect(pcx - pr * .38, pcy - bh2 / 2, bw, bh2);
+          ctx.fillRect(pcx + pr * .16, pcy - bh2 / 2, bw, bh2);
+        }
+      } else { s.btnPause = null; }
       const barY = GND + (H - GND) * .35, barH = H * .015, barPad = W * .08;
       if (s.phase === "ready") {
         ctx.textAlign = "center"; ctx.fillStyle = "#4E342E";
@@ -524,10 +643,32 @@ export default function App() {
         ctx.textAlign = "center"; ctx.fillStyle = "#4E342E";
         ctx.font = `bold ${Math.round(fs * .85)}px 'Helvetica Neue','PingFang TC',sans-serif`;
         ctx.fillText(isD ? `${Math.ceil(s.drawTimer / 60)}秒` : `${Math.ceil(s.timer / 60)}秒`, W / 2, barY - barH * .8);
+        // ink meter (drawing only) — shows remaining ink budget
+        if (isD) {
+          const inkY = barY + barH + Math.max(5, barH * 1.6), inkPct = Math.max(0, 1 - s.ink / (W * 3));
+          ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.roundRect(barPad, inkY, W - barPad * 2, barH, barH / 2); ctx.fill();
+          ctx.fillStyle = inkPct > .15 ? "#3F51B5" : "#E53935";
+          ctx.beginPath(); ctx.roundRect(barPad, inkY, (W - barPad * 2) * inkPct, barH, barH / 2); ctx.fill();
+          ctx.fillStyle = "#3F51B5"; ctx.font = `${Math.round(fs * .62)}px 'Helvetica Neue','PingFang TC',sans-serif`;
+          ctx.fillText("墨水", W / 2, inkY + barH + Math.round(fs * .7));
+        }
+      }
+      if (s.paused && (s.phase === "play" || s.phase === "drawing")) {
+        ctx.fillStyle = "rgba(0,0,0,.4)"; ctx.fillRect(0, 0, W, H);
+        ctx.textAlign = "center"; ctx.fillStyle = "#fff";
+        ctx.font = `bold ${Math.min(40, Math.round(30 * sc))}px 'Helvetica Neue','PingFang TC',sans-serif`;
+        ctx.fillText("已暫停", W / 2, H * .45);
+        ctx.font = `${Math.min(18, Math.round(14 * sc))}px 'Helvetica Neue','PingFang TC',sans-serif`;
+        ctx.fillText("點擊繼續 · 按 R 重玩本關", W / 2, H * .52);
       }
       if (s.phase === "win" || s.phase === "lose") {
-        ctx.fillStyle = s.phase === "win" ? "rgba(255,255,255,.4)" : "rgba(0,0,0,.2)"; ctx.fillRect(0, 0, W, H);
-        const cw = Math.min(420, W * .75), ch = Math.min(160, H * .22);
+        s.modalT = Math.min(1, s.modalT + (reduced ? 1 : .12));
+        const t = s.modalT, sclM = .85 + t * .15;
+        ctx.fillStyle = s.phase === "win" ? `rgba(255,255,255,${.4 * t})` : `rgba(0,0,0,${.2 * t})`; ctx.fillRect(0, 0, W, H);
+        const cw = Math.min(420, W * .75), ch = Math.min(180, H * .25);
+        ctx.save();
+        ctx.globalAlpha = t;
+        ctx.translate(W / 2, H / 2); ctx.scale(sclM, sclM); ctx.translate(-W / 2, -H / 2);
         ctx.fillStyle = "#fff"; ctx.shadowColor = "rgba(0,0,0,.1)"; ctx.shadowBlur = 14;
         ctx.beginPath(); ctx.roundRect((W - cw) / 2, (H - ch) / 2, cw, ch, 22); ctx.fill(); ctx.shadowBlur = 0;
         ctx.textAlign = "center";
@@ -535,15 +676,33 @@ export default function App() {
         const smFs = Math.min(18, Math.round(14 * sc));
         if (s.phase === "win") {
           ctx.fillStyle = "#FF6E40"; ctx.font = `bold ${bigFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText("狗狗得救了", W / 2, H / 2 - ch * .08);
+          ctx.fillText("狗狗得救了", W / 2, H / 2 - ch * .22);
+          // stars (display only)
+          const stars = s.lastStars || 1, starR = Math.min(14, 11 * sc), gap = starR * 2.4, sy = H / 2 - ch * .02;
+          for (let i = 0; i < 3; i++) {
+            const sx2 = W / 2 + (i - 1) * gap, on = i < stars;
+            ctx.fillStyle = on ? "#FFC107" : "rgba(0,0,0,.12)";
+            ctx.beginPath();
+            for (let k = 0; k < 5; k++) {
+              const ang = -Math.PI / 2 + k * Math.PI * 2 / 5;
+              const ox = sx2 + Math.cos(ang) * starR, oy = sy + Math.sin(ang) * starR;
+              k === 0 ? ctx.moveTo(ox, oy) : ctx.lineTo(ox, oy);
+              const ia = ang + Math.PI / 5;
+              ctx.lineTo(sx2 + Math.cos(ia) * starR * .45, sy + Math.sin(ia) * starR * .45);
+            }
+            ctx.closePath(); ctx.fill();
+          }
           ctx.fillStyle = "#8D6E63"; ctx.font = `${smFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText(s.level + 1 < s.levels.length ? "點擊下一關" : "全部通關", W / 2, H / 2 + ch * .28);
+          ctx.fillText(s.level + 1 < s.levels.length ? "點擊下一關" : "全部通關", W / 2, H / 2 + ch * .3);
         } else {
           ctx.fillStyle = "#E53935"; ctx.font = `bold ${bigFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText("被叮了", W / 2, H / 2 - ch * .08);
+          ctx.fillText("被叮了", W / 2, H / 2 - ch * .14);
           ctx.fillStyle = "#8D6E63"; ctx.font = `${smFs}px 'Helvetica Neue','PingFang TC',sans-serif`;
-          ctx.fillText("點擊重試", W / 2, H / 2 + ch * .28);
+          ctx.fillText("別灰心，再試一次！", W / 2, H / 2 + ch * .08);
+          if (s.best > 0) { ctx.fillStyle = "#FF6E40"; ctx.fillText(`最佳：第 ${s.best} 關`, W / 2, H / 2 + ch * .3); }
+          else ctx.fillText("點擊重試", W / 2, H / 2 + ch * .3);
         }
+        ctx.restore();
       }
       ctx.fillStyle = "rgba(80,50,30,.07)"; ctx.font = `${Math.min(13, Math.round(W * .016))}px sans-serif`;
       ctx.textAlign = "center"; ctx.fillText("HAO0321 ©Studio", W / 2, H - 6);
@@ -553,12 +712,41 @@ export default function App() {
     raf.current = requestAnimationFrame(loop);
     return () => { cancelAnimationFrame(raf.current);
       c.removeEventListener("mousedown", onD); c.removeEventListener("mousemove", onM); c.removeEventListener("mouseup", onU); c.removeEventListener("mouseleave", onU);
-      c.removeEventListener("touchstart", onD); c.removeEventListener("touchmove", onM); c.removeEventListener("touchend", onU); };
-  }, [gp, init, finalize]);
+      c.removeEventListener("touchstart", onD); c.removeEventListener("touchmove", onM); c.removeEventListener("touchend", onU);
+      window.removeEventListener("keydown", onKey); };
+  }, [gp, init, finalize, getAudio, sfx]);
+
+  const toggle = (k) => setSettings(p => ({ ...p, [k]: !p[k] }));
+  const btnBase = { minWidth: 44, minHeight: 44, border: "none", borderRadius: 12, cursor: "pointer",
+    background: "rgba(255,255,255,.85)", color: "#6D4C41", fontSize: 20, lineHeight: "44px", padding: 0,
+    boxShadow: "0 2px 6px rgba(0,0,0,.12)" };
 
   return (
     <div style={{ position: "absolute", inset: 0, overflow: "hidden", background: "#795548", userSelect: "none", WebkitUserSelect: "none" }}>
-      <canvas ref={ref} style={{ display: "block", touchAction: "none", cursor: "crosshair" }} />
+      <canvas ref={ref} role="img" aria-label="救救狗狗 遊戲" style={{ display: "block", touchAction: "none", cursor: "crosshair" }} />
+      <button type="button" aria-label="設定" aria-expanded={panelOpen}
+        onClick={() => setPanelOpen(o => !o)}
+        style={{ position: "absolute", top: 8, left: 8, ...btnBase }}>⚙</button>
+      {panelOpen && (
+        <div role="dialog" aria-label="遊戲設定"
+          style={{ position: "absolute", top: 60, left: 8, background: "rgba(255,255,255,.96)", borderRadius: 14,
+            padding: "12px 14px", boxShadow: "0 4px 16px rgba(0,0,0,.18)", color: "#5D4037", fontSize: 15,
+            display: "flex", flexDirection: "column", gap: 6, minWidth: 180 }}>
+          <strong style={{ color: "#FF6E40", fontSize: 16, marginBottom: 2 }}>設定</strong>
+          {[["sound", "音效"], ["haptics", "震動"], ["reducedMotion", "減少動態"]].map(([k, label]) => (
+            <label key={k} style={{ display: "flex", alignItems: "center", gap: 8, minHeight: 44, cursor: "pointer" }}>
+              <input type="checkbox" checked={!!settings[k]} onChange={() => toggle(k)}
+                style={{ width: 20, height: 20, accentColor: "#FF6E40" }} />
+              <span>{label}</span>
+            </label>
+          ))}
+          <button type="button" onClick={() => setPanelOpen(false)}
+            style={{ ...btnBase, marginTop: 4, fontSize: 15, lineHeight: "44px", background: "#FF6E40", color: "#fff" }}>關閉</button>
+        </div>
+      )}
+      <style>{`
+        button:focus-visible, input:focus-visible { outline: 3px solid #FF6E40; outline-offset: 2px; }
+      `}</style>
     </div>
   );
 }

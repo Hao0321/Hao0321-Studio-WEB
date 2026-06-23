@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 
 /* ── Highly distinct color palette ── */
 const COLORS = {
@@ -97,7 +97,7 @@ function pour(f, t) {
 }
 
 /* ── Bottle component ── */
-function Bottle({ segments, selected, completed, onClick, shakeError, idx }) {
+function Bottle({ segments, selected, completed, onClick, shakeError, idx, pouringFrom, pouringTo, justCompleted }) {
   const bw = 52, bh = 168, segH = bh / CAP, neckW = 28, neckH = 14;
   const bottlePath = `
     M${(bw-neckW)/2} 0 L${(bw+neckW)/2} 0
@@ -108,14 +108,25 @@ function Bottle({ segments, selected, completed, onClick, shakeError, idx }) {
     L14 ${bh+neckH} Q0 ${bh+neckH} 0 ${bh+neckH-14}
     L0 ${neckH+18} Q0 ${neckH+6} ${(bw-neckW)/2} ${neckH-4} Z`;
 
+  const aria = segments.length
+    ? `瓶${idx+1}，頂層${COLORS[segments[segments.length-1]].label}色，${segments.length}格`
+    : `空瓶${idx+1}`;
+  let outerAnim = "none";
+  if (justCompleted) outerAnim = "completeRing .55s ease";
+  else if (pouringFrom) outerAnim = "pourTilt .35s ease";
+  else if (shakeError) outerAnim = "bottleShake .4s ease";
+
   return (
-    <div onClick={onClick} style={{
+    <div onClick={onClick}
+      role="button" tabIndex={0} aria-label={aria} title={aria}
+      onKeyDown={(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onClick(); } }}
+      style={{
       cursor:"pointer", display:"flex", flexDirection:"column", alignItems:"center",
       transition:"transform .25s cubic-bezier(.34,1.56,.64,1),filter .3s",
       transform: selected ? "translateY(-20px) scale(1.06)" : "translateY(0) scale(1)",
       filter: completed ? "drop-shadow(0 0 14px rgba(100,255,170,.25))" : "none",
-      animation: shakeError ? "bottleShake .4s ease" : "none",
-      WebkitTapHighlightColor:"transparent", userSelect:"none",
+      animation: outerAnim,
+      WebkitTapHighlightColor:"transparent", userSelect:"none", outline:"none",
     }}>
       {selected ? (
         <div style={{
@@ -155,8 +166,9 @@ function Bottle({ segments, selected, completed, onClick, shakeError, idx }) {
           {segments.map((color,i) => {
             const y = bh+neckH-(i+1)*segH;
             const isTop = i===segments.length-1;
+            const rise = isTop && pouringTo;
             return (
-              <g key={i}>
+              <g key={i} style={rise ? {animation:"liquidRise .35s ease", transformOrigin:`center ${y+segH}px`} : undefined}>
                 <rect x={0} y={y} width={bw} height={segH+1} fill={`url(#wg${idx}-${i})`}/>
                 {isTop && <ellipse cx={bw/2} cy={y+2} rx={bw/2-1} ry={3} fill={COLORS[color].g[0]} opacity={.55}/>}
                 <rect x={3} y={y+5} width={4} height={segH-10} rx={2} fill="rgba(255,255,255,.1)"/>
@@ -199,22 +211,100 @@ export default function WaterSortPuzzle() {
   const [hist, setHist] = useState([]);
   const [won, setWon] = useState(false);
   const [particles, setParticles] = useState(false);
-  const [best, setBest] = useState({});
+  const [best, setBest] = useState(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const r = localStorage.getItem("ws_best");
+        if (r) return JSON.parse(r);
+      }
+    } catch (e) {}
+    return {};
+  });
   const [shakeIdx, setShakeIdx] = useState(null);
+  const [pourFx, setPourFx] = useState(null);
+  const [completedFx, setCompletedFx] = useState(null);
+  const [soundOn, setSoundOn] = useState(() => {
+    try {
+      if (typeof window !== "undefined") {
+        const r = localStorage.getItem("ws_sound");
+        if (r !== null) return r === "1";
+      }
+    } catch (e) {}
+    return true;
+  });
+
+  useEffect(() => {
+    try { localStorage.setItem("ws_best", JSON.stringify(best)); } catch (e) {}
+  }, [best]);
+
+  /* ── Web Audio (lazy) + procedural SFX ── */
+  const audioRef = useRef(null);
+  const getAC = () => {
+    if (typeof window === "undefined") return null;
+    if (!audioRef.current) {
+      try { audioRef.current = new (window.AudioContext || window.webkitAudioContext)(); }
+      catch (e) { return null; }
+    }
+    return audioRef.current;
+  };
+  const playTone = (freq, dur, type = "sine", vol = .15, delay = 0) => {
+    const ac = getAC();
+    if (!ac) return;
+    try {
+      if (ac.state === "suspended") ac.resume();
+      const t0 = ac.currentTime + delay;
+      const osc = ac.createOscillator();
+      const g = ac.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, t0);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.linearRampToValueAtTime(vol, t0 + 0.012);
+      g.gain.linearRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(g); g.connect(ac.destination);
+      osc.start(t0); osc.stop(t0 + dur + 0.02);
+    } catch (e) {}
+  };
+  const sfx = {
+    pour: () => { playTone(420, .12, "sine"); playTone(300, .18, "sine", .1, .04); },
+    select: () => playTone(660, .07, "triangle", .12),
+    error: () => { playTone(140, .18, "sawtooth", .12); },
+    complete: () => { [523, 659, 784].forEach((f, i) => playTone(f, .18, "sine", .12, i * .05)); },
+    win: () => { [523, 659, 784, 1047].forEach((f, i) => playTone(f, .3, "sine", .14, i * .09)); },
+  };
+  const vibrate = (pat) => { try { navigator.vibrate && navigator.vibrate(pat); } catch (e) {} };
+
+  const toggleSound = useCallback(() => {
+    setSoundOn(s => {
+      const ns = !s;
+      try { localStorage.setItem("ws_sound", ns ? "1" : "0"); } catch (e) {}
+      return ns;
+    });
+  }, []);
 
   const click = useCallback((i) => {
     if (won) return;
     if (sel === null) {
-      if (bottles[i].length > 0) setSel(i);
+      if (bottles[i].length > 0) { setSel(i); if (soundOn) sfx.select(); }
     } else if (sel === i) {
       setSel(null);
     } else {
       if (canPour(bottles[sel], bottles[i])) {
+        const fromIdx = sel;
         const nb = bottles.map(b => [...b]);
         const [nf, nt] = pour(nb[sel], nb[i]);
         nb[sel] = nf; nb[i] = nt;
         setHist(h => [...h, bottles]);
         setBottles(nb); setMoves(m => m+1); setSel(null);
+        if (soundOn) sfx.pour();
+        vibrate(15);
+        const madeComplete = nt.length === CAP && new Set(nt).size === 1;
+        setPourFx({ from: fromIdx, to: i });
+        setTimeout(() => setPourFx(null), 350);
+        if (madeComplete) {
+          setCompletedFx(i);
+          setTimeout(() => setCompletedFx(c => (c === i ? null : c)), 550);
+          if (soundOn) sfx.complete();
+        }
         if (isDone(nb)) {
           setWon(true); setParticles(true);
           setBest(p => {
@@ -222,16 +312,20 @@ export default function WaterSortPuzzle() {
             if (!b || moves+1 < b) return {...p,[level]:moves+1};
             return p;
           });
+          if (soundOn) sfx.win();
+          vibrate([20, 40, 20, 40, 60]);
           if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(level + 1);
           setTimeout(() => setParticles(false), 3500);
         }
       } else {
         setShakeIdx(i);
         setTimeout(() => setShakeIdx(null), 400);
+        if (soundOn) sfx.error();
+        vibrate([10, 30, 10]);
         if (bottles[i].length > 0) setSel(i); else setSel(null);
       }
     }
-  }, [sel, bottles, won, level, moves]);
+  }, [sel, bottles, won, level, moves, soundOn]);
 
   const undo = useCallback(() => {
     if (!hist.length || won) return;
@@ -258,12 +352,18 @@ export default function WaterSortPuzzle() {
   const cnt = bottles.length;
   const perRow = cnt <= 5 ? cnt : Math.ceil(cnt / 2);
 
-  const winParts = useMemo(() =>
-    particles ? Array.from({length:40},(_,i) => ({
+  const winParts = useMemo(() => {
+    if (!particles) return [];
+    let reduce = false;
+    try { reduce = typeof window !== "undefined" && window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    if (reduce) return [];
+    return Array.from({length:40},(_,i) => ({
       x:5+Math.random()*90, y:10+Math.random()*70,
       s:Math.random()*6+3, d:Math.random()*.8,
       dur:1+Math.random()*2, hue:Math.random()*360,
-    })) : [], [particles]);
+    }));
+  }, [particles]);
 
   const renderRow = (arr, offset=0) => (
     <div style={{display:"flex",gap:6,justifyContent:"center",flexWrap:"wrap"}}>
@@ -272,7 +372,10 @@ export default function WaterSortPuzzle() {
         return (
           <Bottle key={`${level}-${ri}`} idx={ri} segments={b} selected={sel===ri}
             completed={b.length===CAP && new Set(b).size===1}
-            shakeError={shakeIdx===ri} onClick={()=>click(ri)}/>
+            shakeError={shakeIdx===ri} onClick={()=>click(ri)}
+            pouringFrom={pourFx && pourFx.from===ri}
+            pouringTo={pourFx && pourFx.to===ri}
+            justCompleted={completedFx===ri}/>
         );
       })}
     </div>
@@ -294,7 +397,11 @@ export default function WaterSortPuzzle() {
         @keyframes bottleShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
         @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.1)}66%{transform:translate(-20px,15px) scale(.9)}}
         @keyframes starSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+        @keyframes pourTilt{0%{transform:rotate(0)}30%{transform:rotate(-8deg)}100%{transform:rotate(0)}}
+        @keyframes liquidRise{0%{transform:translateY(6px) scaleY(.8)}60%{transform:translateY(-2px) scaleY(1.05)}100%{transform:translateY(0) scaleY(1)}}
+        @keyframes completeRing{0%{box-shadow:0 0 0 0 rgba(100,255,170,.5)}100%{box-shadow:0 0 0 18px rgba(100,255,170,0)}}
         button{font-family:inherit} button:active{transform:scale(.95)!important}
+        @media (prefers-reduced-motion: reduce){*{animation-duration:.001ms!important;animation-iteration-count:1!important}}
       `}</style>
 
       {/* Ambient orbs */}
@@ -383,17 +490,32 @@ export default function WaterSortPuzzle() {
       )}
 
       {/* Controls */}
-      <div style={{display:"flex",gap:10,zIndex:1,animation:"fadeIn .5s ease .25s both"}}>
+      <div style={{display:"flex",gap:10,zIndex:1,flexWrap:"wrap",justifyContent:"center",animation:"fadeIn .5s ease .25s both"}}>
         <Btn icon="↩" label="撤回" onClick={undo} disabled={!hist.length||won}/>
         <Btn icon="↻" label="重來" onClick={reset}/>
+        <button onClick={toggleSound}
+          aria-label={soundOn?"關閉音效":"開啟音效"} aria-pressed={soundOn} title={soundOn?"關閉音效":"開啟音效"}
+          style={{
+            display:"flex",flexDirection:"column",alignItems:"center",gap:3,
+            padding:"10px 20px",borderRadius:12,
+            background:"rgba(255,255,255,.04)",
+            border:"1px solid rgba(255,255,255,.06)",
+            color:soundOn?"rgba(255,255,255,.55)":"rgba(255,255,255,.2)",
+            cursor:"pointer",transition:"all .2s",minWidth:72,
+          }}>
+          <span style={{fontSize:18,lineHeight:1}}>{soundOn?"🔊":"🔇"}</span>
+          <span style={{fontSize:10,letterSpacing:2,fontWeight:300}}>音效</span>
+        </button>
         {won && <Btn icon="→" label="下一關" onClick={next} hl/>}
       </div>
 
       {/* Level select */}
-      <div style={{marginTop:28,display:"flex",gap:6,flexWrap:"wrap",justifyContent:"center",zIndex:1,animation:"fadeIn .5s ease .35s both",maxWidth:360}}>
+      <div style={{marginTop:28,display:"flex",gap:8,flexWrap:"wrap",justifyContent:"center",zIndex:1,animation:"fadeIn .5s ease .35s both",maxWidth:400}}>
         {LEVELS.map((_,i) => (
-          <button key={i} onClick={()=>go(i)} style={{
-            width:38,height:38,borderRadius:10,
+          <button key={i} onClick={()=>go(i)}
+            aria-label={`第${i+1}關${best[i]!=null?"（已通關）":""}`}
+            aria-pressed={level===i} style={{
+            width:42,height:42,borderRadius:10,
             border:level===i?"1.5px solid rgba(255,255,255,.3)":"1px solid rgba(255,255,255,.06)",
             background:level===i?"linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.05))":"rgba(255,255,255,.02)",
             color:level===i?"#fff":"rgba(255,255,255,.3)",
@@ -425,7 +547,7 @@ function Stat({label,val,color}) {
 
 function Btn({icon,label,onClick,disabled,hl}) {
   return (
-    <button onClick={onClick} disabled={disabled} style={{
+    <button onClick={onClick} disabled={disabled} aria-label={label} style={{
       display:"flex",flexDirection:"column",alignItems:"center",gap:3,
       padding:"10px 20px",borderRadius:12,
       background:hl?"linear-gradient(135deg,rgba(100,255,170,.15),rgba(60,200,255,.1))":"rgba(255,255,255,.04)",

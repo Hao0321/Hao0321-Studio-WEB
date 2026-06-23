@@ -19,6 +19,15 @@ const JUMP_BUF_F = 12;    // buffer window (frames)
 
 const PLAYER_A = Math.PI / 2; // 6 o'clock
 
+// ── persistence ──
+const LS_KEY = "splatring_best";
+const LS_SOUND = "splatring_sound";
+function loadBest() { try { return parseInt(localStorage.getItem(LS_KEY)) || 0; } catch (e) { return 0; } }
+function saveBest(v) { try { localStorage.setItem(LS_KEY, String(v)); } catch (e) {} }
+
+// ── reduced motion ──
+const prefersReduced = typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 // ── helpers ──
 function angDist(a, b) { return Math.abs(((a - b + Math.PI) % TAU + TAU) % TAU - Math.PI); }
 
@@ -74,7 +83,20 @@ export default function SplatRing() {
   const raf = useRef(null);
   // track whether finger/mouse is currently down
   const pressing = useRef(false);
-  const [ui, setUi] = useState({ score: 0, lives: 3, phase: "menu", pct: 0, round: 1 });
+  const audioRef = useRef(null);
+  const soundRef = useRef(true);
+  const [ui, setUi] = useState({ score: 0, lives: 3, phase: "menu", pct: 0, round: 1, paused: false });
+  const [soundOn, setSoundOn] = useState(() => {
+    try { return localStorage.getItem(LS_SOUND) !== "0"; } catch (e) { return true; }
+  });
+  useEffect(() => { soundRef.current = soundOn; }, [soundOn]);
+  const toggleSound = useCallback(() => {
+    setSoundOn(v => {
+      const nv = !v;
+      try { localStorage.setItem(LS_SOUND, nv ? "1" : "0"); } catch (e) {}
+      return nv;
+    });
+  }, []);
 
   const W = 420, H = 420, CX = W / 2, CY = H / 2;
 
@@ -93,27 +115,109 @@ export default function SplatRing() {
       spdMul: 1,
       particles: [], flash: 0,
       comboT: 0, comboV: 0, hitCD: 0,
+      paused: false, shake: 0,
     };
     pressing.current = false;
-    setUi({ score: 0, lives: 3, phase: "play", pct: 0, round: 1 });
+    setUi({ score: 0, lives: 3, phase: "play", pct: 0, round: 1, paused: false });
   }, []);
+
+  // ── audio (WebAudio SFX) ──
+  const ensureAudio = useCallback(() => {
+    if (!soundRef.current) return null;
+    try {
+      const actx = audioRef.current || (audioRef.current = new (window.AudioContext || window.webkitAudioContext)());
+      if (actx.state === "suspended") actx.resume();
+      return actx;
+    } catch (e) { return null; }
+  }, []);
+  const beep = useCallback((freq, dur, type, gain) => {
+    if (!soundRef.current) return;
+    try {
+      const actx = audioRef.current;
+      if (!actx) return;
+      const t0 = actx.currentTime;
+      const osc = actx.createOscillator();
+      const g = actx.createGain();
+      osc.type = type || "square";
+      osc.frequency.setValueAtTime(freq, t0);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(gain || 0.12, t0 + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(g); g.connect(actx.destination);
+      osc.start(t0); osc.stop(t0 + dur + 0.02);
+    } catch (e) {}
+  }, []);
+  const beepRise = useCallback((f1, f2, dur, type) => {
+    if (!soundRef.current) return;
+    try {
+      const actx = audioRef.current;
+      if (!actx) return;
+      const t0 = actx.currentTime;
+      const osc = actx.createOscillator();
+      const g = actx.createGain();
+      osc.type = type || "square";
+      osc.frequency.setValueAtTime(f1, t0);
+      osc.frequency.exponentialRampToValueAtTime(f2, t0 + dur);
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.13, t0 + 0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      osc.connect(g); g.connect(actx.destination);
+      osc.start(t0); osc.stop(t0 + dur + 0.02);
+    } catch (e) {}
+  }, []);
+  // expose sfx to the imperative loop via a ref bag
+  const sfx = useRef({});
+  useEffect(() => {
+    sfx.current = {
+      clear() { beepRise(660, 880, 0.12, "square"); try { navigator.vibrate && navigator.vibrate(15); } catch (e) {} },
+      hit() { beep(140, 0.22, "sawtooth", 0.16); try { navigator.vibrate && navigator.vibrate([30, 40, 30]); } catch (e) {} },
+      roundUp() {
+        if (!soundRef.current || !audioRef.current) return;
+        try {
+          const actx = audioRef.current, t0 = actx.currentTime;
+          [523, 659, 784].forEach((f, i) => {
+            const osc = actx.createOscillator(), g = actx.createGain();
+            const ts = t0 + i * 0.07;
+            osc.type = "square"; osc.frequency.setValueAtTime(f, ts);
+            g.gain.setValueAtTime(0.0001, ts);
+            g.gain.exponentialRampToValueAtTime(0.12, ts + 0.008);
+            g.gain.exponentialRampToValueAtTime(0.0001, ts + 0.16);
+            osc.connect(g); g.connect(actx.destination);
+            osc.start(ts); osc.stop(ts + 0.18);
+          });
+        } catch (e) {}
+      },
+    };
+  }, [beep, beepRise]);
 
   // ── input ──
   const doPress = useCallback(() => {
     pressing.current = true;
+    ensureAudio(); // unlock audio on first user gesture
     const g = G.current;
     if (!g || g.phase === "menu" || g.phase === "dead") { init(); return; }
     if (g.dropPhase) return;
+    // if paused, a press resumes instead of jumping
+    if (g.paused) { g.paused = false; setUi(u => ({ ...u, paused: false })); return; }
     if (!g.airborne) {
       // jump immediately
       g.vy = TAP_V;
       g.airborne = true;
       g.holdF = 0;
+      beep(440, 0.07, "square", 0.1);
     } else {
       // in air → buffer
       g.jumpBuf = JUMP_BUF_F;
     }
-  }, [init]);
+  }, [init, ensureAudio, beep]);
+
+  // ── pause toggle ──
+  const togglePause = useCallback(() => {
+    const g = G.current;
+    if (!g || g.phase !== "play" || g.dropPhase) return;
+    g.paused = !g.paused;
+    setUi(u => ({ ...u, paused: g.paused }));
+  }, []);
 
   const doRelease = useCallback(() => {
     pressing.current = false;
@@ -129,6 +233,21 @@ export default function SplatRing() {
     return () => { window.removeEventListener("keydown", kd); window.removeEventListener("keyup", ku); };
   }, [doPress, doRelease]);
 
+  // ── auto-pause when tab hidden / window blurred ──
+  useEffect(() => {
+    const autoPause = () => {
+      const g = G.current;
+      if (g && g.phase === "play" && !g.dropPhase && !g.paused) {
+        g.paused = true;
+        setUi(u => ({ ...u, paused: true }));
+      }
+    };
+    const onVis = () => { if (document.hidden) autoPause(); };
+    window.addEventListener("blur", autoPause);
+    document.addEventListener("visibilitychange", onVis);
+    return () => { window.removeEventListener("blur", autoPause); document.removeEventListener("visibilitychange", onVis); };
+  }, []);
+
   // ── game loop ──
   useEffect(() => {
     const ctx = cvs.current.getContext("2d");
@@ -136,6 +255,7 @@ export default function SplatRing() {
 
     function burst(x, y, color, n, spd) {
       const g = G.current; if (!g) return;
+      if (prefersReduced) n = Math.ceil(n / 3);
       for (let i = 0; i < n; i++) {
         const a = Math.random() * TAU;
         g.particles.push({ x, y, vx: Math.cos(a) * (1 + Math.random() * spd), vy: Math.sin(a) * (1 + Math.random() * spd), life: 16, ml: 16, color, r: 2 + Math.random() * 2.5 });
@@ -145,11 +265,13 @@ export default function SplatRing() {
     // ── draw helpers ──
     function drawBg() {
       ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
-      ctx.save(); ctx.globalAlpha = 0.016; ctx.strokeStyle = C.pink; ctx.lineWidth = 14;
-      for (let i = -H; i < W + H; i += 46) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + H, H); ctx.stroke(); }
-      ctx.restore();
+      if (!prefersReduced) {
+        ctx.save(); ctx.globalAlpha = 0.016; ctx.strokeStyle = C.pink; ctx.lineWidth = 14;
+        for (let i = -H; i < W + H; i += 46) { ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i + H, H); ctx.stroke(); }
+        ctx.restore();
+      }
       bgRef.current.forEach(s => {
-        ctx.save(); ctx.globalAlpha = s.a; ctx.fillStyle = s.color;
+        ctx.save(); ctx.globalAlpha = prefersReduced ? s.a * 0.5 : s.a; ctx.fillStyle = s.color;
         if (s.dot) { ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, TAU); ctx.fill(); }
         else { splatShape(ctx, s.x, s.y, s.r, s.seed); ctx.fill(); }
         ctx.restore();
@@ -288,6 +410,24 @@ export default function SplatRing() {
         raf.current = requestAnimationFrame(loop); return;
       }
 
+      // ═══ PAUSED ═══ (freeze everything; nothing advances)
+      if (g.paused) {
+        drawTrack(g);
+        drawObs(g);
+        const ppr = INNER - g.jumpOff;
+        const ppx = CX + Math.cos(PLAYER_A) * ppr, ppy = CY + Math.sin(PLAYER_A) * ppr;
+        drawBall(ppx, ppy, BR, false);
+        ctx.save();
+        ctx.fillStyle = "rgba(24,18,43,0.55)"; ctx.fillRect(0, 0, W, H);
+        ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillStyle = C.cyan; ctx.font = "900 30px 'Trebuchet MS',sans-serif";
+        ctx.fillText("PAUSED", CX, CY - 12);
+        ctx.fillStyle = C.text; ctx.font = "600 13px 'Trebuchet MS',sans-serif";
+        ctx.fillText("點擊繼續", CX, CY + 18);
+        ctx.restore();
+        raf.current = requestAnimationFrame(loop); return;
+      }
+
       // ═══ PLAY ═══
 
       // ring rotation
@@ -336,7 +476,10 @@ export default function SplatRing() {
         g.spdMul = 1 + (g.round - 1) * 0.04; // gentle ramp
         g.score += 50;
         g.hitCD = 70;
-        for (let i = 0; i < 18; i++) {
+        if (sfx.current.roundUp) sfx.current.roundUp();
+        if (g.score > g.best) { g.best = g.score; saveBest(g.best); }
+        const rcN = prefersReduced ? 6 : 18;
+        for (let i = 0; i < rcN; i++) {
           const a2 = Math.random() * TAU, dd = 20 + Math.random() * (TR - 30);
           g.particles.push({ x: CX + Math.cos(a2) * dd, y: CY + Math.sin(a2) * dd, vx: Math.cos(a2) * 2, vy: Math.sin(a2) * 2, life: 24, ml: 24, color: [C.pink, C.green, C.yellow, C.cyan][i % 4], r: 3 + Math.random() * 3 });
         }
@@ -360,14 +503,17 @@ export default function SplatRing() {
               g.score += 20; g.combo++;
               g.comboT = 35; g.comboV = g.combo;
               burst(CX + Math.cos(PLAYER_A) * INNER, CY + Math.sin(PLAYER_A) * INNER, C.green, 6, 2);
+              if (sfx.current.clear) sfx.current.clear();
             }
           } else {
             g.lives--; g.combo = 0; g.flash = 10;
             g.jumpOff = 0; g.vy = 0; g.airborne = false;
             g.hitCD = 50;
+            g.shake = prefersReduced ? 0 : 8;
             burst(CX + Math.cos(PLAYER_A) * INNER, CY + Math.sin(PLAYER_A) * INNER, C.orange, 10, 3);
+            if (sfx.current.hit) sfx.current.hit();
             if (g.lives <= 0) {
-              g.phase = "dead"; if (g.score > g.best) g.best = g.score;
+              g.phase = "dead"; if (g.score > g.best) { g.best = g.score; saveBest(g.best); }
               if (typeof window !== "undefined" && window.haoGame) window.haoGame.reportScore(g.score);
             }
           }
@@ -378,7 +524,16 @@ export default function SplatRing() {
       g.particles = g.particles.filter(p => { p.x += p.vx; p.y += p.vy; p.vx *= 0.91; p.vy *= 0.91; p.life--; return p.life > 0; });
 
       // ═══ DRAW ═══
-      if (g.flash > 0) { ctx.fillStyle = `rgba(255,110,26,${g.flash / 25})`; ctx.fillRect(0, 0, W, H); }
+      // screen shake on hit (skipped under reduced motion)
+      const shaking = g.shake > 0;
+      if (shaking) {
+        ctx.save();
+        ctx.translate((Math.random() - 0.5) * g.shake, (Math.random() - 0.5) * g.shake);
+      }
+      if (g.flash > 0) {
+        const fa = prefersReduced ? g.flash / 60 : g.flash / 25;
+        ctx.fillStyle = `rgba(255,110,26,${fa})`; ctx.fillRect(0, 0, W, H);
+      }
       drawTrack(g);
       drawObs(g);
 
@@ -416,12 +571,25 @@ export default function SplatRing() {
           ctx.save();
           ctx.globalAlpha = 0.3 + Math.sin(Date.now() / 100) * 0.25;
           ctx.fillStyle = ob.big ? C.orange : C.yellow;
-          ctx.font = "bold 14px sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-          ctx.fillText("", ax, ay); ctx.restore();
+          // draw a small chevron/triangle pointing toward the incoming obstacle
+          ctx.translate(ax, ay);
+          ctx.rotate(wa + Math.PI / 2);
+          const s = ob.big ? 9 : 7;
+          ctx.beginPath();
+          ctx.moveTo(0, -s);
+          ctx.lineTo(s * 0.8, s * 0.6);
+          ctx.lineTo(-s * 0.8, s * 0.6);
+          ctx.closePath();
+          ctx.fill();
+          ctx.restore();
         }
       });
 
       drawParticles(g);
+
+      // end screen shake
+      if (shaking) ctx.restore();
+      if (g.shake > 0) g.shake--;
 
       // "GO!" text
       if (g.goT > 0) {
@@ -455,11 +623,11 @@ export default function SplatRing() {
         ctx.fillText(g.comboV + "x COMBO!", 0, 0); ctx.restore();
       }
 
-      setUi({ score: g.score, lives: g.lives, phase: g.phase, pct: pctV, round: g.round });
+      setUi({ score: g.score, lives: g.lives, phase: g.phase, pct: pctV, round: g.round, paused: g.paused });
       raf.current = requestAnimationFrame(loop);
     }
 
-    if (!G.current) G.current = { phase: "menu", best: 0 };
+    if (!G.current) G.current = { phase: "menu", best: loadBest() };
     raf.current = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf.current);
   }, []);
@@ -504,10 +672,48 @@ export default function SplatRing() {
           </div>
           <span style={{ color: C.pink, fontSize: 10, fontWeight: 700 }}>{ui.pct}%</span>
         </div>
+        {ui.phase === "play" && (
+          <button
+            type="button"
+            aria-label={ui.paused ? "繼續遊戲" : "暫停遊戲"}
+            onMouseDown={e => e.stopPropagation()}
+            onTouchStart={e => { e.stopPropagation(); }}
+            onClick={e => { e.stopPropagation(); togglePause(); }}
+            style={{
+              background: "rgba(0,229,255,0.08)", border: "1.5px solid " + C.cyan,
+              borderRadius: 20, minWidth: 40, minHeight: 40, padding: "0 10px",
+              color: C.cyan, fontWeight: 800, fontSize: 13, cursor: "pointer",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              fontFamily: "'Trebuchet MS',sans-serif",
+            }}
+          >{ui.paused ? "▶" : "❚❚"}</button>
+        )}
+        <button
+          type="button"
+          aria-label="切換音效"
+          aria-pressed={soundOn}
+          onMouseDown={e => e.stopPropagation()}
+          onTouchStart={e => { e.stopPropagation(); }}
+          onClick={e => { e.stopPropagation(); toggleSound(); }}
+          style={{
+            background: "rgba(255,226,41,0.08)", border: "1.5px solid " + C.yellow,
+            borderRadius: 20, minWidth: 40, minHeight: 40, padding: "0 10px",
+            color: C.yellow, fontWeight: 800, fontSize: 15, cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontFamily: "'Trebuchet MS',sans-serif",
+          }}
+        >{soundOn ? "🔊" : "🔇"}</button>
       </div>
 
       <canvas ref={cvs} width={W} height={H}
+        role="img"
+        aria-label={`SPLAT RING 街機遊戲。${ui.score} 分，第 ${ui.round} 關，剩 ${ui.lives} 命。`}
         style={{ borderRadius: 16, maxWidth: "95vw", maxHeight: "70vh" }} />
+
+      <div aria-live="polite" aria-atomic="true" style={{
+        position: "absolute", width: 1, height: 1, overflow: "hidden",
+        clip: "rect(0 0 0 0)", clipPath: "inset(50%)", whiteSpace: "nowrap", border: 0, padding: 0, margin: -1,
+      }}>{`${ui.score} 分，第 ${ui.round} 關，剩 ${ui.lives} 命${ui.paused ? "，已暫停" : ""}`}</div>
 
       {ui.phase === "play" && (
         <div style={{ marginTop: 8, color: C.dim, fontSize: 11, letterSpacing: 0.3, zIndex: 2 }}>

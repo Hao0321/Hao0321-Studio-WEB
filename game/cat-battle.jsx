@@ -60,11 +60,26 @@ const STAGES = [
 
 const clamp=(v,a,b)=>Math.min(Math.max(v,a),b);
 
-// ─── Persistent state via React state (simulated save) ───
-const initSave=()=>({
-  coins:0, cleared:[], catLvl:BASE_CATS.map(()=>1),
-  walletLvl:1, cannonLvl:1, baseHpLvl:1,
-});
+// ─── Persistent state via localStorage ───
+const initSave=()=>{
+  const def={coins:0, cleared:[], catLvl:BASE_CATS.map(()=>1),
+    walletLvl:1, cannonLvl:1, baseHpLvl:1};
+  try{
+    const raw=typeof window!=="undefined"&&window.localStorage&&localStorage.getItem("nyanko_save");
+    if(raw){
+      const p=JSON.parse(raw);
+      return {
+        coins:p.coins||0,
+        cleared:Array.isArray(p.cleared)?p.cleared:[],
+        catLvl:Array.isArray(p.catLvl)&&p.catLvl.length===BASE_CATS.length?p.catLvl:BASE_CATS.map(()=>1),
+        walletLvl:p.walletLvl||1,
+        cannonLvl:p.cannonLvl||1,
+        baseHpLvl:p.baseHpLvl||1,
+      };
+    }
+  }catch(e){}
+  return def;
+};
 
 export default function App(){
   const [scr,setScr]=useState("title");
@@ -73,10 +88,22 @@ export default function App(){
   const [won,setWon]=useState(true);
   const [reward,setReward]=useState(0);
   const [gk,setGk]=useState(0);
+  const [stats,setStats]=useState({kills:0,maxCombo:0,spawned:0});
+  const [freshClear,setFreshClear]=useState(false);
+  const [sfxOn,setSfxOn]=useState(()=>{try{return localStorage.getItem("nyanko_sfx")!=="0";}catch(e){return true;}});
+
+  const reduce=typeof window!=="undefined"&&window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Persist save to localStorage
+  useEffect(()=>{try{localStorage.setItem("nyanko_save",JSON.stringify(save));}catch(e){}},[save]);
+  // Persist sfx setting
+  useEffect(()=>{try{localStorage.setItem("nyanko_sfx",sfxOn?"1":"0");}catch(e){}},[sfxOn]);
 
   const play=i=>{setSi(i);setGk(k=>k+1);setScr("game");};
-  const end=(w)=>{
+  const end=(w,st)=>{
     setWon(w);
+    if(st)setStats(st);
+    setFreshClear(w&&!save.cleared.includes(si));
     const r=w?STAGES[si].reward:Math.floor(STAGES[si].reward*.2);
     setReward(r);
     setSave(s=>{
@@ -102,24 +129,24 @@ export default function App(){
         @keyframes shakeX{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
         ::-webkit-scrollbar{display:none}
       `}</style>
-      {scr==="title"&&<Title onStart={()=>setScr("select")}/>}
-      {scr==="select"&&<SelectScreen stages={STAGES} save={save} onPick={play} onUpgrade={()=>setScr("upgrade")} onBack={()=>setScr("title")}/>}
+      {scr==="title"&&<Title onStart={()=>setScr("select")} reduce={reduce}/>}
+      {scr==="select"&&<SelectScreen stages={STAGES} save={save} sfxOn={sfxOn} onToggleSfx={()=>setSfxOn(v=>!v)} onPick={play} onUpgrade={()=>setScr("upgrade")} onBack={()=>setScr("title")}/>}
       {scr==="upgrade"&&<UpgradeScreen save={save} setSave={setSave} onBack={()=>setScr("select")}/>}
-      {scr==="game"&&<GameScreen key={gk} stage={STAGES[si]} save={save} onEnd={end} onBack={()=>setScr("select")}/>}
-      {scr==="result"&&<ResultScreen won={won} name={STAGES[si].name} reward={reward} onRetry={()=>play(si)} onMenu={()=>setScr("select")}/>}
+      {scr==="game"&&<GameScreen key={gk} stage={STAGES[si]} save={save} sfxOn={sfxOn} reduce={reduce} onEnd={end} onBack={()=>setScr("select")}/>}
+      {scr==="result"&&<ResultScreen won={won} name={STAGES[si].name} reward={reward} stats={stats} si={si} stageCount={STAGES.length} freshClear={freshClear} onRetry={()=>play(si)} onMenu={()=>setScr("select")}/>}
     </div>
   );
 }
 
 // ════════ TITLE ════════
-function Title({onStart}){
+function Title({onStart,reduce}){
   const [show,setShow]=useState(false);
   useEffect(()=>{setTimeout(()=>setShow(true),60);},[]);
   return(
     <div style={{width:"100%",height:"100%",display:"flex",alignItems:"center",justifyContent:"center",
       background:"linear-gradient(160deg,#E8F5E9 0%,#FFF8E1 35%,#FFF3E0 65%,#FCE4EC 100%)",
       position:"relative",overflow:"hidden",userSelect:"none"}}>
-      {[...Array(15)].map((_,i)=>(
+      {!reduce&&[...Array(15)].map((_,i)=>(
         <div key={i} style={{position:"absolute",left:`${2+Math.random()*96}%`,top:-15,
           fontSize:10+Math.random()*10,opacity:0,pointerEvents:"none",
           animation:`petal ${5+Math.random()*7}s linear infinite`,animationDelay:`${Math.random()*7}s`}}></div>
@@ -162,16 +189,21 @@ function CatSVG({sz=16,c="#fff"}){
 }
 
 // ════════ SELECT ════════
-function SelectScreen({stages,save,onPick,onUpgrade,onBack}){
+function SelectScreen({stages,save,sfxOn,onToggleSfx,onPick,onUpgrade,onBack}){
   const icons=["","","","","","","",""];
   return(
     <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",
       background:"linear-gradient(180deg,#FDFBF7,#FFF8E1)",userSelect:"none",overflow:"auto"}}>
       <div style={{padding:"8px 12px",display:"flex",alignItems:"center",gap:8,
         borderBottom:"1px solid #EDE7DD",flexShrink:0}}>
-        <button onClick={onBack} style={{background:"#FFF",border:"1.5px solid #E0D5C5",borderRadius:10,
+        <button onClick={onBack} aria-label="戻る" style={{background:"#FFF",border:"1.5px solid #E0D5C5",borderRadius:10,
           color:"#8D6E63",padding:"4px 10px",fontSize:11,fontWeight:700}}>←</button>
-        <span style={{color:"#4E342E",fontSize:15,fontWeight:900,letterSpacing:2,flex:1}}> ステージ</span>
+        <span style={{color:"#4E342E",fontSize:15,fontWeight:900,letterSpacing:2}}> ステージ</span>
+        <span style={{fontSize:9,fontWeight:700,color:"#A1887F",flex:1}}>{save.cleared.length}/{stages.length} クリア</span>
+        <button onClick={onToggleSfx} aria-label={sfxOn?"音効 オン":"音効 オフ"} aria-pressed={sfxOn} style={{
+          minWidth:40,minHeight:40,background:"#FFF",border:"1.5px solid #E0D5C5",borderRadius:10,
+          color:"#8D6E63",fontSize:15,fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center"}}>
+          {sfxOn?"🔊":"🔇"}</button>
         <div style={{display:"flex",alignItems:"center",gap:4,background:"#FFF8E1",padding:"3px 10px",
           borderRadius:8,border:"1px solid #FFE0B240"}}>
           <span style={{fontSize:10}}></span>
@@ -187,7 +219,7 @@ function SelectScreen({stages,save,onPick,onUpgrade,onBack}){
           const ok=i===0||save.cleared.includes(i-1),done=save.cleared.includes(i);
           const stars=done?s.diff<=2?"":s.diff<=3?"":"":"";
           return(
-            <button key={i} onClick={()=>ok&&onPick(i)} style={{
+            <button key={i} onClick={()=>ok&&onPick(i)} aria-label={`${i+1} ${s.name} ${ok?"":"ロック中"}`} aria-disabled={!ok} style={{
               padding:"10px 14px",borderRadius:12,textAlign:"left",
               background:done?"linear-gradient(135deg,#E8F5E9,#F1F8E9)":"#FFF",
               border:`2px solid ${done?"#A5D6A7":ok?"#FFE0B2":"#EEE"}`,
@@ -334,7 +366,9 @@ function UpgradeScreen({save,setSave,onBack}){
 }
 
 // ════════ RESULT ════════
-function ResultScreen({won,name,reward,onRetry,onMenu}){
+function ResultScreen({won,name,reward,stats,si,stageCount,freshClear,onRetry,onMenu}){
+  const st=stats||{kills:0,maxCombo:0,spawned:0};
+  const showUnlock=won&&freshClear&&typeof si==="number"&&si+1<(stageCount||0);
   return(
     <div style={{width:"100%",height:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",
       background:won?"linear-gradient(180deg,#FFF8E1,#FFFDE7,#F9FBE7)":"linear-gradient(180deg,#FBE9E7,#FFEBEE,#FCE4EC)",
@@ -344,10 +378,20 @@ function ResultScreen({won,name,reward,onRetry,onMenu}){
         {won?"勝利！":"敗北..."}</h1>
       <p style={{color:"#BCAAA4",fontSize:11,marginBottom:8}}>{name}</p>
       <div style={{display:"flex",alignItems:"center",gap:4,padding:"6px 16px",background:"rgba(255,248,225,.8)",
-        borderRadius:10,border:"1px solid #FFE0B240",marginBottom:24}}>
+        borderRadius:10,border:"1px solid #FFE0B240",marginBottom:10}}>
         <span style={{fontSize:14}}></span>
         <span style={{fontSize:16,fontWeight:900,color:"#E65100"}}>+{reward}</span>
       </div>
+      <div style={{display:"flex",gap:8,padding:"6px 14px",background:"rgba(255,255,255,.6)",
+        borderRadius:10,border:"1px solid #EDE7DD",marginBottom:showUnlock?10:24,fontSize:10,
+        color:"#8D6E63",fontWeight:700}}>
+        <span>撃破 {st.kills}</span><span style={{color:"#D7CCC8"}}>·</span>
+        <span>最高 ×{st.maxCombo}</span><span style={{color:"#D7CCC8"}}>·</span>
+        <span>出撃 {st.spawned}</span>
+      </div>
+      {showUnlock&&<div style={{padding:"5px 16px",background:"linear-gradient(135deg,#FFF3E0,#FFE0B2)",
+        borderRadius:10,border:"1px solid #FFCC80",marginBottom:24,fontSize:11,fontWeight:900,
+        color:"#E65100"}}>ステージ{si+2} 解鎖！</div>}
       <div style={{display:"flex",gap:8}}>
         <button onClick={onRetry} style={{padding:"10px 22px",borderRadius:22,border:"none",color:"#fff",fontSize:13,fontWeight:900,
           background:won?"linear-gradient(135deg,#FF8A65,#F4511E)":"linear-gradient(135deg,#EF5350,#C62828)",
@@ -362,10 +406,28 @@ function ResultScreen({won,name,reward,onRetry,onMenu}){
 // ════════════════════════════════════════════════
 //  GAME SCREEN
 // ════════════════════════════════════════════════
-function GameScreen({stage,save,onEnd,onBack}){
+function GameScreen({stage,save,sfxOn,reduce,onEnd,onBack}){
   const cvs=useRef(null),G=useRef(null),raf=useRef(null),box=useRef(null);
   const sz=useRef({w:700,h:320});
   const drag=useRef({sx:0,ss:0,on:false});
+  const ac=useRef(null);
+  const beep=useCallback((freq,dur=0.08,type="square",vol=0.12)=>{
+    if(!sfxOn)return;
+    try{
+      if(!ac.current)ac.current=new (window.AudioContext||window.webkitAudioContext)();
+      const a=ac.current;if(a.state==="suspended")a.resume();
+      const o=a.createOscillator(),g=a.createGain();
+      o.type=type;o.frequency.value=freq;g.gain.value=vol;
+      o.connect(g);g.connect(a.destination);
+      const t=a.currentTime;
+      g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      o.start(t);o.stop(t+dur);
+    }catch(e){}
+  },[sfxOn]);
+  const haptic=useCallback((ms)=>{
+    if(!sfxOn)return;
+    try{navigator.vibrate&&navigator.vibrate(ms);}catch(e){}
+  },[sfxOn]);
   const [money,setMoney]=useState(300);
   const baseMaxHp=1400+save.baseHpLvl*200;
   const [php,setPhp]=useState(baseMaxHp);
@@ -389,7 +451,7 @@ function GameScreen({stage,save,onEnd,onBack}){
     G.current={pu:[],eu:[],ph:baseMaxHp,eh:eMaxHp,money:300,t:0,
       cd:BASE_CATS.map(()=>0),q:[...stage.enemies],st:80,si:stage.si,
       fx:[],pt:[],over:false,sx:0,cannon:0,combo:0,comboTimer:0,
-      kills:0,speed:1};
+      kills:0,speed:1,shake:0,maxCombo:0,spawned:0};
   },[stage,baseMaxHp,eMaxHp]);
 
   const spawn=useCallback(i=>{
@@ -397,12 +459,16 @@ function GameScreen({stage,save,onEnd,onBack}){
     const c=CATS[i];if(g.money<c.cost||g.cd[i]>0)return;
     g.money-=c.cost;g.cd[i]=c.cd;
     g.pu.push({...c,x:PBX+55,mhp:c.hp,at:0,alive:true,s:"p",ph:Math.random()*6.28});
+    g.spawned=(g.spawned||0)+1;
+    beep(330,0.06,"triangle");haptic(8);
     setMoney(g.money);
-  },[CATS]);
+  },[CATS,beep,haptic]);
 
   const fireCannon=useCallback(()=>{
     const g=G.current;if(!g||g.over||g.cannon<100)return;
     g.cannon=0;setCannonReady(0);
+    beep(110,0.25,"sawtooth",0.18);haptic([20,30,20]);
+    if(!reduce)g.shake=10;
     const dmg=50+save.cannonLvl*30;
     // Hit all enemies on screen
     for(const u of g.eu){
@@ -416,7 +482,7 @@ function GameScreen({stage,save,onEnd,onBack}){
     // Screen flash effect
     g.fx.push({x:sz.current.w/2+g.sx,y:0,t:"CANNON",l:20,c:"#FF6D00",big:true});
     setMoney(g.money);
-  },[save.cannonLvl]);
+  },[save.cannonLvl,beep,haptic,reduce]);
 
   const toggleSpeed=useCallback(()=>{
     const g=G.current;if(!g)return;
@@ -519,6 +585,7 @@ function GameScreen({stage,save,onEnd,onBack}){
             const d=stage.diff;
             g.eu.push({...et,hp:Math.floor(et.hp*d),mhp:Math.floor(et.hp*d),
               atk:Math.floor(et.atk*d),x:EBX-55,at:0,alive:true,s:"e",ph:Math.random()*6.28});
+            if(!reduce&&(et.shape==="boss"||et.shape==="dragon"))g.shake=8;
             g.st=g.si+Math.random()*40;
             setWave(`${stage.enemies.length-g.q.length}/${stage.enemies.length}`);
           }
@@ -544,6 +611,8 @@ function GameScreen({stage,save,onEnd,onBack}){
                   if(isP){
                     g.money+=Math.floor(20*(1+g.combo*.1));g.kills++;
                     g.combo++;g.comboTimer=180;
+                    g.maxCombo=Math.max(g.maxCombo,g.combo);
+                    beep(660+Math.min(g.combo,8)*40,0.05,"square",0.1);
                     setCombo(g.combo);setMoney(g.money);
                     // Cannon charge on kill
                     g.cannon=Math.min(100,g.cannon+8);setCannonReady(Math.floor(g.cannon));
@@ -553,7 +622,7 @@ function GameScreen({stage,save,onEnd,onBack}){
             }else if(bd<=u.rng+24){
               u.at++;if(u.at>=u.as){u.at=0;
                 if(isP){g.eh-=u.atk;g.fx.push({x:EBX,y:groundY-48,t:`${u.atk}`,l:24,c:"#E65100"});}
-                else{g.ph-=u.atk;g.fx.push({x:PBX,y:groundY-48,t:`${u.atk}`,l:24,c:"#C62828"});}
+                else{g.ph-=u.atk;g.fx.push({x:PBX,y:groundY-48,t:`${u.atk}`,l:24,c:"#C62828"});if(!reduce)g.shake=Math.max(g.shake,5);}
               }
             }else{u.x+=u.spd*dir;u.at=Math.max(0,u.at-1);}
           }
@@ -562,12 +631,21 @@ function GameScreen({stage,save,onEnd,onBack}){
         g.fx=g.fx.map(e=>({...e,l:e.l-1})).filter(e=>e.l>0);
         g.pt=g.pt.map(p=>({...p,x:p.x+p.vx,y:p.y+p.vy,vy:p.vy+.13,l:p.l-1})).filter(p=>p.l>0);
         setPhp(g.ph);setEhp(g.eh);
-        if(g.eh<=0){g.over=true;setOver(true);setTimeout(()=>onEnd(true),700);}
-        else if(g.ph<=0){g.over=true;setOver(true);setTimeout(()=>onEnd(false),700);}
+        if(g.eh<=0){g.over=true;setOver(true);beep(523,0.12);beep(784,0.18);
+          const st={kills:g.kills,maxCombo:g.maxCombo,spawned:g.spawned};
+          setTimeout(()=>onEnd(true,st),700);}
+        else if(g.ph<=0){g.over=true;setOver(true);beep(160,0.3,"sawtooth");
+          const st={kills:g.kills,maxCombo:g.maxCombo,spawned:g.spawned};
+          setTimeout(()=>onEnd(false,st),700);}
       }
 
       // ──── RENDER ────
       const sx=g.sx;
+      // Screen shake (visual only — applied after dpr transform, before all drawing)
+      if(g.shake>0){
+        ctx.translate((Math.random()-0.5)*g.shake,(Math.random()-0.5)*g.shake);
+        g.shake*=0.85;if(g.shake<0.4)g.shake=0;
+      }
 
       // Sky
       const sg=ctx.createLinearGradient(0,0,0,groundY);
@@ -692,7 +770,7 @@ function GameScreen({stage,save,onEnd,onBack}){
     };
     raf.current=requestAnimationFrame(loop);
     return()=>{if(raf.current)cancelAnimationFrame(raf.current);};
-  },[paused,stage,onEnd,save,baseMaxHp,eMaxHp]);
+  },[paused,stage,onEnd,save,baseMaxHp,eMaxHp,beep,reduce]);
 
   const ppct=clamp(php/baseMaxHp*100,0,100);
   const epct=clamp(ehp/eMaxHp*100,0,100);
@@ -703,7 +781,7 @@ function GameScreen({stage,save,onEnd,onBack}){
       <div style={{padding:"3px 8px",display:"flex",alignItems:"center",gap:4,
         background:"rgba(255,253,245,.95)",backdropFilter:"blur(6px)",
         borderBottom:"1px solid #EDE7DD",flexShrink:0,minHeight:32}}>
-        <button onClick={onBack} style={{background:"none",border:"none",color:"#BCAAA4",fontSize:13,padding:"0 3px",fontWeight:700}}></button>
+        <button onClick={onBack} aria-label="戻る" style={{background:"none",border:"none",color:"#BCAAA4",fontSize:13,padding:"0 3px",fontWeight:700}}></button>
 
         <div style={{flex:1,display:"flex",alignItems:"center",gap:4}}>
           <span style={{fontSize:7,fontWeight:900,color:"#43A047",whiteSpace:"nowrap"}}>我方</span>
@@ -732,14 +810,14 @@ function GameScreen({stage,save,onEnd,onBack}){
         </div>
 
         {/* Speed button */}
-        <button onClick={toggleSpeed} style={{
+        <button onClick={toggleSpeed} aria-label={`スピード ${speed}倍`} style={{
           background:speed===2?"#FF7043":"rgba(255,255,255,.8)",border:speed===2?"none":"1.5px solid #E0D5C5",
           borderRadius:6,color:speed===2?"#FFF":"#8D6E63",padding:"1px 6px",fontSize:9,fontWeight:900,
           minWidth:28}}>
           {speed}×
         </button>
 
-        <button onClick={()=>setPaused(p=>!p)} style={{
+        <button onClick={()=>setPaused(p=>!p)} aria-label={paused?"再開":"一時停止"} style={{
           background:paused?"#FF7043":"rgba(255,255,255,.8)",border:paused?"none":"1.5px solid #E0D5C5",
           borderRadius:6,color:paused?"#FFF":"#8D6E63",padding:"1px 6px",fontSize:9,fontWeight:900}}>
           {paused?"▶":""}
@@ -767,7 +845,7 @@ function GameScreen({stage,save,onEnd,onBack}){
         display:"flex",alignItems:"center",gap:5}}>
 
         {/* Cannon button */}
-        <button onClick={fireCannon} disabled={cannonReady<100||paused||over}
+        <button onClick={fireCannon} disabled={cannonReady<100||paused||over} aria-label="貓咪大砲 発射"
           style={{width:52,height:52,borderRadius:14,border:"none",flexShrink:0,
             background:cannonReady>=100?"linear-gradient(135deg,#FF6D00,#F4511E)":"#EFEBE9",
             color:cannonReady>=100?"#FFF":"#BCAAA4",
@@ -791,7 +869,7 @@ function GameScreen({stage,save,onEnd,onBack}){
             const cdP=cd?(cds[i]/c.cd)*100:0;
             const lv=save.catLvl[i];
             return(
-              <button key={c.id} onClick={()=>!dis&&spawn(i)} style={{
+              <button key={c.id} onClick={()=>!dis&&spawn(i)} aria-label={`${c.name} 出撃 コスト${c.cost}`} style={{
                 position:"relative",overflow:"hidden",flexShrink:0,
                 width:62,padding:"4px 3px 3px",borderRadius:10,
                 background:dis?"#F5F0E8":"#FFF",

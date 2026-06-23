@@ -177,7 +177,46 @@ const CSS = `
   0% { opacity: 0; }
   100% { opacity: 1; }
 }
+@media (prefers-reduced-motion: reduce){ *{animation-duration:.001s!important;animation-iteration-count:1!important;} }
 `;
+
+/* ══════════ PERSISTENCE / AUDIO / A11Y HELPERS ══════════ */
+const lsGet = (k, d) => { try { const v = localStorage.getItem('hao_poker_' + k); return v == null ? d : JSON.parse(v); } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem('hao_poker_' + k, JSON.stringify(v)); } catch {} };
+const prefersReduced = () => !!(typeof window !== "undefined" && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+let _muted = lsGet('muted', false);
+const isMuted = () => _muted;
+const setMuted = (v) => { _muted = !!v; lsSet('muted', _muted); };
+
+let _ac = null;
+const sfx = (name) => {
+  try {
+    if (_muted) return;
+    const AC = typeof window !== "undefined" && (window.AudioContext || window.webkitAudioContext);
+    if (!AC) return;
+    if (!_ac) _ac = new AC();
+    if (_ac.state === "suspended") _ac.resume();
+    const ctx = _ac, now = ctx.currentTime;
+    const tone = (freq, start, dur, type, vol) => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = type || "sine"; o.frequency.value = freq;
+      g.gain.setValueAtTime(0, now + start);
+      g.gain.linearRampToValueAtTime(vol == null ? .12 : vol, now + start + .01);
+      g.gain.exponentialRampToValueAtTime(.0001, now + start + dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(now + start); o.stop(now + start + dur + .02);
+    };
+    if (name === "select") tone(660, 0, .08, "triangle", .08);
+    else if (name === "deal") tone(520, 0, .1, "triangle", .07);
+    else if (name === "play") { tone(523, 0, .09, "triangle", .1); tone(784, .05, .12, "triangle", .09); }
+    else if (name === "pass") tone(300, 0, .14, "sine", .08);
+    else if (name === "invalid") { tone(150, 0, .18, "sawtooth", .07); tone(120, .04, .18, "sawtooth", .06); }
+    else if (name === "win") { [523, 659, 784, 1047].forEach((f, i) => tone(f, i * .1, .25, "triangle", .1)); }
+    else if (name === "lose") { tone(330, 0, .25, "sine", .09); tone(247, .12, .35, "sine", .08); }
+  } catch {}
+};
+const haptic = (ms) => { try { if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate(ms); } catch {} };
 
 /* ══════════ CARD COMPONENT ══════════ */
 function Card({ card, selected, onClick, faceDown, small, tiny, disabled, highlight, glow, style }) {
@@ -275,7 +314,7 @@ function SecBtn({ children, onClick, disabled }) {
 function Fireworks({ active }) {
   const [sparks, setSparks] = useState([]);
   useEffect(() => {
-    if (!active) return;
+    if (!active || prefersReduced()) return;
     setSparks(Array.from({ length: 45 }, (_, i) => ({ id: Date.now() + i, x: Math.random() * 100, y: Math.random() * 80 + 10, sz: Math.random() * 6 + 2, dur: Math.random() * 2 + .8, del: Math.random() * .5, c: ["#d4af37", "#e85d75", "#4ecdc4", "#fff", "#f2d06b"][0 | Math.random() * 5] })));
     const t = setTimeout(() => setSparks([]), 3000);
     return () => clearTimeout(t);
@@ -288,7 +327,26 @@ function Fireworks({ active }) {
   );
 }
 
-function WinScreen({ won, msg, onAgain, onBack, fwt }) {
+function ComboFlash({ flash }) {
+  if (!flash) return null;
+  const big = ["bomb", "rocket", "straightflush", "fourofakind"].includes(flash.t);
+  const reduced = prefersReduced();
+  return (
+    <div style={{ position: "absolute", left: "50%", top: "40%", transform: "translate(-50%,-50%)", zIndex: 30, pointerEvents: "none", textAlign: "center" }}>
+      <div style={{
+        fontSize: big ? 52 : 38, fontWeight: 900, fontFamily: "'Playfair Display',serif", letterSpacing: 3,
+        background: big ? "linear-gradient(135deg,#e85d75,#f2d06b,#e85d75)" : "linear-gradient(135deg,#d4af37,#f2d06b,#d4af37)",
+        backgroundClip: "text", WebkitBackgroundClip: "text", color: "transparent",
+        textShadow: big ? "0 0 30px rgba(232,93,117,.4)" : "0 0 24px rgba(212,175,55,.35)",
+        filter: "drop-shadow(0 2px 8px rgba(0,0,0,.6))",
+        animation: reduced ? "fi .2s" : "comboFlash .9s ease-out"
+      }}>{flash.name}{big ? "!" : ""}</div>
+    </div>
+  );
+}
+
+function WinScreen({ won, msg, onAgain, onBack, fwt, best, streak }) {
+  useEffect(() => { sfx(won ? "win" : "lose"); haptic(won ? [30, 40, 30] : 40); }, []);
   return (
     <TableBG>
       <Fireworks active={fwt} />
@@ -304,6 +362,11 @@ function WinScreen({ won, msg, onAgain, onBack, fwt }) {
         <p style={{ fontSize: 12, color: "rgba(232,228,218,.3)", animation: "su .5s .4s both", fontStyle: "italic" }}>
           {won ? "Perfect game!" : "Better luck next time."}
         </p>
+        {(streak != null || best != null) && (
+          <p style={{ fontSize: 11, color: "rgba(212,175,55,.6)", animation: "su .5s .5s both", letterSpacing: 1, fontFamily: "'Playfair Display'" }}>
+            {streak != null ? "連勝 " + streak : ""}{streak != null && best != null ? " · " : ""}{best != null ? "最佳 " + best : ""}
+          </p>
+        )}
         <div style={{ display: "flex", gap: 12, animation: "su .5s .6s both" }}>
           <GoldBtn onClick={onAgain} sm>再來一局</GoldBtn>
           <SecBtn onClick={onBack}>返回選單</SecBtn>
@@ -322,11 +385,13 @@ function HandArea({ cards, selected, onToggle, disabled, onPlay, onPass, canPlay
     if (disabled) return;
     // If card has _playable === false, show shake feedback
     if (card._playable === false && onToggle) {
+      sfx("invalid"); haptic(20);
       setShakeMsg(true);
       setTimeout(() => setShakeMsg(false), 500);
       onToggle(card);
       return;
     }
+    sfx("select"); haptic(8);
     setTapFeedback(i);
     setTimeout(() => setTapFeedback(null), 300);
     if (onToggle) onToggle(card);
@@ -431,7 +496,9 @@ function BigTwoGame({ onBack }) {
   const [tk, setTK] = useState(false);
   const [pa, setPA] = useState(null);
   const [fw, setFW] = useState(0);
+  const [flash, setFlash] = useState(null);
   const lr = useRef(null);
+  const showFlash = (t) => { if (!t) return; setFlash({ name: CL[t] || t, t }); setTimeout(() => setFlash(null), 900); };
   const log = useCallback(m => setLogs(p => [...p.slice(-25), { m, t: Date.now() }]), []);
 
   const start = () => {
@@ -453,12 +520,14 @@ function BigTwoGame({ onBack }) {
     const nh = [...hands]; nh[0] = nh[0].filter(c => !sel.some(s2 => s2.id === c.id));
     setH(nh); setCP([...sel]); setPA({ c: [...sel], p: 0 }); setLP(0); setPaC(0);
     if (isF) setIF(false); setSel([]); log("你 " + CL[t]);
-    if (!nh[0].length) { setWin(0); setFW(f => f + 1); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
+    sfx("play"); haptic(12); showFlash(t);
+    if (!nh[0].length) { setWin(0); setFW(f => { const nf = f + 1; lsSet('b2_best', Math.max(lsGet('b2_best', 0), nf)); return nf; }); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
     setCur(1 % pc);
   };
 
   const pass = () => {
     if (lp === 0 && cp) return;
+    sfx("pass"); haptic(10);
     const np = paC + 1; log("你 PASS");
     if (np >= pc - 1) { setCP(null); setPaC(0); setPA(null); setCur(lp >= 0 ? lp : (cur + 1) % pc); log("─ 新一輪 ─"); }
     else { setPaC(np); setCur(1 % pc); }
@@ -476,9 +545,10 @@ function BigTwoGame({ onBack }) {
         nh[p] = nh[p].filter(c => !pl.some(x => x.id === c.id));
         setH(nh); setCP([...pl]); setPA({ c: [...pl], p: p }); setLP(p); setPaC(0);
         if (isF) setIF(false); log(PM[p].n + " " + CL[t2]);
+        sfx("play"); showFlash(t2);
         if (!nh[p].length) { setWin(p); setFW(f => f + 1); setPh("over"); setTK(false); return; }
       } else {
-        const np = paC + 1; log(PM[p].n + " PASS");
+        const np = paC + 1; log(PM[p].n + " PASS"); sfx("pass");
         if (np >= pc - 1) { setCP(null); setPaC(0); setPA(null); setCur(lp >= 0 ? lp : (p + 1) % pc); log("─ 新一輪 ─"); setTK(false); return; }
         setPaC(np);
       }
@@ -515,7 +585,7 @@ function BigTwoGame({ onBack }) {
   }
 
   if (ph === "over") {
-    return <WinScreen won={win === 0} msg={win === 0 ? "你贏了！" : PM[win].n + "勝出"} onAgain={start} onBack={onBack} fwt={fw} />;
+    return <WinScreen won={win === 0} msg={win === 0 ? "你贏了！" : PM[win].n + "勝出"} onAgain={start} onBack={onBack} fwt={fw} streak={win === 0 ? fw : undefined} best={lsGet('b2_best', 0) || undefined} />;
   }
 
   const ops = pc === 2 ? [{ i: 1, p: "top" }] : pc === 3 ? [{ i: 1, p: "left" }, { i: 2, p: "right" }] : [{ i: 1, p: "left" }, { i: 2, p: "top" }, { i: 3, p: "right" }];
@@ -524,6 +594,7 @@ function BigTwoGame({ onBack }) {
     <TableBG>
       <TopBar title="大老二" onBack={onBack} />
       <div style={{ flex: 1, position: "relative" }}>
+        <ComboFlash flash={flash} />
         <div style={{ position: "absolute", left: "10%", right: "10%", top: "8%", bottom: "5%", borderRadius: "50%", pointerEvents: "none", border: "2px solid rgba(212,175,55,.04)", boxShadow: "inset 0 0 60px rgba(0,0,0,.2)", background: "radial-gradient(ellipse,rgba(26,74,48,.2),transparent 70%)" }} />
         {ops.map(({ i: idx, p: pos }) => {
           const act = cur === idx;
@@ -584,20 +655,21 @@ function BlackjackGame({ onBack }) {
   const getVal = (c) => "JQK".includes(c.rank) ? 10 : c.rank === "A" ? 11 : +c.rank;
   const handVal = (h) => { let s = h.reduce((a, c) => a + getVal(c), 0), ac = h.filter(c => c.rank === "A").length; while (s > 21 && ac > 0) { s -= 10; ac--; } return s; };
   const [dk, setDK] = useState([]); const [pH, setPH] = useState([]); const [dH, setDH] = useState([]);
-  const [ph, setPh] = useState("bet"); const [bt, setBt] = useState(10); const [ch, setCh] = useState(1000);
+  const [ph, setPh] = useState("bet"); const [bt, setBt] = useState(10); const [ch, setCh] = useState(() => lsGet('bj_chips', 1000));
   const [msg, setMsg] = useState(""); const [fw, setFw] = useState(0);
+  useEffect(() => { lsSet('bj_chips', ch); }, [ch]);
 
-  const deal = () => { const d = shuffle(mkDeck()); setPH([d[0], d[2]]); setDH([d[1], d[3]]); setDK(d.slice(4)); setPh("play"); setMsg("");
+  const deal = (ob) => { const eb = typeof ob === "number" ? ob : bt; if (eb > ch) return; if (eb !== bt) setBt(eb); const d = shuffle(mkDeck()); setPH([d[0], d[2]]); setDH([d[1], d[3]]); setDK(d.slice(4)); setPh("play"); setMsg(""); sfx("deal"); haptic(10);
     if (handVal([d[0], d[2]]) === 21) setTimeout(() => stand([d[0], d[2]], [d[1], d[3]], d.slice(4)), 500); };
-  const hit = () => { const nh = [...pH, dk[0]]; setPH(nh); setDK(d => d.slice(1));
-    if (handVal(nh) > 21) { setMsg("爆牌！"); setCh(c => c - bt); setPh("over"); } else if (handVal(nh) === 21) stand(nh, dH, dk.slice(1)); };
+  const hit = () => { sfx("play"); haptic(10); const nh = [...pH, dk[0]]; setPH(nh); setDK(d => d.slice(1));
+    if (handVal(nh) > 21) { setMsg("爆牌！"); sfx("lose"); haptic(40); setCh(c => c - bt); setPh("over"); } else if (handVal(nh) === 21) stand(nh, dH, dk.slice(1)); };
   const stand = (ph2, dh, dd) => {
     const p2 = ph2 || pH, d2 = dh || dH; let d = [...d2], k = dd || [...dk];
     while (handVal(d) < 17) { d.push(k[0]); k = k.slice(1); }
     setDH(d); setDK(k);
     const pv = handVal(p2), dv = handVal(d);
-    if (dv > 21 || pv > dv) { setMsg("你贏了！"); setCh(c => c + bt); setFw(f => f + 1); }
-    else if (pv < dv) { setMsg("莊家贏"); setCh(c => c - bt); }
+    if (dv > 21 || pv > dv) { setMsg("你贏了！"); sfx("win"); haptic([30, 40, 30]); setCh(c => c + bt); setFw(f => { const nf = f + 1; lsSet('bj_best', Math.max(lsGet('bj_best', 0), nf)); return nf; }); }
+    else if (pv < dv) { setMsg("莊家贏"); sfx("lose"); haptic(40); setCh(c => c - bt); setFw(0); }
     else setMsg("平手");
     setPh("over");
   };
@@ -614,15 +686,31 @@ function BlackjackGame({ onBack }) {
           <div style={{ fontSize: 18, fontWeight: 900, fontFamily: "'Playfair Display'", color: "#d4af37" }}>${ch}</div>
         </div>
         {ph === "bet" ? (
-          <div style={{ textAlign: "center", animation: "su .5s" }}>
-            <div style={{ fontSize: 12, color: "rgba(212,175,55,.5)", letterSpacing: 2, marginBottom: 14 }}>下注</div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
-              {[5, 10, 25, 50, 100].map(b => (
-                <button key={b} onClick={() => setBt(b)} style={{ padding: "8px 14px", borderRadius: 10, fontSize: 13, fontFamily: "'Playfair Display'", background: bt === b ? "rgba(212,175,55,.08)" : "rgba(255,255,255,.02)", border: bt === b ? "1.5px solid rgba(212,175,55,.3)" : "1px solid rgba(255,255,255,.04)", color: bt === b ? "#d4af37" : "rgba(232,228,218,.3)", cursor: "pointer" }}>${b}</button>
-              ))}
-            </div>
-            <GoldBtn onClick={deal}>發牌</GoldBtn>
-          </div>
+          (() => {
+            const aff = [5, 10, 25, 50, 100].filter(b => b <= ch);
+            if (!aff.length) {
+              return (
+                <div style={{ textAlign: "center", animation: "su .5s", padding: "20px 24px", borderRadius: 16, background: "rgba(232,93,117,.05)", border: "1px solid rgba(232,93,117,.15)" }}>
+                  <div style={{ fontSize: 32, marginBottom: 8 }}>💸</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "#e85d75", marginBottom: 4 }}>籌碼用盡</div>
+                  <div style={{ fontSize: 10, color: "rgba(232,228,218,.3)", marginBottom: 16 }}>再次入場，重新挑戰</div>
+                  <GoldBtn onClick={() => { setCh(1000); setBt(10); lsSet('bj_chips', 1000); }} sm>重新入場 $1000</GoldBtn>
+                </div>
+              );
+            }
+            const cb = bt <= ch ? bt : aff[0];
+            return (
+              <div style={{ textAlign: "center", animation: "su .5s" }}>
+                <div style={{ fontSize: 12, color: "rgba(212,175,55,.5)", letterSpacing: 2, marginBottom: 14 }}>下注</div>
+                <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+                  {aff.map(b => (
+                    <button key={b} onClick={() => setBt(b)} style={{ padding: "8px 14px", borderRadius: 10, fontSize: 13, fontFamily: "'Playfair Display'", background: cb === b ? "rgba(212,175,55,.08)" : "rgba(255,255,255,.02)", border: cb === b ? "1.5px solid rgba(212,175,55,.3)" : "1px solid rgba(255,255,255,.04)", color: cb === b ? "#d4af37" : "rgba(232,228,218,.3)", cursor: "pointer" }}>${b}</button>
+                  ))}
+                </div>
+                <GoldBtn onClick={() => deal(bt <= ch ? bt : aff[0])}>發牌</GoldBtn>
+              </div>
+            );
+          })()
         ) : (
           <>
             <div style={{ textAlign: "center" }}>
@@ -675,7 +763,7 @@ function OldMaidGame({ onBack }) {
     setHs([h0, h1]); setTn(0); setMsg(""); setWin(null); setPh("play"); };
   const chkW = (hs2) => { if (!hs2[0].length) { setWin(0); setMsg("你贏了！"); setFw(f => f + 1); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return true; }
     if (!hs2[1].length) { setWin(1); setMsg("你持有鬼牌！"); setPh("over"); return true; } return false; };
-  const draw = (idx) => { const c = hs[1][idx]; const n1 = hs[1].filter((_, i) => i !== idx); const n0 = remP([...hs[0], c]);
+  const draw = (idx) => { sfx("play"); haptic(12); const c = hs[1][idx]; const n1 = hs[1].filter((_, i) => i !== idx); const n0 = remP([...hs[0], c]);
     const nh = [n0, n1]; setHs(nh); setMsg("抽到 " + (c.isJoker ? "" : c.rank + c.suit)); if (!chkW(nh)) setTn(1); };
 
   useEffect(() => {
@@ -710,7 +798,9 @@ function OldMaidGame({ onBack }) {
           <div style={{ fontSize: 10, color: "rgba(232,228,218,.3)", marginBottom: 4 }}> 對手 · {hs[1].length}張 {tn === 0 ? "← 點擊抽牌" : ""}</div>
           <div style={{ display: "flex", justifyContent: "center", gap: 2, flexWrap: "wrap" }}>
             {hs[1].map((c, i) => (
-              <div key={c.id} style={{ animation: "dc .15s " + (i * .015) + "s both" }} onClick={() => tn === 0 && draw(i)}>
+              <div key={c.id} role="button" aria-label={"抽第 " + (i + 1) + " 張牌"} tabIndex={tn === 0 ? 0 : -1}
+                style={{ animation: "dc .15s " + (i * .015) + "s both", padding: 6, minWidth: 44, minHeight: 44, display: "flex", alignItems: "center", justifyContent: "center", cursor: tn === 0 ? "pointer" : "default" }}
+                onClick={() => tn === 0 && draw(i)}>
                 <Card card={c} faceDown small disabled={tn !== 0} glow={tn === 0} style={{ width: 34, height: 48, borderRadius: 4 }} />
               </div>
             ))}
@@ -745,6 +835,7 @@ function SevensGame({ onBack }) {
   const [showHint, setShowHint] = useState(false);
   const [lastPlayed, setLastPlayed] = useState(null);
   const [logs, setLogs] = useState([]);
+  const [flash, setFlash] = useState(null);
   const logRef = useRef(null);
 
   const so = (r) => ({ A: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 6, 8: 7, 9: 8, 10: 9, J: 10, Q: 11, K: 12 }[r] ?? -1);
@@ -790,13 +881,16 @@ function SevensGame({ onBack }) {
     const nb = { ...bd };
     nb[c.suit] = [...nb[c.suit], c.rank].sort((a, b) => so(a) - so(b));
     setHs(nh); setBd(nb); setLastPlayed(c); setShowHint(false);
+    sfx("play"); haptic(12);
+    if (c.rank === "7") { setFlash({ name: c.suit + "7", t: "" }); setTimeout(() => setFlash(null), 900); }
     const m = "你放了 " + c.rank + c.suit;
     setMsg(m); addLog(m);
-    if (!nh[0].length) { setWin(0); setFw(f => f + 1); setPh("over"); addLog("你贏了！"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
+    if (!nh[0].length) { setWin(0); setFw(f => { const nf = f + 1; lsSet('s7_best', Math.max(lsGet('s7_best', 0), nf)); return nf; }); setPh("over"); addLog("你贏了！"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
     setTn(1);
   };
 
   const passT = () => {
+    sfx("pass"); haptic(10);
     const np = [...pC]; np[0]++; setPC(np); setShowHint(false);
     if (np[0] >= 3) {
       setWin(np[1] < np[2] ? 1 : 2); setPh("over");
@@ -820,12 +914,12 @@ function SevensGame({ onBack }) {
         nh[p] = nh[p].filter(x => x.id !== c.id);
         const nb = { ...bd };
         nb[c.suit] = [...nb[c.suit], c.rank].sort((a, b) => so(a) - so(b));
-        setHs(nh); setBd(nb); setLastPlayed(c);
+        setHs(nh); setBd(nb); setLastPlayed(c); sfx("play");
         const m = PM[p].n + " 放了 " + c.rank + c.suit;
         setMsg(m); addLog(m);
         if (!nh[p].length) { setWin(p); setPh("over"); setTK(false); addLog(PM[p].n + " 贏了！"); return; }
       } else {
-        const np = [...pC]; np[p]++; setPC(np);
+        const np = [...pC]; np[p]++; setPC(np); sfx("pass");
         const m = PM[p].n + " PASS (" + np[p] + "/3)";
         setMsg(m); addLog(m);
         if (np[p] >= 3) { addLog(PM[p].n + " 被淘汰！"); }
@@ -863,13 +957,14 @@ function SevensGame({ onBack }) {
 
   if (ph === "over") {
     return (
-      <WinScreen won={win === 0} msg={win === 0 ? "你贏了！" : PM[win].n + "贏了"} onAgain={start} onBack={onBack} fwt={fw} />
+      <WinScreen won={win === 0} msg={win === 0 ? "你贏了！" : PM[win].n + "贏了"} onAgain={start} onBack={onBack} fwt={fw} streak={win === 0 ? fw : undefined} best={lsGet('s7_best', 0) || undefined} />
     );
   }
 
   return (
     <TableBG>
       <TopBar title="排七" onBack={onBack} />
+      <ComboFlash flash={flash} />
       <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "6px 8px", gap: 4, overflow: "hidden" }}>
 
         {/* ── Opponents ── */}
@@ -1042,18 +1137,19 @@ function SevensGame({ onBack }) {
 /* ══════════ TEXAS HOLD'EM ══════════ */
 function TexasGame({ onBack }) {
   const [ph, setPh] = useState("intro"); const [dk, setDK] = useState([]); const [pC, setPC] = useState([]); const [dC, setDC] = useState([]);
-  const [cm, setCm] = useState([]); const [pot, setPot] = useState(0); const [ch, setCh] = useState(1000); const [stg, setStg] = useState("pre");
+  const [cm, setCm] = useState([]); const [pot, setPot] = useState(0); const [ch, setCh] = useState(() => lsGet('tx_chips', 1000)); const [stg, setStg] = useState("pre");
   const [msg, setMsg] = useState(""); const [fw, setFw] = useState(0); const [bt, setBt] = useState(20);
+  useEffect(() => { lsSet('tx_chips', ch); }, [ch]);
   const bH = (cs) => { let b = 0; cs.forEach(c => { const v = { A: 14, K: 13, Q: 12, J: 11 }[c.rank] || +c.rank; if (v > b) b = v; }); return b; };
-  const deal = () => { const d = shuffle(mkDeck()); setPC([d[0], d[1]]); setDC([d[2], d[3]]); setCm([]); setDK(d.slice(4)); setPot(bt * 2); setCh(c => c - bt); setStg("pre"); setMsg(""); setPh("play"); };
+  const deal = () => { if (ch < bt) return; const d = shuffle(mkDeck()); setPC([d[0], d[1]]); setDC([d[2], d[3]]); setCm([]); setDK(d.slice(4)); setPot(bt * 2); setCh(c => c - bt); setStg("pre"); setMsg(""); setPh("play"); sfx("deal"); haptic(10); };
   const adv = () => { if (stg === "pre") { setCm([dk[0], dk[1], dk[2]]); setDK(d => d.slice(3)); setStg("flop"); }
     else if (stg === "flop") { setCm(c => [...c, dk[0]]); setDK(d => d.slice(1)); setStg("turn"); }
     else if (stg === "turn") { setCm(c => [...c, dk[0]]); setDK(d => d.slice(1)); setStg("river"); }
     else sd(); };
-  const raise = () => { setPot(p => p + bt); setCh(c => c - bt); adv(); };
-  const fold = () => { setMsg("棄牌"); setPh("result"); };
+  const raise = () => { if (ch >= bt) { sfx("play"); haptic(12); setPot(p => p + bt); setCh(c => c - bt); adv(); } else { sfx("pass"); adv(); } };
+  const fold = () => { sfx("pass"); haptic(10); setMsg("棄牌"); setFw(0); setPh("result"); };
   const sd = () => { const pv = bH([...pC, ...cm]), dv = bH([...dC, ...cm]);
-    if (pv >= dv) { setMsg("你贏了！"); setCh(c => c + pot); setFw(f => f + 1); } else setMsg("莊家贏"); setPh("result"); };
+    if (pv >= dv) { setMsg("你贏了！"); sfx("win"); haptic([30, 40, 30]); setCh(c => c + pot); setFw(f => { const nf = f + 1; lsSet('tx_best', Math.max(lsGet('tx_best', 0), nf)); return nf; }); } else { setMsg("莊家贏"); sfx("lose"); haptic(40); setFw(0); } setPh("result"); };
 
   if (ph === "intro") {
     return (
@@ -1066,7 +1162,10 @@ function TexasGame({ onBack }) {
           <div style={{ display: "flex", gap: 6 }}>
             {[10, 20, 50].map(b => <button key={b} onClick={() => setBt(b)} style={{ padding: "6px 12px", borderRadius: 8, fontSize: 12, fontFamily: "'Playfair Display'", background: bt === b ? "rgba(212,175,55,.08)" : "rgba(255,255,255,.02)", border: bt === b ? "1.5px solid rgba(212,175,55,.3)" : "1px solid rgba(255,255,255,.04)", color: bt === b ? "#d4af37" : "rgba(232,228,218,.3)", cursor: "pointer" }}>${b}</button>)}
           </div>
-          <GoldBtn onClick={deal}>發牌</GoldBtn>
+          <div style={{ fontSize: 11, color: "#d4af37" }}>籌碼: ${ch}</div>
+          {ch < bt
+            ? <GoldBtn onClick={() => { setCh(1000); lsSet('tx_chips', 1000); }}>重新入場 $1000</GoldBtn>
+            : <GoldBtn onClick={() => deal()}>發牌</GoldBtn>}
         </div>
       </TableBG>
     );
@@ -1084,7 +1183,7 @@ function TexasGame({ onBack }) {
           <div style={{ fontSize: 10, color: "rgba(212,175,55,.5)" }}>你</div>
           <h3 style={{ fontSize: 20, fontWeight: 900, fontFamily: "'Playfair Display'", color: msg.includes("贏") ? "#4ecdc4" : "#e85d75" }}>{msg}</h3>
           <div style={{ fontSize: 12, color: "#d4af37" }}>籌碼: ${ch}</div>
-          <div style={{ display: "flex", gap: 8 }}><GoldBtn onClick={deal} sm>再來</GoldBtn><SecBtn onClick={onBack}>返回</SecBtn></div>
+          <div style={{ display: "flex", gap: 8 }}>{ch < bt ? <GoldBtn onClick={() => { setCh(1000); lsSet('tx_chips', 1000); }} sm>重新入場 $1000</GoldBtn> : <GoldBtn onClick={() => deal()} sm>再來</GoldBtn>}<SecBtn onClick={onBack}>返回</SecBtn></div>
         </div>
       </TableBG>
     );
@@ -1408,6 +1507,8 @@ function DDZGame({ onBack }) {
   const [tk, setTK] = useState(false);
   const [msg, setMsg] = useState("");
   const [extra, setExtra] = useState([]);
+  const [flash, setFlash] = useState(null);
+  const showFlash = (t) => { if (!t) return; setFlash({ name: DDZ_NAMES[t] || t, t }); setTimeout(() => setFlash(null), 900); };
 
   const start = () => {
     const d = shuffle(mkDeck(true));
@@ -1432,12 +1533,14 @@ function DDZGame({ onBack }) {
     nh[0] = nh[0].filter(c => !sel.some(s2 => s2.id === c.id));
     setHs(nh); setCP([...sel]); setLP(0); setPaC(0); setSel([]);
     setMsg("出了 " + (DDZ_NAMES[co.t] || co.t));
-    if (!nh[0].length) { setWin(0); setFw(f => f + 1); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
+    sfx("play"); haptic(12); showFlash(co.t);
+    if (!nh[0].length) { setWin(0); setFw(f => { const nf = f + 1; lsSet('dz_best', Math.max(lsGet('dz_best', 0), nf)); return nf; }); setPh("over"); if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(fw+1); return; }
     setCur(1);
   };
 
   const pass = () => {
     if (lp === 0 && cp) return;
+    sfx("pass"); haptic(10);
     const np = paC + 1;
     if (np >= 2) { setCP(null); setPaC(0); setCur(lp >= 0 ? lp : 1); setMsg("新一輪"); return; }
     setPaC(np); setCur(1); setMsg("你 PASS");
@@ -1458,10 +1561,11 @@ function DDZGame({ onBack }) {
         nh[p] = nh[p].filter(c => !played.some(x => x.id === c.id));
         setHs(nh); setCP([...played]); setLP(p); setPaC(0);
         setMsg(PM[p].n + " " + (DDZ_NAMES[co.t] || "出牌"));
+        sfx("play"); showFlash(co.t);
         if (!nh[p].length) { setWin(p === 0 ? 0 : p); setPh("over"); setTK(false); return; }
       } else {
         const np = paC + 1;
-        setMsg(PM[p].n + " PASS");
+        setMsg(PM[p].n + " PASS"); sfx("pass");
         if (np >= 2) { setCP(null); setPaC(0); setCur(lp >= 0 ? lp : (p + 1) % 3); setTK(false); return; }
         setPaC(np);
       }
@@ -1493,13 +1597,14 @@ function DDZGame({ onBack }) {
   }
   if (ph === "over") {
     return (
-      <WinScreen won={win === 0} msg={win === 0 ? "地主勝利！" : "農民勝利！"} onAgain={start} onBack={onBack} fwt={fw} />
+      <WinScreen won={win === 0} msg={win === 0 ? "地主勝利！" : "農民勝利！"} onAgain={start} onBack={onBack} fwt={fw} streak={win === 0 ? fw : undefined} best={lsGet('dz_best', 0) || undefined} />
     );
   }
   return (
     <TableBG>
       <TopBar title="鬥地主" onBack={onBack} />
       <div style={{ flex: 1, position: "relative" }}>
+        <ComboFlash flash={flash} />
         <div style={{ position: "absolute", left: "10%", right: "10%", top: "8%", bottom: "5%", borderRadius: "50%", pointerEvents: "none", border: "2px solid rgba(212,175,55,.04)", boxShadow: "inset 0 0 60px rgba(0,0,0,.2)", background: "radial-gradient(ellipse,rgba(26,74,48,.2),transparent 70%)" }} />
         {/* Bottom cards (地主牌) */}
         <div style={{ position: "absolute", top: 6, left: "50%", transform: "translateX(-50%)", zIndex: 12, display: "flex", gap: 3 }}>
@@ -1565,6 +1670,8 @@ const GAMES = [
 export default function App() {
   const [game, setGame] = useState(null);
   const [transitioning, setTransitioning] = useState(false);
+  const [mute, setMute] = useState(() => isMuted());
+  const toggleMute = () => { const nv = !mute; setMuted(nv); setMute(nv); if (!nv) sfx("select"); };
 
   const goToGame = (id) => {
     setTransitioning(true);
@@ -1598,6 +1705,11 @@ export default function App() {
       <div style={{ position: "absolute", inset: 28, border: "1px solid rgba(212,175,55,.02)", borderRadius: 22, pointerEvents: "none" }} />
 
       <div style={{ position: "relative", zIndex: 1, padding: "44px 16px 36px", maxWidth: 460, margin: "0 auto" }}>
+        {/* Mute toggle */}
+        <button onClick={toggleMute} aria-label={mute ? "開啟音效" : "靜音"} aria-pressed={mute}
+          style={{ position: "absolute", top: 8, right: 8, width: 40, height: 40, borderRadius: 12, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, cursor: "pointer", background: "rgba(255,255,255,.03)", border: "1px solid rgba(212,175,55,.12)", color: "#d4af37", zIndex: 5 }}>
+          {mute ? "🔇" : "🔊"}
+        </button>
         {/* Header */}
         <div style={{ textAlign: "center", marginBottom: 36, animation: "su .7s cubic-bezier(.25,.1,.25,1)" }}>
           <div style={{ fontSize: 8, letterSpacing: 7, color: "rgba(212,175,55,.2)", textTransform: "uppercase", marginBottom: 8 }}>HAO0321 ©Studio presents</div>

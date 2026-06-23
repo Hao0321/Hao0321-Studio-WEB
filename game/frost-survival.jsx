@@ -17,17 +17,41 @@ function mkWorld(){const t=[],r=[],a=[];for(let i=0;i<180;i++){let x,y;do{x=rn(6
 
 function mkWalls(lv){if(lv<1)return[];const f=FORTS[lv],w=[];for(let i=0;i<f.wSeg;i++){const a=(i/f.wSeg)*Math.PI*2,na=((i+1)/f.wSeg)*Math.PI*2;w.push({id:i,x1:FX+Math.cos(a)*f.r,y1:FY+Math.sin(a)*f.r,x2:FX+Math.cos(na)*f.r,y2:FY+Math.sin(na)*f.r,hp:f.wHp,mhp:f.wHp,mx:FX+Math.cos((a+na)/2)*f.r,my:FY+Math.sin((a+na)/2)*f.r})}return w}
 
+/* ═══════════════════════ PERSISTENCE / A11Y HELPERS ═══════════════════════ */
+const BEST_KEY="frost_best_v1",SET_KEY="frost_set_v1";
+const loadBest=()=>{try{return JSON.parse(localStorage.getItem(BEST_KEY))||{score:0,day:0,con:0}}catch{return{score:0,day:0,con:0}}};
+const loadSet=()=>{try{const s=JSON.parse(localStorage.getItem(SET_KEY));return{sound:s&&typeof s.sound==="boolean"?s.sound:true,haptics:s&&typeof s.haptics==="boolean"?s.haptics:true}}catch{return{sound:true,haptics:true}}};
+const reduceMotion=typeof matchMedia!=="undefined"&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /* ═══════════════════════ MAIN COMPONENT ═══════════════════════ */
 export default function EmberGame(){
   const cvs=useRef(null),G=useRef(null),joy=useRef({on:false,sx:0,sy:0,cx:0,cy:0,id:null}),ks=useRef({}),fr=useRef(0);
   const [ui,setUi]=useState({screen:"title"});
+  const [best,setBest]=useState(loadBest);
+  const setRef=useRef(loadSet());
   const mQ=useRef([]);
   const addM=(t,c="#ffe0b0")=>{mQ.current.push({text:t,life:110,color:c});if(mQ.current.length>3)mQ.current.shift()};
 
-  const init=useCallback(()=>{const w=mkWorld();G.current={p:{x:FX,y:FY-50,hp:15,mhp:15,dir:1,acd:0,inv:0,fr:0,sw:false},res:{w:10,s:5,f:8},fort:{lv:0,hp:80,mhp:80},walls:[],workers:[],turrets:[],trees:w.trees,rocks:w.rocks,animals:w.animals,villages:w.villages,enemies:[],pt:[],dr:[],bul:[],time:0,day:1,kills:0,esp:0,cam:{x:0,y:0},over:false,con:0};fr.current=0;setUi({screen:"game",w:10,s:5,f:8,hp:15,mhp:15,flv:0,fhp:80,fmhp:80,day:1,night:false,en:0,kills:0,wk:0,con:0,showU:false,vil:w.villages})},[]);
+  /* ─── WebAudio SFX + haptics (lazy, settings-gated) ─── */
+  const audioRef=useRef(null);
+  const initAudio=()=>{if(!audioRef.current){try{const AC=window.AudioContext||window.webkitAudioContext;if(AC)audioRef.current=new AC()}catch{}}if(audioRef.current&&audioRef.current.state==="suspended"){try{audioRef.current.resume()}catch{}}};
+  const sfx=(type)=>{if(!setRef.current.sound)return;const ac=audioRef.current;if(!ac)return;try{const t=ac.currentTime;const mk=(freq,dur,wave,vol,f2)=>{const o=ac.createOscillator(),gn=ac.createGain();o.type=wave;o.frequency.setValueAtTime(freq,t);if(f2!=null)o.frequency.exponentialRampToValueAtTime(Math.max(20,f2),t+dur);gn.gain.setValueAtTime(0,t);gn.gain.linearRampToValueAtTime(vol,t+0.005);gn.gain.exponentialRampToValueAtTime(0.0001,t+dur);o.connect(gn);gn.connect(ac.destination);o.start(t);o.stop(t+dur+0.02)};
+    if(type==="chop")mk(220,0.05,"triangle",0.18);
+    else if(type==="hit")mk(90,0.14,"square",0.2,60);
+    else if(type==="kill")mk(420,0.18,"sawtooth",0.16,120);
+    else if(type==="upgrade"){[330,440,550,660].forEach((fq,i)=>{const o=ac.createOscillator(),gn=ac.createGain();o.type="triangle";o.frequency.setValueAtTime(fq,t+i*0.06);gn.gain.setValueAtTime(0,t+i*0.06);gn.gain.linearRampToValueAtTime(0.15,t+i*0.06+0.01);gn.gain.exponentialRampToValueAtTime(0.0001,t+i*0.06+0.12);o.connect(gn);gn.connect(ac.destination);o.start(t+i*0.06);o.stop(t+i*0.06+0.14)})}
+    else if(type==="night")mk(70,0.6,"sine",0.12,55);
+  }catch{}};
+  const vib=(pat)=>{if(setRef.current.haptics&&typeof navigator!=="undefined"&&navigator.vibrate)try{navigator.vibrate(pat)}catch{}};
+  const finishGame=(sc,g)=>{const prev=loadBest();let nr=false;if(sc>prev.score){const nb={score:sc,day:g.day,con:g.con};try{localStorage.setItem(BEST_KEY,JSON.stringify(nb))}catch{}setBest(nb);nr=true}setUi(pr=>({...pr,screen:"over",kills:g.kills,day:g.day,flv:g.fort.lv,con:g.con,score:sc,newRecord:nr}))};
+  const togglePause=()=>{const g=G.current;if(g&&!g.over){g.paused=!g.paused;if(!g.paused)initAudio();setUi(p=>({...p,paused:g.paused}))}};
+  const toggleSetting=(key)=>{const ns={...setRef.current,[key]:!setRef.current[key]};setRef.current=ns;try{localStorage.setItem(SET_KEY,JSON.stringify(ns))}catch{}setUi(p=>({...p,sound:ns.sound,haptics:ns.haptics}))};
 
-  useEffect(()=>{const kd=e=>{ks.current[e.key.toLowerCase()]=true};const ku=e=>{ks.current[e.key.toLowerCase()]=false};window.addEventListener("keydown",kd);window.addEventListener("keyup",ku);return()=>{window.removeEventListener("keydown",kd);window.removeEventListener("keyup",ku)}},[]);
-  const onTS=useCallback(e=>{e.preventDefault();for(let t of e.changedTouches)if(!joy.current.on)joy.current={on:true,sx:t.clientX,sy:t.clientY,cx:t.clientX,cy:t.clientY,id:t.identifier}},[]);
+  const init=useCallback(()=>{initAudio();const w=mkWorld();G.current={p:{x:FX,y:FY-50,hp:15,mhp:15,dir:1,acd:0,inv:0,fr:0,sw:false},res:{w:10,s:5,f:8},fort:{lv:0,hp:80,mhp:80},walls:[],workers:[],turrets:[],trees:w.trees,rocks:w.rocks,animals:w.animals,villages:w.villages,enemies:[],pt:[],dr:[],bul:[],time:0,day:1,kills:0,esp:0,cam:{x:0,y:0},over:false,con:0,paused:false,shake:0,nightSeen:false};fr.current=0;setUi({screen:"game",w:10,s:5,f:8,hp:15,mhp:15,flv:0,fhp:80,fmhp:80,day:1,night:false,en:0,kills:0,wk:0,con:0,showU:false,vil:w.villages,paused:false,sound:setRef.current.sound,haptics:setRef.current.haptics,newRecord:false})},[]);
+
+  useEffect(()=>{const kd=e=>{const key=e.key.toLowerCase();ks.current[key]=true;if((key==="p"||key==="escape")){const g=G.current;if(g&&!g.over){initAudio();g.paused=!g.paused;setUi(p=>({...p,paused:g.paused}))}}};const ku=e=>{ks.current[e.key.toLowerCase()]=false};window.addEventListener("keydown",kd);window.addEventListener("keyup",ku);return()=>{window.removeEventListener("keydown",kd);window.removeEventListener("keyup",ku)}},[]);
+  useEffect(()=>{const vc=()=>{if(typeof document!=="undefined"&&document.hidden){const g=G.current;if(g&&!g.over&&!g.paused){g.paused=true;setUi(p=>({...p,paused:true}))}}};if(typeof document!=="undefined")document.addEventListener("visibilitychange",vc);return()=>{if(typeof document!=="undefined")document.removeEventListener("visibilitychange",vc)}},[]);
+  const onTS=useCallback(e=>{e.preventDefault();initAudio();for(let t of e.changedTouches)if(!joy.current.on)joy.current={on:true,sx:t.clientX,sy:t.clientY,cx:t.clientX,cy:t.clientY,id:t.identifier}},[]);
   const onTM=useCallback(e=>{e.preventDefault();for(let t of e.changedTouches)if(t.identifier===joy.current.id){joy.current.cx=t.clientX;joy.current.cy=t.clientY}},[]);
   const onTE=useCallback(e=>{e.preventDefault();for(let t of e.changedTouches)if(t.identifier===joy.current.id)joy.current={on:false,sx:0,sy:0,cx:0,cy:0,id:null}},[]);
 
@@ -37,7 +61,7 @@ export default function EmberGame(){
     const resize=()=>{c.width=window.innerWidth;c.height=window.innerHeight};resize();window.addEventListener("resize",resize);
 
     const tick=()=>{
-      const g=G.current;if(!g||g.over){anim=requestAnimationFrame(tick);return}
+      const g=G.current;if(!g||g.over||g.paused){anim=requestAnimationFrame(tick);return}
       const CW=c.width,CH=c.height;fr.current++;const f=fr.current;
       let dx=0,dy=0;const k=ks.current;
       if(k.w||k.arrowup)dy-=1;if(k.s||k.arrowdown)dy+=1;if(k.a||k.arrowleft)dx-=1;if(k.d||k.arrowright)dx+=1;
@@ -48,14 +72,14 @@ export default function EmberGame(){
       // AUTO INTERACT
       if(p.acd<=0){let acted=false;
         let nt=null,nd=AR;for(let t of g.trees){const dd=d(p,t);if(dd<nd){nd=dd;nt=t}}
-        if(nt){nt.hp--;nt.sh=6;p.acd=ACD;acted=true;p.sw=true;g.pt.push({x:nt.x+rn(-5,5),y:nt.y-8,vx:rn(-1.5,1.5),vy:rn(-2.5,-.5),life:22,c:"#6a4"});if(nt.hp<=0){const a=3+ri(0,4);g.res.w+=a;g.dr.push({x:nt.x,y:nt.y-12,text:`+${a}`,icon:"",life:50,c:"#d4a46a"});for(let i=0;i<5;i++)g.pt.push({x:nt.x+rn(-8,8),y:nt.y-rn(0,12),vx:rn(-2,2),vy:rn(-3,-1),life:ri(12,25),c:"#a86"})}}g.trees=g.trees.filter(t=>t.hp>0);
-        if(!acted){let nr=null,nrd=AR;for(let r of g.rocks){const dd=d(p,r);if(dd<nrd){nrd=dd;nr=r}}if(nr){nr.hp--;nr.sh=5;p.acd=ACD;acted=true;p.sw=true;g.pt.push({x:nr.x,y:nr.y-3,vx:rn(-1,1),vy:rn(-2,-.5),life:15,c:"#999"});if(nr.hp<=0){const a=2+ri(0,4);g.res.s+=a;g.dr.push({x:nr.x,y:nr.y-12,text:`+${a}`,icon:"",life:50,c:"#a0aab8"})}}g.rocks=g.rocks.filter(r=>r.hp>0)}
-        if(!acted){let na=null,nad=AR;for(let a of g.animals){const dd=d(p,a);if(dd<nad){nad=dd;na=a}}if(na){na.hp--;p.acd=ACD;acted=true;p.sw=true;na.fl=true;const fx=na.x-p.x,fy=na.y-p.y,fl2=Math.hypot(fx,fy)||1;na.vx=fx/fl2*3.5;na.vy=fy/fl2*3.5;g.pt.push({x:na.x,y:na.y,vx:rn(-1,1),vy:rn(-1.5,-.3),life:14,c:"#c44"});if(na.hp<=0){const a=na.t==="deer"?5+ri(0,3):2+ri(0,3);g.res.f+=a;g.dr.push({x:na.x,y:na.y-12,text:`+${a}`,icon:"",life:50,c:"#e8a050"})}}g.animals=g.animals.filter(a=>a.hp>0)}
-        if(!acted){let ne=null,ned=AR+8;for(let e of g.enemies){const dd=d(p,e);if(dd<ned){ned=dd;ne=e}}if(ne){ne.hp-=2+Math.floor(g.fort.lv*.5);p.acd=ACD;p.sw=true;const fx=ne.x-p.x,fy=ne.y-p.y,fl2=Math.hypot(fx,fy)||1;ne.kb=8;ne.kbx=fx/fl2*5;ne.kby=fy/fl2*5;g.pt.push({x:ne.x,y:ne.y,vx:rn(-2,2),vy:rn(-2,0),life:16,c:"#f55"});if(ne.hp<=0){g.kills++;g.dr.push({x:ne.x,y:ne.y-8,text:"擊殺",icon:"",life:40,c:"#f66"});if(Math.random()<.45){const a=ri(1,5);g.res.f+=a}}}g.enemies=g.enemies.filter(e=>e.hp>0)}
-        if(!acted){for(let v of g.villages){if(!v.con&&d(p,v)<60){v.hp-=3;p.acd=ACD;p.sw=true;g.pt.push({x:v.x+rn(-10,10),y:v.y+rn(-10,5),vx:rn(-1,1),vy:rn(-2,-.5),life:18,c:"#fa0"});if(v.hp<=0){v.con=true;g.con++;g.res.w+=30+v.lv*20;g.res.s+=20+v.lv*15;g.res.f+=15+v.lv*10;addM(` 征服 ${v.nm}！大量資源入手`,"#ffcc44");p.mhp+=3;p.hp=p.mhp}break}}}}
+        if(nt){nt.hp--;nt.sh=6;p.acd=ACD;acted=true;p.sw=true;sfx("chop");g.pt.push({x:nt.x+rn(-5,5),y:nt.y-8,vx:rn(-1.5,1.5),vy:rn(-2.5,-.5),life:22,c:"#6a4"});if(nt.hp<=0){const a=3+ri(0,4);g.res.w+=a;g.dr.push({x:nt.x,y:nt.y-12,text:`+${a}`,icon:"",life:50,c:"#d4a46a"});for(let i=0;i<5;i++)g.pt.push({x:nt.x+rn(-8,8),y:nt.y-rn(0,12),vx:rn(-2,2),vy:rn(-3,-1),life:ri(12,25),c:"#a86"})}}g.trees=g.trees.filter(t=>t.hp>0);
+        if(!acted){let nr=null,nrd=AR;for(let r of g.rocks){const dd=d(p,r);if(dd<nrd){nrd=dd;nr=r}}if(nr){nr.hp--;nr.sh=5;p.acd=ACD;acted=true;p.sw=true;sfx("chop");g.pt.push({x:nr.x,y:nr.y-3,vx:rn(-1,1),vy:rn(-2,-.5),life:15,c:"#999"});if(nr.hp<=0){const a=2+ri(0,4);g.res.s+=a;g.dr.push({x:nr.x,y:nr.y-12,text:`+${a}`,icon:"",life:50,c:"#a0aab8"})}}g.rocks=g.rocks.filter(r=>r.hp>0)}
+        if(!acted){let na=null,nad=AR;for(let a of g.animals){const dd=d(p,a);if(dd<nad){nad=dd;na=a}}if(na){na.hp--;p.acd=ACD;acted=true;p.sw=true;sfx("chop");na.fl=true;const fx=na.x-p.x,fy=na.y-p.y,fl2=Math.hypot(fx,fy)||1;na.vx=fx/fl2*3.5;na.vy=fy/fl2*3.5;g.pt.push({x:na.x,y:na.y,vx:rn(-1,1),vy:rn(-1.5,-.3),life:14,c:"#c44"});if(na.hp<=0){const a=na.t==="deer"?5+ri(0,3):2+ri(0,3);g.res.f+=a;g.dr.push({x:na.x,y:na.y-12,text:`+${a}`,icon:"",life:50,c:"#e8a050"})}}g.animals=g.animals.filter(a=>a.hp>0)}
+        if(!acted){let ne=null,ned=AR+8;for(let e of g.enemies){const dd=d(p,e);if(dd<ned){ned=dd;ne=e}}if(ne){ne.hp-=2+Math.floor(g.fort.lv*.5);p.acd=ACD;p.sw=true;const fx=ne.x-p.x,fy=ne.y-p.y,fl2=Math.hypot(fx,fy)||1;ne.kb=8;ne.kbx=fx/fl2*5;ne.kby=fy/fl2*5;g.pt.push({x:ne.x,y:ne.y,vx:rn(-2,2),vy:rn(-2,0),life:16,c:"#f55"});if(ne.hp<=0){g.kills++;sfx("kill");g.dr.push({x:ne.x,y:ne.y-8,text:"擊殺",icon:"",life:40,c:"#f66"});if(Math.random()<.45){const a=ri(1,5);g.res.f+=a}}}g.enemies=g.enemies.filter(e=>e.hp>0)}
+        if(!acted){for(let v of g.villages){if(!v.con&&d(p,v)<60){v.hp-=3;p.acd=ACD;p.sw=true;g.pt.push({x:v.x+rn(-10,10),y:v.y+rn(-10,5),vx:rn(-1,1),vy:rn(-2,-.5),life:18,c:"#fa0"});if(v.hp<=0){v.con=true;g.con++;g.res.w+=30+v.lv*20;g.res.s+=20+v.lv*15;g.res.f+=15+v.lv*10;addM(` 征服 ${v.nm}！大量資源入手`,"#ffcc44");sfx("upgrade");vib([20,40,20]);p.mhp+=3;p.hp=p.mhp}break}}}}
 
       // TIME
-      g.time++;const dp=(g.time%DLEN)/DLEN,isN=dp>.65;if(g.time>0&&g.time%DLEN===0){g.day++;addM(g.day<=SAFE_DAYS?` 第 ${g.day} 天 — 安全期（第${SAFE_DAYS}天後入夜有敵人）`:` 第 ${g.day} 天破曉`,g.day<=SAFE_DAYS?"#88ddaa":"#88ccff")}
+      g.time++;const dp=(g.time%DLEN)/DLEN,isN=dp>.65;if(isN){if(!g.nightSeen&&g.day>SAFE_DAYS){g.nightSeen=true;sfx("night")}}else if(g.nightSeen)g.nightSeen=false;if(g.time>0&&g.time%DLEN===0){g.day++;addM(g.day<=SAFE_DAYS?` 第 ${g.day} 天 — 安全期（第${SAFE_DAYS}天後入夜有敵人）`:` 第 ${g.day} 天破曉`,g.day<=SAFE_DAYS?"#88ddaa":"#88ccff")}
 
       // WORKERS
       const mxW=FORTS[g.fort.lv].wk;while(g.workers.length<mxW)g.workers.push({id:Date.now()+g.workers.length,x:FX+rn(-30,30),y:FY+rn(-30,30),tgt:null,carry:null,amt:0,st:"idle"});while(g.workers.length>mxW)g.workers.pop();
@@ -77,9 +101,10 @@ export default function EmberGame(){
       for(let v of g.villages){if(v.con||g.day<=SAFE_DAYS+1)continue;v.rt--;if(v.rt<=0){v.rt=ri(600,1000)-Math.max(0,(g.day-SAFE_DAYS))*8;for(let i=0;i<v.sol;i++)g.enemies.push({id:Date.now()+ri(0,99999),x:v.x+rn(-20,20),y:v.y+rn(-20,20),hp:3+v.lv*2,mhp:3+v.lv*2,spd:.8+v.lv*.1,dmg:1+Math.floor(v.lv*.5),t:"raid",kb:0,kbx:0,kby:0,acd:0});addM(` ${v.nm}派出突襲隊！`,"#ff8866")}}
 
       const fp={x:FX,y:FY};
-      for(let e of g.enemies){if(e.kb>0){e.x+=e.kbx;e.y+=e.kby;e.kbx*=.85;e.kby*=.85;e.kb--;continue}e.acd=Math.max(0,(e.acd||0)-1);if(d(e,p)<24&&e.acd<=0&&p.inv<=0){p.hp-=e.dmg;p.inv=30;e.acd=50;g.pt.push({x:p.x,y:p.y-5,vx:rn(-2,2),vy:rn(-2,0),life:15,c:"#f44"});if(p.hp<=0){g.over=true;setUi(pr=>({...pr,screen:"over",kills:g.kills,day:g.day,flv:g.fort.lv,con:g.con}));if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(g.day*100+g.kills+g.con*500)}continue}const dTF=d(e,fp),fR=FORTS[g.fort.lv].r;if(g.walls.length>0&&dTF<fR+80){let cw=null,cd2=999;for(let w of g.walls){if(w.hp<=0)continue;const wd=d(e,{x:w.mx,y:w.my});if(wd<cd2){cd2=wd;cw=w}}if(cw&&cd2<fR+30){if(cd2>18){const wa=ag(e,{x:cw.mx,y:cw.my});e.x+=Math.cos(wa)*e.spd;e.y+=Math.sin(wa)*e.spd}else if(e.acd<=0){cw.hp-=e.dmg;e.acd=50;g.pt.push({x:cw.mx+rn(-5,5),y:cw.my+rn(-5,5),vx:rn(-1,1),vy:rn(-1.5,-.3),life:15,c:g.fort.lv>=3?"#889":"#a86"});if(cw.hp<=0)addM(" 城牆被突破！","#ff4444")}continue}}const tgt=d(e,p)<200?p:fp;const ea2=ag(e,tgt);e.x+=Math.cos(ea2)*e.spd;e.y+=Math.sin(ea2)*e.spd;if(dTF<fR+10&&e.acd<=0){const wA=g.walls.filter(w=>w.hp>0).length;if(wA===0||g.walls.length===0){g.fort.hp-=e.dmg;e.acd=60;g.pt.push({x:FX+rn(-12,12),y:FY+rn(-12,12),vx:rn(-1,1),vy:rn(-2,0),life:20,c:"#fa0"});if(g.fort.hp<=0){g.over=true;setUi(pr=>({...pr,screen:"over",kills:g.kills,day:g.day,flv:g.fort.lv,con:g.con}));if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(g.day*100+g.kills+g.con*500)}}}}
+      for(let e of g.enemies){if(e.kb>0){e.x+=e.kbx;e.y+=e.kby;e.kbx*=.85;e.kby*=.85;e.kb--;continue}e.acd=Math.max(0,(e.acd||0)-1);if(d(e,p)<24&&e.acd<=0&&p.inv<=0){p.hp-=e.dmg;p.inv=30;e.acd=50;sfx("hit");vib(30);if(!reduceMotion)g.shake=6;g.pt.push({x:p.x,y:p.y-5,vx:rn(-2,2),vy:rn(-2,0),life:15,c:"#f44"});if(p.hp<=0){g.over=true;const sc=g.day*100+g.kills+g.con*500;finishGame(sc,g);if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(sc)}continue}const dTF=d(e,fp),fR=FORTS[g.fort.lv].r;if(g.walls.length>0&&dTF<fR+80){let cw=null,cd2=999;for(let w of g.walls){if(w.hp<=0)continue;const wd=d(e,{x:w.mx,y:w.my});if(wd<cd2){cd2=wd;cw=w}}if(cw&&cd2<fR+30){if(cd2>18){const wa=ag(e,{x:cw.mx,y:cw.my});e.x+=Math.cos(wa)*e.spd;e.y+=Math.sin(wa)*e.spd}else if(e.acd<=0){cw.hp-=e.dmg;e.acd=50;g.pt.push({x:cw.mx+rn(-5,5),y:cw.my+rn(-5,5),vx:rn(-1,1),vy:rn(-1.5,-.3),life:15,c:g.fort.lv>=3?"#889":"#a86"});if(cw.hp<=0)addM(" 城牆被突破！","#ff4444")}continue}}const tgt=d(e,p)<200?p:fp;const ea2=ag(e,tgt);e.x+=Math.cos(ea2)*e.spd;e.y+=Math.sin(ea2)*e.spd;if(dTF<fR+10&&e.acd<=0){const wA=g.walls.filter(w=>w.hp>0).length;if(wA===0||g.walls.length===0){g.fort.hp-=e.dmg;e.acd=60;g.pt.push({x:FX+rn(-12,12),y:FY+rn(-12,12),vx:rn(-1,1),vy:rn(-2,0),life:20,c:"#fa0"});if(g.fort.hp<=0){g.over=true;const sc=g.day*100+g.kills+g.con*500;finishGame(sc,g);if(typeof window!=="undefined"&&window.haoGame)window.haoGame.reportScore(sc)}}}}
 
       if(d(p,fp)<FORTS[g.fort.lv].r+35&&f%70===0)p.hp=Math.min(p.mhp,p.hp+1);
+      if(f%90===0&&((p.hp/p.mhp)<.25||(g.fort.hp/g.fort.mhp)<.25))sfx("hit");
       for(let t of g.trees)if(t.sh>0)t.sh*=.8;for(let r of g.rocks)if(r.sh>0)r.sh*=.8;
       for(let pt of g.pt){pt.x+=pt.vx;pt.y+=pt.vy;pt.vy+=.06;pt.life--}g.pt=g.pt.filter(pt=>pt.life>0);
       for(let dr2 of g.dr){dr2.y-=.4;dr2.life--}g.dr=g.dr.filter(dr2=>dr2.life>0);
@@ -88,6 +113,7 @@ export default function EmberGame(){
       g.cam.x=cl(p.x-CW/2,0,WW-CW);g.cam.y=cl(p.y-CH/2,0,WH-CH);const cx=g.cam.x,cy=g.cam.y;
 
       // ═══ RENDER ═══
+      let shaken=false;if(!reduceMotion&&g.shake>0.2){ctx.save();ctx.translate(rn(-g.shake,g.shake),rn(-g.shake,g.shake));shaken=true;g.shake*=.85}else g.shake=0;
       ctx.fillStyle="#121a26";ctx.fillRect(0,0,CW,CH);
       const ts=64,stx=Math.floor(cx/ts),sty=Math.floor(cy/ts),etx=Math.ceil((cx+CW)/ts),ety=Math.ceil((cy+CH)/ts);
       for(let tx=stx;tx<=etx;tx++)for(let ty=sty;ty<=ety;ty++){const sx=tx*ts-cx,sy=ty*ts-cy,sd=(tx*127+ty*311)&0xff;ctx.fillStyle=sd%5===0?"#172434":sd%7===0?"#141f2c":"#151e2b";ctx.fillRect(sx,sy,ts,ts);ctx.fillStyle=`rgba(195,215,240,${.03+(sd%4)*.008})`;ctx.fillRect(sx+(sd%38)+3,sy+((sd*3)%38)+3,1.5,1.5)}
@@ -111,13 +137,14 @@ export default function EmberGame(){
       const nA=isN?Math.min(.5,(dp-.5)*2.5):0;if(nA>0){ctx.fillStyle=`rgba(5,8,25,${nA})`;ctx.fillRect(0,0,CW,CH);const px2=p.x-cx,py2=p.y-cy;const tg2=ctx.createRadialGradient(px2,py2,8,px2,py2,120);tg2.addColorStop(0,"rgba(255,200,100,.18)");tg2.addColorStop(1,"rgba(255,150,50,0)");ctx.fillStyle=tg2;ctx.fillRect(px2-130,py2-130,260,260)}const vig=ctx.createRadialGradient(CW/2,CH/2,CW*.28,CW/2,CH/2,CW*.7);vig.addColorStop(0,"rgba(0,0,0,0)");vig.addColorStop(1,"rgba(0,0,0,.4)");ctx.fillStyle=vig;ctx.fillRect(0,0,CW,CH);
       if(joy.current.on){const rect=c.getBoundingClientRect();const jx=joy.current.sx-rect.left,jy=joy.current.sy-rect.top,jcx=joy.current.cx-rect.left,jcy=joy.current.cy-rect.top;ctx.globalAlpha=.15;ctx.strokeStyle="#c8aa80";ctx.lineWidth=2;ctx.beginPath();ctx.arc(jx,jy,48,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.25;ctx.fillStyle="#c8aa80";const jjd=Math.min(Math.hypot(jcx-jx,jcy-jy),48),jja=Math.atan2(jcy-jy,jcx-jx);ctx.beginPath();ctx.arc(jx+Math.cos(jja)*jjd,jy+Math.sin(jja)*jjd,14,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1}
       mQ.current.forEach((m,i)=>{const ma=Math.min(1,m.life/20);ctx.globalAlpha=ma;ctx.font="bold 13px 'Noto Sans TC',sans-serif";ctx.textAlign="center";const tw=ctx.measureText(m.text).width+32;const my=CH*.32+i*34;ctx.fillStyle="rgba(10,8,4,.82)";ctx.strokeStyle="rgba(180,140,80,.25)";ctx.lineWidth=1;ctx.beginPath();ctx.roundRect(CW/2-tw/2,my,tw,28,6);ctx.fill();ctx.stroke();ctx.fillStyle=m.color;ctx.fillText(m.text,CW/2,my+19)});ctx.globalAlpha=1;
+      if(shaken)ctx.restore();
 
       if(f%8===0)setUi(prev=>({...prev,w:g.res.w,s:g.res.s,f:g.res.f,hp:p.hp,mhp:p.mhp,flv:g.fort.lv,fhp:g.fort.hp,fmhp:g.fort.mhp,day:g.day,night:isN,en:g.enemies.length,kills:g.kills,wk:g.workers.length,con:g.con,vil:g.villages.map(v=>({...v}))}));
       anim=requestAnimationFrame(tick)};
     anim=requestAnimationFrame(tick);return()=>{cancelAnimationFrame(anim);window.removeEventListener("resize",resize)}
   },[ui.screen]);
 
-  const upgF=()=>{const g=G.current;if(!g)return;const nl=g.fort.lv+1;if(nl>=FORTS.length){addM("已達最高等級！");return}const c2=FORTS[nl].cost;if((c2.w||0)>g.res.w||(c2.s||0)>g.res.s||(c2.f||0)>g.res.f){addM(" 資源不足！","#ff8866");return}g.res.w-=c2.w||0;g.res.s-=c2.s||0;g.res.f-=c2.f||0;g.fort.lv=nl;g.fort.mhp=FORTS[nl].hp;g.fort.hp=FORTS[nl].hp;g.walls=mkWalls(nl);addM(` 升級為 ${FORTS[nl].n}！`,"#ffcc44");for(let i=0;i<20;i++)g.pt.push({x:FX+rn(-40,40),y:FY+rn(-40,10),vx:rn(-2,2),vy:rn(-3,-1),life:ri(20,40),c:Math.random()>.5?"#fa0":"#ff6"});setUi(p=>({...p,showU:false}))};
+  const upgF=()=>{const g=G.current;if(!g)return;const nl=g.fort.lv+1;if(nl>=FORTS.length){addM("已達最高等級！");return}const c2=FORTS[nl].cost;if((c2.w||0)>g.res.w||(c2.s||0)>g.res.s||(c2.f||0)>g.res.f){addM(" 資源不足！","#ff8866");return}g.res.w-=c2.w||0;g.res.s-=c2.s||0;g.res.f-=c2.f||0;g.fort.lv=nl;g.fort.mhp=FORTS[nl].hp;g.fort.hp=FORTS[nl].hp;g.walls=mkWalls(nl);addM(` 升級為 ${FORTS[nl].n}！`,"#ffcc44");sfx("upgrade");vib([20,40,20]);for(let i=0;i<20;i++)g.pt.push({x:FX+rn(-40,40),y:FY+rn(-40,10),vx:rn(-2,2),vy:rn(-3,-1),life:ri(20,40),c:Math.random()>.5?"#fa0":"#ff6"});setUi(p=>({...p,showU:false}))};
   const repW=()=>{const g=G.current;if(!g||g.walls.length===0)return;const br=g.walls.filter(w=>w.hp<w.mhp);if(!br.length){addM("城牆完好！");return}const cost=br.length*3;if(g.res.w<cost){addM(" 木材不足！","#ff8866");return}g.res.w-=cost;for(let w of br)w.hp=w.mhp;addM(" 城牆已修復！","#88ccff")};
   const eat=()=>{const g=G.current;if(!g)return;if(g.res.f>=3){g.res.f-=3;g.p.hp=Math.min(g.p.mhp,g.p.hp+5);addM(" 恢復體力！")}else addM(" 食物不足！","#ff8866")};
 
@@ -130,7 +157,8 @@ export default function EmberGame(){
 @keyframes fadeUp{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes barGlow{0%,100%{box-shadow:0 0 4px rgba(255,180,80,.2)}50%{box-shadow:0 0 10px rgba(255,180,80,.4)}}
-@keyframes panelIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}`;
+@keyframes panelIn{from{opacity:0;transform:translateX(-50%) translateY(10px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important}}`;
 
   const panel={background:"linear-gradient(180deg,rgba(18,14,10,.96),rgba(12,10,8,.98))",border:"1px solid rgba(180,140,80,.2)",borderRadius:4,boxShadow:"0 0 20px rgba(0,0,0,.6), inset 0 1px 0 rgba(180,140,80,.08)"};
   const goldBorder="1px solid rgba(180,140,80,.25)";
@@ -140,7 +168,7 @@ export default function EmberGame(){
   if(ui.screen==="title")return(
     <div style={{width:"100%",height:"100vh",background:"radial-gradient(ellipse at 50% 30%, #151820 0%, #0a0c12 50%, #060810 100%)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",fontFamily:"'Noto Sans TC',sans-serif",color:"#c8d8e8",overflow:"hidden",position:"relative",touchAction:"none"}}>
       <style>{CSS}</style>
-      {Array.from({length:50}).map((_,i)=><div key={i} style={{position:"absolute",width:rn(1,2.5),height:rn(1,2.5),background:`rgba(180,200,230,${rn(.12,.4)})`,borderRadius:"50%",left:`${rn(0,100)}%`,top:"-2%",animation:`snow ${rn(6,16)}s linear ${rn(0,10)}s infinite`}}/>)}
+      {!reduceMotion&&Array.from({length:50}).map((_,i)=><div key={i} style={{position:"absolute",width:rn(1,2.5),height:rn(1,2.5),background:`rgba(180,200,230,${rn(.12,.4)})`,borderRadius:"50%",left:`${rn(0,100)}%`,top:"-2%",animation:`snow ${rn(6,16)}s linear ${rn(0,10)}s infinite`}}/>)}
       {/* Decorative lines */}
       <div style={{position:"absolute",top:"15%",left:"50%",transform:"translateX(-50%)",width:200,height:1,background:"linear-gradient(90deg,transparent,rgba(180,140,80,.3),transparent)"}}/>
       <div style={{position:"absolute",bottom:"18%",left:"50%",transform:"translateX(-50%)",width:200,height:1,background:"linear-gradient(90deg,transparent,rgba(180,140,80,.3),transparent)"}}/>
@@ -169,13 +197,20 @@ export default function EmberGame(){
       <style>{CSS}</style>
       <div style={{fontSize:70,marginBottom:16,filter:"drop-shadow(0 0 20px rgba(200,60,60,.3))",animation:"fadeUp .8s ease-out"}}></div>
       <h1 style={{fontFamily:"'Cinzel',serif",fontSize:34,fontWeight:900,color:"#c08080",letterSpacing:8,marginBottom:8,textShadow:"0 0 15px rgba(200,80,80,.2)",animation:"fadeUp .8s ease-out .1s both"}}>城市陷落</h1>
+      {ui.newRecord&&<div style={{margin:"0 0 10px",padding:"5px 18px",borderRadius:20,fontSize:13,fontWeight:900,letterSpacing:4,color:"#1a1208",background:"linear-gradient(180deg,#ffd870,#e0a830)",boxShadow:"0 0 18px rgba(255,200,80,.5)",animation:"fadeUp .8s ease-out .25s both"}}>★ 新紀錄 ★</div>}
       <p style={{fontSize:11,color:"#5a4a4a",marginBottom:24,animation:"fadeUp .8s ease-out .15s both"}}>永恆的黑暗吞噬了最後的餘燼</p>
-      <div style={{...panel,padding:20,marginBottom:24,minWidth:250,animation:"fadeUp .8s ease-out .2s both"}}>
+      <div style={{...panel,padding:20,marginBottom:16,minWidth:250,animation:"fadeUp .8s ease-out .2s both"}}>
         {[["存活天數",`${ui.day} 天`,"#c8a868"],["擊殺敵人",`${ui.kills}`,"#c88080"],["堡壘等級",FORTS[ui.flv]?.n||"營火","#a0a8b8"],["征服領地",`${ui.con} 座`,"#80c880"]].map(([k,v,c])=>(
           <div key={k} style={{display:"flex",justifyContent:"space-between",padding:"8px 4px",borderBottom:"1px solid rgba(180,140,80,.06)",fontSize:13}}>
             <span style={{color:"#5a4a3a"}}>{k}</span><span style={{color:c,fontWeight:700}}>{v}</span>
           </div>
         ))}
+        <div style={{display:"flex",justifyContent:"space-between",padding:"10px 4px 2px",marginTop:4,borderTop:"1px solid rgba(180,140,80,.12)",fontSize:13}}>
+          <span style={{color:"#5a4a3a"}}>本局分數</span><span style={{color:ui.newRecord?"#ffd870":"#c8a868",fontWeight:800,textShadow:ui.newRecord?"0 0 8px rgba(255,200,80,.4)":"none"}}>{ui.score||0}</span>
+        </div>
+        <div style={{display:"flex",justifyContent:"space-between",padding:"6px 4px 0",fontSize:12}}>
+          <span style={{color:"#5a4a3a"}}>歷史最佳</span><span style={{color:"#9a8a6a",fontWeight:700}}>{best.score}（{best.day}天·{best.con}征服）</span>
+        </div>
       </div>
       <button onClick={init} style={{...panel,background:"linear-gradient(180deg,rgba(160,80,20,.7),rgba(120,50,10,.8))",border:"1px solid rgba(220,160,60,.35)",color:"#ffe0b0",padding:"13px 44px",fontSize:15,fontWeight:800,letterSpacing:6,cursor:"pointer",boxShadow:"0 4px 20px rgba(200,100,20,.25), inset 0 1px 0 rgba(255,200,120,.15)",animation:"fadeUp .8s ease-out .3s both"}}>再次挑戰</button>
     </div>
@@ -188,7 +223,10 @@ export default function EmberGame(){
   return(
     <div style={{width:"100%",height:"100vh",background:"#000",overflow:"hidden",position:"relative",fontFamily:"'Noto Sans TC',sans-serif",touchAction:"none"}}>
       <style>{CSS}</style>
-      <canvas ref={cvs} style={{display:"block",width:"100%",height:"100%"}} onTouchStart={onTS} onTouchMove={onTM} onTouchEnd={onTE}/>
+      <canvas ref={cvs} role="img" aria-label="餘燼荒原遊戲畫面" tabIndex={0} style={{display:"block",width:"100%",height:"100%"}} onTouchStart={onTS} onTouchMove={onTM} onTouchEnd={onTE}/>
+
+      {/* ═══ LOW-HP WARNING ═══ */}
+      {((ui.hp/ui.mhp<.3)||(ui.fhp/ui.fmhp<.3))&&<div aria-hidden="true" style={{position:"absolute",inset:0,pointerEvents:"none",zIndex:5,boxShadow:"inset 0 0 80px rgba(200,40,30,.5)",animation:reduceMotion?"none":"barGlow 1s infinite"}}/>}
 
       {/* ═══ TOP HUD ═══ */}
       <div style={{position:"absolute",top:0,left:0,right:0,pointerEvents:"none",zIndex:10,animation:"slideDown .4s ease-out"}}>
@@ -232,7 +270,7 @@ export default function EmberGame(){
                 <span style={{fontSize:9,...goldText}}> 玩家</span>
                 <span style={{fontSize:9,color:"#5a4a3a"}}>{ui.hp}/{ui.mhp}</span>
               </div>
-              <div style={{height:7,background:"rgba(0,0,0,.4)",borderRadius:2,border:"1px solid rgba(180,140,80,.1)",overflow:"hidden",position:"relative"}}>
+              <div role="progressbar" aria-label="玩家生命值" aria-valuemin={0} aria-valuemax={ui.mhp} aria-valuenow={ui.hp} style={{height:7,background:"rgba(0,0,0,.4)",borderRadius:2,border:"1px solid rgba(180,140,80,.1)",overflow:"hidden",position:"relative"}}>
                 <div style={{position:"absolute",top:0,left:0,height:"100%",width:`${hpP}%`,background:hpP>30?"linear-gradient(180deg,#5a9a3a,#3a7a2a)":"linear-gradient(180deg,#c84030,#a03020)",transition:"width .3s",borderRadius:2}}/>
                 <div style={{position:"absolute",top:0,left:0,height:"40%",width:`${hpP}%`,background:"rgba(255,255,255,.15)",borderRadius:"2px 2px 0 0"}}/>
               </div>
@@ -242,7 +280,7 @@ export default function EmberGame(){
                 <span style={{fontSize:9,...goldText}}> {FORTS[ui.flv].n}</span>
                 <span style={{fontSize:9,color:"#5a4a3a"}}>{ui.fhp}/{ui.fmhp}</span>
               </div>
-              <div style={{height:7,background:"rgba(0,0,0,.4)",borderRadius:2,border:"1px solid rgba(180,140,80,.1)",overflow:"hidden",position:"relative"}}>
+              <div role="progressbar" aria-label="堡壘生命值" aria-valuemin={0} aria-valuemax={ui.fmhp} aria-valuenow={ui.fhp} style={{height:7,background:"rgba(0,0,0,.4)",borderRadius:2,border:"1px solid rgba(180,140,80,.1)",overflow:"hidden",position:"relative"}}>
                 <div style={{position:"absolute",top:0,left:0,height:"100%",width:`${fhpP}%`,background:fhpP>30?"linear-gradient(180deg,#4a7aaa,#2a5a8a)":"linear-gradient(180deg,#c84030,#a03020)",transition:"width .3s",borderRadius:2}}/>
                 <div style={{position:"absolute",top:0,left:0,height:"40%",width:`${fhpP}%`,background:"rgba(255,255,255,.12)",borderRadius:"2px 2px 0 0"}}/>
               </div>
@@ -274,11 +312,15 @@ export default function EmberGame(){
           {icon:"",label:"修牆",action:repW,accent:"rgba(100,160,180,.15)",bc:"rgba(100,160,180,.2)"},
           {icon:"",label:"進食",action:eat,accent:"rgba(180,120,50,.15)",bc:"rgba(180,120,50,.2)"},
         ].map(b=>(
-          <button key={b.label} onClick={b.action} style={{background:`linear-gradient(180deg,${b.accent},rgba(10,8,6,.9))`,border:`1px solid ${b.bc}`,borderRadius:4,padding:"8px 14px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,minWidth:56,boxShadow:"0 2px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.03)",transition:"all .12s"}} onMouseDown={e=>e.currentTarget.style.transform="scale(.93)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>
+          <button key={b.label} onClick={b.action} aria-label={b.label} title={b.label} style={{background:`linear-gradient(180deg,${b.accent},rgba(10,8,6,.9))`,border:`1px solid ${b.bc}`,borderRadius:4,padding:"8px 14px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,minWidth:56,minHeight:44,boxShadow:"0 2px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.03)",transition:"all .12s"}} onMouseDown={e=>e.currentTarget.style.transform="scale(.93)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>
             <span style={{fontSize:18,filter:"drop-shadow(0 1px 3px rgba(0,0,0,.5))"}}>{b.icon}</span>
             <span style={{fontSize:9,color:"#8a7a60",letterSpacing:2,fontWeight:700}}>{b.label}</span>
           </button>
         ))}
+        <button onClick={togglePause} aria-label="暫停" title="暫停" style={{background:"linear-gradient(180deg,rgba(120,130,150,.15),rgba(10,8,6,.9))",border:"1px solid rgba(120,130,150,.2)",borderRadius:4,padding:"8px 14px",cursor:"pointer",display:"flex",flexDirection:"column",alignItems:"center",gap:2,minWidth:56,minHeight:44,boxShadow:"0 2px 10px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.03)",transition:"all .12s"}} onMouseDown={e=>e.currentTarget.style.transform="scale(.93)"} onMouseUp={e=>e.currentTarget.style.transform="scale(1)"}>
+          <span style={{fontSize:18,filter:"drop-shadow(0 1px 3px rgba(0,0,0,.5))"}}>⏸</span>
+          <span style={{fontSize:9,color:"#8a7a60",letterSpacing:2,fontWeight:700}}>暫停</span>
+        </button>
       </div>
 
       {/* ═══ UPGRADE PANEL ═══ */}
@@ -331,7 +373,23 @@ export default function EmberGame(){
               </div>
             </div>
 
-            <button onClick={()=>setUi(p=>({...p,showU:false}))} style={{width:"100%",marginTop:8,padding:6,fontSize:10,background:"transparent",border:goldBorder,color:"#3a3028",borderRadius:3,cursor:"pointer",letterSpacing:2}}>關 閉</button>
+            <button onClick={()=>setUi(p=>({...p,showU:false}))} aria-label="關閉" style={{width:"100%",marginTop:8,padding:6,fontSize:10,background:"transparent",border:goldBorder,color:"#3a3028",borderRadius:3,cursor:"pointer",letterSpacing:2}}>關 閉</button>
+          </div>
+        </div>
+      )}
+
+      {/* ═══ PAUSE OVERLAY ═══ */}
+      {ui.paused&&(
+        <div style={{position:"absolute",inset:0,zIndex:40,display:"flex",alignItems:"center",justifyContent:"center",background:"rgba(6,5,4,.72)",animation:reduceMotion?"none":"fadeUp .2s ease-out"}}>
+          <div style={{...panel,padding:24,width:280,textAlign:"center"}}>
+            <div style={{fontFamily:"'Cinzel',serif",fontSize:22,fontWeight:900,...goldText,marginBottom:4}}>暫停</div>
+            <div style={{fontSize:10,color:"#5a4a38",marginBottom:18,letterSpacing:2}}>PAUSED</div>
+            <button onClick={togglePause} aria-label="繼續遊戲" style={{width:"100%",padding:12,minHeight:44,marginBottom:8,fontSize:14,fontWeight:800,...goldText,background:"linear-gradient(180deg,rgba(160,80,20,.6),rgba(120,50,10,.7))",border:"1px solid rgba(220,160,60,.3)",borderRadius:3,cursor:"pointer",letterSpacing:4}}>繼 續</button>
+            <button onClick={init} aria-label="重新開始" style={{width:"100%",padding:12,minHeight:44,marginBottom:16,fontSize:13,fontWeight:700,color:"#8a7a60",background:"transparent",border:goldBorder,borderRadius:3,cursor:"pointer",letterSpacing:4}}>重新開始</button>
+            <div style={{display:"flex",gap:8,paddingTop:14,borderTop:goldBorder}}>
+              <button onClick={()=>toggleSetting("sound")} aria-label={ui.sound?"關閉音效":"開啟音效"} aria-pressed={!!ui.sound} title="音效" style={{flex:1,padding:"10px 6px",minHeight:44,fontSize:11,fontWeight:700,borderRadius:20,cursor:"pointer",letterSpacing:1,color:ui.sound?"#1a1208":"#7a6a50",background:ui.sound?"linear-gradient(180deg,#d8b060,#b88830)":"rgba(0,0,0,.25)",border:`1px solid ${ui.sound?"rgba(220,160,60,.4)":"rgba(180,140,80,.15)"}`}}>{ui.sound?"🔊":"🔇"} 音效</button>
+              <button onClick={()=>toggleSetting("haptics")} aria-label={ui.haptics?"關閉震動":"開啟震動"} aria-pressed={!!ui.haptics} title="震動" style={{flex:1,padding:"10px 6px",minHeight:44,fontSize:11,fontWeight:700,borderRadius:20,cursor:"pointer",letterSpacing:1,color:ui.haptics?"#1a1208":"#7a6a50",background:ui.haptics?"linear-gradient(180deg,#d8b060,#b88830)":"rgba(0,0,0,.25)",border:`1px solid ${ui.haptics?"rgba(220,160,60,.4)":"rgba(180,140,80,.15)"}`}}>{ui.haptics?"📳":"🚫"} 震動</button>
+            </div>
           </div>
         </div>
       )}
