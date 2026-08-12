@@ -2,6 +2,28 @@
 const navbar = document.getElementById('navbar');
 let lastScroll = 0;
 
+// ========== Hero video: respect data, battery and motion preferences ==========
+const heroVideo = document.getElementById('heroVideo');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+const hasDesktopViewport = window.matchMedia('(min-width: 769px)');
+const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+const shouldSaveData = Boolean(connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || ''));
+if (heroVideo && hasDesktopViewport.matches && !prefersReducedMotion.matches && !shouldSaveData) {
+  heroVideo.muted = true;
+  const playHero = () => {
+    heroVideo.play().then(() => heroVideo.classList.add('is-playing')).catch(() => {});
+  };
+  const heroMediaObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) playHero();
+      else heroVideo.pause();
+    });
+  }, { threshold: 0.08 });
+  const observeHero = () => window.setTimeout(() => heroMediaObserver.observe(heroVideo), 1200);
+  if (document.readyState === 'complete') observeHero();
+  else window.addEventListener('load', observeHero, { once: true });
+}
+
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY;
   if (scrollY > 50) {
@@ -21,13 +43,16 @@ function toggleMenu() {
   navLinks.classList.toggle('open');
   navToggle.classList.toggle('active');
   navOverlay.classList.toggle('active');
-  document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+  const isOpen = navLinks.classList.contains('open');
+  navToggle.setAttribute('aria-expanded', String(isOpen));
+  document.body.style.overflow = isOpen ? 'hidden' : '';
 }
 
 function closeMenu() {
   navLinks.classList.remove('open');
   navToggle.classList.remove('active');
   navOverlay.classList.remove('active');
+  navToggle.setAttribute('aria-expanded', 'false');
   document.body.style.overflow = '';
 }
 
@@ -87,7 +112,7 @@ filterBtns.forEach(btn => {
   const API = 'https://yt-rss-proxy.lo246179268.workers.dev/?channel=';
   const cards = document.querySelectorAll('.creator-card[data-channel-id]');
 
-  cards.forEach(card => {
+  const hydrateCards = () => cards.forEach(card => {
     const channelId = card.dataset.channelId;
     if (!channelId) return;
 
@@ -119,6 +144,10 @@ filterBtns.forEach(btn => {
       })
       .catch(() => { /* keep fallback static content */ });
   });
+
+  const scheduleHydration = () => window.setTimeout(hydrateCards, 3500);
+  if (document.readyState === 'complete') scheduleHydration();
+  else window.addEventListener('load', scheduleHydration, { once: true });
 })();
 
 // ========== Lazy load YouTube on click ==========

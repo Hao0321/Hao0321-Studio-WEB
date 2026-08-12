@@ -1,10 +1,18 @@
 /* ========== CSS Variables & Reset ========== */
+@font-face {
+  font-family: 'Plus Jakarta Sans';
+  src: url('../assets/fonts/plus-jakarta-sans.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+}
+
 :root {
-  --blue: #0033CC;
-  --blue-light: #0055FF;
-  --blue-dark: #001A80;
-  --yellow: #FFE600;
-  --yellow-soft: #FFF3A0;
+  --blue: #2146FF;
+  --blue-light: #365CFF;
+  --blue-dark: #071758;
+  --yellow: #B7FF00;
+  --yellow-soft: #E1FF90;
   --gray-bg: #F0EDE8;
   --gray-light: #F7F5F2;
   --dark: #111111;
@@ -32,7 +40,7 @@ html {
 
 body {
   padding-top: 32px; /* studio-bar height */
-  font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Plus Jakarta Sans', 'Microsoft JhengHei', 'PingFang TC', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text);
   background: var(--gray-bg);
   overflow-x: hidden;
@@ -60,7 +68,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   top: 0; left: 0; right: 0;
   z-index: 1100;
   height: 32px;
-  background: #1a1a2e;
+  background: #030304;
   display: flex;
   align-items: center;
   padding: 0 20px;
@@ -77,17 +85,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   text-decoration: none;
   transition: color 0.2s;
 }
-.studio-bar-link:hover { color: #ff1493; }
+.studio-bar-link:hover { color: var(--yellow); }
 .studio-bar-logo {
   width: 18px; height: 18px;
-  background: #ff1493;
+  background: var(--yellow);
   border-radius: 4px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.65rem; font-weight: 900; color: #fff;
+  font-size: 0.65rem; font-weight: 900; color: #050505;
   flex-shrink: 0;
 }
 .studio-bar-sep { opacity: 0.2; }
-.studio-bar-sub { color: rgba(255,255,255,0.4); }
+.studio-bar-sub { color: rgba(255,255,255,0.72); }
 
 /* ========== Navbar ========== */
 .navbar {
@@ -101,9 +109,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .navbar.scrolled {
-  background: rgba(255,255,255,0.92);
+  background: rgba(3,3,4,0.88);
   backdrop-filter: blur(20px);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+  border-bottom: 1px solid rgba(183,255,0,0.14);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.24);
   padding: 10px 0;
 }
 
@@ -125,7 +134,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .navbar.scrolled .nav-logo {
-  color: var(--blue);
+  color: var(--yellow);
 }
 
 .nav-links {
@@ -159,7 +168,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .navbar.scrolled .nav-links a {
-  color: var(--dark-soft);
+  color: rgba(255,255,255,0.86);
 }
 
 .nav-cta {
@@ -201,8 +210,10 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 }
 
 .navbar.scrolled .nav-toggle span {
-  background: var(--dark);
+  background: var(--white);
 }
+
+.navbar.scrolled .nav-toggle.active span { background: var(--dark); }
 
 /* Hamburger animation when open */
 .nav-toggle.active span:nth-child(1) {
@@ -248,27 +259,56 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   z-index: 0;
 }
 
+.hero-picture,
 .hero-image {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
+}
+
+.hero-image {
   object-fit: cover;
   object-position: center;
 }
 
-/* Fallback gradient if image not loaded */
-.hero-bg {
-  background: linear-gradient(135deg, #001A80 0%, #0033CC 40%, #0055FF 70%, #0077FF 100%);
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 0.8s ease;
 }
+
+.hero-video.is-playing { opacity: 1; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Fallback gradient if image not loaded */
+.hero-bg { background: #020204; }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to bottom,
-    rgba(0,26,128,0.1) 0%,
-    rgba(0,26,128,0.15) 50%,
-    rgba(0,20,80,0.85) 85%,
-    rgba(0,15,60,0.95) 100%
+    rgba(0,0,0,0.02) 0%,
+    rgba(0,0,0,0.06) 48%,
+    rgba(0,0,0,0.72) 84%,
+    rgba(0,0,0,0.94) 100%
   );
 }
 
@@ -382,6 +422,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   margin: 0 auto 28px;
   line-height: 1.8;
   text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  padding: 13px 20px;
+  border: 1px solid rgba(183,255,0,0.22);
+  border-radius: 18px;
+  background: rgba(2,2,4,0.52);
+  backdrop-filter: blur(16px) saturate(140%);
 }
 
 .hero-actions {
@@ -1170,14 +1215,14 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   display: inline-block;
   font-size: 0.7rem;
   font-weight: 700;
-  color: var(--tag-color, var(--blue));
-  background: color-mix(in srgb, var(--tag-color, var(--blue)) 10%, transparent);
+  color: #293044;
+  background: color-mix(in srgb, var(--tag-color, var(--blue)) 14%, transparent);
   padding: 3px 10px;
   border-radius: 100px;
   margin-bottom: 8px;
 }
 
-.gallery-info h4 {
+.gallery-info h3 {
   font-size: 1rem;
   font-weight: 700;
   color: var(--dark);
@@ -1187,7 +1232,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .gallery-author {
   font-size: 0.8rem;
-  color: var(--text-light);
+  color: #5f6470;
   font-weight: 500;
 }
 
@@ -1367,7 +1412,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   height: 32px;
 }
 
-.collab-card h4 {
+.collab-card h3 {
   font-size: 1.05rem;
   font-weight: 700;
   color: var(--white);
@@ -1422,7 +1467,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 .footer-brand p {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.72);
   margin-top: 4px;
   line-height: 1.6;
 }
@@ -1432,7 +1477,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   gap: 6px;
   margin-top: 12px;
   font-size: 0.76rem;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.72);
   text-decoration: none;
   border: 1px solid rgba(255,255,255,0.1);
   padding: 5px 12px;
@@ -1496,7 +1541,7 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .footer-bottom p {
   text-align: center;
   font-size: 0.8rem;
-  color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.7);
 }
 
 /* ========== Scroll Animations ========== */
@@ -1565,6 +1610,33 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     font-size: clamp(2.5rem, 10vw, 4rem);
   }
 
+  .hero-image,
+  .hero-video {
+    object-fit: contain;
+    object-position: center 28%;
+    z-index: 1;
+  }
+
+  .hero-bg::before {
+    content: "";
+    position: absolute;
+    inset: -32px;
+    background:
+      radial-gradient(circle at 72% 28%, rgba(33,70,255,0.24), transparent 42%),
+      radial-gradient(circle at 22% 64%, rgba(183,255,0,0.15), transparent 38%);
+    filter: blur(28px);
+    opacity: 0.8;
+    transform: scale(1.08);
+  }
+
+  .hero-overlay {
+    z-index: 2;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.02) 0%, rgba(0,0,0,0.08) 48%, rgba(0,0,0,0.88) 78%, #020204 100%);
+  }
+
+  .hero-content { padding: 0 18px 78px; }
+  .hero-desc { font-size: 0.94rem; }
+
   .about, .categories, .showcase, .collaborate {
     padding: 80px 0;
   }
@@ -1593,4 +1665,11 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
     padding: 6px 14px;
     font-size: 0.8rem;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  .hero-video { display: none; }
+  .animate-on-scroll { opacity: 1; transform: none; }
 }

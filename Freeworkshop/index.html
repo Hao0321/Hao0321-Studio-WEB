@@ -13,7 +13,10 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="自由工坊 — AI 創意應用社群">
   <meta property="og:description" content="用 AI 探索圖片、影片、音樂、程式的無限可能。加入自由工坊，一起創造！">
-  <meta property="og:image" content="https://hao0321.com/Freeworkshop/hero.jpg">
+  <meta property="og:image" content="https://hao0321.com/Freeworkshop/freedom-workshop-og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="675">
+  <meta property="og:image:alt" content="自由工坊螢光綠與電光藍 3D 主視覺">
   <meta property="og:url" content="https://hao0321.com/Freeworkshop/">
   <meta property="og:locale" content="zh_TW">
 
@@ -21,10 +24,46 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="自由工坊 — AI 創意應用社群">
   <meta name="twitter:description" content="用 AI 探索圖片、影片、音樂、程式的無限可能。加入自由工坊，一起創造！">
-  <meta name="twitter:image" content="https://hao0321.com/Freeworkshop/hero.jpg">
+  <meta name="twitter:image" content="https://hao0321.com/Freeworkshop/freedom-workshop-og.jpg">
 
   <link rel="canonical" href="https://hao0321.com/Freeworkshop/" />
-  <meta name="theme-color" content="#0033CC" />
+  <meta name="theme-color" content="#050505" />
+  <link rel="preload" as="image" href="/Freeworkshop/freedom-workshop-hero-mobile.webp" media="(max-width: 768px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/Freeworkshop/freedom-workshop-hero.webp" media="(min-width: 769px)" fetchpriority="high">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://hao0321.com/Freeworkshop/#community",
+        "name": "自由工坊",
+        "alternateName": "Freedom Workshop",
+        "url": "https://hao0321.com/Freeworkshop/",
+        "logo": "https://hao0321.com/Freeworkshop/freedom-workshop-og.jpg",
+        "description": "一起學習、製作與公開作品的 AI 創作者社群，涵蓋圖像、影片、音樂與 Vibe Coding。",
+        "sameAs": ["https://discord.gg/MtccYqJxCx"]
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://hao0321.com/Freeworkshop/#webpage",
+        "url": "https://hao0321.com/Freeworkshop/",
+        "name": "自由工坊 — AI 創意應用社群",
+        "description": "自由工坊是一個 AI 創意應用社群，探索圖片、影片、音樂與 Vibe Coding。",
+        "inLanguage": "zh-Hant-TW",
+        "about": { "@id": "https://hao0321.com/Freeworkshop/#community" },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://hao0321.com/Freeworkshop/freedom-workshop-og.jpg",
+          "width": 1200,
+          "height": 675
+        },
+        "dateModified": "2026-08-13"
+      }
+    ]
+  }
+  </script>
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -39,10 +78,7 @@
     gtag('config', 'G-XXXXXXXXXX');
   </script> -->
 
-  <link rel="stylesheet" href="styles.css?v=4">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=5">
 </head>
 <body>
   <!-- Studio Topbar -->
@@ -59,7 +95,7 @@
   <nav class="navbar" id="navbar">
     <div class="nav-container">
       <a href="#" class="nav-logo">自由工坊</a>
-      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="開啟導覽選單" aria-controls="navLinks" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
@@ -80,7 +116,14 @@
   <!-- Hero Section -->
   <section class="hero" id="hero">
     <div class="hero-bg">
-      <img src="hero.jpg" alt="自由工坊主視覺" class="hero-image">
+      <picture class="hero-picture">
+        <source srcset="freedom-workshop-hero-mobile.webp" media="(max-width: 768px)" width="854" height="480">
+        <img src="freedom-workshop-hero.webp" alt="自由工坊螢光綠與電光藍 3D 主視覺" class="hero-image" width="1280" height="720" fetchpriority="high" decoding="sync">
+      </picture>
+      <video class="hero-video" id="heroVideo" muted loop playsinline preload="none" poster="freedom-workshop-hero.webp" aria-hidden="true">
+        <source src="freedom-workshop-hero-mobile.mp4" type="video/mp4" media="(max-width: 768px)">
+        <source src="freedom-workshop-hero.mp4" type="video/mp4">
+      </video>
       <div class="hero-overlay"></div>
     </div>
     <div class="hero-deco">
@@ -91,6 +134,7 @@
       <div class="circle circle-5"></div>
     </div>
     <div class="hero-content">
+      <h1 class="sr-only">自由工坊 — AI 創意應用社群</h1>
       <p class="hero-desc animate-on-scroll">我們是一群熱愛 AI 創意的人，用最新技術探索圖片、影片、音樂、程式的無限可能</p>
       <div class="hero-actions animate-on-scroll">
         <a href="#showcase" class="btn btn-primary">探索成果</a>
@@ -930,7 +974,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #FFE600;">圖片創作</span>
-            <h4>AI 生成藝術作品</h4>
+            <h3>AI 生成藝術作品</h3>
             <p class="gallery-author">by Hao0321</p>
           </div>
         </div>
@@ -944,7 +988,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h4>White Out Signal</h4>
+            <h3>White Out Signal</h3>
             <p class="gallery-author">by 迷子 Maigo</p>
           </div>
         </div>
@@ -958,7 +1002,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h4>花墜之處</h4>
+            <h3>花墜之處</h3>
             <p class="gallery-author">by Xiaoloulou</p>
           </div>
         </div>
@@ -972,7 +1016,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h4>天衣縫</h4>
+            <h3>天衣縫</h3>
             <p class="gallery-author">by 九黎月</p>
           </div>
         </div>
@@ -986,7 +1030,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h4>Sweet Pop 少女系電音</h4>
+            <h3>Sweet Pop 少女系電音</h3>
             <p class="gallery-author">by COYA可夜</p>
           </div>
         </div>
@@ -1000,7 +1044,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #0055FF;">影片創作</span>
-            <h4>抗體 Antibody</h4>
+            <h3>抗體 Antibody</h3>
             <p class="gallery-author">by Zoe. G</p>
           </div>
         </div>
@@ -1014,7 +1058,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h4>我還住在你愛我的那一年</h4>
+            <h3>我還住在你愛我的那一年</h3>
             <p class="gallery-author">by Aria 艾莉亞</p>
           </div>
         </div>
@@ -1028,7 +1072,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h4>空山・山外人間</h4>
+            <h3>空山・山外人間</h3>
             <p class="gallery-author">by 弦斷誰聽</p>
           </div>
         </div>
@@ -1042,7 +1086,7 @@
           </div>
           <div class="gallery-info">
             <span class="gallery-tag" style="--tag-color: #00CC88;">VibeCoding</span>
-            <h4>永恆的貶值 Lo-fi R&B</h4>
+            <h3>永恆的貶值 Lo-fi R&B</h3>
             <p class="gallery-author">by 筠芙得利</p>
           </div>
         </div>
@@ -1074,17 +1118,17 @@
         <div class="collab-options">
           <div class="collab-card animate-on-scroll" data-delay="0">
             <div class="collab-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-            <h4>社群合作</h4>
+            <h3>社群合作</h3>
             <p>與其他 AI 創作者一起合作專案</p>
           </div>
           <div class="collab-card animate-on-scroll" data-delay="100">
             <div class="collab-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg></div>
-            <h4>分享交流</h4>
+            <h3>分享交流</h3>
             <p>分享你的 AI 作品與使用心得</p>
           </div>
           <div class="collab-card animate-on-scroll" data-delay="200">
             <div class="collab-card-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
-            <h4>專案孵化</h4>
+            <h3>專案孵化</h3>
             <p>將你的 AI 創意轉化為實際產品</p>
           </div>
         </div>
