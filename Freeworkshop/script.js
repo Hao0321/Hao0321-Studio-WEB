@@ -86,61 +86,6 @@ document.querySelectorAll('.animate-on-scroll').forEach(el => {
   observer.observe(el);
 });
 
-// ========== Gallery filter ==========
-(function() {
-  const galleryBtns = document.querySelectorAll('.gallery-filters .filter-btn');
-  const galleryItems = document.querySelectorAll('.gallery-item');
-
-  galleryBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const filter = btn.dataset.filter;
-
-      galleryBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      galleryItems.forEach(item => {
-        if (filter === 'all' || item.dataset.category === filter) {
-          item.classList.remove('gallery-hidden');
-        } else {
-          item.classList.add('gallery-hidden');
-        }
-      });
-    });
-  });
-})();
-
-// ========== Lightbox ==========
-(function() {
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightboxImg');
-  const lightboxClose = document.getElementById('lightboxClose');
-  if (!lightbox || !lightboxImg) return;
-
-  document.querySelectorAll('.gallery-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const img = item.querySelector('.gallery-thumb img');
-      if (!img) return;
-      lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt;
-      lightbox.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-  });
-
-  function closeLightbox() {
-    lightbox.classList.remove('active');
-    document.body.style.overflow = '';
-  }
-
-  if (lightboxClose) lightboxClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
-  });
-})();
-
 // ========== Parallax on hero circles ==========
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY;

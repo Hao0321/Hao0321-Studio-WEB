@@ -78,7 +78,7 @@
     gtag('config', 'G-XXXXXXXXXX');
   </script> -->
 
-  <link rel="stylesheet" href="styles.css?v=6">
+  <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
   <!-- Studio Topbar -->
@@ -102,7 +102,6 @@
         <li><a href="#announcements">最新公告</a></li>
         <li><a href="#about">關於我們</a></li>
         <li><a href="#categories">創作領域</a></li>
-        <li><a href="#gallery">作品展示</a></li>
         <li><a href="icebreaker/" target="_blank" rel="noopener">TOY TWIN 🎁</a></li>
         <li><a href="../pipeline/">Pipeline</a></li>
         <li><a href="../works/">作品總覽</a></li>
@@ -136,7 +135,7 @@
       <h1 class="sr-only">自由工坊 — AI 創意應用社群</h1>
       <p class="hero-desc animate-on-scroll">我們是一群熱愛 AI 創意的人，用最新技術探索圖片、影片、音樂、程式的無限可能</p>
       <div class="hero-actions animate-on-scroll">
-        <a href="#gallery" class="btn btn-primary">探索作品</a>
+        <a href="#about" class="btn btn-primary">了解自由工坊</a>
         <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" class="btn btn-outline">加入 Discord</a>
       </div>
     </div>
@@ -164,7 +163,7 @@
         <div class="announcement-card animate-on-scroll" data-delay="50">
           <time class="announcement-date">2025.04.06</time>
           <h3 class="announcement-title">自由工坊網站正式上線</h3>
-          <p class="announcement-desc">全新的自由工坊官方網站正式上線！精選社群作品、創作領域與最新企劃，歡迎大家來逛逛。</p>
+          <p class="announcement-desc">全新的自由工坊官方網站正式上線！整理社群資訊、創作領域與最新企劃，歡迎大家來逛逛。</p>
           <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" class="announcement-link">前往 Discord 討論 →</a>
         </div>
         <div class="announcement-card animate-on-scroll" data-delay="100">
@@ -284,155 +283,6 @@
     </div>
   </section>
 
-  <!-- Gallery Section -->
-  <section class="gallery" id="gallery">
-    <div class="container">
-      <div class="section-header animate-on-scroll">
-        <span class="section-tag">GALLERY</span>
-        <h2 class="section-title">優質作品展示</h2>
-        <div class="section-line"></div>
-        <p class="section-desc">精選自由工坊成員們的 AI 創作，點擊可放大預覽</p>
-      </div>
-
-      <div class="gallery-filters animate-on-scroll">
-        <button class="filter-btn active" data-filter="all">全部</button>
-        <button class="filter-btn" data-filter="image">圖片</button>
-        <button class="filter-btn" data-filter="video">影片</button>
-        <button class="filter-btn" data-filter="music">音樂</button>
-        <button class="filter-btn" data-filter="code">VibeCoding</button>
-      </div>
-
-      <div class="gallery-masonry" id="galleryGrid">
-
-        <div class="gallery-item" data-category="image">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/-p8sMr3H9LQ/maxresdefault.jpg" alt="AI 圖片創作" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #FFE600;">圖片創作</span>
-            <h3>AI 生成藝術作品</h3>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="music">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/rQKDb5n1Bdo/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h3>White Out Signal</h3>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="music">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/Fb3DVdAQkDM/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h3>花墜之處</h3>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="music">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/aJazt-VYjjc/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h3>天衣縫</h3>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="music">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/neou0SJ66CM/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h3>Sweet Pop 少女系電音</h3>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="video">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/fuwyaAPXKQw/maxresdefault.jpg" alt="AI 影片創作" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #0055FF;">影片創作</span>
-            <h3>抗體 Antibody</h3>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="music">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/AZr-7JZkgSs/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h3>我還住在你愛我的那一年</h3>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="music">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/DByXBSOvHOg/maxresdefault.jpg" alt="AI 音樂創作" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #FF4444;">音樂創作</span>
-            <h3>空山・山外人間</h3>
-          </div>
-        </div>
-
-        <div class="gallery-item" data-category="code">
-          <div class="gallery-thumb">
-            <img src="https://img.youtube.com/vi/YXP5lLuhMho/maxresdefault.jpg" alt="VibeCoding" loading="lazy">
-            <div class="gallery-overlay">
-              <span class="gallery-zoom"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg></span>
-            </div>
-          </div>
-          <div class="gallery-info">
-            <span class="gallery-tag" style="--tag-color: #00CC88;">VibeCoding</span>
-            <h3>永恆的貶值 Lo-fi R&B</h3>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- Lightbox -->
-    <div class="lightbox" id="lightbox">
-      <button class="lightbox-close" id="lightboxClose" aria-label="關閉">✕</button>
-      <div class="lightbox-content">
-        <img id="lightboxImg" src="" alt="預覽">
-      </div>
-    </div>
-  </section>
-
   <!-- Collaborate Section -->
   <section class="collaborate" id="collaborate">
     <div class="collab-deco">
@@ -519,6 +369,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=3"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>
