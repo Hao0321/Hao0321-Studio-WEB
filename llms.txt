@@ -24,6 +24,12 @@
 - [自由工坊](https://hao0321.com/Freeworkshop/)：圖片、影片、音樂與 Vibe Coding 的 AI 創意應用社群。
 - [關於 Hao0321 Studio](https://hao0321.com/about.html)：創作者背景、原則與聯絡資訊。
 
+## 代表案例
+
+- [Hao0321 Game Lab Case Study](https://hao0321.com/case-studies/game-lab/)：Hao 如何從玩法實驗出發，獨立製作 14 款免費瀏覽器遊戲並整理成共用入口。
+- [AI Production Pipeline Case Study](https://hao0321.com/case-studies/ai-pipeline/)：由 Hao 主導決策與驗收，讓 AI 協助研究、原型、程式、視覺、QA 與發布。
+- [自由工坊 Case Study](https://hao0321.com/case-studies/freeworkshop/)：把追逐 AI 工具的焦慮，轉成一起學習、製作與公開作品的創作者社群。
+
 ## 精選內容
 
 - [1 人工作室的全端架構](https://hao0321.com/blog/tech-stack.html)
@@ -49,4 +55,4 @@
 - Gumroad: https://hao0321.gumroad.com/
 - Email: lo246179268@gmail.com
 
-最後更新：2026-08-12
+最後更新：2026-08-13

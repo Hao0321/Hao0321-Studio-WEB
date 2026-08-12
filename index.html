@@ -12,7 +12,7 @@
   <link rel="alternate" hreflang="zh-Hant-TW" href="https://hao0321.com/" />
   <link rel="alternate" hreflang="x-default" href="https://hao0321.com/" />
   <link rel="author" href="/about" />
-  <link rel="preload" as="image" href="hero-frames-new/frame_0001.webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/hero-frames-new/frame_0001.webp" imagesrcset="/hero-frames-mobile/frame_0001.webp 960w, /hero-frames-new/frame_0001.webp 2560w" imagesizes="100vw" fetchpriority="high" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Hao0321 Studio" />
@@ -30,10 +30,21 @@
   <meta name="twitter:image" content="https://hao0321.com/og-image.jpg" />
   <link rel="alternate" type="application/rss+xml" title="Hao0321 Studio Blog RSS" href="/blog/rss.xml" />
   <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://hao0321.com/#hao","name":"Hao","alternateName":["Hao0321","駱君昊"],"url":"https://hao0321.com/about","image":"https://hao0321.com/og-image.jpg","jobTitle":"獨立遊戲開發者與數位創作者","sameAs":["https://www.youtube.com/@HAO0321_Studio","https://www.instagram.com/hao0321_studio"]},{"@type":"Organization","@id":"https://hao0321.com/#studio","name":"Hao0321 Studio","alternateName":"Hao0321","url":"https://hao0321.com/","logo":{"@type":"ImageObject","url":"https://hao0321.com/favicon.svg"},"founder":{"@id":"https://hao0321.com/#hao"},"description":"Hao 的一人數位工作室，創作 AI 遊戲、3D／VFX 視覺、工具與公開開發內容。","foundingDate":"2024","areaServed":"TW","sameAs":["https://www.youtube.com/@HAO0321_Studio","https://www.instagram.com/hao0321_studio","https://discord.gg/MtccYqJxCx","https://hao0321.gumroad.com/"],"knowsAbout":["AI-assisted creation","Browser game development","3D","VFX","Liquid Glass design","Web development"]},{"@type":"WebSite","@id":"https://hao0321.com/#website","name":"Hao0321 Studio","url":"https://hao0321.com/","inLanguage":"zh-Hant-TW","publisher":{"@id":"https://hao0321.com/#studio"}},{"@type":"WebPage","@id":"https://hao0321.com/#webpage","url":"https://hao0321.com/","name":"Hao0321 Studio｜Hao 的 AI 遊戲、3D 視覺與創作工具","isPartOf":{"@id":"https://hao0321.com/#website"},"about":{"@id":"https://hao0321.com/#hao"},"primaryImageOfPage":{"@type":"ImageObject","url":"https://hao0321.com/og-image.jpg"},"inLanguage":"zh-Hant-TW"},{"@type":"ItemList","name":"Hao0321 Studio 主要內容","itemListElement":[{"@type":"ListItem","position":1,"name":"瀏覽器遊戲","url":"https://game.hao0321.com/"},{"@type":"ListItem","position":2,"name":"作品總覽","url":"https://hao0321.com/works/"},{"@type":"ListItem","position":3,"name":"創作工具","url":"https://hao0321.com/tools/"},{"@type":"ListItem","position":4,"name":"開發日誌","url":"https://hao0321.com/blog/"}]},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"誰是 Hao？","acceptedAnswer":{"@type":"Answer","text":"Hao 是來自台灣的獨立遊戲開發者與數位創作者，也是 Hao0321 Studio 的唯一創作者。"}},{"@type":"Question","name":"這裡能直接玩什麼？","acceptedAnswer":{"@type":"Answer","text":"目前有 14 款免費瀏覽器遊戲，另有創作工具、資源、社群專案與 47 篇開發實錄。"}},{"@type":"Question","name":"AI 怎麼參與？","acceptedAnswer":{"@type":"Answer","text":"Hao 負責方向、設計、選擇與最終品質；AI 協助研究、原型、程式、視覺與自動化流程。"}}]}]}</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
   <style>
+    @font-face {
+      font-family: 'Plus Jakarta Sans';
+      src: url('/assets/fonts/plus-jakarta-sans.woff2') format('woff2');
+      font-style: normal;
+      font-weight: 400 800;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Playfair Display';
+      src: url('/assets/fonts/playfair-display-italic.woff2') format('woff2');
+      font-style: italic;
+      font-weight: 500 600;
+      font-display: swap;
+    }
     /* ========== DESIGN TOKENS ========== */
     :root {
       --bg: #F4F4F7;
@@ -70,7 +81,7 @@
       --ease: cubic-bezier(0.22, 1, 0.36, 1);
       --ease-swift: cubic-bezier(0.4, 0, 0.2, 1);
 
-      --font-sans: 'Plus Jakarta Sans', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
+      --font-sans: 'Plus Jakarta Sans', 'Microsoft JhengHei', 'PingFang TC', system-ui, -apple-system, sans-serif;
       --font-serif: 'Playfair Display', Georgia, serif;
 
       --nav-h: 68px;
@@ -1328,6 +1339,176 @@
         0 20px 60px rgba(15,15,30,0.16),
         inset 0 1px 1px rgba(255,255,255,0.9) !important;
     }
+
+    /* ===== LIQUID GLASS 2.0 REFRESH ===== */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+      opacity: 0.16;
+      mix-blend-mode: soft-light;
+      background-image:
+        repeating-linear-gradient(118deg, rgba(255,255,255,.16) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(28deg, rgba(15,15,30,.035) 0 1px, transparent 1px 5px);
+    }
+    .hero-bg { isolation: isolate; }
+    .hero-poster,
+    #heroCanvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-poster { z-index: 0; }
+    #heroCanvas { z-index: 1; }
+    .nav-more { position: relative; }
+    .nav-more-button {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      padding: 8px 14px;
+      color: var(--text-2);
+      border-radius: var(--radius-pill);
+      font: 500 14px/1 var(--font-sans);
+      cursor: pointer;
+      transition: all .2s var(--ease-swift);
+    }
+    .nav-more-button:hover,
+    .nav-more-button[aria-expanded="true"] { color: var(--text); background: rgba(15,15,30,.05); }
+    .nav-more-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      right: 0;
+      width: 210px;
+      padding: 8px;
+      display: grid;
+      gap: 2px;
+      background: linear-gradient(150deg, rgba(255,255,255,.88), rgba(243,246,255,.72));
+      -webkit-backdrop-filter: blur(28px) saturate(190%);
+      backdrop-filter: blur(28px) saturate(190%);
+      border: 1px solid rgba(255,255,255,.9);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(30,45,90,.18), inset 0 1px rgba(255,255,255,.95);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-7px) scale(.98);
+      transform-origin: top right;
+      transition: opacity .18s ease, transform .18s ease, visibility .18s;
+    }
+    .nav-more-menu.open { opacity: 1; visibility: visible; transform: none; }
+    .nav-more-menu a { padding: 10px 12px; }
+    .hero-left,
+    .service-item,
+    .work-card,
+    .why-card,
+    .portfolio-card,
+    .now-card { isolation: isolate; }
+    .hero-left::before,
+    .service-item::before,
+    .work-card::before,
+    .why-card::before,
+    .portfolio-card::before,
+    .now-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      pointer-events: none;
+      background:
+        radial-gradient(420px circle at var(--glass-x, 24%) var(--glass-y, 18%), rgba(255,255,255,.78), transparent 36%),
+        linear-gradient(125deg, rgba(255,255,255,.16), transparent 42%, rgba(101,129,255,.08));
+      opacity: .7;
+      transition: opacity .25s ease;
+    }
+    .hero-left:hover::before,
+    .service-item:hover::before,
+    .work-card:hover::before,
+    .why-card:hover::before,
+    .portfolio-card:hover::before,
+    .now-card:hover::before { opacity: 1; }
+    .now-section { padding-top: 42px; }
+    .now-grid { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 20px; }
+    .now-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 270px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      background: linear-gradient(145deg, rgba(255,255,255,.66), rgba(228,234,255,.38));
+      -webkit-backdrop-filter: blur(26px) saturate(180%);
+      backdrop-filter: blur(26px) saturate(180%);
+      border: 1px solid rgba(255,255,255,.82);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 18px 50px rgba(27,43,91,.1), inset 0 1px rgba(255,255,255,.95);
+      transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+    }
+    .now-card:first-child { min-height: 340px; background: linear-gradient(145deg, rgba(225,235,255,.82), rgba(226,218,255,.44)); }
+    .now-card:hover { transform: translateY(-5px); box-shadow: 0 24px 64px rgba(27,43,91,.16), inset 0 1px #fff; }
+    .now-status { display: inline-flex; width: fit-content; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-2); }
+    .now-status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #43d7a5; box-shadow: 0 0 0 5px rgba(67,215,165,.13); }
+    .now-card h3 { margin: 38px 0 10px; font-size: clamp(1.45rem, 2.5vw, 2.3rem); letter-spacing: -.04em; }
+    .now-card p { margin: 0; color: var(--text-3); line-height: 1.75; }
+    .now-link { margin-top: 28px; display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--accent-blue); }
+    .work-card-visual { overflow: hidden; }
+    .work-card-visual-img { width: 100%; height: 100%; min-height: 420px; object-fit: cover; display: block; transition: transform .7s var(--ease); }
+    .work-card:hover .work-card-visual-img { transform: scale(1.035); }
+    .work-card-visual-label { position: absolute; right: 18px; bottom: 18px; left: 18px; padding: 13px 16px; border: 1px solid rgba(255,255,255,.62); border-radius: 14px; background: rgba(20,29,65,.46); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); color: #fff; font-size: 12px; letter-spacing: .08em; }
+    .portfolio-card-img::after { display: none; }
+    .project-visual { position: relative; aspect-ratio: 16/10; overflow: hidden; padding: 22px; }
+    .game-preview { background: linear-gradient(145deg, #151b3d, #515ed2 54%, #a4c9ff); }
+    .game-window { height: 100%; padding: 15px; border: 1px solid rgba(255,255,255,.32); border-radius: 16px; background: rgba(255,255,255,.14); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+    .game-window-bar { width: 42%; height: 7px; margin-bottom: 14px; border-radius: 9px; background: rgba(255,255,255,.7); }
+    .game-tiles { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+    .game-tiles i { aspect-ratio: 1; border-radius: 10px; background: linear-gradient(140deg, rgba(255,255,255,.82), rgba(120,183,255,.34)); box-shadow: inset 0 1px rgba(255,255,255,.8); }
+    .pipeline-preview { display: grid; place-items: center; background: linear-gradient(145deg, #dce9ff, #cac5ff 56%, #f4f7ff); }
+    .pipeline-flow { width: 90%; display: grid; grid-template-columns: repeat(3,1fr); align-items: center; gap: 14px; }
+    .pipeline-flow span { position: relative; padding: 18px 8px; text-align: center; border: 1px solid rgba(255,255,255,.86); border-radius: 14px; background: rgba(255,255,255,.52); box-shadow: 0 12px 26px rgba(55,68,142,.12), inset 0 1px #fff; font-size: 10px; font-weight: 800; color: #38416d; }
+    .pipeline-flow span:not(:last-child)::after { content: '→'; position: absolute; right: -13px; color: #5b65ce; }
+    .community-preview { padding: 0; background: #e4ecff; }
+    .community-preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .case-study-tag { display: inline-flex; margin-top: 14px; font-size: 12px; font-weight: 800; color: var(--accent-blue); }
+    .mobile-dock { display: none; }
+    @media (max-width: 900px) {
+      .now-grid { grid-template-columns: 1fr 1fr; }
+      .now-card:first-child { grid-column: 1/-1; }
+    }
+    @media (max-width: 700px) {
+      body { padding-bottom: calc(82px + env(safe-area-inset-bottom)); }
+      body::before { opacity: .09; }
+      .now-grid { grid-template-columns: 1fr; }
+      .now-card:first-child { grid-column: auto; min-height: 300px; }
+      .work-card-visual-img { min-height: 330px; }
+      .mobile-dock {
+        position: fixed;
+        z-index: 10000;
+        right: 12px;
+        bottom: calc(10px + env(safe-area-inset-bottom));
+        left: 12px;
+        min-height: 58px;
+        padding: 7px;
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        background: linear-gradient(155deg, rgba(255,255,255,.88), rgba(224,232,255,.72));
+        -webkit-backdrop-filter: blur(28px) saturate(190%);
+        backdrop-filter: blur(28px) saturate(190%);
+        border: 1px solid rgba(255,255,255,.92);
+        border-radius: 22px;
+        box-shadow: 0 18px 45px rgba(24,39,84,.24), inset 0 1px #fff;
+      }
+      .mobile-dock a { display: grid; place-items: center; min-width: 0; padding: 9px 4px; border-radius: 16px; color: var(--text-2); font-size: 11px; font-weight: 700; }
+      .mobile-dock a:first-child { color: #fff; background: linear-gradient(135deg, #5273f5, #8061ed); box-shadow: 0 7px 18px rgba(81,93,224,.28); }
+      .hero-poster { object-position: 30% center; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .hero-poster { z-index: 2; }
+      .now-card:hover, .work-card:hover, .portfolio-card:hover { transform: none !important; }
+    }
   </style>
 </head>
 <body>
@@ -1336,29 +1517,35 @@
   <div class="bg-waves" aria-hidden="true"></div>
 
   <!-- ========== NAVBAR ========== -->
-  <nav class="nav" id="nav">
-    <a href="/" class="nav-logo" aria-label="Hao0321 Studio 首頁">
-      <span class="nav-logo-mark">H</span>
+  <nav class="nav" id="nav" aria-label="主要導覽">
+    <a href="/" class="nav-logo">
+      <span class="nav-logo-mark" aria-hidden="true">H</span>
       Hao0321 Studio
     </a>
     <ul class="nav-links">
-      <li><a href="#about-hao">Hao</a></li>
       <li><a href="/works/" class="active">作品</a></li>
       <li><a href="https://game.hao0321.com/">遊戲</a></li>
       <li><a href="/tools/">工具</a></li>
-      <li><a href="/resources/">資源</a></li>
       <li><a href="/blog/">開發日誌</a></li>
-      <li><a href="/about">關於</a></li>
+      <li class="nav-more">
+        <button class="nav-more-button" id="navMoreButton" type="button" aria-expanded="false" aria-controls="navMoreMenu">探索 ＋</button>
+        <div class="nav-more-menu" id="navMoreMenu">
+          <a href="/about">關於 Hao</a>
+          <a href="/resources/">精選資源</a>
+          <a href="/pipeline/">製作流程</a>
+          <a href="/Freeworkshop/">自由工坊</a>
+        </div>
+      </li>
     </ul>
     <a href="https://game.hao0321.com/" class="nav-cta">免費玩遊戲</a>
-    <button class="nav-mob-toggle" id="mobToggle" aria-label="Menu">
+    <button class="nav-mob-toggle" id="mobToggle" type="button" aria-label="開啟選單">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
   </nav>
 
   <div class="mob-backdrop" id="mobBackdrop"></div>
   <aside class="mob-menu" id="mobMenu">
-    <button class="mob-menu-close" id="mobClose" aria-label="Close">
+    <button class="mob-menu-close" id="mobClose" type="button" aria-label="關閉選單">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
     <a href="#about-hao">Hao</a>
@@ -1379,6 +1566,7 @@
    <div class="hero-sticky" id="heroSticky">
     <!-- Full-bleed canvas background -->
     <div class="hero-bg" id="heroShowcase" aria-hidden="true">
+      <img class="hero-poster" src="/hero-frames-new/frame_0001.webp" srcset="/hero-frames-mobile/frame_0001.webp 960w, /hero-frames-new/frame_0001.webp 2560w" sizes="100vw" alt="" fetchpriority="high" decoding="async">
       <canvas id="heroCanvas"></canvas>
     </div>
     <div class="hero-showcase-loader" id="heroLoader">
@@ -1476,6 +1664,43 @@
     </div>
   </section>
 
+  <!-- ========== NOW BUILDING ========== -->
+  <section class="section now-section" id="now">
+    <div class="container">
+      <div class="section-head-divider reveal">
+        <span class="section-num">— NOW</span>
+        <h2 class="section-title" style="margin-bottom:0">Hao 正在做什麼</h2>
+        <div class="line"></div>
+      </div>
+      <div class="now-grid">
+        <a class="now-card reveal" href="/works/">
+          <span class="now-status">Currently building</span>
+          <div>
+            <h3>Liquid Glass 2.0</h3>
+            <p>我正在把網站重新整理成更有辨識度、速度更快，也更容易讓搜尋與 AI 看懂的個人作品系統。</p>
+            <span class="now-link">查看完整作品 →</span>
+          </div>
+        </a>
+        <a class="now-card reveal reveal-d1" href="https://game.hao0321.com/">
+          <span class="now-status">Playable now</span>
+          <div>
+            <h3>Game Lab</h3>
+            <p>14 款免下載瀏覽器遊戲，從小型機制實驗一路做成共用入口。</p>
+            <span class="now-link">直接玩遊戲 ↗</span>
+          </div>
+        </a>
+        <a class="now-card reveal reveal-d2" href="/pipeline/">
+          <span class="now-status">Open workflow</span>
+          <div>
+            <h3>AI Pipeline</h3>
+            <p>把研究、原型、程式、視覺、QA 與發布接成能反覆使用的製作流程。</p>
+            <span class="now-link">查看製作流程 →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ========== LATEST WORK ========== -->
   <section class="section" id="works">
     <div class="container">
@@ -1500,7 +1725,8 @@
           </a>
         </div>
         <div class="work-card-visual">
-          <div class="work-card-visual-placeholder">14 Games · Tools · Resources · Community</div>
+          <img class="work-card-visual-img" src="/hero-frames-new/frame_0037.webp" alt="Hao0321 Liquid Glass 立體識別視覺" loading="lazy" decoding="async">
+          <div class="work-card-visual-label">HAO0321 · LIQUID GLASS IDENTITY</div>
         </div>
       </div>
     </div>
@@ -1553,31 +1779,33 @@
         <div class="line"></div>
       </div>
       <div class="portfolio-grid">
-        <a href="https://game.hao0321.com/" class="portfolio-card reveal reveal-d1">
-          <div class="portfolio-card-img" data-label="14 Games · Free"></div>
+        <a href="/case-studies/game-lab/" class="portfolio-card reveal reveal-d1">
+          <div class="portfolio-card-img project-visual game-preview">
+            <div class="game-window"><div class="game-window-bar"></div><div class="game-tiles"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+          </div>
           <div class="portfolio-card-body">
-            <div class="portfolio-card-label">Games · Browser</div>
-            <div class="portfolio-card-title">Hao0321 遊戲大廳</div>
-            <div class="portfolio-card-desc">免下載，直接玩 14 款瀏覽器遊戲</div>
-            <span class="portfolio-card-status active">立即遊玩</span>
+            <div class="portfolio-card-label">Case Study · Games</div>
+            <div class="portfolio-card-title">一人打造 14 款瀏覽器遊戲</div>
+            <div class="portfolio-card-desc">從玩法實驗到共用入口，拆解我如何把遊戲真正上線</div>
+            <span class="case-study-tag">查看 Case Study →</span>
           </div>
         </a>
-        <a href="/pipeline/" class="portfolio-card reveal reveal-d2">
-          <div class="portfolio-card-img" data-label="AI · Production"></div>
+        <a href="/case-studies/ai-pipeline/" class="portfolio-card reveal reveal-d2">
+          <div class="portfolio-card-img project-visual pipeline-preview"><div class="pipeline-flow"><span>BRIEF</span><span>BUILD</span><span>SHIP</span></div></div>
           <div class="portfolio-card-body">
-            <div class="portfolio-card-label">Workflow · Build in Public</div>
-            <div class="portfolio-card-title">Production Pipeline</div>
-            <div class="portfolio-card-desc">看 Hao 如何把 AI 接進真實製作流程</div>
-            <span class="portfolio-card-status active">查看流程</span>
+            <div class="portfolio-card-label">Case Study · Workflow</div>
+            <div class="portfolio-card-title">把 AI 接進真實製作流程</div>
+            <div class="portfolio-card-desc">從 brief、原型、QA 到發布，不停在聊天視窗</div>
+            <span class="case-study-tag">查看 Case Study →</span>
           </div>
         </a>
-        <a href="/Freeworkshop/" class="portfolio-card reveal reveal-d3">
-          <div class="portfolio-card-img" data-label="Community · Discord"></div>
+        <a href="/case-studies/freeworkshop/" class="portfolio-card reveal reveal-d3">
+          <div class="portfolio-card-img project-visual community-preview"><img src="/Freeworkshop/hero.jpg" alt="自由工坊 AI 應用創作者社群" loading="lazy" decoding="async"></div>
           <div class="portfolio-card-body">
-            <div class="portfolio-card-label">Community · Learning</div>
-            <div class="portfolio-card-title">自由工坊</div>
-            <div class="portfolio-card-desc">創作者一起學、一起做、一起公開作品</div>
-            <span class="portfolio-card-status active">加入探索</span>
+            <div class="portfolio-card-label">Case Study · Community</div>
+            <div class="portfolio-card-title">自由工坊：從工具焦慮到完成作品</div>
+            <div class="portfolio-card-desc">用共同製作，重新設計 AI 創作者社群</div>
+            <span class="case-study-tag">查看 Case Study →</span>
           </div>
         </a>
       </div>
@@ -1606,7 +1834,7 @@
     <div class="container">
       <div class="footer-inner">
         <div class="footer-copy">© 2026 Hao0321 Studio · Based in Taiwan</div>
-        <nav class="footer-links">
+        <nav class="footer-links" aria-label="頁尾導覽">
           <a href="/works/">Works</a>
           <a href="https://game.hao0321.com/">Games</a>
           <a href="/tools/">Tools</a>
@@ -1633,6 +1861,13 @@
       </div>
     </div>
   </footer>
+
+  <nav class="mobile-dock" aria-label="手機快速導覽">
+    <a href="/">首頁</a>
+    <a href="/works/">作品</a>
+    <a href="https://game.hao0321.com/">遊戲</a>
+    <a href="/about">Hao</a>
+  </nav>
 
   <!-- ========== A11Y: FONT SIZE TOGGLE ========== -->
   <div class="a11y-fs" role="group" aria-label="字體大小">
@@ -1694,14 +1929,50 @@
     window.addEventListener('scroll', updateNav, { passive: true });
     updateNav();
 
+    // ========== DESKTOP EXPLORE MENU ==========
+    (function setupExploreMenu() {
+      const button = document.getElementById('navMoreButton');
+      const menu = document.getElementById('navMoreMenu');
+      if (!button || !menu) return;
+      function setOpen(open) {
+        button.setAttribute('aria-expanded', String(open));
+        menu.classList.toggle('open', open);
+      }
+      button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        setOpen(button.getAttribute('aria-expanded') !== 'true');
+      });
+      document.addEventListener('click', (event) => {
+        if (!menu.contains(event.target)) setOpen(false);
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') { setOpen(false); button.focus(); }
+      });
+    })();
+
+    // ========== POINTER-REACTIVE GLASS HIGHLIGHT ==========
+    (function setupGlassLight() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const targets = document.querySelectorAll('.hero-left, .service-item, .work-card, .why-card, .portfolio-card, .now-card');
+      targets.forEach((element) => {
+        element.addEventListener('pointermove', (event) => {
+          const rect = element.getBoundingClientRect();
+          const x = ((event.clientX - rect.left) / rect.width) * 100;
+          const y = ((event.clientY - rect.top) / rect.height) * 100;
+          element.style.setProperty('--glass-x', x.toFixed(1) + '%');
+          element.style.setProperty('--glass-y', y.toFixed(1) + '%');
+        }, { passive: true });
+      });
+    })();
+
     // ========== HERO SCROLL-REVEAL (text panel appears as user scrolls into hero) ==========
     (function setupHeroReveal() {
       const hero = document.getElementById('hero');
       const heroLeft = document.getElementById('heroLeft');
       if (!hero || !heroLeft) return;
-      // Threshold: let user enjoy ~30% of the pinned hero before revealing the text panel
-      const REVEAL_AT = 0.30;
-      const HIDE_BELOW = 0.18; // hysteresis — don't flicker near the top
+      // Reveal early enough that Hao remains the clear identity of the page.
+      const REVEAL_AT = 0.12;
+      const HIDE_BELOW = 0.04; // hysteresis — don't flicker near the top
       function updateHeroReveal() {
         const rect = hero.getBoundingClientRect();
         const scrolled = Math.max(0, -rect.top);
@@ -1760,7 +2031,8 @@
       const loaderFill = document.getElementById('loaderFill');
       const showcase = document.getElementById('heroShowcase');
       const FRAME_COUNT = STATIC ? 1 : 61;
-      const PATH = 'hero-frames-new/frame_';
+      const MOBILE_SEQUENCE = window.matchMedia('(max-width: 700px)').matches;
+      const PATH = MOBILE_SEQUENCE ? 'hero-frames-mobile/frame_' : 'hero-frames-new/frame_';
       const frames = [];
       let loaded = 0;
       let currentFrame = -1;
@@ -1788,7 +2060,8 @@
         const iw = img.naturalWidth, ih = img.naturalHeight;
         const scale = Math.max(cw/iw, ch/ih);
         const dw = iw*scale, dh = ih*scale;
-        const dx = (cw-dw)/2, dy = (ch-dh)/2;
+        const focalX = window.matchMedia('(max-width: 700px)').matches ? 0.30 : 0.50;
+        const dx = (cw-dw) * focalX, dy = (ch-dh)/2;
         ctx.clearRect(0, 0, cw, ch);
         ctx.drawImage(img, dx, dy, dw, dh);
         currentFrame = i;
@@ -1819,8 +2092,8 @@
         if (end < FRAME_COUNT && remainingStarted) setTimeout(() => loadBatch(end), 80);
       }
 
-      // Paint the first frame immediately; defer the remaining 8.2 MB sequence
-      // until the visitor signals intent to interact with the scroll animation.
+      // Paint the first frame immediately; defer the remaining sequence until
+      // the visitor interacts. Mobile receives a dedicated 960 px sequence.
       function startRemainingFrames() {
         if (remainingStarted || STATIC) return;
         remainingStarted = true;
