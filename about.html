@@ -1,21 +1,77 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant-TW">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>關於 — Hao0321 Studio</title>
-  <meta name="description" content="Hao0321 Studio 是一間專注 AI 教學、遊戲開發、影視動畫、原創音樂的個人獨立工作室。" />
-  <meta name="robots" content="index, follow" />
+  <title>關於 Hao｜Hao0321 Studio 一人遊戲與 AI 創作工作室</title>
+  <meta name="description" content="認識台灣獨立創作者 Hao：如何用 AI 協作開發 14 款瀏覽器遊戲、創作工具與可由一人維運的數位產品。" />
+  <meta name="author" content="Hao" />
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1" />
   <meta name="theme-color" content="#F4F4F7" />
   <link rel="canonical" href="https://hao0321.com/about.html" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="author" href="https://hao0321.com/about.html" />
+  <link rel="alternate" type="application/rss+xml" title="Hao0321 Studio 技術日誌" href="https://hao0321.com/blog/rss.xml" />
 
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="關於 — Hao0321 Studio" />
-  <meta property="og:description" content="工作室理念、核心領域、技術堆疊、聯絡方式。" />
+  <meta property="og:title" content="關於 Hao｜Hao0321 Studio" />
+  <meta property="og:description" content="一人做遊戲、工具和內容，把每次實驗變成現在就能使用的產品。" />
   <meta property="og:url" content="https://hao0321.com/about.html" />
-  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
+  <meta property="og:image" content="https://hao0321.com/og-image-v2.jpg" />
   <meta property="og:locale" content="zh_TW" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="關於 Hao｜Hao0321 Studio" />
+  <meta name="twitter:description" content="一人做遊戲、工具和內容，把每次實驗變成現在就能使用的產品。" />
+  <meta name="twitter:image" content="https://hao0321.com/og-image-v2.jpg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "AboutPage",
+        "@id": "https://hao0321.com/about.html#webpage",
+        "url": "https://hao0321.com/about.html",
+        "name": "關於 Hao｜Hao0321 Studio",
+        "description": "台灣遊戲產業 3D／技術美術與獨立創作者 Hao 的背景、作品、AI 協作方式與工作室原則。",
+        "inLanguage": "zh-Hant-TW",
+        "isPartOf": { "@id": "https://hao0321.com/#website" },
+        "mainEntity": { "@id": "https://hao0321.com/#hao" },
+        "breadcrumb": { "@id": "https://hao0321.com/about.html#breadcrumb" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://hao0321.com/#hao",
+        "name": "Hao",
+        "alternateName": "Hao0321",
+        "url": "https://hao0321.com/about.html",
+        "jobTitle": "3D / Technical Artist and Independent Creator",
+        "description": "台灣遊戲產業 3D／技術美術與獨立創作者，使用 AI 協作製作瀏覽器遊戲、工具與內容。",
+        "worksFor": { "@id": "https://hao0321.com/#studio" },
+        "knowsAbout": ["3D art", "technical art", "VFX", "browser games", "AI-assisted creation", "indie product development"],
+        "sameAs": ["https://youtube.com/@hao0321_studio", "https://www.instagram.com/hao0321_studio"]
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://hao0321.com/#studio",
+        "name": "Hao0321 Studio",
+        "url": "https://hao0321.com/",
+        "founder": { "@id": "https://hao0321.com/#hao" },
+        "email": "mailto:lo246179268@gmail.com",
+        "logo": { "@type": "ImageObject", "url": "https://hao0321.com/favicon.svg" },
+        "sameAs": ["https://youtube.com/@hao0321_studio", "https://www.instagram.com/hao0321_studio", "https://hao0321.gumroad.com/"]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://hao0321.com/about.html#breadcrumb",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "首頁", "item": "https://hao0321.com/" },
+          { "@type": "ListItem", "position": 2, "name": "關於 Hao", "item": "https://hao0321.com/about.html" }
+        ]
+      }
+    ]
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -28,7 +84,7 @@
       --surface: #FFFFFF;
       --text: #0F0F1E;
       --text-2: #4A4A5E;
-      --text-3:#6B6B80;
+      --text-3: #8C8CA0;
       --border: rgba(15,15,30,0.06);
       --border-2: rgba(15,15,30,0.12);
       --accent-blue: #4A7BF5;
@@ -68,7 +124,7 @@
       min-height: 100vh;
     }
     ::selection { background: var(--accent-blue); color: #fff; }
-    a{color:#2C5ED9; text-decoration: none; transition: color .2s; }
+    a { color: var(--accent-blue); text-decoration: none; transition: color .2s; }
     a:hover { color: var(--accent-violet); }
 
     /* Subtle decorative grain */
@@ -273,6 +329,15 @@
     }
     .pillar-desc { font-size: 14px; color: var(--text-2); line-height: 1.7; }
 
+    .method-box {
+      margin: 24px 0;
+      padding: 26px 28px;
+      background: linear-gradient(135deg, rgba(74,123,245,0.07), rgba(142,124,240,0.05));
+      border: 1px solid rgba(74,123,245,0.18);
+      border-radius: var(--radius-lg);
+    }
+    .method-box p:last-child { margin-bottom: 0; }
+
     /* Tech chips */
     .tech {
       display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -376,7 +441,7 @@
       h2 { font-size: 22px; margin: 56px 0 14px; }
       .contact-box { padding: 24px; }
     }
-  /*a11y-seo-fix-v1*/:focus-visible{outline:2px solid #2C5ED9;outline-offset:2px;border-radius:4px}@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}/*liquid-glass-v2*/.post-card,.tool-card,.res-card,.cta-box{background:rgba(255,255,255,0.55)!important;-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);border:1px solid rgba(255,255,255,0.55)!important;box-shadow:0 6px 28px rgba(15,15,30,0.06),0 1px 3px rgba(15,15,30,0.04),inset 0 1px 0 rgba(255,255,255,0.7)!important;}.post-card:hover,.tool-card:hover,.res-card:hover{background:rgba(255,255,255,0.72)!important;border-color:rgba(255,255,255,0.85)!important;box-shadow:0 18px 48px rgba(15,15,30,0.13),inset 0 1px 0 rgba(255,255,255,0.85)!important;}article{background:rgba(255,255,255,0.68)!important;-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);border:1px solid rgba(255,255,255,0.55)!important;box-shadow:0 8px 36px rgba(15,15,30,0.07),inset 0 1px 0 rgba(255,255,255,0.7)!important;}.related a{background:rgba(255,255,255,0.5)!important;-webkit-backdrop-filter:blur(14px) saturate(160%);backdrop-filter:blur(14px) saturate(160%);border:1px solid rgba(255,255,255,0.5)!important;}.related a:hover{background:rgba(255,255,255,0.7)!important;border-color:rgba(255,255,255,0.8)!important}.cat,.hero-tag,.tool-tag,.res-tier,.post-tag{-webkit-backdrop-filter:saturate(150%) blur(8px);backdrop-filter:saturate(150%) blur(8px);}@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.post-card,.tool-card,.res-card,.cta-box,article,.related a{background:var(--surface,#fff)!important}}/*liquid-glass-v3*/body{background-image:radial-gradient(circle 520px at 14% 16%,rgba(74,123,245,0.22),transparent 60%),radial-gradient(circle 640px at 86% 10%,rgba(142,124,240,0.20),transparent 60%),radial-gradient(circle 580px at 80% 86%,rgba(110,170,255,0.18),transparent 60%),radial-gradient(circle 480px at 18% 92%,rgba(168,140,255,0.16),transparent 60%)!important;background-attachment:fixed!important;background-color:#EEF1F8!important}.post-card,.tool-card,.res-card,.cta-box,.related a{background:linear-gradient(140deg,rgba(255,255,255,0.60),rgba(255,255,255,0.40))!important;-webkit-backdrop-filter:blur(24px) saturate(200%);backdrop-filter:blur(24px) saturate(200%);border:1px solid rgba(255,255,255,0.7)!important;box-shadow:0 10px 36px rgba(15,15,30,0.10),0 2px 8px rgba(15,15,30,0.05),inset 0 1px 1px rgba(255,255,255,0.95),inset 0 -1px 1px rgba(15,15,30,0.04)!important;}.post-card:hover,.tool-card:hover,.res-card:hover,.related a:hover{background:linear-gradient(140deg,rgba(255,255,255,0.78),rgba(255,255,255,0.58))!important;border-color:rgba(255,255,255,0.95)!important;box-shadow:0 22px 60px rgba(15,15,30,0.18),inset 0 1px 1px rgba(255,255,255,1)!important;}article{background:linear-gradient(140deg,rgba(255,255,255,0.74),rgba(255,255,255,0.58))!important;-webkit-backdrop-filter:blur(20px) saturate(185%);backdrop-filter:blur(20px) saturate(185%);border:1px solid rgba(255,255,255,0.72)!important;box-shadow:0 12px 44px rgba(15,15,30,0.10),inset 0 1px 1px rgba(255,255,255,0.95)!important;}.cta-box{box-shadow:0 14px 48px rgba(74,123,245,0.20),inset 0 1px 1px rgba(255,255,255,0.9)!important;border:1px solid rgba(255,255,255,0.7)!important;}@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.post-card,.tool-card,.res-card,.cta-box,article,.related a{background:rgba(255,255,255,0.95)!important}}</style>
+  </style>
 </head>
 <body>
   <div class="bg-waves"></div>
@@ -386,16 +451,16 @@
       <span class="logo-mark">H</span>
       <span>Hao0321 Studio</span>
     </a>
-    <a href="/" class="back-link">← 回首頁</a>
+    <a href="/works/" class="back-link">作品總覽 →</a>
   </nav>
 
   <main>
-    <div class="page-eyebrow">About / Sector 06</div>
-    <h1>用技術<em>探索未知</em>，<br/>做有溫度的數位體驗。</h1>
-    <p class="lede">Hao0321 Studio 是一間位於台灣的個人獨立工作室，專注在 <strong>AI 教學、遊戲開發、影視動畫與原創音樂</strong>四個核心領域。我們相信好的工具應該讓更多人有能力創造，好的作品應該誠實、有個性、有人味。這裡沒有一堆設計師、工程師和行銷，只有一個持續在踩坑學習的創作者，以及不斷進化的作品集。</p>
+    <div class="page-eyebrow">About / Hao0321 Studio</div>
+    <h1>我用 AI 協作，<br/>把想法做成<em>能玩的產品</em>。</h1>
+    <p class="lede">Hao0321 Studio 是 Hao 在台灣經營的個人獨立工作室，專注在 <strong>遊戲開發、AI 教學、影視動畫與原創音樂</strong>四個彼此支援的領域。我相信好的工具應該讓更多人有能力創造，好的作品則應該能被真正打開、使用和驗證。這裡沒有龐大團隊，只有一個持續製作、公開踩坑，也持續把經驗整理出來的創作者。</p>
 
     <div class="stats">
-      <div class="stat"><div class="n">14+</div><div class="k">原創遊戲</div></div>
+      <div class="stat"><div class="n">14</div><div class="k">原創遊戲</div></div>
       <div class="stat"><div class="n">4</div><div class="k">核心領域</div></div>
       <div class="stat"><div class="n">100%</div><div class="k">親手製作</div></div>
       <div class="stat"><div class="n">0</div><div class="k">訂閱門檻</div></div>
@@ -448,7 +513,7 @@
       <div class="tech-chip"><b>3D / VFX</b><span>Houdini, Blender, Nuke</span></div>
       <div class="tech-chip"><b>Game Engines</b><span>Unreal, Unity</span></div>
     </div>
-    <p>選擇 Cloudflare 堆疊的理由很簡單：全球邊緣運算的延遲極低（API 回應 &lt; 100ms），免費額度對個人工作室充裕，Workers + D1 在台灣也有良好的覆蓋。我們更深入的技術分享會在 <a href="/blog/">Blog</a> 陸續更新。</p>
+    <p>選擇 Cloudflare 堆疊的理由很簡單：全球邊緣運算的延遲極低（API 回應 &lt; 100ms），免費額度對個人工作室充裕，Workers + D1 在台灣也有良好的覆蓋。更深入的技術拆解會持續整理在 <a href="/blog/">技術日誌</a>。</p>
 
     <h2>時間軸</h2>
     <div class="timeline">
@@ -474,12 +539,12 @@
       </div>
       <div class="tl-item">
         <div class="tl-date">— 持續進行中</div>
-        <div class="tl-title">下一步</div>
-        <div class="tl-desc">擴充遊戲數量到 20 款、上線開發日誌與 AI 教學專欄、推出付費主題與道具、計劃多人對戰支援。</div>
+        <div class="tl-title">持續把實驗變成產品</div>
+        <div class="tl-desc">維護 14 款現有遊戲、整理開發日誌與 AI 創作流程，並把真正有用的實驗逐步做成可玩的產品與可重用工具。</div>
       </div>
     </div>
 
-    <h2>我們的原則</h2>
+    <h2>我的原則</h2>
     <ul>
       <li><strong>誠實優先於漂亮</strong> — 不用行銷話術美化未完成的功能，就說「還在做」。</li>
       <li><strong>原創優先於模板</strong> — 寧可做慢做小，也要是自己的作品，不抄。</li>
@@ -488,9 +553,16 @@
       <li><strong>隱私至上</strong> — 只收集提供服務必要的最少資料，細節見 <a href="/privacy.html">隱私權政策</a>。</li>
     </ul>
 
+    <h2 id="editorial-method">內容與 AI 協作方式</h2>
+    <div class="method-box">
+      <p><strong>誰負責：</strong>網站、遊戲與文章由 Hao 主導題目、設計方向、實作驗證與最終發布。Hao 的本業背景是遊戲產業 3D／技術美術，而不是以傳統軟體工程師身分包裝自己。</p>
+      <p><strong>AI 怎麼參與：</strong>AI 用於研究整理、原型、程式草擬、除錯與文字整稿；涉及作品功能、數據、成本或技術判斷的內容，發布前都會回到實際專案檢查。</p>
+      <p><strong>為什麼公開：</strong>這些內容的目的，是讓正在做遊戲或個人產品的人少繞一點路。文章會區分已完成、仍在實驗與尚未驗證的部分；不為了搜尋排名改寫不存在的經驗。</p>
+    </div>
+
     <div class="contact-box">
       <h3>聯絡 / 合作</h3>
-      <p>工作室目前接受合作提案：品牌動畫、AI 工作坊、遊戲委製、原創配樂。歡迎透過下列管道聯絡。</p>
+      <p>工作室目前接受遊戲、工具、內容聯名與社群合作提案；不提供一般外包報價或付費顧問服務。來信請直接說明你已有的產品或資源、希望一起完成的成果，以及雙方能怎麼互補。</p>
       <ul class="contact-list">
         <li><strong>Email</strong><a href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a></li>
         <li><strong>YouTube</strong><a href="https://youtube.com/@hao0321_studio" target="_blank" rel="noopener">@hao0321_studio</a></li>
@@ -505,6 +577,7 @@
   <footer>
     <div class="links">
       <a href="/">首頁</a>
+      <a href="/works/">作品</a>
       <a href="/about.html">關於</a>
       <a href="/blog/">Blog</a>
       <a href="/privacy.html">隱私權</a>

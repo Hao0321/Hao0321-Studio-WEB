@@ -1,1842 +1,403 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hao0321 Studio — 設計 · 創新 · 啟發</title>
-  <meta name="description" content="Hao0321 Studio — 結合 AI、遊戲開發與視覺設計的創意工作室。打造令人驚艷的數位體驗。" />
-  <meta name="theme-color" content="#F4F4F7" />
-  <meta name="robots" content="index, follow" />
-  <link rel="canonical" href="https://hao0321.com/" />
-  <link rel="preload" as="image" href="hero-frames-new/frame_0001.webp" fetchpriority="high" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="Hao0321 Studio" />
-  <meta property="og:title" content="Hao0321 Studio — 設計 · 創新 · 啟發" />
-  <meta property="og:description" content="結合 AI 技術、遊戲開發與視覺設計的獨立工作室。用心打造每一個令人驚艷的數位體驗。" />
-  <meta property="og:url" content="https://hao0321.com/" />
-  <meta property="og:image" content="https://hao0321.com/og-image.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Hao0321 Studio — 設計 · 創新 · 啟發" />
-  <meta property="og:locale" content="zh_TW" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Hao0321 Studio — 設計 · 創新 · 啟發" />
-  <meta name="twitter:description" content="結合 AI 技術、遊戲開發與視覺設計的獨立工作室。用心打造每一個令人驚艷的數位體驗。" />
-  <meta name="twitter:image" content="https://hao0321.com/og-image.jpg" />
-  <link rel="alternate" type="application/rss+xml" title="Hao0321 Studio Blog RSS" href="/blog/rss.xml" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Hao0321 Studio","alternateName":"Hao0321","url":"https://hao0321.com/","logo":"https://hao0321.com/favicon.svg","description":"結合 AI 技術、遊戲開發與視覺設計的獨立工作室。","founder":{"@type":"Person","name":"Hao0321"},"sameAs":["https://www.youtube.com/@HAO0321_Studio","https://www.instagram.com/hao0321_studio","https://discord.gg/MtccYqJxCx","https://hao0321.gumroad.com/"],"foundingDate":"2024","areaServed":"TW","knowsAbout":["AI","Game Development","VFX","Cloudflare","React","Web Development"]}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Hao0321 Studio","url":"https://hao0321.com/","inLanguage":"zh-Hant","publisher":{"@type":"Organization","name":"Hao0321 Studio","logo":{"@type":"ImageObject","url":"https://hao0321.com/favicon.svg"}}}</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
-  <style>
-    /* ========== DESIGN TOKENS ========== */
-    :root {
-      --bg: #F4F4F7;
-      --bg-soft: #FBFBFD;
-      --surface: #FFFFFF;
-      --text: #0F0F1E;
-      --text-2: #4A4A5E;
-      --text-3: #6B6B80;
-      --border: rgba(15,15,30,0.06);
-      --border-2: rgba(15,15,30,0.12);
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hao0321 Studio｜AI 遊戲、創作工具與開發實錄</title>
+  <meta name="description" content="台灣獨立創作者 Hao 的數位實驗室：免費玩 14 款瀏覽器遊戲，探索 AI 創作工具、製作流程與一人開發實錄。">
+  <meta name="author" content="Hao">
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  <meta name="theme-color" content="#eef3ff">
+  <link rel="canonical" href="https://hao0321.com/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="author" href="https://hao0321.com/about.html">
+  <link rel="alternate" type="application/rss+xml" title="Hao0321 Studio 技術日誌" href="https://hao0321.com/blog/rss.xml">
+  <link rel="preload" as="image" href="/hero-frames-new/frame_0001.webp" type="image/webp" fetchpriority="high">
+  <link rel="stylesheet" href="/site.css">
 
-      --accent-blue:   #4A7BF5;
-      --accent-violet: #8E7CF0;
-      --accent-sky:    #7EB0FF;
-      --accent-ink:    #0F0F1E;
-      --accent-mist:   #A8B4D6;
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Hao0321 Studio">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:title" content="Hao0321 Studio｜用 AI，把想法做成可玩的產品">
+  <meta property="og:description" content="14 款免費瀏覽器遊戲、AI 創作工具與一人開發實錄。直接來玩，也看看我是怎麼做出來的。">
+  <meta property="og:url" content="https://hao0321.com/">
+  <meta property="og:image" content="https://hao0321.com/og-image-v2.jpg">
+  <meta property="og:image:secure_url" content="https://hao0321.com/og-image-v2.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Hao0321 Studio — 用 AI，把想法做成可玩的產品">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Hao0321 Studio｜用 AI，把想法做成可玩的產品">
+  <meta name="twitter:description" content="14 款免費瀏覽器遊戲、AI 創作工具與一人開發實錄。">
+  <meta name="twitter:image" content="https://hao0321.com/og-image-v2.jpg">
 
-      --grad-hero:   linear-gradient(135deg, #4A7BF5 0%, #7C8EEA 45%, #8E7CF0 100%);
-      --grad-accent: linear-gradient(135deg, #4A7BF5 0%, #8E7CF0 100%);
-      --grad-visual: linear-gradient(140deg, #DCE4F5 0%, #CFD7EE 45%, #C8CFF0 100%);
-
-      --radius-sm: 12px;
-      --radius-md: 20px;
-      --radius-lg: 28px;
-      --radius-xl: 36px;
-      --radius-pill: 9999px;
-
-      --shadow-xs: 0 1px 2px rgba(15,15,30,0.04);
-      --shadow-sm: 0 1px 2px rgba(15,15,30,0.03), 0 4px 12px rgba(15,15,30,0.04);
-      --shadow-md: 0 4px 12px rgba(15,15,30,0.05), 0 12px 32px rgba(15,15,30,0.06);
-      --shadow-lg: 0 8px 24px rgba(15,15,30,0.06), 0 24px 64px rgba(15,15,30,0.08);
-      --shadow-nav: 0 2px 8px rgba(15,15,30,0.04), 0 8px 24px rgba(15,15,30,0.06);
-
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-      --ease-swift: cubic-bezier(0.4, 0, 0.2, 1);
-
-      --font-sans: 'Plus Jakarta Sans', 'Noto Sans TC', system-ui, -apple-system, sans-serif;
-      --font-serif: 'Playfair Display', Georgia, serif;
-
-      --nav-h: 68px;
-      --container: 1120px;
-    }
-
-    /* ========== RESET ========== */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html {
-      scroll-behavior: smooth;
-      -webkit-text-size-adjust: 100%;
-      /* html font-size kept 16px; a11y toggle uses body { zoom } */
-      font-size: 16px;
-    }
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-sans);
-      font-weight: 400;
-      font-size: 1rem;
-      line-height: 1.65;
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: optimizeLegibility;
-      font-feature-settings: "kern" 1, "liga" 1, "calt" 1, "ss01" 1;
-      font-variation-settings: normal;
-      background-image:
-        radial-gradient(ellipse 900px 650px at 12% 3%, rgba(195,215,255,0.40), transparent 60%),
-        radial-gradient(ellipse 700px 560px at 88% 28%, rgba(180,190,240,0.22), transparent 60%),
-        radial-gradient(ellipse 760px 600px at 50% 100%, rgba(200,220,255,0.22), transparent 60%);
-      background-attachment: fixed;
-    }
-    ::selection { background: var(--accent-blue); color: #fff; }
-    a { color: inherit; text-decoration: none; }
-    img, svg, canvas { display: block; max-width: 100%; }
-    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
-    input, textarea { font: inherit; color: inherit; }
-    :focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; border-radius: 4px; }
-    .skip-link { position: absolute; left: 12px; top: -60px; z-index: 9999; background: var(--accent-ink); color: #fff; padding: 10px 18px; border-radius: 8px; font-weight: 600; transition: top .2s; }
-    .skip-link:focus { top: 12px; }
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
-    }
-
-    /* ========== SUBTLE WAVE BG (like reference) ========== */
-    .bg-waves {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.4;
-      background-image:
-        repeating-linear-gradient(110deg, transparent 0 50px, rgba(255,255,255,0.4) 50px 51px, transparent 51px 200px);
-      mask-image: radial-gradient(ellipse at 50% 50%, #000 0%, transparent 70%);
-      -webkit-mask-image: radial-gradient(ellipse at 50% 50%, #000 0%, transparent 70%);
-    }
-
-    /* ========== CONTAINER ========== */
-    .container {
-      width: min(100% - 48px, var(--container));
-      margin: 0 auto;
-    }
-
-    /* ========== NAVBAR (PILL) ========== */
-    .nav {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(calc(100% - 32px), 960px);
-      z-index: 100;
-      padding: 8px 8px 8px 24px;
-      background: rgba(255,255,255,0.72);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-pill);
-      box-shadow: var(--shadow-nav);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      transition: padding 0.3s var(--ease), top 0.3s var(--ease);
-    }
-    .nav.scrolled {
-      top: 12px;
-      background: rgba(255,255,255,0.86);
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 15px;
-      letter-spacing: -0.01em;
-      color: var(--text);
-      white-space: nowrap;
-    }
-    .nav-logo-mark {
-      width: 28px; height: 28px;
-      border-radius: 8px;
-      background: var(--grad-accent);
-      color: #fff;
-      font-weight: 800;
-      font-size: 14px;
-      display: grid; place-items: center;
-      box-shadow: 0 2px 6px rgba(74,123,245,0.3);
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      list-style: none;
-    }
-    .nav-links a {
-      position: relative;
-      padding: 8px 14px;
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-2);
-      border-radius: var(--radius-pill);
-      transition: all 0.2s var(--ease-swift);
-    }
-    .nav-links a:hover {
-      color: var(--text);
-      background: rgba(15,15,30,0.04);
-    }
-    .nav-links a.active {
-      color: var(--text);
-      font-weight: 600;
-    }
-    .nav-links a.active::after {
-      content: '';
-      position: absolute;
-      left: 50%;
-      bottom: 2px;
-      width: 16px;
-      height: 2px;
-      background: var(--accent-blue);
-      border-radius: 2px;
-      transform: translateX(-50%);
-    }
-    .nav-cta {
-      padding: 10px 20px;
-      background: var(--text);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      border-radius: var(--radius-pill);
-      transition: all 0.2s var(--ease-swift);
-      white-space: nowrap;
-    }
-    .nav-cta:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(15,15,30,0.2);
-    }
-    .nav-mob-toggle {
-      display: none;
-      padding: 8px;
-      color: var(--text);
-    }
-
-    /* ========== MOBILE NAV ========== */
-    .mob-menu {
-      position: fixed;
-      top: 0; right: 0; bottom: 0;
-      width: min(320px, 85vw);
-      background: var(--surface);
-      box-shadow: -8px 0 40px rgba(15,15,30,0.1);
-      z-index: 200;
-      transform: translateX(100%);
-      transition: transform 0.35s var(--ease);
-      padding: 80px 28px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .mob-menu.open { transform: translateX(0); }
-    .mob-menu a {
-      padding: 14px 0;
-      font-size: 16px;
-      font-weight: 500;
-      color: var(--text);
-      border-bottom: 1px solid var(--border);
-    }
-    .mob-menu a:last-child { border-bottom: none; }
-    .mob-menu-close {
-      position: absolute;
-      top: 24px; right: 24px;
-      padding: 8px;
-      color: var(--text);
-    }
-    .mob-backdrop {
-      position: fixed; inset: 0;
-      background: rgba(15,15,30,0.4);
-      backdrop-filter: blur(4px);
-      z-index: 150;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s;
-    }
-    .mob-backdrop.open { opacity: 1; pointer-events: auto; }
-
-    /* ========== BUTTONS ========== */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px 28px;
-      font-size: 15px;
-      font-weight: 600;
-      border-radius: var(--radius-pill);
-      border: 1px solid transparent;
-      transition: all 0.25s var(--ease-swift);
-      cursor: pointer;
-      white-space: nowrap;
-    }
-    .btn-primary {
-      background: var(--text);
-      color: #fff;
-      box-shadow: var(--shadow-sm);
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(15,15,30,0.25);
-    }
-    .btn-secondary {
-      background: var(--surface);
-      color: var(--text);
-      border-color: var(--border-2);
-      box-shadow: var(--shadow-xs);
-    }
-    .btn-secondary:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
-      border-color: var(--text);
-    }
-    /* glass variant for hero over canvas */
-    .btn-glass {
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      color: var(--text);
-      border-color: rgba(255,255,255,0.6);
-      box-shadow:
-        0 4px 16px rgba(15,15,30,0.08),
-        inset 0 1px 0 rgba(255,255,255,0.6);
-    }
-    .btn-glass:hover {
-      background: rgba(255,255,255,0.75);
-      transform: translateY(-2px);
-      box-shadow:
-        0 10px 24px rgba(15,15,30,0.12),
-        inset 0 1px 0 rgba(255,255,255,0.7);
-    }
-    .btn-link {
-      padding: 0;
-      background: none;
-      color: var(--text);
-      font-weight: 600;
-      font-size: 14px;
-      gap: 6px;
-    }
-    .btn-link:hover .arrow { transform: translateX(4px); }
-    .arrow {
-      display: inline-block;
-      transition: transform 0.25s var(--ease-swift);
-    }
-
-    /* ========== HERO (pinned-scroll: tall section + sticky inner viewport) ========== */
-    .hero {
-      position: relative;
-      height: 200vh;            /* gives 100vh of extra scroll room for pin */
-      padding: 0;
-    }
-    .hero-sticky {
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-    }
-    /* Full-bleed canvas background — unobstructed so the 3D render shines */
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .hero-bg canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-    /* Very subtle top/bottom edge fade so canvas blends with page — left side stays clean */
-    .hero-bg::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(180deg,
-          rgba(244,244,247,0.25) 0%,
-          transparent 14%,
-          transparent 86%,
-          rgba(244,244,247,0.4) 100%);
-    }
-    /* Subtle ambient glow blobs in front of canvas but behind text */
-    .hero-sticky::before {
-      content: '';
-      position: absolute;
-      top: -200px;
-      right: -180px;
-      width: 520px;
-      height: 520px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(142,124,240,0.10), transparent 70%);
-      pointer-events: none;
-      z-index: 1;
-    }
-    .hero-sticky::after {
-      content: '';
-      position: absolute;
-      bottom: -240px;
-      left: -160px;
-      width: 560px;
-      height: 560px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(74,123,245,0.10), transparent 70%);
-      pointer-events: none;
-      z-index: 1;
-    }
-    .hero-wrap {
-      position: relative;
-      z-index: 2;
-      width: min(100% - 48px, var(--container));
-      margin: 0 auto;
-    }
-    .hero-left {
-      max-width: 520px;
-      padding: 36px 40px 32px;
-      background: rgba(255,255,255,0.22);
-      backdrop-filter: blur(14px) saturate(140%);
-      -webkit-backdrop-filter: blur(14px) saturate(140%);
-      border: 1px solid rgba(255,255,255,0.38);
-      border-radius: 28px;
-      box-shadow:
-        0 10px 32px rgba(15,15,30,0.06),
-        0 2px 8px rgba(15,15,30,0.03),
-        inset 0 1px 0 rgba(255,255,255,0.5);
-      /* Hidden on load — scroll-driven reveal sets these via .is-visible */
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.55s var(--ease), transform 0.55s var(--ease);
-      will-change: opacity, transform;
-    }
-    .hero-left.is-visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .hero-eyebrow {
-      display: flex;
-      width: fit-content;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 15px;
-      color: var(--text-2);
-      letter-spacing: 0.04em;
-    }
-    .hero-eyebrow::before {
-      content: '';
-      width: 40px;
-      height: 1px;
-      background: currentColor;
-      opacity: 0.4;
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 18px 8px 10px;
-      background: rgba(255,255,255,0.7);
-      backdrop-filter: blur(16px) saturate(180%);
-      -webkit-backdrop-filter: blur(16px) saturate(180%);
-      border: 1px solid rgba(255,255,255,0.8);
-      border-radius: var(--radius-pill);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text);
-      box-shadow: 0 2px 10px rgba(15,15,30,0.04);
-      margin-bottom: 28px;
-      letter-spacing: 0.015em;
-    }
-    .hero-badge-dot {
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: var(--grad-accent);
-      position: relative;
-      box-shadow: 0 2px 6px rgba(74,123,245,0.35);
-    }
-    .hero-badge-dot::after {
-      content: '';
-      position: absolute;
-      inset: 4px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.55);
-    }
-    .hero-title {
-      font-size: clamp(44px, 5.8vw, 76px);
-      font-weight: 800;
-      line-height: 1.04;
-      letter-spacing: -0.035em;
-      margin-bottom: 28px;
-      color: var(--text);
-      font-feature-settings: "ss01" 1, "kern" 1;
-    }
-    .hero-title .accent {
-      background: var(--grad-accent);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .hero-title .block { display: block; }
-    .hero-title .word {
-      display: inline-block;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: heroWordIn 0.8s var(--ease) forwards;
-    }
-    .hero-title .word:nth-child(1) { animation-delay: 0.1s; }
-    .hero-title .word:nth-child(2) { animation-delay: 0.22s; }
-    .hero-title .word:nth-child(3) { animation-delay: 0.34s; }
-    @keyframes heroWordIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .hero-sub {
-      max-width: 520px;
-      margin-bottom: 40px;
-      font-size: clamp(15px, 1.2vw, 17px);
-      color: var(--text-2);
-      line-height: 1.75;
-      letter-spacing: 0.005em;
-      opacity: 0;
-      animation: heroFadeIn 0.8s var(--ease) 0.45s forwards;
-    }
-    @keyframes heroFadeIn { to { opacity: 1; } }
-    .hero-ctas {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: heroFadeIn 0.8s var(--ease) 0.6s forwards;
-      margin-bottom: 48px;
-    }
-    .hero-meta {
-      display: flex;
-      gap: 40px;
-      padding-top: 28px;
-      border-top: 1px solid var(--border);
-      opacity: 0;
-      animation: heroFadeIn 0.8s var(--ease) 0.75s forwards;
-    }
-    .hero-meta-item { display: flex; flex-direction: column; gap: 2px; }
-    .hero-meta-num {
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.02em;
-      line-height: 1;
-    }
-    .hero-meta-num.accent {
-      background: var(--grad-accent);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .hero-meta-lbl {
-      font-size: 11px;
-      color: var(--text-3);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-weight: 500;
-      margin-top: 4px;
-    }
-
-    /* Floating caption pinned to bottom-right of viewport */
-    .hero-visual-caption {
-      position: absolute;
-      right: 32px;
-      bottom: 80px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      z-index: 3;
-      pointer-events: none;
-      opacity: 0;
-      animation: heroFadeIn 1s var(--ease) 0.9s forwards;
-    }
-    .hero-visual-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 7px 16px;
-      background: rgba(15,15,30,0.7);
-      color: rgba(255,255,255,0.95);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      border-radius: var(--radius-pill);
-    }
-    .hero-visual-tag::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: #6EE79A;
-      box-shadow: 0 0 8px #6EE79A;
-    }
-    .hero-visual-corner {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 12px;
-      color: var(--text-2);
-      letter-spacing: 0.06em;
-    }
-
-    /* Full-screen loader */
-    .hero-showcase-loader {
-      position: absolute;
-      inset: 0;
-      display: grid; place-items: center;
-      background: var(--grad-visual);
-      transition: opacity 0.6s;
-      z-index: 4;
-    }
-    .hero-showcase-loader.loaded {
-      opacity: 0;
-      pointer-events: none;
-    }
-    .loader-bar {
-      width: 160px; height: 2px;
-      background: rgba(15,15,30,0.08);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .loader-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: var(--grad-accent);
-      border-radius: 3px;
-      transition: width 0.3s var(--ease-swift);
-    }
-
-    /* Scroll hint */
-    .scroll-hint {
-      position: absolute;
-      left: 50%;
-      bottom: 28px;
-      transform: translateX(-50%);
-      font-size: 10px;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      color: var(--text-3);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-      z-index: 4;
-      opacity: 0;
-      animation: heroFadeIn 1s var(--ease) 1.2s forwards;
-    }
-    .scroll-hint .dash {
-      width: 1px;
-      height: 28px;
-      background: currentColor;
-      opacity: 0.5;
-      animation: hintPulse 1.8s ease-in-out infinite;
-    }
-    @keyframes hintPulse {
-      0%, 100% { transform: scaleY(0.6); transform-origin: top; opacity: 0.25; }
-      50% { transform: scaleY(1); opacity: 0.8; }
-    }
-
-    /* ========== SECTION (generic) ========== */
-    .section {
-      padding: 96px 0;
-      position: relative;
-      z-index: 1;
-    }
-    .section-title {
-      font-size: clamp(30px, 4.2vw, 44px);
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      line-height: 1.15;
-      margin-bottom: 12px;
-      color: var(--text);
-    }
-    .section-num {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 14px;
-      color: var(--text-3);
-      letter-spacing: 0.04em;
-    }
-    .section-sub {
-      font-size: 16px;
-      color: var(--text-2);
-      margin-bottom: 48px;
-      max-width: 560px;
-      line-height: 1.7;
-    }
-    .section-head-center { text-align: center; }
-    .section-head-divider {
-      display: flex;
-      align-items: baseline;
-      gap: 18px;
-      margin-bottom: 36px;
-    }
-    .section-head-divider .line {
-      flex: 1;
-      height: 1px;
-      background: var(--border-2);
-      transform: translateY(-6px);
-    }
-    .section-head-divider .section-num {
-      flex-shrink: 0;
-    }
-
-    /* ========== SERVICES (3-column card row) ========== */
-    .card-panel {
-      background: rgba(255,255,255,0.75);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      padding: 44px;
-      box-shadow: var(--shadow-sm);
-    }
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--border);
-      border-radius: 24px;
-      overflow: hidden;
-    }
-    .service-item {
-      background: var(--surface);
-      padding: 40px 30px 36px;
-      transition: background 0.35s var(--ease-swift), transform 0.4s var(--ease);
-      position: relative;
-      overflow: hidden;
-    }
-    .service-item::before {
-      content: '';
-      position: absolute;
-      inset: auto 0 0 0;
-      height: 2px;
-      background: var(--grad-accent);
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform 0.5s var(--ease);
-    }
-    .service-item:hover { background: var(--bg-soft); }
-    .service-item:hover::before { transform: scaleX(1); }
-    .service-item:hover .service-icon {
-      transform: translateY(-4px);
-      color: var(--accent-violet);
-    }
-    .service-num {
-      position: absolute;
-      top: 22px; right: 24px;
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 13px;
-      color: var(--text-3);
-      opacity: 0.6;
-      letter-spacing: 0.05em;
-    }
-    .service-icon {
-      width: 42px; height: 42px;
-      color: var(--accent-blue);
-      margin-bottom: 24px;
-      stroke-width: 1.5;
-      transition: all 0.35s var(--ease);
-    }
-    .service-title {
-      font-size: 19px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      color: var(--text);
-      letter-spacing: -0.015em;
-    }
-    .service-desc {
-      font-size: 14px;
-      color: var(--text-3);
-      line-height: 1.7;
-    }
-
-    /* ========== LATEST WORK ========== */
-    .work-card {
-      background: var(--surface);
-      border-radius: var(--radius-xl);
-      padding: 48px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: 56px;
-      align-items: center;
-      overflow: hidden;
-      position: relative;
-      transition: all 0.45s var(--ease);
-    }
-    .work-card:hover {
-      box-shadow: var(--shadow-lg);
-      border-color: var(--border-2);
-    }
-    .work-card::before {
-      content: '';
-      position: absolute;
-      top: -50%; right: -20%;
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(155,140,255,0.08), transparent 60%);
-      pointer-events: none;
-    }
-    .work-card > * { position: relative; }
-    .work-card-kicker {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 13px;
-      color: var(--text-3);
-      letter-spacing: 0.06em;
-      margin-bottom: 14px;
-      display: block;
-    }
-    .work-card-text h3 {
-      font-size: clamp(26px, 3.4vw, 38px);
-      font-weight: 800;
-      letter-spacing: -0.025em;
-      line-height: 1.15;
-      margin-bottom: 14px;
-      color: var(--text);
-    }
-    .work-card-text p {
-      font-size: 15px;
-      color: var(--text-2);
-      margin-bottom: 26px;
-      line-height: 1.75;
-    }
-    .work-card-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-    .tag {
-      font-size: 12px;
-      font-weight: 500;
-      padding: 6px 12px;
-      background: rgba(74,123,245,0.08);
-      color: var(--accent-blue);
-      border-radius: var(--radius-pill);
-    }
-    .tag.violet { background: rgba(142,124,240,0.12); color: #6E5BD9; }
-    .tag.sky    { background: rgba(126,176,255,0.14); color: #2C6FD9; }
-    .tag.mist   { background: rgba(168,180,214,0.14); color: #4F5974; }
-    .work-card-visual {
-      aspect-ratio: 16 / 10;
-      background:
-        linear-gradient(135deg, #DCE4F5 0%, #CFD3EE 55%, #C4C8EC 100%),
-        radial-gradient(circle at 30% 30%, rgba(74,123,245,0.14), transparent 60%);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 24px 64px rgba(15,15,30,0.1);
-      transition: transform 0.5s var(--ease);
-    }
-    .work-card:hover .work-card-visual {
-      transform: translateY(-6px);
-    }
-    .work-card-visual img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-    .work-card-visual-placeholder {
-      display: grid;
-      place-items: center;
-      height: 100%;
-      color: var(--text-3);
-      font-size: 14px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-
-    /* ========== WHY CHOOSE US ========== */
-    .why-head {
-      text-align: center;
-      margin-bottom: 56px;
-    }
-    .why-head .section-num { display: block; margin-bottom: 10px; }
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-    }
-    .why-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 36px 28px 32px;
-      box-shadow: var(--shadow-xs);
-      transition: all 0.35s var(--ease);
-      position: relative;
-    }
-    .why-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-2);
-    }
-    .why-card-num {
-      position: absolute;
-      top: 24px; right: 26px;
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-size: 13px;
-      color: var(--text-3);
-      opacity: 0.6;
-    }
-    .why-icon {
-      width: 38px; height: 38px;
-      color: var(--accent-blue);
-      margin-bottom: 22px;
-      stroke-width: 1.6;
-    }
-    .why-title {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 10px;
-      letter-spacing: -0.01em;
-    }
-    .why-desc {
-      font-size: 14px;
-      color: var(--text-3);
-      line-height: 1.65;
-    }
-
-    /* ========== PORTFOLIO STRIP ========== */
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .portfolio-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      box-shadow: var(--shadow-xs);
-      transition: all 0.4s var(--ease);
-      display: block;
-      position: relative;
-    }
-    .portfolio-card::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      pointer-events: none;
-      box-shadow: 0 0 0 0 rgba(74,123,245,0);
-      transition: box-shadow 0.4s var(--ease);
-    }
-    .portfolio-card:hover {
-      transform: translateY(-8px);
-      box-shadow: var(--shadow-lg);
-      border-color: transparent;
-    }
-    .portfolio-card:hover::after {
-      box-shadow: 0 0 0 1px rgba(74,123,245,0.15);
-    }
-    .portfolio-card.is-soon {
-      cursor: default;
-      opacity: 0.88;
-    }
-    .portfolio-card.is-soon:hover {
-      transform: none;
-      box-shadow: var(--shadow-xs);
-      border-color: var(--border);
-    }
-    .portfolio-card.is-soon:hover::after {
-      box-shadow: 0 0 0 0 rgba(74,123,245,0);
-    }
-    .portfolio-card-img {
-      aspect-ratio: 16 / 10;
-      background:
-        linear-gradient(135deg, #DCE4F5 0%, #D8DDF0 55%, #CFD3EE 100%);
-      overflow: hidden;
-      position: relative;
-      transition: transform 0.6s var(--ease);
-    }
-    .portfolio-card:hover .portfolio-card-img {
-      transform: scale(1.04);
-    }
-    .portfolio-card-img::after {
-      content: attr(data-label);
-      position: absolute;
-      inset: 0;
-      display: grid; place-items: center;
-      color: var(--text-3);
-      font-size: 13px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 500;
-    }
-    .portfolio-card-body {
-      padding: 22px 22px 24px;
-    }
-    .portfolio-card-label {
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-3);
-      margin-bottom: 6px;
-    }
-    .portfolio-card-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-    .portfolio-card-desc {
-      font-size: 13px;
-      color: var(--text-2);
-    }
-    .portfolio-card-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 10px;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 11px 4px 9px;
-      border-radius: var(--radius-pill);
-      letter-spacing: 0.05em;
-    }
-    .portfolio-card-status::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: currentColor;
-    }
-    .portfolio-card-status.active {
-      background: rgba(74,123,245,0.12);
-      color: #2C5ED9;
-    }
-    .portfolio-card-status.active::before {
-      animation: livePulse 1.6s ease-in-out infinite;
-    }
-    @keyframes livePulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(74,123,245,0.5); }
-      50% { box-shadow: 0 0 0 5px rgba(74,123,245,0); }
-    }
-    .portfolio-card-status.soon {
-      background: rgba(142,124,240,0.12);
-      color: #6E5BD9;
-    }
-
-    /* ========== CTA SECTION ========== */
-    .cta-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      padding: 72px 48px 64px;
-      text-align: center;
-      box-shadow: var(--shadow-sm);
-      max-width: 720px;
-      margin: 0 auto;
-      position: relative;
-      overflow: hidden;
-    }
-    .cta-card::before {
-      content: '';
-      position: absolute;
-      top: -60%; left: -20%;
-      width: 140%; height: 100%;
-      background:
-        radial-gradient(ellipse 60% 50% at 30% 60%, rgba(74,123,245,0.14), transparent 65%),
-        radial-gradient(ellipse 50% 50% at 75% 40%, rgba(142,124,240,0.12), transparent 65%);
-      pointer-events: none;
-    }
-    .cta-card > * { position: relative; z-index: 1; }
-    .cta-title {
-      font-size: clamp(24px, 3.5vw, 36px);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 10px;
-    }
-    .cta-sub {
-      color: var(--text-2);
-      margin-bottom: 28px;
-    }
-
-    /* ========== FOOTER ========== */
-    .footer {
-      padding: 60px 0 40px;
-      position: relative;
-      z-index: 1;
-    }
-    .footer-inner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 24px;
-      padding-top: 32px;
-      border-top: 1px solid var(--border);
-      flex-wrap: wrap;
-    }
-    .footer-copy {
-      font-size: 13px;
-      color: var(--text-3);
-    }
-    .footer-links {
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-    .footer-links a {
-      padding: 6px 10px;
-      font-size: 13px;
-      color: var(--text-2);
-      border-radius: 6px;
-      transition: all 0.2s;
-    }
-    .footer-links a:hover {
-      color: var(--text);
-      background: rgba(15,15,30,0.04);
-    }
-    .footer-socials {
-      display: flex;
-      gap: 10px;
-    }
-    .footer-socials a {
-      width: 36px; height: 36px;
-      display: grid; place-items: center;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      color: var(--text-2);
-      transition: all 0.25s var(--ease-swift);
-    }
-    .footer-socials a:hover {
-      color: #fff;
-      background: var(--text);
-      transform: translateY(-2px);
-    }
-    .footer-socials svg { width: 16px; height: 16px; }
-
-    /* ========== REVEAL ANIMATIONS ========== */
-    .reveal {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-    }
-    .reveal.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .reveal-d1 { transition-delay: 0.1s; }
-    .reveal-d2 { transition-delay: 0.2s; }
-    .reveal-d3 { transition-delay: 0.3s; }
-
-    /* ========== RESPONSIVE ========== */
-    @media (max-width: 960px) {
-      .nav-links { display: none; }
-      .nav-cta { display: none; }
-      .nav-mob-toggle { display: grid; place-items: center; }
-      .nav { padding: 8px 12px 8px 18px; }
-
-      .services-grid { grid-template-columns: 1fr; }
-      .why-grid { grid-template-columns: 1fr; }
-      .portfolio-grid { grid-template-columns: 1fr; }
-      .work-card {
-        grid-template-columns: 1fr;
-        gap: 32px;
-        padding: 28px;
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://hao0321.com/#website",
+        "url": "https://hao0321.com/",
+        "name": "Hao0321 Studio",
+        "description": "AI 遊戲、創作工具與一人開發實錄",
+        "inLanguage": "zh-Hant-TW",
+        "publisher": { "@id": "https://hao0321.com/#studio" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://hao0321.com/#webpage",
+        "url": "https://hao0321.com/",
+        "name": "Hao0321 Studio｜AI 遊戲、創作工具與開發實錄",
+        "description": "台灣獨立創作者 Hao 的數位實驗室：免費瀏覽器遊戲、AI 創作工具與一人開發實錄。",
+        "inLanguage": "zh-Hant-TW",
+        "isPartOf": { "@id": "https://hao0321.com/#website" },
+        "about": { "@id": "https://hao0321.com/#studio" },
+        "primaryImageOfPage": { "@id": "https://hao0321.com/#primaryimage" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://hao0321.com/#studio",
+        "name": "Hao0321 Studio",
+        "alternateName": "Hao0321",
+        "url": "https://hao0321.com/",
+        "logo": { "@type": "ImageObject", "url": "https://hao0321.com/favicon.svg" },
+        "image": { "@id": "https://hao0321.com/#primaryimage" },
+        "description": "由台灣獨立創作者 Hao 經營的數位實驗室，專注 AI 協作開發、瀏覽器遊戲與創作流程。",
+        "founder": { "@id": "https://hao0321.com/#hao" },
+        "email": "mailto:lo246179268@gmail.com",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "product partnerships",
+          "email": "lo246179268@gmail.com",
+          "availableLanguage": ["zh-Hant", "English"]
+        },
+        "location": {
+          "@type": "Place",
+          "address": { "@type": "PostalAddress", "addressCountry": "TW" }
+        },
+        "sameAs": [
+          "https://youtube.com/@hao0321_studio",
+          "https://www.instagram.com/hao0321_studio",
+          "https://hao0321.gumroad.com/"
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://hao0321.com/#hao",
+        "name": "Hao",
+        "alternateName": "Hao0321",
+        "url": "https://hao0321.com/about.html",
+        "email": "mailto:lo246179268@gmail.com",
+        "jobTitle": "3D / Technical Artist and Independent Creator",
+        "description": "台灣遊戲產業 3D／技術美術與獨立創作者，使用 AI 協作製作遊戲、工具與內容。",
+        "worksFor": { "@id": "https://hao0321.com/#studio" },
+        "knowsAbout": ["3D art", "technical art", "VFX", "browser games", "AI-assisted creation", "indie product development"],
+        "sameAs": [
+          "https://youtube.com/@hao0321_studio",
+          "https://www.instagram.com/hao0321_studio"
+        ]
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://hao0321.com/#featured",
+        "name": "Hao0321 Studio 精選作品",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "url": "https://game.hao0321.com/", "name": "Hao0321 遊戲大廳" },
+          { "@type": "ListItem", "position": 2, "url": "https://hao0321.com/pipeline/", "name": "Production Pipeline" },
+          { "@type": "ListItem", "position": 3, "url": "https://hao0321.com/Freeworkshop/", "name": "自由工坊" }
+        ]
+      },
+      {
+        "@type": "ImageObject",
+        "@id": "https://hao0321.com/#primaryimage",
+        "url": "https://hao0321.com/og-image-v2.jpg",
+        "contentUrl": "https://hao0321.com/og-image-v2.jpg",
+        "width": 1200,
+        "height": 630,
+        "caption": "Hao0321 Studio — 用 AI，把想法做成可玩的產品"
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://hao0321.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Hao0321 Studio 是什麼？",
+            "acceptedAnswer": { "@type": "Answer", "text": "Hao0321 Studio 是台灣獨立創作者 Hao 經營的個人數位工作室，專注用 AI 協作製作瀏覽器遊戲、創作工具與公開開發紀錄。" }
+          },
+          {
+            "@type": "Question",
+            "name": "Hao0321 Studio 有哪些可以直接使用的內容？",
+            "acceptedAnswer": { "@type": "Answer", "text": "目前可直接使用 14 款免費瀏覽器遊戲、Production Pipeline 互動流程圖、自由工坊社群內容，以及遊戲與 Cloudflare 後端的技術實錄。" }
+          },
+          {
+            "@type": "Question",
+            "name": "Hao0321 的遊戲需要下載或註冊嗎？",
+            "acceptedAnswer": { "@type": "Answer", "text": "不用下載，也不必註冊。手機或電腦打開瀏覽器即可免費遊玩；登入只用於保存排行榜、金幣與成就紀錄。" }
+          },
+          {
+            "@type": "Question",
+            "name": "可以找 Hao0321 Studio 接案或合作嗎？",
+            "acceptedAnswer": { "@type": "Answer", "text": "目前接受適合的遊戲、工具、內容聯名與社群產品合作，不提供一般外包、代做或付費顧問服務。" }
+          }
+        ]
       }
-      .section { padding: 72px 0; }
-      .hero { height: 190vh; padding: 0; }
-      .hero-sticky { padding: calc(var(--nav-h) + 24px) 0 48px; align-items: flex-start; }
-      .hero-wrap {
-        gap: 48px;
-      }
-      .hero-left { max-width: 100%; padding: 32px 28px 28px; border-radius: 24px; }
-      .hero-meta { gap: 28px; }
-      .hero-visual-caption { right: 20px; bottom: 70px; gap: 10px; }
-      .hero-visual-corner { display: none; }
-      .card-panel { padding: 28px; }
-      .work-card { padding: 32px; gap: 32px; }
-      .cta-card { padding: 48px 28px; }
-    }
-    @media (max-width: 640px) {
-      .hero-title { font-size: clamp(36px, 9.5vw, 52px); }
-      .hero-ctas { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; }
-      .hero-ctas .btn { width: 100%; }
-      .hero-meta { gap: 20px; flex-wrap: wrap; }
-      .hero-meta-num { font-size: 22px; }
-      .footer-inner {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 20px;
-      }
-      .section-head-divider { gap: 12px; }
-      .section-head-divider .section-num { font-size: 12px; }
-    }
-
-    /* ========== NO-SCROLL on mobile menu ========== */
-    body.no-scroll { overflow: hidden; }
-
-    /* ========== A11Y: FONT-SIZE TOGGLE ========== */
-    .a11y-fs {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      z-index: 120;
-      display: flex;
-      align-items: center;
-      gap: 2px;
-      padding: 6px;
-      background: rgba(255,255,255,0.88);
-      backdrop-filter: blur(14px) saturate(160%);
-      -webkit-backdrop-filter: blur(14px) saturate(160%);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-pill);
-      box-shadow: var(--shadow-md);
-      font-size: 13px;
-      color: var(--text-2);
-    }
-    .a11y-fs button {
-      width: 34px; height: 34px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: var(--text-2);
-      font-weight: 700;
-      transition: all 0.2s var(--ease-swift);
-    }
-    .a11y-fs button:hover:not(:disabled) {
-      background: rgba(15,15,30,0.06);
-      color: var(--text);
-    }
-    .a11y-fs button:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-    .a11y-fs .fs-minus { font-size: 12px; font-weight: 600; }
-    .a11y-fs .fs-plus  { font-size: 17px; font-weight: 800; }
-    .a11y-fs .fs-label {
-      padding: 0 4px;
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      color: var(--text-3);
-      text-transform: uppercase;
-      user-select: none;
-    }
-    @media (max-width: 640px) {
-      .a11y-fs { right: 12px; bottom: 12px; padding: 4px; }
-      .a11y-fs button { width: 30px; height: 30px; }
-      .a11y-fs .fs-label { display: none; }
-    }
-
-    /* ========== LIQUID GLASS LAYER (extends .hero-left / .btn-glass language) ========== */
-    .service-item,
-    .work-card,
-    .portfolio-card {
-      background: rgba(255,255,255,0.5) !important;
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255,255,255,0.55) !important;
-      box-shadow:
-        0 6px 28px rgba(15,15,30,0.07),
-        0 1px 3px rgba(15,15,30,0.04),
-        inset 0 1px 0 rgba(255,255,255,0.7) !important;
-    }
-    .service-item { border-radius: 20px; }
-    .service-item:hover,
-    .work-card:hover,
-    .portfolio-card:hover {
-      background: rgba(255,255,255,0.68) !important;
-      border-color: rgba(255,255,255,0.85) !important;
-      box-shadow:
-        0 18px 48px rgba(15,15,30,0.13),
-        inset 0 1px 0 rgba(255,255,255,0.85) !important;
-    }
-    .cta-card {
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255,255,255,0.4) !important;
-      box-shadow:
-        0 12px 44px rgba(74,123,245,0.20),
-        inset 0 1px 0 rgba(255,255,255,0.5) !important;
-    }
-    /* hero panel: deepen the existing glass a touch */
-    .hero-left {
-      background: rgba(255,255,255,0.32) !important;
-      -webkit-backdrop-filter: blur(22px) saturate(170%) !important;
-      backdrop-filter: blur(22px) saturate(170%) !important;
-      border: 1px solid rgba(255,255,255,0.5) !important;
-    }
-    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-      .service-item, .work-card, .portfolio-card { background: var(--surface) !important; }
-      .hero-left { background: rgba(255,255,255,0.92) !important; }
-    }
-
-    /* ===== LIQUID GLASS v3 — visible frost: colour pools + stronger panes ===== */
-    body {
-      background-color: #EEF1F8 !important;
-      background-image:
-        radial-gradient(circle 540px at 14% 14%, rgba(74,123,245,0.22), transparent 60%),
-        radial-gradient(circle 660px at 86% 8%, rgba(142,124,240,0.20), transparent 60%),
-        radial-gradient(circle 600px at 82% 84%, rgba(110,170,255,0.18), transparent 60%),
-        radial-gradient(circle 500px at 16% 94%, rgba(168,140,255,0.16), transparent 60%) !important;
-      background-attachment: fixed !important;
-    }
-    .work-card, .portfolio-card, .service-item {
-      background: linear-gradient(140deg, rgba(255,255,255,0.58), rgba(255,255,255,0.38)) !important;
-      -webkit-backdrop-filter: blur(26px) saturate(200%) !important;
-      backdrop-filter: blur(26px) saturate(200%) !important;
-      border: 1px solid rgba(255,255,255,0.72) !important;
-      box-shadow:
-        0 12px 40px rgba(15,15,30,0.10),
-        0 2px 8px rgba(15,15,30,0.05),
-        inset 0 1px 1px rgba(255,255,255,0.95),
-        inset 0 -1px 1px rgba(15,15,30,0.04) !important;
-    }
-    .work-card:hover, .portfolio-card:hover, .service-item:hover {
-      background: linear-gradient(140deg, rgba(255,255,255,0.76), rgba(255,255,255,0.56)) !important;
-      border-color: rgba(255,255,255,0.95) !important;
-      box-shadow:
-        0 24px 64px rgba(15,15,30,0.18),
-        inset 0 1px 1px rgba(255,255,255,1) !important;
-    }
-    .hero-left {
-      background: linear-gradient(150deg, rgba(255,255,255,0.40), rgba(255,255,255,0.20)) !important;
-      -webkit-backdrop-filter: blur(26px) saturate(180%) !important;
-      backdrop-filter: blur(26px) saturate(180%) !important;
-      border: 1px solid rgba(255,255,255,0.6) !important;
-      box-shadow:
-        0 20px 60px rgba(15,15,30,0.16),
-        inset 0 1px 1px rgba(255,255,255,0.9) !important;
-    }
-  </style>
+    ]
+  }
+  </script>
 </head>
 <body>
+  <a class="skip-link" href="#main">跳到主要內容</a>
 
-  <a href="#main-content" class="skip-link">跳到主要內容</a>
-  <div class="bg-waves" aria-hidden="true"></div>
-
-  <!-- ========== NAVBAR ========== -->
-  <nav class="nav" id="nav">
-    <a href="#" class="nav-logo">
-      <span class="nav-logo-mark">H</span>
-      Hao0321 Studio
+  <header class="site-header" data-header>
+    <a class="brand" href="/" aria-label="Hao0321 Studio 首頁">
+      <span class="brand-mark" aria-hidden="true">H</span>
+      <span>Hao0321 Studio</span>
     </a>
-    <ul class="nav-links">
-      <li><a href="#services">服務</a></li>
-      <li><a href="#works" class="active">作品</a></li>
-      <li><a href="https://game.hao0321.com/">遊戲</a></li>
-      <li><a href="/Freeworkshop/">自由工坊</a></li>
-      <li><a href="/tools/">工具</a></li>
-      <li><a href="/blog/">部落格</a></li>
-      <li><a href="https://youtube.com/@hao0321_studio" target="_blank" rel="noopener">頻道</a></li>
-      <li><a href="about.html">關於</a></li>
-    </ul>
-    <a href="#contact" class="nav-cta">開始合作</a>
-    <button class="nav-mob-toggle" id="mobToggle" aria-label="Menu">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+      <span></span><span></span><span></span>
+      <span class="sr-only">開啟選單</span>
     </button>
-  </nav>
+    <nav class="site-nav" id="site-nav" aria-label="主要導覽" data-menu>
+      <a href="/works/">作品與產品</a>
+      <a href="/blog/">開發日誌</a>
+      <a href="/about.html">關於 Hao</a>
+      <a class="nav-primary" href="https://game.hao0321.com/" data-cta="nav-play">免費玩遊戲 <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
 
-  <div class="mob-backdrop" id="mobBackdrop"></div>
-  <aside class="mob-menu" id="mobMenu">
-    <button class="mob-menu-close" id="mobClose" aria-label="Close">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </button>
-    <a href="#services">服務</a>
-    <a href="#works">作品</a>
-    <a href="https://game.hao0321.com/">遊戲</a>
-    <a href="https://hao0321.gumroad.com/">商店</a>
-    <a href="Freeworkshop/">自由工坊</a>
-    <a href="/tools/">工具</a>
-    <a href="/blog/">部落格</a>
-    <a href="/resources/">資源</a>
-    <a href="https://youtube.com/@hao0321_studio" target="_blank" rel="noopener">頻道</a>
-    <a href="about.html">關於</a>
-    <a href="#contact">聯繫</a>
-  </aside>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="status-dot" aria-hidden="true"></span> Taiwan · Independent maker studio</p>
+          <h1 id="hero-title">用 AI，把想法做成<br><em>可玩的產品。</em></h1>
+          <p class="hero-lede">我是 Hao，一人做遊戲、工具和內容。這裡沒有只停在概念的作品集——你可以直接玩、直接用，也能看到我怎麼把它做出來。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="https://game.hao0321.com/" data-cta="hero-play">免費玩 14 款遊戲 <span aria-hidden="true">→</span></a>
+            <a class="button button-secondary" href="/blog/" data-cta="hero-learn">看開發實錄</a>
+          </div>
+          <dl class="proof-row" role="group" aria-label="工作室成果">
+            <div><dt>14</dt><dd>款瀏覽器遊戲</dd></div>
+            <div><dt>47</dt><dd>篇技術文章</dd></div>
+            <div><dt>1</dt><dd>人持續製作中</dd></div>
+          </dl>
+        </div>
 
-  <!-- ========== HERO (pinned: tall section wraps a sticky viewport) ========== -->
-  <main id="main-content">
-  <section class="hero" id="hero">
-   <div class="hero-sticky" id="heroSticky">
-    <!-- Full-bleed canvas background -->
-    <div class="hero-bg" id="heroShowcase" aria-hidden="true">
-      <canvas id="heroCanvas"></canvas>
-    </div>
-    <div class="hero-showcase-loader" id="heroLoader">
-      <div class="loader-bar"><div class="loader-bar-fill" id="loaderFill"></div></div>
-    </div>
-
-    <!-- Text overlay content — revealed on scroll via .is-visible -->
-    <div class="hero-wrap">
-      <div class="hero-left" id="heroLeft">
-        <div class="hero-eyebrow">Hao0321 Studio</div>
-        <div class="hero-badge">
-          <span class="hero-badge-dot" aria-hidden="true"></span>
-          Creative Studio &middot; Based in Taiwan
-        </div>
-        <h1 class="hero-title">
-          <span class="block"><span class="word">設計</span> <span class="word accent">創新</span></span>
-          <span class="block"><span class="word">啟發未來</span></span>
-        </h1>
-        <p class="hero-sub">
-          結合 AI 技術、遊戲開發與視覺設計的獨立工作室。用心打造每一個令人驚艷的數位體驗。
-        </p>
-        <div class="hero-ctas">
-          <a href="#works" class="btn btn-primary">
-            探索作品
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </a>
-          <a href="#contact" class="btn btn-secondary">聯繫我們</a>
-        </div>
-        <div class="hero-meta">
-          <div class="hero-meta-item">
-            <span class="hero-meta-num accent">5+</span>
-            <span class="hero-meta-lbl">Years</span>
-          </div>
-          <div class="hero-meta-item">
-            <span class="hero-meta-num">20+</span>
-            <span class="hero-meta-lbl">Projects</span>
-          </div>
-          <div class="hero-meta-item">
-            <span class="hero-meta-num">AI</span>
-            <span class="hero-meta-lbl">Powered</span>
-          </div>
-        </div>
+        <figure class="hero-art">
+          <img src="/hero-frames-new/frame_0001.webp" width="2048" height="1152" alt="冰藍金屬與玻璃構成的 Hao0321 立體品牌視覺" fetchpriority="high" decoding="async">
+          <figcaption>
+            <span>Games · AI Tools · Build in Public</span>
+            <span class="live-label"><i aria-hidden="true"></i> 持續更新</span>
+          </figcaption>
+        </figure>
       </div>
-    </div>
+      <a class="scroll-cue" href="#paths">從這裡開始 <span aria-hidden="true">↓</span></a>
+    </section>
 
-    <!-- Floating badge at bottom-right -->
-    <div class="hero-visual-caption">
-      <span class="hero-visual-tag">Live · Scroll</span>
-      <span class="hero-visual-corner">— 3D Render</span>
-    </div>
-
-    <div class="scroll-hint" aria-hidden="true">
-      <span>Scroll</span>
-      <span class="dash"></span>
-    </div>
-   </div>
-  </section>
-
-  <!-- ========== SERVICES ========== -->
-  <section class="section" id="services">
-    <div class="container">
-      <div class="section-head-divider reveal">
-        <span class="section-num">— 01</span>
-        <h2 class="section-title" style="margin-bottom:0">我們的服務</h2>
-        <div class="line"></div>
+    <section class="section start-section" id="paths" aria-labelledby="paths-title">
+      <div class="section-heading">
+        <p class="section-kicker">Start here</p>
+        <h2 id="paths-title">你今天想做什麼？</h2>
+        <p>不用猜網站裡有什麼，選一條最適合你的路。</p>
       </div>
-      <div class="card-panel reveal">
-        <div class="services-grid">
-          <div class="service-item">
-            <span class="service-num">01</span>
-            <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="14" rx="2"/><path d="M9 20h6M12 17v3"/>
-            </svg>
-            <h3 class="service-title">遊戲開發</h3>
-            <p class="service-desc">以 Unreal 與 Unity 打造原創獨立遊戲與互動體驗</p>
-          </div>
-          <div class="service-item">
-            <span class="service-num">02</span>
-            <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/>
-            </svg>
-            <h3 class="service-title">視覺設計</h3>
-            <p class="service-desc">品牌識別、動態影像、3D 與 VFX 視覺製作</p>
-          </div>
-          <div class="service-item">
-            <span class="service-num">03</span>
-            <svg class="service-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M8 16h2"/>
-            </svg>
-            <h3 class="service-title">AI 技術整合</h3>
-            <p class="service-desc">客製化 AI Agent、自動化工具與 Pipeline 開發</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== LATEST WORK ========== -->
-  <section class="section" id="works">
-    <div class="container">
-      <div class="section-head-divider reveal">
-        <span class="section-num">— 02</span>
-        <h2 class="section-title" style="margin-bottom:0">精選作品</h2>
-        <div class="line"></div>
-      </div>
-      <div class="work-card reveal">
-        <div class="work-card-text">
-          <span class="work-card-kicker">— Featured Shop</span>
-          <h3>Hao0321 Shop<br/><em style="font-style:normal;color:var(--text-2);font-weight:500;font-size:0.62em">— 數位工具與商品</em></h3>
-          <p>工作室自製的教學資源、模板與開發工具，全部上架於 Gumroad。從 AI 動畫流程模板到遊戲原始碼範例，讓你能直接拿來用。</p>
-          <div class="work-card-tags">
-            <span class="tag">Templates</span>
-            <span class="tag violet">Dev Tools</span>
-            <span class="tag mist">Tutorials</span>
-          </div>
-          <a href="https://hao0321.gumroad.com/" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">
-            前往 Gumroad
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M7 7h10v10"/></svg>
-          </a>
-        </div>
-        <div class="work-card-visual">
-          <div class="work-card-visual-placeholder">Hao0321 Shop · Gumroad</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== WHY CHOOSE US ========== -->
-  <section class="section">
-    <div class="container">
-      <div class="card-panel reveal">
-        <div class="why-head">
-          <span class="section-num">— 03</span>
-          <h2 class="section-title">為什麼選擇我們</h2>
-        </div>
-        <div class="why-grid">
-          <div class="why-card reveal reveal-d1">
-            <span class="why-card-num">01</span>
-            <svg class="why-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
-            </svg>
-            <h3 class="why-title">專業團隊</h3>
-            <p class="why-desc">跨領域的技術背景與創意實力，確保每個專案都超出期待</p>
-          </div>
-          <div class="why-card reveal reveal-d2">
-            <span class="why-card-num">02</span>
-            <svg class="why-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2L3 9l9 6 9-6-9-7zM3 15l9 6 9-6"/>
-            </svg>
-            <h3 class="why-title">前沿技術</h3>
-            <p class="why-desc">緊跟業界最新工具與工作流程，讓創意以最有效率的方式落地</p>
-          </div>
-          <div class="why-card reveal reveal-d3">
-            <span class="why-card-num">03</span>
-            <svg class="why-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="12 2 15 8 22 9 17 14 18 21 12 18 6 21 7 14 2 9 9 8 12 2"/>
-            </svg>
-            <h3 class="why-title">以客為本</h3>
-            <p class="why-desc">從溝通到交付的每個細節，都以你的目標為中心</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== PORTFOLIO STRIP ========== -->
-  <section class="section" id="portfolio">
-    <div class="container">
-      <div class="section-head-divider reveal">
-        <span class="section-num">— 04</span>
-        <h2 class="section-title" style="margin-bottom:0">最新專案</h2>
-        <div class="line"></div>
-      </div>
-      <div class="portfolio-grid">
-        <a href="https://youtube.com/@hao0321_studio" target="_blank" rel="noopener" class="portfolio-card reveal reveal-d1">
-          <div class="portfolio-card-img" data-label="AI · Tutorial"></div>
-          <div class="portfolio-card-body">
-            <div class="portfolio-card-label">AI · YouTube</div>
-            <div class="portfolio-card-title">AI 創作系列教學</div>
-            <div class="portfolio-card-desc">從零開始的 AI 工具實作</div>
-            <span class="portfolio-card-status active">更新中</span>
-          </div>
+      <div class="path-grid">
+        <a class="path-card path-play" href="https://game.hao0321.com/" data-cta="path-play">
+          <span class="path-index">01</span>
+          <span class="path-icon" aria-hidden="true">PLAY</span>
+          <h3>我想玩點東西</h3>
+          <p>14 款免費瀏覽器遊戲，不用下載、不用註冊，手機與電腦都能玩。</p>
+          <span class="text-link">進入遊戲大廳 <b aria-hidden="true">↗</b></span>
         </a>
-        <div class="portfolio-card reveal reveal-d2 is-soon" aria-disabled="true">
-          <div class="portfolio-card-img" data-label="Unreal · Strategy"></div>
-          <div class="portfolio-card-body">
-            <div class="portfolio-card-label">Game · Unreal</div>
-            <div class="portfolio-card-title">Pact of Arcania</div>
-            <div class="portfolio-card-desc">原創奇幻策略遊戲</div>
-            <span class="portfolio-card-status soon">即將推出</span>
-          </div>
-        </div>
-        <div class="portfolio-card reveal reveal-d3 is-soon" aria-disabled="true">
-          <div class="portfolio-card-img" data-label="3D · Motion"></div>
-          <div class="portfolio-card-body">
-            <div class="portfolio-card-label">Brand · Motion</div>
-            <div class="portfolio-card-title">品牌形象動畫</div>
-            <div class="portfolio-card-desc">3D · VFX · 動態識別</div>
-            <span class="portfolio-card-status soon">即將推出</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== CTA ========== -->
-  <section class="section" id="contact">
-    <div class="container">
-      <div class="cta-card reveal">
-        <span class="section-num" style="display:block;margin-bottom:10px">— Let&#39;s talk</span>
-        <h2 class="cta-title">一起合作吧</h2>
-        <p class="cta-sub">有想法需要被實現？我們來談談。</p>
-        <a href="mailto:lo246179268@gmail.com" class="btn btn-primary">
-          開始專案
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        <a class="path-card path-learn" href="/blog/" data-cta="path-learn">
+          <span class="path-index">02</span>
+          <span class="path-icon" aria-hidden="true">LEARN</span>
+          <h3>我想看怎麼做</h3>
+          <p>從 Canvas 遊戲到 Cloudflare 後端，公開一人開發的架構、成本與踩坑紀錄。</p>
+          <span class="text-link">閱讀技術日誌 <b aria-hidden="true">→</b></span>
+        </a>
+        <a class="path-card path-build" href="mailto:lo246179268@gmail.com?subject=Hao0321%20Studio%20產品合作詢問" data-cta="path-contact">
+          <span class="path-index">03</span>
+          <span class="path-icon" aria-hidden="true">BUILD</span>
+          <h3>我想談產品合作</h3>
+          <p>遊戲、工具、內容聯名或社群合作，可以先用一封信把彼此能帶來的價值說清楚。</p>
+          <span class="text-link">提出合作 <b aria-hidden="true">↗</b></span>
         </a>
       </div>
-    </div>
-  </section>
+    </section>
 
+    <section class="section" id="featured" aria-labelledby="featured-title">
+      <div class="section-heading section-heading-row">
+        <div>
+          <p class="section-kicker">Featured builds</p>
+          <h2 id="featured-title">現在就能打開的作品</h2>
+        </div>
+        <a class="quiet-link" href="/works/">查看全部作品與產品 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="work-grid">
+        <article class="work-card work-card-main">
+          <div class="work-visual game-visual" aria-hidden="true">
+            <div class="mini-window">
+              <span class="mini-bar"><i></i><i></i><i></i></span>
+              <strong>GAME LOBBY</strong>
+              <span class="mini-chip">14 GAMES</span>
+              <div class="mini-tiles"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            </div>
+          </div>
+          <div class="work-body">
+            <p class="work-meta">Flagship product · Free to play</p>
+            <h3>Hao0321 遊戲大廳</h3>
+            <p>動作、策略、益智、卡牌一次收進瀏覽器。從 DODGE MASTER 到台灣大富翁，每款都是可直接驗證的開發成果。</p>
+            <ul class="tag-list"><li>免下載</li><li>跨裝置</li><li>排行榜</li></ul>
+            <a class="text-link" href="https://game.hao0321.com/" data-cta="work-games">選一款開始玩 <b aria-hidden="true">↗</b></a>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="work-visual pipeline-visual" aria-hidden="true">
+            <div class="pipeline-lines"><i></i><i></i><i></i><i></i><i></i></div>
+            <span>CONCEPT</span><span>BUILD</span><span>SHIP</span>
+          </div>
+          <div class="work-body">
+            <p class="work-meta">Interactive reference</p>
+            <h3>Production Pipeline</h3>
+            <p>VFX、遊戲與獨立製作的完整流程圖。從概念到上線，把模糊的「做專案」拆成可執行步驟。</p>
+            <a class="text-link" href="/pipeline/" data-cta="work-pipeline">打開流程圖 <b aria-hidden="true">→</b></a>
+          </div>
+        </article>
+
+        <article class="work-card">
+          <div class="work-visual community-visual" aria-hidden="true">
+            <span class="orbit orbit-a"></span><span class="orbit orbit-b"></span>
+            <strong>自由<br>工坊</strong>
+          </div>
+          <div class="work-body">
+            <p class="work-meta">Creator community</p>
+            <h3>自由工坊</h3>
+            <p>圖片、影片、音樂與 Vibe Coding 的 AI 創意應用社群。看看不同創作者怎麼把新工具變成作品。</p>
+            <a class="text-link" href="/Freeworkshop/" data-cta="work-community">認識社群 <b aria-hidden="true">→</b></a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section journal-section" aria-labelledby="journal-title">
+      <div class="section-heading section-heading-row">
+        <div>
+          <p class="section-kicker">Build notes</p>
+          <h2 id="journal-title">不是心得文，是實際做過的拆解</h2>
+        </div>
+        <a class="quiet-link" href="/blog/">全部技術日誌 <span aria-hidden="true">→</span></a>
+      </div>
+
+      <div class="journal-list">
+        <a class="journal-card" href="/blog/tech-stack.html">
+          <span class="journal-no">01</span>
+          <div>
+            <p class="journal-meta"><span>Engineering</span> 8 分鐘</p>
+            <h3>1 人工作室的全端架構：月成本不到 NT$200</h3>
+            <p>前端、Cloudflare Workers、D1、Google OAuth 與維運取捨一次說清楚。</p>
+          </div>
+          <span class="journal-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="journal-card" href="/blog/dodge-master-devlog.html">
+          <span class="journal-no">02</span>
+          <div>
+            <p class="journal-meta"><span>Game devlog</span> 10 分鐘</p>
+            <h3>用 Canvas 從零寫 DODGE MASTER</h3>
+            <p>碰撞、物件池、觸控操作、角色與廣告節點的實作決策。</p>
+          </div>
+          <span class="journal-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="journal-card" href="/blog/cloudflare-workers-d1.html">
+          <span class="journal-no">03</span>
+          <div>
+            <p class="journal-meta"><span>Backend</span> 12 分鐘</p>
+            <h3>14 款遊戲共用的 Workers + D1 後端</h3>
+            <p>登入、簽到、排行榜、金幣與成就系統如何由一個人維護。</p>
+          </div>
+          <span class="journal-arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="section about-strip" aria-labelledby="about-title">
+      <div class="about-copy">
+        <p class="section-kicker">About the studio</p>
+        <h2 id="about-title">一人工作室的速度，<br>公開製作的可信度。</h2>
+      </div>
+      <div class="about-detail">
+        <p>Hao0321 Studio 是 Hao 在台灣經營的個人工作室。我相信最有說服力的作品集不是漂亮截圖，而是你現在就能點開、玩到、用到的東西。</p>
+        <p>所以我把每次實驗都變成產品，也把成功與踩坑整理成可以被搜尋、被分享、被下一個創作者用上的內容。</p>
+        <div class="about-links">
+          <a class="button button-secondary" href="/about.html">認識 Hao0321 Studio</a>
+          <a class="quiet-link" href="https://youtube.com/@hao0321_studio" target="_blank" rel="noopener">YouTube 頻道 <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section faq-section" id="faq" aria-labelledby="faq-title">
+      <div class="section-heading section-heading-row">
+        <div>
+          <p class="section-kicker">Quick answers</p>
+          <h2 id="faq-title">先把最常問的說清楚</h2>
+        </div>
+        <p>給第一次認識 Hao0321 Studio 的人，也讓搜尋與 AI 答案能引用一致、可驗證的資訊。</p>
+      </div>
+      <div class="faq-grid">
+        <article class="faq-card">
+          <h3>Hao0321 Studio 是什麼？</h3>
+          <p>Hao0321 Studio 是台灣獨立創作者 Hao 經營的個人數位工作室，專注用 AI 協作製作瀏覽器遊戲、創作工具與公開開發紀錄。</p>
+        </article>
+        <article class="faq-card">
+          <h3>有哪些內容可以直接使用？</h3>
+          <p>目前有 14 款免費瀏覽器遊戲、Production Pipeline 互動流程圖、自由工坊社群內容，以及遊戲與 Cloudflare 後端的技術實錄。</p>
+        </article>
+        <article class="faq-card">
+          <h3>遊戲需要下載或註冊嗎？</h3>
+          <p>不用下載，也不必註冊。手機或電腦打開瀏覽器即可免費遊玩；登入只用於保存排行榜、金幣與成就紀錄。</p>
+        </article>
+        <article class="faq-card">
+          <h3>可以找 Hao 接案或合作嗎？</h3>
+          <p>目前接受適合的遊戲、工具、內容聯名與社群產品合作，不提供一般外包、代做或付費顧問服務。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section contact-section" id="contact" aria-labelledby="contact-title">
+      <div class="contact-card">
+        <p class="section-kicker">Let’s make it real</p>
+        <h2 id="contact-title">如果你有一個值得一起做的產品，<br>先從一封信開始。</h2>
+        <p>告訴我你已經有的產品或資源、想一起完成的成果，以及雙方能怎麼互補。我會直接回覆是否適合合作；目前不提供一般外包或付費顧問服務。</p>
+        <div class="contact-actions">
+          <a class="button button-light" href="mailto:lo246179268@gmail.com?subject=Hao0321%20Studio%20產品合作詢問&body=你好%20Hao%EF%BC%8C%0A%0A我的產品%EF%BC%8F資源是%EF%BC%9A%0A希望一起完成%EF%BC%9A%0A我能提供的價值%EF%BC%9A%0A" data-cta="contact-email">提出產品合作 <span aria-hidden="true">↗</span></a>
+          <a class="contact-email" href="mailto:lo246179268@gmail.com">lo246179268@gmail.com</a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- ========== FOOTER ========== -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-inner">
-        <div class="footer-copy">© 2026 Hao0321 Studio · Based in Taiwan</div>
-        <nav class="footer-links">
-          <a href="/about.html">About</a>
-          <a href="/Freeworkshop/">Freeworkshop</a>
-          <a href="/blog/">Blog</a>
-          <a href="/tools/">Tools</a>
-          <a href="/resources/">Resources</a>
-          <a href="/privacy.html">Privacy</a>
-          <a href="/terms.html">Terms</a>
-        </nav>
-        <div class="footer-socials">
-          <a href="https://youtube.com/@hao0321_studio" target="_blank" rel="noopener" aria-label="YouTube">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31.4 31.4 0 000 12a31.4 31.4 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1c.4-1.9.5-3.8.5-5.8a31.4 31.4 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>
-          </a>
-          <a href="https://www.instagram.com/hao0321_studio" target="_blank" rel="noopener" aria-label="Instagram">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
-          </a>
-          <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener" aria-label="Discord">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.7 4.3A17.3 17.3 0 0015.3 3l-.2.5a14 14 0 00-6.2 0L8.7 3A17.3 17.3 0 004.3 4.3C2 8 1.3 11.5 1.7 15c1.8 1.3 3.5 2.1 5.2 2.6l.4-.6a10 10 0 01-1.9-.9l.5-.4c3.6 1.7 7.5 1.7 11 0l.5.4a10 10 0 01-1.9 1l.4.5c1.7-.5 3.4-1.3 5.2-2.6.5-4-.6-7.5-1.4-10.7zM8.5 13.2c-1 0-1.9-1-1.9-2.1s.9-2.1 1.9-2.1 1.9 1 1.9 2.1-.8 2.1-1.9 2.1zm7 0c-1 0-1.9-1-1.9-2.1s.9-2.1 1.9-2.1 1.9 1 1.9 2.1-.9 2.1-1.9 2.1z"/></svg>
-          </a>
-          <a href="mailto:lo246179268@gmail.com" aria-label="Email">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
-          </a>
-        </div>
-      </div>
+  <footer class="site-footer">
+    <div class="footer-brand">
+      <span class="brand-mark" aria-hidden="true">H</span>
+      <div><strong>Hao0321 Studio</strong><span>Games · AI Tools · Build in Public</span></div>
     </div>
+    <nav aria-label="頁尾導覽">
+      <a href="/works/">Works</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about.html">About</a>
+      <a href="https://hao0321.gumroad.com/" target="_blank" rel="noopener">Shop</a>
+      <a href="https://discord.gg/MtccYqJxCx" target="_blank" rel="noopener">Discord</a>
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+    </nav>
+    <p>© <span data-year>2026</span> Hao0321 Studio · Made in Taiwan</p>
   </footer>
 
-  <!-- ========== A11Y: FONT SIZE TOGGLE ========== -->
-  <div class="a11y-fs" role="group" aria-label="字體大小">
-    <button type="button" class="fs-minus" id="fsMinus" aria-label="縮小字體" title="縮小字體">A</button>
-    <span class="fs-label" aria-hidden="true">字級</span>
-    <button type="button" class="fs-plus"  id="fsPlus"  aria-label="放大字體" title="放大字體">A</button>
-  </div>
-
-  <script>
-    // ========== A11Y FONT-SIZE TOGGLE ==========
-    // Uses CSS `zoom` on body — widely supported (Chrome, Edge, Safari, Firefox 126+)
-    // with a transform-scale fallback for older Firefox.
-    (function() {
-      const STEPS = [0.9, 1.0, 1.15, 1.3];
-      const KEY = 'hao0321_fs_idx';
-      let idx = parseInt(localStorage.getItem(KEY), 10);
-      if (isNaN(idx) || idx < 0 || idx >= STEPS.length) idx = 1;
-      const minus = document.getElementById('fsMinus');
-      const plus  = document.getElementById('fsPlus');
-      const supportsZoom = (function() {
-        const t = document.createElement('div');
-        t.style.zoom = '1.5';
-        return t.style.zoom === '1.5';
-      })();
-      function apply() {
-        const scale = STEPS[idx];
-        if (supportsZoom) {
-          document.body.style.zoom = scale;
-          // Counter-zoom the hero so its 100vh sticky layout stays pinned correctly
-          const hero = document.getElementById('hero');
-          if (hero) hero.style.zoom = scale === 1 ? '' : (1 / scale);
-        } else {
-          // Firefox fallback: scale all text via CSS custom prop + inline style
-          document.documentElement.style.fontSize = (16 * scale) + 'px';
-        }
-        minus.disabled = (idx === 0);
-        plus.disabled  = (idx === STEPS.length - 1);
-        localStorage.setItem(KEY, String(idx));
-        // Re-run hero scroll reveal calc since layout metrics just changed
-        window.dispatchEvent(new Event('resize'));
-      }
-      minus.addEventListener('click', (e) => {
-        e.preventDefault(); e.stopPropagation();
-        if (idx > 0) { idx--; apply(); }
-      });
-      plus.addEventListener('click', (e) => {
-        e.preventDefault(); e.stopPropagation();
-        if (idx < STEPS.length - 1) { idx++; apply(); }
-      });
-      apply();
-    })();
-
-    // ========== NAV SCROLL STATE ==========
-    const nav = document.getElementById('nav');
-    function updateNav() {
-      if (window.scrollY > 40) nav.classList.add('scrolled');
-      else nav.classList.remove('scrolled');
-    }
-    window.addEventListener('scroll', updateNav, { passive: true });
-    updateNav();
-
-    // ========== HERO SCROLL-REVEAL (text panel appears as user scrolls into hero) ==========
-    (function setupHeroReveal() {
-      const hero = document.getElementById('hero');
-      const heroLeft = document.getElementById('heroLeft');
-      if (!hero || !heroLeft) return;
-      // Threshold: let user enjoy ~30% of the pinned hero before revealing the text panel
-      const REVEAL_AT = 0.30;
-      const HIDE_BELOW = 0.18; // hysteresis — don't flicker near the top
-      function updateHeroReveal() {
-        const rect = hero.getBoundingClientRect();
-        const scrolled = Math.max(0, -rect.top);
-        const scrollRoom = Math.max(1, hero.offsetHeight - window.innerHeight);
-        const progress = scrolled / scrollRoom;
-        if (progress >= REVEAL_AT) {
-          heroLeft.classList.add('is-visible');
-        } else if (progress <= HIDE_BELOW) {
-          heroLeft.classList.remove('is-visible');
-        }
-      }
-      window.addEventListener('scroll', updateHeroReveal, { passive: true });
-      window.addEventListener('resize', updateHeroReveal);
-      updateHeroReveal();
-    })();
-
-    // ========== MOBILE MENU ==========
-    const mobToggle = document.getElementById('mobToggle');
-    const mobMenu = document.getElementById('mobMenu');
-    const mobClose = document.getElementById('mobClose');
-    const mobBackdrop = document.getElementById('mobBackdrop');
-    function openMob() {
-      mobMenu.classList.add('open');
-      mobBackdrop.classList.add('open');
-      document.body.classList.add('no-scroll');
-    }
-    function closeMob() {
-      mobMenu.classList.remove('open');
-      mobBackdrop.classList.remove('open');
-      document.body.classList.remove('no-scroll');
-    }
-    mobToggle.addEventListener('click', openMob);
-    mobClose.addEventListener('click', closeMob);
-    mobBackdrop.addEventListener('click', closeMob);
-    mobMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMob));
-
-    // ========== REVEAL ON SCROLL ==========
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in-view');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -80px 0px' });
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-    // ========== HERO FRAME SEQUENCE ==========
-    (function() {
-      const STATIC = /[?&]static=1/.test(location.search);
-      const canvas = document.getElementById('heroCanvas');
-      const ctx = canvas.getContext('2d');
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      const loader = document.getElementById('heroLoader');
-      const loaderFill = document.getElementById('loaderFill');
-      const showcase = document.getElementById('heroShowcase');
-      const FRAME_COUNT = STATIC ? 1 : 61;
-      const PATH = 'hero-frames-new/frame_';
-      const frames = [];
-      let loaded = 0;
-      let currentFrame = -1;
-      let ready = false;
-
-      function pad(n) { return n < 10 ? '000'+n : n < 100 ? '00'+n : '0'+n; }
-
-      function resize() {
-        const dpr = Math.max(1, Math.min(3, window.devicePixelRatio || 1));
-        const rect = showcase.getBoundingClientRect();
-        canvas.width  = Math.round(rect.width * dpr);
-        canvas.height = Math.round(rect.height * dpr);
-        canvas.style.width  = rect.width  + 'px';
-        canvas.style.height = rect.height + 'px';
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        if (ready && frames[currentFrame]) drawFrame(currentFrame);
-      }
-
-      function drawFrame(i) {
-        const img = frames[i];
-        if (!img) return;
-        const cw = canvas.width, ch = canvas.height;
-        const iw = img.naturalWidth, ih = img.naturalHeight;
-        const scale = Math.max(cw/iw, ch/ih);
-        const dw = iw*scale, dh = ih*scale;
-        const dx = (cw-dw)/2, dy = (ch-dh)/2;
-        ctx.clearRect(0, 0, cw, ch);
-        ctx.drawImage(img, dx, dy, dw, dh);
-        currentFrame = i;
-      }
-
-      function onFirstReady() {
-        ready = true;
-        resize();
-        drawFrame(0);
-        loader.classList.add('loaded');
-        window.addEventListener('resize', resize);
-        // Scroll-scrub only — no autoplay on load (user must scroll to trigger animation)
-        if (!STATIC) startScrollScrub();
-      }
-
-      // Progressive load — batch to avoid 61 parallel requests
-      (function loadBatch(start) {
-        const end = Math.min(start + 6, FRAME_COUNT);
-        for (let i = start; i < end; i++) {
-          const img = new Image();
-          img.onload = img.onerror = function() {
-            if (img.naturalWidth) frames[i] = img;
-            loaded++;
-            loaderFill.style.width = (loaded/FRAME_COUNT*100) + '%';
-            if (loaded >= 1 && !ready) onFirstReady();
-          };
-          img.src = PATH + pad(i+1) + '.webp';
-        }
-        if (end < FRAME_COUNT) setTimeout(() => loadBatch(end), 80);
-      })(0);
-
-      // Scroll-scrub: tie frame index to scroll progress within hero
-      function startScrollScrub() {
-        let ticking = false;
-        const hero = document.querySelector('.hero');
-        function update() {
-          ticking = false;
-          if (!ready) return;
-          const heroH = hero.offsetHeight;
-          const y = window.scrollY;
-          // scrub over the first 90% of hero so frames finish before hero exits
-          const p = Math.max(0, Math.min(1, y / (heroH * 0.9)));
-          const idx = Math.min(FRAME_COUNT - 1, Math.floor(p * FRAME_COUNT));
-          if (idx !== currentFrame && frames[idx]) drawFrame(idx);
-        }
-        window.addEventListener('scroll', () => {
-          if (!ticking) { requestAnimationFrame(update); ticking = true; }
-        }, { passive: true });
-      }
-    })();
-  </script>
-
+  <script src="/site.js" defer></script>
 </body>
 </html>

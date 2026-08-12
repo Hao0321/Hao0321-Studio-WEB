@@ -12,6 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
-Disallow: /.claude/
 
-Sitemap: https://hao0321.com/sitemap.xml
+Sitemap: https://game.hao0321.com/sitemap.xml

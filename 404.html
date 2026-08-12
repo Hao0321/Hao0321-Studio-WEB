@@ -1,30 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant-TW">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 — Hao0321 Studio</title>
-  <meta name="robots" content="noindex" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;900&family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>找不到頁面｜Hao0321 Studio</title>
+  <meta name="robots" content="noindex,follow">
+  <meta name="theme-color" content="#eef3ff">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#fff;font-family:'Space Grotesk','Noto Sans TC',sans-serif;color:#1a1a2e;background-image:linear-gradient(rgba(0,0,0,0.05) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,0.05) 1px,transparent 1px);background-size:32px 32px}
-    .wrap{text-align:center;padding:40px 24px}
-    .code{font-size:clamp(5rem,15vw,10rem);font-weight:900;line-height:1;background:linear-gradient(135deg,#a855f7,#ff1493);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-    h1{font-size:1.4rem;font-weight:700;margin:16px 0 12px}
-    p{color:#555;font-size:.92rem;margin-bottom:32px}
-    a{display:inline-flex;align-items:center;gap:8px;padding:12px 32px;border-radius:100px;background:#ff1493;color:#fff;text-decoration:none;font-weight:700;font-size:.88rem;transition:transform .3s,box-shadow .3s}
-    a:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,20,147,0.25)}
+    *{box-sizing:border-box}body{min-height:100svh;margin:0;padding:24px;display:grid;place-items:center;color:#10142b;background:radial-gradient(circle at 20% 10%,#dce6ff,transparent 34rem),radial-gradient(circle at 90% 80%,#e7ddff,transparent 30rem),#f4f7ff;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI","Noto Sans TC",sans-serif}.shell{width:min(100%,820px);padding:clamp(36px,7vw,76px);background:rgba(255,255,255,.8);border:1px solid rgba(255,255,255,.9);border-radius:36px;box-shadow:0 24px 80px rgba(30,52,119,.14);text-align:center}.brand{display:inline-flex;align-items:center;gap:10px;font-size:.85rem;font-weight:800}.mark{width:34px;height:34px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,#2853e9,#8269ed);border-radius:11px}.code{margin:42px 0 14px;color:transparent;background:linear-gradient(120deg,#335df4,#7857e8);background-clip:text;-webkit-background-clip:text;font-size:clamp(5.5rem,17vw,10rem);font-weight:900;line-height:.82;letter-spacing:-.08em}h1{margin:0;font-size:clamp(1.8rem,4vw,3rem);letter-spacing:-.05em}p{max-width:520px;margin:18px auto 30px;color:#4d5673;line-height:1.75}.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}a{min-height:50px;padding:12px 19px;display:inline-flex;align-items:center;justify-content:center;color:#10142b;background:#fff;border:1px solid rgba(22,35,79,.12);border-radius:999px;font-weight:800;text-decoration:none}.primary{color:#fff;background:#10142b;border-color:#10142b}a:hover{transform:translateY(-2px)}@media(max-width:520px){.shell{border-radius:26px}.actions{display:grid}.actions a{width:100%}}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="code">404</div>
-    <h1>找不到這個頁面</h1>
-    <p>你要找的頁面不存在或已經移動了。</p>
-    <a href="/">回到首頁</a>
-  </div>
+  <main class="shell">
+    <a class="brand" href="/"><span class="mark">H</span> Hao0321 Studio</a>
+    <div class="code" aria-hidden="true">404</div>
+    <h1>這條路還沒有做成產品。</h1>
+    <p>網址可能已移動或不存在。你可以回到首頁重新選路，或直接玩一款不用下載的瀏覽器遊戲。</p>
+    <div class="actions">
+      <a class="primary" href="/">回到首頁</a>
+      <a href="https://game.hao0321.com/">免費玩遊戲 ↗</a>
+      <a href="/blog/">看技術日誌</a>
+    </div>
+  </main>
 </body>
 </html>

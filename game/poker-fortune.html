@@ -1,28 +1,52 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-Hant-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>命運之牌 — 撲克牌占卜 | Hao0321 Studio</title>
 <meta name="description" content="命運之牌 — 輸入生日，用撲克牌占卜你的運勢、愛情、事業。民間古法，支持繁中/英文/日文。" />
-<meta name="author" content="Hao0321 Studio" />
-<meta name="robots" content="index, follow" />
+<meta name="author" content="Hao" />
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1" />
 <meta name="theme-color" content="#c4956a" />
 <link rel="canonical" href="https://game.hao0321.com/poker-fortune.html" />
 <link rel="icon" type="image/svg+xml" href="https://hao0321.com/favicon.svg" />
+<link rel="author" href="https://hao0321.com/about.html" />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="命運之牌 — 撲克牌占卜" />
 <meta property="og:description" content="輸入生日，翻開屬於你的命運牌陣。支持繁中/英文/日文。" />
 <meta property="og:url" content="https://game.hao0321.com/poker-fortune.html" />
+<meta property="og:image" content="https://hao0321.com/og-image-v2.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta property="og:locale" content="zh_TW" />
 <meta property="og:site_name" content="Hao0321 Studio" />
 
 <!-- Twitter Card -->
-<meta name="twitter:card" content="summary" />
+<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="命運之牌 — 撲克牌占卜" />
 <meta name="twitter:description" content="輸入生日，翻開屬於你的命運牌陣。" />
+<meta name="twitter:image" content="https://hao0321.com/og-image-v2.jpg" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "@id": "https://game.hao0321.com/poker-fortune.html#app",
+  "name": "命運之牌 — 撲克牌占卜",
+  "description": "輸入生日，以撲克牌產生運勢、愛情與事業牌陣的免費瀏覽器互動體驗。",
+  "url": "https://game.hao0321.com/poker-fortune.html",
+  "image": "https://hao0321.com/og-image-v2.jpg",
+  "inLanguage": ["zh-Hant", "en", "ja"],
+  "operatingSystem": "Any",
+  "applicationCategory": "EntertainmentApplication",
+  "browserRequirements": "Requires JavaScript",
+  "isAccessibleForFree": true,
+  "author": { "@id": "https://hao0321.com/#hao" },
+  "publisher": { "@type": "Organization", "@id": "https://hao0321.com/#studio", "name": "Hao0321 Studio", "url": "https://hao0321.com/" },
+  "mainEntityOfPage": "https://game.hao0321.com/poker-fortune.html"
+}
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700;900&family=Shippori+Mincho:wght@400;600;800&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -33,6 +57,7 @@ body{font-family:'Noto Serif TC','Noto Serif JP',serif;background:var(--bg);colo
 .hd h1{font-family:'Shippori Mincho',serif;font-size:1.8rem;font-weight:800;letter-spacing:.3em}
 .hd .dv{width:48px;height:1px;background:var(--acc);margin:12px auto}
 .hd .sub{font-size:.75rem;color:var(--txtL);letter-spacing:.12em}
+.hd .seo-intro{max-width:420px;margin:10px auto 0;font-size:.72rem;color:var(--txtL);line-height:1.7;letter-spacing:.02em}
 .lang-sw{display:flex;justify-content:center;gap:6px;margin-top:12px}
 .lang-sw button{font-family:inherit;font-size:.65rem;padding:3px 10px;border:1px solid var(--border);background:transparent;color:var(--txtL);border-radius:4px;cursor:pointer;letter-spacing:.05em}
 .lang-sw button.on{background:var(--txt);color:var(--bg);border-color:var(--txt)}
@@ -157,7 +182,7 @@ input:focus{border-color:var(--acc)}
   <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-family:'Noto Serif TC',serif;font-size:.78rem;color:var(--txtL,#8a8070);text-decoration:none;transition:color .2s" onmouseover="this.style.color='var(--acc,#c4956a)'" onmouseout="this.style.color='var(--txtL,#8a8070)'">&larr; 遊戲大廳</a>
 </div>
 <div class="ctn">
-<div class="hd"><h1 id="t-title">命運之牌</h1><div class="dv"></div><p class="sub" id="t-sub">撲克牌占卜 · 民間古法</p>
+<div class="hd"><h1 id="t-title">命運之牌</h1><div class="dv"></div><p class="sub" id="t-sub">撲克牌占卜 · 民間古法</p><p class="seo-intro">輸入生日，以撲克牌產生運勢、愛情與事業牌陣的免費瀏覽器互動體驗；支援繁中、英文與日文。</p>
 <div class="lang-sw" id="lang-sw"></div></div>
 <div class="steps" id="steps"></div>
 
