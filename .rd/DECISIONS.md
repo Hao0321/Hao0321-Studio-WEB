@@ -8,4 +8,5 @@ Append dated decisions with evidence and rollback conditions.
 - Preserve: `/works/`, `/about`, `/blog/`, `/tools/`, `/resources/`, `/pipeline/`, `/Freeworkshop/`, sitemap, robots, `llms.txt`, headers, and child game site.
 - Improve: Hao-first copy, truthful one-person positioning, direct-answer content, Person/Organization/WebSite/WebPage/ItemList/FAQ structured data, and deferred loading for the 8.2 MB scroll sequence.
 - Guardrail: do not replace the brand system during future SEO or information-architecture work.
+- Deployment hygiene: build production archives with `git archive`; exclude R&D notes, source scripts, API worker sources, obsolete hero sequences, and legacy homepage copies. Redirect historical duplicate homepage URLs to `/`.
 - Rollback: visual source remains available at commit `196ea4b`; previous production state remains at `1fb391d`.

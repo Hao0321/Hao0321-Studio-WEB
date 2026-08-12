@@ -1,0 +1,15 @@
+.rd export-ignore
+.gitignore export-ignore
+.gitattributes export-ignore
+scripts export-ignore
+game-api export-ignore
+REDESIGN-BLUEPRINT.md export-ignore
+design-v2.html export-ignore
+index-v2.html export-ignore
+hao0321-studio.html export-ignore
+hero-frames export-ignore
+bg-frames-01 export-ignore
+bg-frames-02 export-ignore
+hero-video.mp4 export-ignore
+og-hero.jpg export-ignore
+
