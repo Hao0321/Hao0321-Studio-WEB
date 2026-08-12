@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "capturedOn": "2026-08-12",
+  "candidate": "Liquid Glass v3 restoration with Hao-first content",
+  "baseline": "production commit 1fb391d",
+  "status": "pass",
+  "checks": {
+    "utf8": true,
+    "liquidGlassV3": true,
+    "haoFirstH1": true,
+    "singleH1": true,
+    "heroFrameCount": 61,
+    "heroSequenceDeferredUntilInteraction": true,
+    "truthfulCounts": true,
+    "fakeTeamClaimsAbsent": true,
+    "seoFilesPresent": true,
+    "pageHubsPresent": true,
+    "uniqueIds": true,
+    "jsonLdValid": true,
+    "visibleFaqAligned": true,
+    "internalLinksResolved": true,
+    "inlineJavaScriptParses": true
+  },
+  "counts": {
+    "jsonLdBlocks": 1,
+    "hrefsChecked": 49,
+    "inlineScriptsChecked": 1,
+    "heroFrames": 61,
+    "heroFramePayloadMegabytes": 8.23
+  },
+  "unmeasured": [
+    "organic rankings",
+    "search impressions",
+    "AI answer citations",
+    "post-deployment Core Web Vitals",
+    "visitor conversion"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "schemaVersion": 1,
+  "minRunsPerScenario": 30,
+  "requireBlinded": true,
+  "gates": []
+}
